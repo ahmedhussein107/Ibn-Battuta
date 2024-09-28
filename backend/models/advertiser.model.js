@@ -10,7 +10,7 @@ const AdvertiserSchema = new mongoose.Schema({
   hotline: String,
   companyProfile: String,
   picture: String,
-  notifications: [{ message: String, date: Date }],
+  //notifications: [{ message: String, date: Date }],
   activities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity" }],
 });
 

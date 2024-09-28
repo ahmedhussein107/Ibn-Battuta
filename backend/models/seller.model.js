@@ -10,7 +10,7 @@ const sellerSchema = new mongoose.Schema(
     name: String,
     description: String,
     picture: String,
-    notifications: [{ message: String, date: Date }],
+    // notifications: [{ message: String, date: Date }],
   },
   { timestamps: true }
 );

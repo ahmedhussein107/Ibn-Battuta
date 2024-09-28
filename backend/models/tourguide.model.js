@@ -10,7 +10,7 @@ const TourGuideSchema = new mongoose.Schema({
   yearsOfExperience: Number,
   previousWork: String,
   picture: String,
-  notifications: [{ message: String, date: Date }],
+  // notifications: [{ message: String, date: Date }],
   itineraries: [{ type: mongoose.Schema.Types.ObjectId, ref: "Itinerary" }],
   ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
   sumofRatings: Number,

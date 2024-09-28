@@ -2,11 +2,21 @@ const mongoose = require("mongoose");
 // who has notifications? :  admin, tourist, seller, advertiser
 const notificationSchema = new mongoose.Schema(
   {
-    tourtoist: { type: mongoose.Schema.Types.ObjectId, ref: "Tourist" },
-    actionType: String,
-    relatedId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId },
+    userType: {
+      type: String,
+      enum: ["admin", "tourist", "seller", "advertiser", "tourguide"],
+      required: true,
+    },
     message: { type: String, required: true },
-    isRead: { type: Boolean, default: false },
+    type: { type: String, enum: ["info", "warning"], required: true },
+
+    relatedId: { type: mongoose.Schema.Types.ObjectId },
+    relatedType: {
+      type: String,
+      enum: ["complaint", "activity", "event", "product"],
+      required: true,
+    },
   },
   {
     timestamps: true,

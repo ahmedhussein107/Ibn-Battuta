@@ -13,7 +13,7 @@ const TouristSchema = new mongoose.Schema(
     wallet: Number,
     points: { type: Number, default: 0 },
     cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
-    notifications: [{ message: String, date: Date }],
+    // notifications: [{ message: String, date: Date }],
     preferences: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
     bookedActivities: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Activity" },
