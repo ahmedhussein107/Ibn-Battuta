@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import { connect } from "mongoose";
+import touristRouter from "./routes/tourist.router.js";
 
 dotenv.config();
 const app = express();
@@ -15,3 +16,6 @@ connect(process.env.MONGO_URI)
   .catch((err) => {
     console.log(err);
   });
+
+app.use(express.json());
+app.use("/api/tourist", touristRouter);
