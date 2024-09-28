@@ -10,9 +10,8 @@ const sellerSchema = new mongoose.Schema(
     name: String,
     description: String,
     picture: String,
-    // notifications: [{ message: String, date: Date }],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Seller", sellerSchema);
+export default mongoose.model("Seller", sellerSchema);

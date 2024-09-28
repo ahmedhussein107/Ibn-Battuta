@@ -29,4 +29,4 @@ const landmarkSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Landmark", landmarkSchema);
+export default mongoose.model("Landmark", landmarkSchema);

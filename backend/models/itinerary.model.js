@@ -12,9 +12,9 @@ const itinerarySchema = new mongoose.Schema(
     isActivated: { type: Boolean, default: true },
     bookings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tourist" }],
     isFlagged: { type: Boolean, default: false },
-    ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+    ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Itinerary", itinerarySchema);
+export default mongoose.model("Itinerary", itinerarySchema);

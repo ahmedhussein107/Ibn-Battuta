@@ -12,4 +12,4 @@ const complaintSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Complaint", complaintSchema);
+export default mongoose.model("Complaint", complaintSchema);

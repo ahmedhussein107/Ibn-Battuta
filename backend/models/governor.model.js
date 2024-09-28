@@ -10,4 +10,4 @@ const governorSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Governor", governorSchema);
+export default mongoose.model("Governor", governorSchema);

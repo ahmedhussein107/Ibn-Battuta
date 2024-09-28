@@ -9,4 +9,4 @@ const promoCodeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("PromoCode", promoCodeSchema);
+export default mongoose.model("PromoCode", promoCodeSchema);
