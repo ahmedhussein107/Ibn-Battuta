@@ -5,7 +5,7 @@ import Seller from "../models/seller.model.js";
 import Product from "../models/product.model.js";
 import Activity from "../models/activity.model.js";
 import Itinerary from "../models/itinerary.model.js";
-import Rating from "../models/ratings.model.js";
+import Rating from "../models/rating.model.js";
 import Order from "../models/order.model.js";
 import Landmark from "../models/landmark.model.js";
 import Governor from "../models/governor.model.js";
@@ -14,7 +14,6 @@ import Advertiser from "../models/advertiser.model.js";
 import Admin from "../models/admin.model.js";
 
 const touristRouter = express.Router();
-
 
 touristRouter.post("/createTourist", async (req, res) => {
   try {
@@ -35,9 +34,6 @@ touristRouter.get("/allTourists", async (req, res) => {
   }
 });
 
-
-
-
 touristRouter.post("/createTourGuide", async (req, res) => {
   try {
     console.log(req.body);
@@ -56,9 +52,6 @@ touristRouter.get("/allTourGuides", async (req, res) => {
     console.log(e.message);
   }
 });
-
-
-
 
 touristRouter.post("/createSeller", async (req, res) => {
   try {
@@ -79,9 +72,6 @@ touristRouter.get("/allSellers", async (req, res) => {
   }
 });
 
-
-
-
 touristRouter.post("/createRating", async (req, res) => {
   try {
     console.log(req.body);
@@ -94,14 +84,14 @@ touristRouter.post("/createRating", async (req, res) => {
 
 touristRouter.get("/allRatings", async (req, res) => {
   try {
-    const tourguides = await Rating.findOne({touristID:"66f810300794b304f66f114b"});
+    const tourguides = await Rating.findOne({
+      touristID: "66f810300794b304f66f114b",
+    });
     res.json(tourguides);
   } catch (e) {
     console.log(e.message);
   }
 });
-
-
 
 touristRouter.post("/createProduct", async (req, res) => {
   try {
@@ -122,8 +112,6 @@ touristRouter.get("/allProducts", async (req, res) => {
   }
 });
 
-
-
 touristRouter.post("/createOrder", async (req, res) => {
   try {
     console.log(req.body);
@@ -142,8 +130,6 @@ touristRouter.get("/allOrders", async (req, res) => {
     console.log(e.message);
   }
 });
-
-
 
 touristRouter.post("/createNotification", async (req, res) => {
   try {
@@ -164,8 +150,6 @@ touristRouter.get("/allNotifications", async (req, res) => {
   }
 });
 
-
-
 touristRouter.post("/createLandmark", async (req, res) => {
   try {
     console.log(req.body);
@@ -184,8 +168,6 @@ touristRouter.get("/allLandmarks", async (req, res) => {
     console.log(e.message);
   }
 });
-
-
 
 touristRouter.post("/createItinerary", async (req, res) => {
   try {
@@ -206,8 +188,6 @@ touristRouter.get("/allItineraries", async (req, res) => {
   }
 });
 
-
-
 touristRouter.post("/createGovernor", async (req, res) => {
   try {
     console.log(req.body);
@@ -226,8 +206,6 @@ touristRouter.get("/allGovernor", async (req, res) => {
     console.log(e.message);
   }
 });
-
-
 
 touristRouter.post("/createComplaint", async (req, res) => {
   try {
@@ -248,8 +226,6 @@ touristRouter.get("/allcomplaints", async (req, res) => {
   }
 });
 
-
-
 touristRouter.post("/createAdvertiser", async (req, res) => {
   try {
     console.log(req.body);
@@ -268,8 +244,6 @@ touristRouter.get("/allAdvertisers", async (req, res) => {
     console.log(e.message);
   }
 });
-
-
 
 touristRouter.post("/createAdmin", async (req, res) => {
   try {
@@ -290,8 +264,6 @@ touristRouter.get("/allAdmins", async (req, res) => {
   }
 });
 
-
-
 touristRouter.post("/createActivity", async (req, res) => {
   try {
     console.log(req.body);
@@ -310,7 +282,5 @@ touristRouter.get("/allActivities", async (req, res) => {
     console.log(e.message);
   }
 });
-
-
 
 export default touristRouter;
