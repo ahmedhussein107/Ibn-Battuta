@@ -2,12 +2,14 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema(
   {
-    picture: String,
+    pictures: [String],
     name: String,
     price: Number,
     description: String,
-    seller: { type: mongoose.Schema.Types.ObjectId, ref: "Seller" },
+    ownerType: { type: String, required: true, enum: ["Admin", "Seller"] },
+    ownerID: { type: mongoose.Schema.Types.ObjectId, refPath: "ownerType" },
     ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
+    sumOfRatings: Number,
     quantity: Number,
     numberOfSales: Number,
     isArchived: { type: Boolean, default: false },

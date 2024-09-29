@@ -3,14 +3,11 @@ import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema(
   {
     buyer: { type: mongoose.Schema.Types.ObjectId, ref: "Tourist" },
-    item: {
-      itemId: { type: mongoose.Schema.Types.ObjectId, required: true },
-      itemType: { type: String, enum: ["Product", "Activity"], required: true },
-    },
+    product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
     price: Number,
     count: Number,
     address: String,
-    method: { type: String, enum: ["card", "wallet"] },
+    method: { type: String, enum: ["card", "wallet", "cash on delivery"] },
     status: { type: String, enum: ["delivered", "canceled", "pending"] },
   },
   { timestamps: true }

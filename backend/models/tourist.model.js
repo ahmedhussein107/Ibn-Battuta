@@ -1,31 +1,38 @@
 import { mongoose } from "mongoose";
 
-const TouristSchema = new mongoose.Schema(
+const touristSchema = new mongoose.Schema(
   {
-    username: { type: String, required: true, unique: true, immutable: true },
+    username: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Username",
+      required: true,
+    },
     password: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Email",
+      required: true,
+    },
     mobile: String,
     nationality: String,
     DOB: { type: Date, required: true, immutable: true },
     job: String,
     picture: String,
-    wallet: Number,
+    wallet: { type: Number, default: 0 },
     points: { type: Number, default: 0 },
     cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
-    // notifications: [{ message: String, date: Date }],
+    notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
     preferences: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
-    bookedActivities: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Activity" },
-    ],
-    bookedItineraries: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Itinerary" },
-    ],
     savedActivity: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity" }],
     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
-    deliveryAddresses: [String], // link or coordinates
+    deliveryAddresses: [
+      {
+        name: String,
+        location: String,
+      },
+    ],
   },
   { timestamps: true }
 );
 
-export default mongoose.model("Tourist", TouristSchema);
+export default mongoose.model("Tourist", touristSchema);

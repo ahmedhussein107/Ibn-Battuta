@@ -2,10 +2,11 @@ import mongoose from "mongoose";
 
 const landmarkSchema = new mongoose.Schema(
   {
+    governorID: { type: mongoose.Schema.Types.ObjectId, ref: "Governor" },
     description: String,
     pictures: [String],
     location: String,
-    ticketPrices: [Number],
+    ticketPrices: { type: Map, of: Number },
     openingHours: [
       {
         day: {

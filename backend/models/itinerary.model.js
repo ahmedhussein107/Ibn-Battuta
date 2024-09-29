@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const itinerarySchema = new mongoose.Schema(
   {
+    tourguideID: { type: mongoose.Schema.Types.ObjectId, ref: "TourGuide" },
     activities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity" }],
     language: String,
     price: Number,
@@ -10,9 +11,9 @@ const itinerarySchema = new mongoose.Schema(
     pickup: String, // Location link
     dropOff: String,
     isActivated: { type: Boolean, default: true },
-    bookings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tourist" }],
     isFlagged: { type: Boolean, default: false },
     ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
+    sumOfRatings: Number,
   },
   { timestamps: true }
 );
