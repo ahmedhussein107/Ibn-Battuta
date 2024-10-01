@@ -1,4 +1,5 @@
 import { mongoose } from "mongoose";
+const { Schema } = mongoose;
 
 const activitySchema = new mongoose.Schema(
   {
@@ -12,10 +13,12 @@ const activitySchema = new mongoose.Schema(
     toBeNotifiedTourists: [{ type: Schema.Types.ObjectId, ref: "Tourist" }], // for change
     isOpenForBooking: { type: Boolean, default: true },
     isFlagged: { type: Boolean, default: false },
-    sumOfRatings: Number,
-    freeSpots: Number,
+    sumOfRatings: { type: Number, default: 0 },
+    freeSpots: { type: Number, required: true },
   },
   { timestamps: true }
 );
+
+activitySchema.index({ advertiserID: 1 });
 
 export default mongoose.model("Activity", activitySchema);

@@ -2,7 +2,11 @@ import mongoose from "mongoose";
 
 const complaintSchema = new mongoose.Schema(
   {
-    tourist: { type: mongoose.Schema.Types.ObjectId, ref: "Tourist" },
+    touristID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tourist",
+      required: true,
+    },
     title: String,
     body: String,
     status: { type: String, enum: ["resolved", "pending"] },

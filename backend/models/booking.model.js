@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const bookingSchema = mongoose.Schema(
   {
-    tourist: { type: mongoose.Schema.Types.ObjectId, ref: "Tourist" },
-    typeType: {
+    touristID: { type: mongoose.Schema.Types.ObjectId, ref: "Tourist" },
+    bookingType: {
       type: String,
       enum: ["Itinerary", "Activity"],
       required: true,
@@ -11,12 +11,14 @@ const bookingSchema = mongoose.Schema(
     typeId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "typeType",
+      refPath: "bookingType",
     },
-    totalPrice: Number,
-    count: Number,
+    totalPrice: { type: Number, required: true },
+    count: { type: Number, required: true },
   },
   { timestamps: true }
 );
+
+bookingSchema.index({ touristID: 1 });
 
 export default mongoose.model("Booking", bookingSchema);
