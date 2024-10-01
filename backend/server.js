@@ -4,8 +4,9 @@ import { connect } from "mongoose";
 import touristRouter from "./routes/tourist.router.js";
 import usernameRouter from "./routes/username.router.js";
 import adminRouter from "./routes/admin.router.js";
-import complaintRouter from "./routes/complaint.router.js";
 import emailRouter from "./routes/email.router.js";
+import governorRouter from "./routes/governor.router.js";
+import complaintRouter from "./routes/complaint.router.js";
 
 dotenv.config();
 const app = express();
@@ -25,5 +26,6 @@ app.use(express.json());
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);
 app.use("/api/admin", adminRouter);
-app.use("/api/complaint", complaintRouter);
 app.use("/api/email", emailRouter);
+app.use("/api/governor", governorRouter);
+app.use("/api/complaint", complaintRouter);
