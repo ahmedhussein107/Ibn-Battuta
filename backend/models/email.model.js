@@ -9,3 +9,4 @@ const emailSchema = new mongoose.Schema({
 });
 
 export default mongoose.model("Email", emailSchema);
+  

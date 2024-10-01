@@ -1,8 +1,10 @@
 import { mongoose } from "mongoose";
 
-const activitySchema = new mongoose.Schema(
+const Schema = mongoose.Schema;
+
+const activitySchema = new Schema(
   {
-    advertiserID: { type: mongoose.Schema.Types.ObjectId, ref: "Advertiser" },
+    advertiserID: { type: Schema.Types.ObjectId, ref: "Advertiser" },
     location: String,
     date: Date,
     duration: Number, // for change

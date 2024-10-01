@@ -12,6 +12,9 @@ import Governor from "../models/governor.model.js";
 import Complaint from "../models/complaint.model.js";
 import Advertiser from "../models/advertiser.model.js";
 import Admin from "../models/admin.model.js";
+import Username from "../models/username.model.js";
+import Email from "../models/email.model.js";
+import Notification from "../models/notification.model.js";
 
 const touristRouter = express.Router();
 
@@ -278,6 +281,26 @@ touristRouter.get("/allActivities", async (req, res) => {
   try {
     const tourguides = await Activity.find();
     res.json(tourguides);
+  } catch (e) {
+    console.log(e.message);
+  }
+});
+
+touristRouter.post("/createUsername", async (req, res) => {
+  try {
+    console.log(req.body);
+    const username = await Username.create(req.body);
+    res.json(username);
+  } catch (e) {
+    console.log(e.message);
+  }
+});
+
+touristRouter.post("/createEmail", async (req, res) => {
+  try {
+    console.log(req.body);
+    const email = await Email.create(req.body);
+    res.json(email);
   } catch (e) {
     console.log(e.message);
   }
