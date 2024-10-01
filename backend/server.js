@@ -4,6 +4,8 @@ import { connect } from "mongoose";
 import touristRouter from "./routes/tourist.router.js";
 import usernameRouter from "./routes/username.router.js";
 import emailRouter from "./routes/email.router.js";
+import productRouter from "./routes/product.router.js";
+import adminRouter from "./routes/admin.router.js";
 
 dotenv.config();
 const app = express();
@@ -23,3 +25,5 @@ app.use(express.json());
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);
 app.use("/api/email", emailRouter);
+app.use("/api/product", productRouter);
+app.use("/api/admin", adminRouter);
