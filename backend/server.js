@@ -8,7 +8,7 @@ import activityRouter from "./routes/activity.router.js";
 import emailRouter from "./routes/email.router.js";
 import governorRouter from "./routes/governor.router.js";
 import complaintRouter from "./routes/complaint.router.js";
-
+import advertiserRouter from "./routes/advertiser.router.js";
 dotenv.config();
 const app = express();
 
@@ -31,3 +31,4 @@ app.use("/api/activity", activityRouter);
 app.use("/api/email", emailRouter);
 app.use("/api/governor", governorRouter);
 app.use("/api/complaint", complaintRouter);
+app.use("/api/advertiser", advertiserRouter);
