@@ -8,8 +8,8 @@ const complaintSchema = new mongoose.Schema(
       required: true,
     },
     title: String,
-    body: String,
-    status: { type: String, enum: ["resolved", "pending"] },
+    body: { type: String, required: true },
+    status: { type: String, enum: ["resolved", "pending"], default: "pending" },
     reply: String,
   },
   { timestamps: true }
