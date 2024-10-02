@@ -8,6 +8,8 @@ import productRouter from "./routes/product.router.js";
 import adminRouter from "./routes/admin.router.js";
 import orderRouter from "./routes/order.router.js";
 import promoCodeRouter from "./routes/promocode.router.js";
+import notificationRouter from "./routes/notification.router.js";
+import itineraryRouter from "./routes/itinerary.router.js";
 
 dotenv.config();
 const app = express();
@@ -31,3 +33,7 @@ app.use("/api/product", productRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/promocode", promoCodeRouter);
+
+
+app.use("/api/notifications", notificationRouter);
+app.use("/api/itinerary", itineraryRouter);
