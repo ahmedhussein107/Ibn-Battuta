@@ -6,6 +6,10 @@ const usernameSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  userType: {
+    type: String,
+    enum: ["tourist", "tourguide", "seller", "governor", "advertiser"],
+  },
 });
 
 export default mongoose.model("Username", usernameSchema);

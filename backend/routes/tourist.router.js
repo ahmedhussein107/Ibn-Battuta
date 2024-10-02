@@ -28,6 +28,20 @@ touristRouter.post("/createTourist", async (req, res) => {
   }
 });
 
+touristRouter.patch("/updateTourist", async (req, res) => {
+  try {
+    console.log(req.body);
+    const tourist = await Tourist.findByIdAndUpdate(
+      { _id: req.body._id },
+      { $set: { picture: "ll" } },
+      { new: true }
+    );
+    res.json(tourist);
+  } catch (e) {
+    console.log(e.message);
+  }
+});
+
 touristRouter.get("/allTourists", async (req, res) => {
   try {
     const tourists = await Tourist.find();
