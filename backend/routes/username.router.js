@@ -1,28 +1,45 @@
 import express from "express";
 import Username from "../models/username.model.js";
 
-const router = express.Router();
+const usernameRouter = express.Router();
 
-router.post("/createUsername", async (req, res) => {
+usernameRouter.post("/createUsername", async (req, res) => {
   try {
+    console.log(req.body);
     const username = await Username.create(req.body);
-    res.status(201).json(username);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.json(username);
+  } catch (e) {
+    res.status(400).json({ e: e.message });
   }
 });
 
-router.get("/getUsername", async (req, res) => {
+usernameRouter.get("/allUsernames", async (req, res) => {
   try {
-    const username = await Username.find({});
-    if (username) {
-      res.json(username);
-    } else {
-      res.status(404).json({ message: "Username not found" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const usernames = await Username.find();
+    res.json(usernames);
+  } catch (e) {
+    res.status(400).json({ e: e.message });
   }
 });
 
-export default router;
+usernameRouter.put("/updateUsername", async (req, res) => {
+  const { username } = req.body;
+  try {
+    const usernames = await Username.updateOne({}, { username });
+    res.json(usernames);
+  } catch (e) {
+    res.status(400).json({ e: e.message });
+  }
+});
+
+usernameRouter.delete("/deleteUsername", async (req, res) => {
+  const { username } = req.body;
+  try {
+    const usernames = await Username.deleteOne({ username });
+    res.json(usernames);
+  } catch (e) {
+    res.status(400).json({ e: e.message });
+  }
+});
+
+export default usernameRouter;

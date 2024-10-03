@@ -24,7 +24,7 @@ touristRouter.post("/createTourist", async (req, res) => {
     const tourist = await Tourist.create(req.body);
     res.json(tourist);
   } catch (e) {
-    console.log(e.message);
+    res.status(400).json({e: e.message});
   }
 });
 
@@ -50,6 +50,16 @@ touristRouter.get("/allTourists", async (req, res) => {
     console.log(e.message);
   }
 });
+
+touristRouter.delete("/deleteTourists", async (req, res) => {
+  const {username} = req.body
+  try {
+      const tourists = await Tourist.deleteMany({});
+      res.json(tourists);
+  } catch (e) {
+      res.status(400).json({e: e.message});
+  }
+  });
 
 touristRouter.post("/createTourGuide", async (req, res) => {
   try {

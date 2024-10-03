@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 
 const itinerarySchema = new mongoose.Schema(
   {
-    tourguideID: { type: mongoose.Schema.Types.ObjectId, ref: "TourGuide" },
     existingActivities: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Activity" },
     ],
@@ -19,11 +18,29 @@ const itinerarySchema = new mongoose.Schema(
       },
     ],
     language: String,
-    price: Number,
-    availableDatesAndTimes: [Date],
     accessibility: [String],
-    pickup: String, // Location link
-    dropOff: String,
+    tourguideID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TourGuide",
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    availableDatesAndTimes: {
+      type: [Date],
+      required: true,
+    },
+    pickup: {
+      type: String,
+      required: true,
+    }, // Location link
+    dropOff: {
+      type: String,
+      required: true,
+    },
+    tags: [{ type: String, ref: "Tag" }], // not ObjectID?
     isActivated: { type: Boolean, default: true },
     isFlagged: { type: Boolean, default: false },
     ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
@@ -34,7 +51,5 @@ const itinerarySchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-// add tags and category??
 
 export default mongoose.model("Itinerary", itinerarySchema);

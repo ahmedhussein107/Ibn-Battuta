@@ -3,32 +3,43 @@ import Email from "../models/email.model.js";
 
 const emailRouter = express.Router();
 
-emailRouter.post("/sendEmail", async (req, res) => {
-    try {
-        const newEmail = await Email.create(req.body);
-        res.json(newEmail);
-        res.status(201).json({ message: "Email sent successfully" });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+emailRouter.post("/createEmail", async (req, res) => {
+  try {
+    console.log(req.body);
+    const email = await Email.create(req.body);
+    res.json(email);
+  } catch (e) {
+    res.status(400).json({ e: e.message });
+  }
 });
 
-emailRouter.get("/getEmail/:id", async (req, res) => {
-    try {
-        const emails = await Email.findById(req.params.id);
-        res.json(emails);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+emailRouter.get("/allEmails", async (req, res) => {
+  try {
+    const emails = await Email.find();
+    res.json(emails);
+  } catch (e) {
+    res.status(400).json({ e: e.message });
+  }
 });
 
-emailRouter.get("/getEmails", async (req, res) => {
-    try {
-        const emails = await Email.find();
-        res.json(emails);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+emailRouter.put("/updateEmail", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const emails = await Email.updateOne({}, { email });
+    res.json(emails);
+  } catch (e) {
+    res.status(400).json({ e: e.message });
+  }
+});
+
+emailRouter.delete("/deleteEmail", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const emails = await Email.deleteOne({ email });
+    res.json(emails);
+  } catch (e) {
+    res.status(400).json({ e: e.message });
+  }
 });
 
 export default emailRouter;
