@@ -1,9 +1,23 @@
 import mongoose from "mongoose";
 
+// total price is price of existing activities + landmark ticketPrices
+
 const itinerarySchema = new mongoose.Schema(
   {
     tourguideID: { type: mongoose.Schema.Types.ObjectId, ref: "TourGuide" },
-    activities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity" }],
+    existingActivities: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Activity" },
+    ],
+    createdActivities: [
+      {
+        location: String, // if new
+        title: String,
+        description: String,
+
+        landmark: { type: mongoose.Schema.Types.ObjectId, ref: "Landmark" },
+        duration: { type: Number, required: true },
+      },
+    ],
     language: String,
     price: Number,
     availableDatesAndTimes: [Date],

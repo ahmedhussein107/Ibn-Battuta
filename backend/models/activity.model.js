@@ -17,10 +17,11 @@ const activitySchema = new Schema(
       required: true,
     },
     duration: Number, // for change
-    priceRange: [Number], // for change
+    priceRange: Number, // for change
     category: { type: String, ref: "Category" },
     tags: [{ type: String, ref: "Tag" }],
     ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+    landmark: [{ type: Schema.Types.ObjectId, ref: "Landmark" }],
     toBeNotifiedTourists: [{ type: Schema.Types.ObjectId, ref: "Tourist" }], // for change
     isOpenForBooking: { type: Boolean, default: true },
     isFlagged: { type: Boolean, default: false },
