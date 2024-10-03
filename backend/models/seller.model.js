@@ -8,6 +8,7 @@ const sellerSchema = new mongoose.Schema(
       required: true,
     },
     password: { type: String, required: true },
+    name: { type: String, required: true },
     email: {
       type: String,
       ref: "Email",
@@ -15,7 +16,7 @@ const sellerSchema = new mongoose.Schema(
     },
     isAccepted: { type: Boolean, default: false },
     notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
-    document: String,
+    document: [String],
     name: String,
     description: String,
     picture: String,

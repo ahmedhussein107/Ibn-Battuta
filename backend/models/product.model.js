@@ -17,6 +17,6 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// TODO create an index on the ownerID
+productSchema.index({ ownerID: 1 });
 
 export default mongoose.model("Product", productSchema);

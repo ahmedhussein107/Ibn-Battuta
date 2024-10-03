@@ -2,7 +2,11 @@ import mongoose from "mongoose";
 
 const bookingSchema = mongoose.Schema(
   {
-    touristID: { type: mongoose.Schema.Types.ObjectId, ref: "Tourist" },
+    touristID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tourist",
+      required: true,
+    },
     bookingType: {
       type: String,
       enum: ["Itinerary", "Activity"],

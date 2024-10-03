@@ -10,7 +10,7 @@ const complaintSchema = new mongoose.Schema(
     title: String,
     body: { type: String, required: true },
     status: { type: String, enum: ["resolved", "pending"], default: "pending" },
-    reply: String,
+    reply: { type: mongoose.Schema.Types.ObjectId, ref: "Comment" },
   },
   { timestamps: true }
 );

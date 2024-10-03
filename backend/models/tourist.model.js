@@ -6,9 +6,10 @@ const touristSchema = new mongoose.Schema(
       type: String,
       ref: "Username",
       required: true,
-      unique: true,
+      unique: true, // auto-created index
     },
     password: { type: String, required: true },
+    name: { type: String, required: true },
     email: {
       type: String,
       ref: "Email",

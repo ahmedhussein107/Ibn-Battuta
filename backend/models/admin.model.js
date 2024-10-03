@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { mongoose, Schema } from "mongoose";
 
-const adminSchema = new mongoose.Schema(
+const adminSchema = new Schema(
   {
     username: {
       type: String,
@@ -8,12 +8,13 @@ const adminSchema = new mongoose.Schema(
       required: true,
     },
     password: { type: String, required: true },
+    name: { type: String, required: true },
     email: {
       type: String,
       ref: "Email",
     },
-    picture: String, // Optional: URL or path to the picture
-    notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
+    picture: String,
+    notifications: [{ type: Schema.ObjectId, ref: "Notifiction" }],
   },
   { timestamps: true }
 );

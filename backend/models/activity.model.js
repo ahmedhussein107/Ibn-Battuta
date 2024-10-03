@@ -11,23 +11,28 @@ const activitySchema = new Schema(
       type: String,
       required: true,
     },
-    date: {
+    startDate: {
       type: Date,
       required: true,
     },
-    duration: Number, // for change
-    priceRange: Number, // for change
+    endDate: {
+      type: Date,
+      required: true,
+    },
+    price: Number,
     category: { type: String, ref: "Category" },
     tags: [{ type: String, ref: "Tag" }],
     ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
-    landmark: [{ type: Schema.Types.ObjectId, ref: "Landmark" }],
-    toBeNotifiedTourists: [{ type: Schema.Types.ObjectId, ref: "Tourist" }], // for change
+    toBeNotifiedTourists: [{ type: Schema.Types.ObjectId, ref: "Tourist" }],
     isOpenForBooking: { type: Boolean, default: true },
     isFlagged: { type: Boolean, default: false },
-    sumOfRatings: Number,
-    freeSpots: Number,
+    sumOfRatings: { type: Number, default: 0 },
+    freeSpots: { type: Number, required: true },
+    specialDiscount: Number,
   },
   { timestamps: true }
 );
+
+activitySchema.index({ advertiserID: 1 });
 
 export default mongoose.model("Activity", activitySchema);

@@ -21,11 +21,11 @@ const landmarkSchema = new mongoose.Schema(
             "Sunday",
           ],
         },
-        open: { type: String, default: "09:00" }, // e.g., "09:00"
-        close: { type: String, default: "21:00" }, // e.g., "18:00"
+        open: Date,
+        close: Date, // hours and minutes only
       },
     ],
-    tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
+    tags: [{ type: String, ref: "Tag" }],
   },
   { timestamps: true }
 );

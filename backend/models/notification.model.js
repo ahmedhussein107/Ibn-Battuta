@@ -7,7 +7,7 @@ const notificationSchema = new mongoose.Schema(
     isRead: { type: Boolean, default: false },
     relatedType: {
       type: String,
-      enum: ["Complaint", "Activity", "Event", "Product"],
+      enum: ["Complaint", "Activity", "Itinerary", "Product"],
       required: true,
     },
     relatedId: { type: mongoose.Schema.Types.ObjectId, refPath: "relatedType" },
@@ -17,9 +17,8 @@ const notificationSchema = new mongoose.Schema(
   }
 );
 
-
 // Middleware to validate the referenced collections
-notificationSchema.pre('save', async function (next) {
+notificationSchema.pre("save", async function (next) {
   try {
     const relatedType = this.relatedType;
     const relatedId = this.relatedId;
@@ -49,7 +48,9 @@ notificationSchema.pre('save', async function (next) {
     }
 
     if (!exists) {
-      return next(new Error(`${relatedType} with ID ${relatedId} does not exist.`));
+      return next(
+        new Error(`${relatedType} with ID ${relatedId} does not exist.`)
+      );
     }
 
     next();
@@ -59,7 +60,7 @@ notificationSchema.pre('save', async function (next) {
 });
 
 // Middleware for updates to validate referenced collections
-const validateReferencesMiddleware = async function (next)  {
+const validateReferencesMiddleware = async function (next) {
   try {
     const update = this.getUpdate();
     const query = this.getQuery();
@@ -69,11 +70,15 @@ const validateReferencesMiddleware = async function (next)  {
     const updatedRelatedId = update.relatedId;
 
     // Get the current document state to identify any changes
-    const currentDoc = await this.model.findOne(query).select('relatedType relatedId');
+    const currentDoc = await this.model
+      .findOne(query)
+      .select("relatedType relatedId");
 
     // Determine the actual relatedType and relatedId to validate
-    const relatedType = updatedRelatedType || (currentDoc ? currentDoc.relatedType : null);
-    const relatedId = updatedRelatedId || (currentDoc ? currentDoc.relatedId : null);
+    const relatedType =
+      updatedRelatedType || (currentDoc ? currentDoc.relatedType : null);
+    const relatedId =
+      updatedRelatedId || (currentDoc ? currentDoc.relatedId : null);
 
     // Check if we have a valid relatedType and relatedId to validate
     if (!relatedType || !relatedId) {
@@ -101,7 +106,9 @@ const validateReferencesMiddleware = async function (next)  {
 
     // If the document does not exist, throw an error
     if (!exists) {
-      return next(new Error(`${relatedType} with ID ${relatedId} does not exist.`));
+      return next(
+        new Error(`${relatedType} with ID ${relatedId} does not exist.`)
+      );
     }
 
     // Proceed with the update
@@ -111,12 +118,9 @@ const validateReferencesMiddleware = async function (next)  {
   }
 };
 
-
 notificationSchema.pre("findOneAndUpdate", validateReferencesMiddleware);
 notificationSchema.pre("updateOne", validateReferencesMiddleware);
 notificationSchema.pre("updateMany", validateReferencesMiddleware);
 notificationSchema.pre("findByIdAndUpdate", validateReferencesMiddleware);
-
-
 
 export default mongoose.model("Notification", notificationSchema);
