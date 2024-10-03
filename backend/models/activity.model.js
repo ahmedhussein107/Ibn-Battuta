@@ -1,7 +1,7 @@
 import { mongoose } from "mongoose";
-const { Schema } = mongoose;
+const Schema = mongoose.Schema;
 
-const activitySchema = new mongoose.Schema(
+const activitySchema = new Schema(
   {
     advertiserID: {
       type: mongoose.Schema.Types.ObjectId,
