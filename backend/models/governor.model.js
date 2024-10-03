@@ -5,11 +5,11 @@ import usernameModel from "./username.model.js";
 const governorSchema = new mongoose.Schema(
   {
     username: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Username",
       required: true,
       validate: {
-        validator: async function(value) {
+        validator: async function (value) {
           // Check if the username exists in the Username collection
           const userExists = await usernameModel.countDocuments({ _id: value });
           if (!userExists) {
@@ -17,10 +17,12 @@ const governorSchema = new mongoose.Schema(
           }
 
           // Check for duplicates in the Governor collection
-          const duplicateCount = await this.constructor.countDocuments({ username: value });
+          const duplicateCount = await this.constructor.countDocuments({
+            username: value,
+          });
           return duplicateCount === 0; // Return true if no duplicates exist
         },
-      }
+      },
     },
     password: { type: String, required: true },
     email: {
@@ -28,7 +30,7 @@ const governorSchema = new mongoose.Schema(
       ref: "Email",
       required: true,
       validate: {
-        validator: async function(value) {
+        validator: async function (value) {
           // Check if the email exists in the Email collection
           const emailExists = await emailModel.countDocuments({ _id: value });
           if (!emailExists) {
@@ -36,10 +38,12 @@ const governorSchema = new mongoose.Schema(
           }
 
           // Check for duplicates in the Governor collection
-          const duplicateCount = await this.constructor.countDocuments({ email: value });
+          const duplicateCount = await this.constructor.countDocuments({
+            email: value,
+          });
           return duplicateCount === 0; // Return true if no duplicates exist
         },
-      }
+      },
     },
   },
   { timestamps: true }

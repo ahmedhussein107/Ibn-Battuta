@@ -3,12 +3,23 @@ const { Schema } = mongoose;
 
 const activitySchema = new mongoose.Schema(
   {
-    advertiserID: { type: mongoose.Schema.Types.ObjectId, ref: "Advertiser" },
-    location: String,
-    date: Date,
+    advertiserID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Advertiser",
+      required: true,
+    },
+    location: {
+      type: String,
+      required: true,
+    },
+    date: {
+      type: Date,
+      required: true,
+    },
     duration: Number, // for change
     priceRange: [Number], // for change
-    tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],
+    category: { type: String, ref: "Category" },
+    tags: [{ type: String, ref: "Tag" }],
     ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
     toBeNotifiedTourists: [{ type: Schema.Types.ObjectId, ref: "Tourist" }], // for change
     isOpenForBooking: { type: Boolean, default: true },

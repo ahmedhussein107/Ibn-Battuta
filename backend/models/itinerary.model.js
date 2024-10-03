@@ -13,9 +13,14 @@ const itinerarySchema = new mongoose.Schema(
     isActivated: { type: Boolean, default: true },
     isFlagged: { type: Boolean, default: false },
     ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
-    sumOfRatings: Number,
+    sumOfRatings: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
+
+// add tags and category??
 
 export default mongoose.model("Itinerary", itinerarySchema);

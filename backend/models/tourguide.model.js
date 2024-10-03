@@ -21,7 +21,7 @@ const tourGuideSchema = new mongoose.Schema(
     picture: String,
     notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
     ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
-    sumOfRatings: Number,
+    sumOfRatings: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

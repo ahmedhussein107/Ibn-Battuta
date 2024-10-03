@@ -3,13 +3,13 @@ import { mongoose } from "mongoose";
 const touristSchema = new mongoose.Schema(
   {
     username: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Username",
       required: true,
     },
     password: { type: String, required: true },
     email: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Email",
       required: true,
     },
@@ -22,7 +22,7 @@ const touristSchema = new mongoose.Schema(
     points: { type: Number, default: 0 },
     cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
-    preferences: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
+    preferences: [{ type: String, ref: "Tag" }],
     savedActivity: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity" }],
     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     deliveryAddresses: [

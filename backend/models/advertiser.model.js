@@ -3,13 +3,13 @@ import { mongoose } from "mongoose";
 const advertiserSchema = new mongoose.Schema(
   {
     username: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Username",
       required: true,
     },
     password: { type: String, required: true },
     email: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Email",
       required: true,
     },

@@ -3,13 +3,13 @@ import mongoose from "mongoose";
 const adminSchema = new mongoose.Schema(
   {
     username: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Username",
       required: true,
     },
     password: { type: String, required: true },
     email: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Email",
     },
     picture: String, // Optional: URL or path to the picture
