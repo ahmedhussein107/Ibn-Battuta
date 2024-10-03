@@ -24,12 +24,10 @@ const activitySchema = new Schema(
     toBeNotifiedTourists: [{ type: Schema.Types.ObjectId, ref: "Tourist" }], // for change
     isOpenForBooking: { type: Boolean, default: true },
     isFlagged: { type: Boolean, default: false },
-    sumOfRatings: { type: Number, default: 0 },
-    freeSpots: { type: Number, required: true },
+    sumOfRatings: Number,
+    freeSpots: Number,
   },
   { timestamps: true }
 );
-
-activitySchema.index({ advertiserID: 1 });
 
 export default mongoose.model("Activity", activitySchema);
