@@ -1,20 +1,14 @@
 import express from "express";
-import activity from "../models/activity.model.js";
+import Activity from "../models/activity.model.js";
+import { getActivities } from "../controllers/activity.controller.js";
 
 const activityRouter = express.Router();
 
-activityRouter.get("/", async (req, res) => {
-  try {
-    const activities = await activity.find();
-    res.status(200).json(activities);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+activityRouter.get("/", getActivities);
 
 activityRouter.post("/", async (req, res) => {
   const activityData = req.body;
-  const newActivity = new activity(activityData);
+  const newActivity = new Activity(activityData);
   try {
     await newActivity.save();
     res.status(201).json(newActivity);
