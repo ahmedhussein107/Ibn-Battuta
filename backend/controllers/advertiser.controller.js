@@ -1,6 +1,7 @@
 import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
 import Advertiser from "../models/advertiser.model.js";
+import Notification from "../models/notification.model.js";
 
 export const createAdvertiser = async (req, res) => {
   console.log(req.body);
@@ -83,6 +84,15 @@ export const deleteAdvertiser = async (req, res) => {
       res.status(200).json({ message: "Advertiser deleted successfully" });
     } else {
       res.status(404).json({ e: "Advertiser not found" });
+    }
+
+    // If there are notifications, delete each one
+    if (advertiser.notifications && advertiser.notifications.length > 0) {
+      await Promise.all(
+        advertiser.notifications.map(async (notificationId) => {
+          await Notification.findByIdAndDelete(notificationId);
+        })
+      );
     }
   } catch (e) {
     console.log(e.message);
