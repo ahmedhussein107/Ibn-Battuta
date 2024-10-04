@@ -76,7 +76,6 @@ export const deleteItinerary = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 export const filterItineraries = async (req, res) => {
   const { budget, date, preferences, language } = req.body;
 
@@ -90,9 +89,17 @@ export const filterItineraries = async (req, res) => {
 
   // Add date filter if provided
   if (date) {
-    query.date = { $gte: date };
-  }
+    // Ensure date is a valid Date string
+    const providedDate = new Date(date);
 
+    // Check if the provided date is valid
+    if (!isNaN(providedDate.getTime())) {
+      // Match itineraries where any available date is greater than or equal to the provided date
+      query.availableDatesAndTimes = { $gte: providedDate }; // Use $gte for filtering
+    } else {
+      return res.status(400).json({ message: "Invalid date provided." });
+    }
+  }
   // Add preferences filter if provided
   if (preferences) {
     query.preferences = { $in: preferences };
@@ -110,9 +117,12 @@ export const filterItineraries = async (req, res) => {
     // Return the filtered itineraries
     res.status(200).json(itineraries);
   } catch (err) {
-    // Handle any errors that occur during the query
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching itineraries." });
+    // Log error details
+    console.error("Error fetching itineraries:", err);
+    // Return error response
+    res.status(500).json({
+      error: "An error occurred while fetching itineraries.",
+      details: err.message,
+    });
   }
 };
