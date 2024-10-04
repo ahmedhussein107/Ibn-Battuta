@@ -8,7 +8,7 @@ import {
 
 const touristRouter = express.Router();
 
-touristRouter.get("/allTourist", getTourist);
+touristRouter.get("/allTourists", getTourist);
 
 touristRouter.post("/createTourist", createTourist);
 
