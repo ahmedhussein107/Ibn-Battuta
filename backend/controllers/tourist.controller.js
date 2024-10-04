@@ -7,17 +7,17 @@ export const getTourist = async (req, res) => {
     const tourguides = await Tourist.find();
     res.json(tourguides);
   } catch (e) {
-    console.log(e.message);
+    //console.log(e.message);
   }
 };
 
 export const createTourist = async (req, res) => {
+  //console.log(req.body);
+  const inputUsername = req.body.username;
+  const inputEmail = req.body.email;
+  const username = await Username.findById(inputUsername);
+  const email = await Email.findById(inputEmail);
   try {
-    console.log(req.body);
-    const inputUsername = req.body.username;
-    const inputEmail = req.body.email;
-    const username = await Username.findById(inputUsername);
-    const email = await Email.findById(inputEmail);
     if (!username && !email) {
       const newUsername = await Username.create({
         _id: inputUsername,
@@ -36,7 +36,7 @@ export const createTourist = async (req, res) => {
       }
     }
   } catch (e) {
-    console.log(e.message);
+    //console.log(e.message);
     res.status(400).json({ e: e.message });
   }
 };
@@ -55,7 +55,13 @@ export const updateTourist = async (req, res) => {
 export const deleteTourist = async (req, res) => {
   try {
     const tourist = await Tourist.findByIdAndDelete(req.params.id);
-    res.json(tourist);
+    if (tourist) {
+      await Username.findByIdAndDelete(tourist.username);
+      await Email.findByIdAndDelete(tourist.email);
+      res.json(tourist);
+    } else {
+      res.status(404).json({ e: "Tourist not found" });
+    }
   } catch (e) {
     res.status(400).json({ e: e.message });
   }

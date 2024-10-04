@@ -1,49 +1,22 @@
 import express from "express";
-import TourGuide from "../models/tourguide.model.js";
+import {
+  createTourGuide,
+  getAllTourGuides,
+  getTourGuideById,
+  updateTourGuide,
+  deleteTourGuide,
+} from "../controllers/tourguide.controller.js";
 
 const tourGuideRouter = express.Router();
 
-tourGuideRouter.post("/createTourGuide", async (req, res) => {
-  try {
-    console.log(req.body);
-    const tourGuide = await TourGuide.create(req.body);
-    res.json(tourGuide);
-  } catch (e) {
-    res.status(400).json({ e: e.message });
-  }
-});
+tourGuideRouter.post("/createTourGuide", createTourGuide);
 
-tourGuideRouter.get("/allTourGuides", async (req, res) => {
-  try {
-    const tourguides = await TourGuide.find();
-    res.json(tourguides);
-  } catch (e) {
-    console.log(e.message);
-  }
-});
+tourGuideRouter.get("/allTourGuides", getAllTourGuides);
 
-tourGuideRouter.patch("/updateTourGuide/:id", async (req, res) => {
-  try {
-    const tourGuide = await TourGuide.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-      }
-    );
-    res.json(tourGuide);
-  } catch (e) {
-    res.status(400).json({ e: e.message });
-  }
-});
+tourGuideRouter.get("/tourGuide/:id", getTourGuideById);
 
-tourGuideRouter.delete("/deleteTourGuide/:id", async (req, res) => {
-  try {
-    const tourGuide = await TourGuide.findByIdAndDelete(req.params.id);
-    res.json(tourGuide);
-  } catch (e) {
-    res.status(400).json({ e: e.message });
-  }
-});
+tourGuideRouter.patch("/updateTourGuide/:id", updateTourGuide);
+
+tourGuideRouter.delete("/deleteTourGuide/:id", deleteTourGuide);
 
 export default tourGuideRouter;
