@@ -1,6 +1,5 @@
 import Tourist from "../models/tourist.model.js";
-import usernameRouter from "../routes/username.router.js";
-import axios from "axios";
+import { createUsername } from "../controllers/username.controller.js";
 
 export const getTourist = async (req, res) => {
   try {
@@ -15,11 +14,10 @@ export const createTourist = async (req, res) => {
   try {
     console.log(req.body);
     const { username } = req.body;
-    const usernameResponse = await axios.post(
-      "http://localhost:5000/api/username/createUsername",
-      { _id: username, userType: "Tourist" }
-    );
-    if (usernameResponse.status != 201) {
+    const newReq = { ...req.body, _id: username, userType: "Tourist" };
+    const newRes = { ...res };
+    await createUsername(newReq, newRes);
+    if (newRes.status !== 201) {
       res.status(400).json(`username: ${username} already exists`);
       return;
     }
