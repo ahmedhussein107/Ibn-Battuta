@@ -7,7 +7,7 @@ usernameRouter.post("/createUsername", async (req, res) => {
   try {
     console.log(req.body);
     const username = await Username.create(req.body);
-    res.json(username);
+    res.status(201).json(username);
   } catch (e) {
     res.status(400).json({ e: e.message });
   }
