@@ -14,7 +14,7 @@ const tourGuideSchema = new mongoose.Schema(
       ref: "Email",
       required: true,
     },
-    isAccepted: { type: Boolean, default: false },
+    isAccepted: { type: Boolean, default: true },
     document: [String],
     mobileNumber: String,
     yearsOfExperience: Number,

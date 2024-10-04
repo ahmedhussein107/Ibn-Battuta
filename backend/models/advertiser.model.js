@@ -14,7 +14,7 @@ const advertiserSchema = new mongoose.Schema(
       required: true,
     },
     name: { type: String, required: true },
-    isAccepted: { type: Boolean, default: false },
+    isAccepted: { type: Boolean, default: true },
     document: [String],
     website: String,
     hotline: String,

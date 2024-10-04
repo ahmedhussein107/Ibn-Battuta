@@ -14,7 +14,7 @@ const sellerSchema = new mongoose.Schema(
       ref: "Email",
       required: true,
     },
-    isAccepted: { type: Boolean, default: false },
+    isAccepted: { type: Boolean, default: true },
     notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
     document: [String],
     name: String,
