@@ -9,7 +9,7 @@ const customActivitySchema = new mongoose.Schema(
     },
     title: String,
     description: String,
-    location: String,
+    location: String, // search for it in the lamdmarks
   },
   { timestamps: true }
 );

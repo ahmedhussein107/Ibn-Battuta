@@ -30,4 +30,6 @@ const landmarkSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+landmarkSchema.index({ location: 1 });
+
 export default mongoose.model("Landmark", landmarkSchema);

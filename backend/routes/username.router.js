@@ -1,45 +1,19 @@
 import express from "express";
-import Username from "../models/username.model.js";
+import {
+  createUsername,
+  getUsernames,
+  updateUsername,
+  deleteUsername,
+} from "../controllers/username.controller.js";
 
 const usernameRouter = express.Router();
 
-usernameRouter.post("/createUsername", async (req, res) => {
-  try {
-    console.log(req.body);
-    const username = await Username.create(req.body);
-    res.json(username);
-  } catch (e) {
-    res.status(400).json({ e: e.message });
-  }
-});
+usernameRouter.post("/createUsername", createUsername);
 
-usernameRouter.get("/allUsernames", async (req, res) => {
-  try {
-    const usernames = await Username.find();
-    res.json(usernames);
-  } catch (e) {
-    res.status(400).json({ e: e.message });
-  }
-});
+usernameRouter.get("/allUsernames", getUsernames);
 
-usernameRouter.put("/updateUsername", async (req, res) => {
-  const { username } = req.body;
-  try {
-    const usernames = await Username.updateOne({}, { username });
-    res.json(usernames);
-  } catch (e) {
-    res.status(400).json({ e: e.message });
-  }
-});
+usernameRouter.put("/updateUsername", updateUsername);
 
-usernameRouter.delete("/deleteUsername", async (req, res) => {
-  const { username } = req.body;
-  try {
-    const usernames = await Username.deleteOne({ username });
-    res.json(usernames);
-  } catch (e) {
-    res.status(400).json({ e: e.message });
-  }
-});
+usernameRouter.delete("/deleteUsername", deleteUsername);
 
 export default usernameRouter;
