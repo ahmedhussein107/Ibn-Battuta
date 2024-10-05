@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 
 const ratingSchema = new mongoose.Schema(
-  {
-    touristID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Tourist",
+    {
+        touristID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Tourist",
+        },
+        rating: Number,
+        comment: String,
     },
-    rating: Number,
-    comment: String,
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 export default mongoose.model("Rating", ratingSchema);

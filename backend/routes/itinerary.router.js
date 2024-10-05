@@ -1,11 +1,11 @@
 import express from "express";
 import {
-  getItineraries,
-  filterItineraries,
-  getItineraryById,
-  createItinerary,
-  updateItinerary,
-  deleteItinerary,
+    getItineraries,
+    filterItineraries,
+    getItineraryById,
+    createItinerary,
+    updateItinerary,
+    deleteItinerary,
 } from "../controllers/itinerary.controller.js";
 
 const itineraryRouter = express.Router();

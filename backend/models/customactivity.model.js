@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 
 const customActivitySchema = new mongoose.Schema(
-  {
-    tourguideID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "TourGuide",
-      required: true,
+    {
+        tourguideID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "TourGuide",
+            required: true,
+        },
+        title: String,
+        description: String,
+        location: String, // search for it in the lamdmarks
     },
-    title: String,
-    description: String,
-    location: String, // search for it in the lamdmarks
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 customActivitySchema.index({ tourguideID: 1 });

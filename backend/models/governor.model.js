@@ -1,20 +1,17 @@
 import mongoose from "mongoose";
 
 const governorSchema = new mongoose.Schema(
-  {
-    username: {
-      type: String,
-      ref: "Username",
-      required: true,
+    {
+        username: {
+            type: String,
+            ref: "Username",
+            required: true,
+        },
+        password: { type: String, required: true },
+        name: { type: String, required: true },
+        email: { type: String, ref: "Email" },
     },
-    password: { type: String, required: true },
-    name: { type: String, required: true },
-    email: {
-      type: String,
-      ref: "Email",
-    },
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 const Governor = mongoose.model("Governor", governorSchema);
