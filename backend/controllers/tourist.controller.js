@@ -68,6 +68,10 @@ export const deleteTourist = async (req, res) => {
           })
         );
       }
+
+      // Delete Entries in TouristActivityNotification related to this tourist
+      await TouristActivityNotification.deletMany({touristId: tourist._id});
+      
       res.status(200).json({ message: "Tourist deleted successfully" });
     } else {
       res.status(404).json({ e: "Tourist not found" });
