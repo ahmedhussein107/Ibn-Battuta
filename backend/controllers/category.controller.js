@@ -20,22 +20,13 @@ export const getCategories = async (req, res) => {
 
 export const updateCategory = async (req, res) => {
   try {
-    const category = req.params.id; // Extract the tag ID from the request params
-
-    // Delete the tag by its ID
+    const category = req.params.id;
     const result = await Category.findByIdAndDelete(category);
-
-    // Check if any document was deleted
     if (result) {
-      // Create a new tag with the updated data
       try {
-        // If the tag ID does not exist in the database, create a new tag
         const updatedCategory = await Category.create(req.body);
-
-        // Return the updated tag
         res.json(updatedCategory);
       } catch (error) {
-        // If the tag ID already exists in the database, update the existing tag
         const updatedCategory = await Category.create({ _id: category });
         res.status(500).json({ message: "Updated category already exists" });
       }
@@ -49,12 +40,8 @@ export const updateCategory = async (req, res) => {
 
 export const deleteCategory = async (req, res) => {
   try {
-    const category = req.params.id; // Extract the tag ID from the request params
-
-    // Delete the tag by its ID
+    const category = req.params.id;
     const result = await Category.findByIdAndDelete(category);
-
-    // Check if any document was deleted
     if (result) {
       res.status(200).json({ message: "Category deleted successfully" });
     } else {
