@@ -13,7 +13,7 @@ export const createProduct = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().populate("ownerID");
+        const products = await Product.find().populate("ownerID").populate("ratings");
         res.json(products);
     } catch (e) {
         res.status(400).json({ e: e.message });
