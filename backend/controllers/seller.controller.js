@@ -1,6 +1,7 @@
 import Seller from "../models/seller.model.js";
 import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
+import Notification from "../models/notification.model.js";
 
 export const createSeller = async (req, res) => {
   //console.log(req.body);
@@ -78,6 +79,15 @@ export const deleteSeller = async (req, res) => {
     if (seller) {
       await Username.findByIdAndDelete(seller.username);
       await Email.findByIdAndDelete(seller.email);
+
+      // If there are notifications, delete each one
+      if (seller.notifications && seller.notifications.length > 0) {
+        await Promise.all(
+          seller.notifications.map(async (notificationId) => {
+            await Notification.findByIdAndDelete(notificationId);
+          })
+        );
+      }
       res.status(200).json({ message: "Seller deleted successfully" });
     } else {
       res.status(404).json({ e: "Seller not found" });

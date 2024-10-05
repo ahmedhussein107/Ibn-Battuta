@@ -1,6 +1,8 @@
 import TourGuide from "../models/tourguide.model.js";
 import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
+import Notification from "../models/notification.model.js";
+import Rating from "../models/rating.model.js";
 
 export const createTourGuide = async (req, res) => {
   //console.log(req.body);
@@ -80,6 +82,24 @@ export const deleteTourGuide = async (req, res) => {
     if (tourGuide) {
       await Username.findByIdAndDelete(tourGuide.username);
       await Email.findByIdAndDelete(tourGuide.email);
+
+      // If there are notifications, delete each one
+      if (tourGuide.notifications && tourGuide.notifications.length > 0) {
+        await Promise.all(
+          tourGuide.notifications.map(async (notificationId) => {
+            await Notification.findByIdAndDelete(notificationId);
+          })
+        );
+      }
+
+      // If there are ratings, delete each one
+      if (tourGuide.ratings && tourGuide.ratings.length > 0) {
+        await Promise.all(
+          tourGuide.ratings.map(async (ratingId) => {
+            await Rating.findByIdAndDelete(ratingId);
+          })
+        );
+      }
       res.status(200).json({ message: "TourGuide deleted successfully" });
     } else {
       res.status(404).json({ e: "TourGuide not found" });
