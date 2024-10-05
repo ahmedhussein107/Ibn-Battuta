@@ -2,18 +2,18 @@ import mongoose from "mongoose";
 import { validateReference, validateReferences } from "./validatingUtils.js";
 
 const complaintSchema = new mongoose.Schema(
-  {
-    touristID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Tourist",
-      required: true,
+    {
+        touristID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Tourist",
+            required: true,
+        },
+        title: String,
+        body: { type: String, required: true },
+        status: { type: String, enum: ["resolved", "pending"], default: "pending" },
+        reply: { type: mongoose.Schema.Types.ObjectId, ref: "Comment" },
     },
-    title: String,
-    body: { type: String, required: true },
-    status: { type: String, enum: ["resolved", "pending"], default: "pending" },
-    reply: { type: mongoose.Schema.Types.ObjectId, ref: "Comment" },
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 complaintSchema.pre("save", async function (next) {

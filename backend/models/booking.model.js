@@ -2,26 +2,26 @@ import mongoose from "mongoose";
 import { validateBookingReferences } from "./validatingUtils.js";
 
 const bookingSchema = mongoose.Schema(
-  {
-    touristID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Tourist",
-      required: true,
+    {
+        touristID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Tourist",
+            required: true,
+        },
+        bookingType: {
+            type: String,
+            enum: ["Itinerary", "Activity"],
+            required: true,
+        },
+        typeId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            refPath: "bookingType",
+        },
+        totalPrice: { type: Number, required: true },
+        count: { type: Number, required: true },
     },
-    bookingType: {
-      type: String,
-      enum: ["Itinerary", "Activity"],
-      required: true,
-    },
-    typeId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      refPath: "bookingType",
-    },
-    totalPrice: { type: Number, required: true },
-    count: { type: Number, required: true },
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 bookingSchema.pre("save", async function (next) {

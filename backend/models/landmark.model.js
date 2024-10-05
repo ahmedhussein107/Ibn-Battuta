@@ -2,82 +2,72 @@ import mongoose from "mongoose";
 import { validateReference, validateReferences } from "./validatingUtils.js";
 
 const landmarkSchema = new mongoose.Schema(
-  {
-    governorID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Governor",
+    {
+        governorID: { type: mongoose.Schema.Types.ObjectId, ref: "Governor" },
+        description: String,
+        pictures: [String],
+        location: String,
+        ticketPrices: { type: Map, of: Number },
+        name: { type: String, required: true },
+        openingHours: [
+            {
+                day: {
+                    type: String,
+                    enum: [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday",
+                    ],
+                },
+                open: Date,
+                close: Date, // hours and minutes only
+            },
+        ],
+        tags: [{ type: String, ref: "Tag" }],
     },
-    description: String,
-    pictures: [String],
-    location: String,
-    ticketPrices: {
-      type: Map,
-      of: Number,
-    },
-    openingHours: [
-      {
-        day: {
-          type: String,
-          enum: [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday",
-          ],
-        },
-        open: Date,
-        close: Date,
-      },
-    ],
-    tags: [
-      {
-        type: String,
-        ref: "Tag",
-      },
-    ],
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 landmarkSchema.pre("save", async function (next) {
-  try {
-    const { governorID, tags } = this;
+    try {
+        const { governorID, tags } = this;
 
-    if (governorID) {
-      await validateReference(governorID, "Governor", next);
+        if (governorID) {
+            await validateReference(governorID, "Governor", next);
+        }
+
+        if (tags && tags.length > 0) {
+            await validateReferences(tags, "Tag", next);
+        }
+
+        next();
+    } catch (error) {
+        next(error);
     }
-
-    if (tags && tags.length > 0) {
-      await validateReferences(tags, "Tag", next);
-    }
-
-    next();
-  } catch (error) {
-    next(error);
-  }
 });
 
 const validateReferencesMiddleware = async function (next) {
-  try {
-    const update = this.getUpdate();
-    const updatedGovernorID = update.governorID || update["$set.governorID"];
-    const updatedTags = update.tags || update["$set.tags"];
+    try {
+        const update = this.getUpdate();
+        const updatedGovernorID = update.governorID || update["$set.governorID"];
+        const updatedTags = update.tags || update["$set.tags"];
 
-    if (updatedGovernorID) {
-      await validateReference(updatedGovernorID, "Governor", next);
+        if (updatedGovernorID) {
+            await validateReference(updatedGovernorID, "Governor", next);
+        }
+
+        if (updatedTags && updatedTags.length > 0) {
+            await validateReferences(updatedTags, "Tag", next);
+        }
+
+        next();
+    } catch (error) {
+        next(error);
     }
-
-    if (updatedTags && updatedTags.length > 0) {
-      await validateReferences(updatedTags, "Tag", next);
-    }
-
-    next();
-  } catch (error) {
-    next(error);
-  }
 };
 
 landmarkSchema.pre("findOneAndUpdate", validateReferencesMiddleware);

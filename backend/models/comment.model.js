@@ -2,24 +2,18 @@ import mongoose from "mongoose";
 import { validateReference, validateReferences } from "./validatingUtils.js";
 
 const commentSchema = new mongoose.Schema(
-  {
-    // I think this is not needed here but rather the complaint should contain the first reply id
-    complaintID: { type: mongoose.Schema.Types.ObjectId, ref: "Complaint" },
-    body: String,
-    authorType: { type: String, enum: ["Tourist", "Admin"], required: true },
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      refPath: "authorType",
-      required: true,
+    {
+        complaintID: { type: mongoose.Schema.Types.ObjectId, ref: "Complaint" },
+        body: String,
+        authorType: { type: String, enum: ["Tourist", "Admin"], required: true },
+        author: {
+            type: mongoose.Schema.Types.ObjectId,
+            refPath: "authorType",
+            required: true,
+        },
+        replies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
     },
-    replies: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-      },
-    ],
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 const validateAuthorTypeAndId = async (authorType, author, next) => {
