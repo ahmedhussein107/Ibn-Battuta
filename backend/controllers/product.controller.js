@@ -49,10 +49,10 @@ export const getProduct = async (req, res) => {
   const { id } = req.params;
   try {
     const productID = id;
-    console.log(productID);
     const product = await Product.findById(productID)
       .populate("ownerID")
       .populate("ratings");
+    console.log(product);
     res.status(200).json(product);
   } catch (e) {
     res.status(400).json({ e: e.message });

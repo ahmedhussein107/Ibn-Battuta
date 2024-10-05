@@ -14,6 +14,7 @@ const _print = function (req, res, next) {
   console.log("body is ", req.body);
   next();
 };
+
 productRouter.post(
   "/createProduct",
   _print,

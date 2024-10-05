@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
 
 import CreateProductPage from "./pages/CreateProductPage";
+import UpdateProductPage from "./pages/UpdateProductPage";
+
 const Home = () => (
   <div>
     <h1>Home Page</h1>
@@ -20,8 +22,6 @@ const About = () => (
 );
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <Router>
       <div>
@@ -42,6 +42,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/create-product" element={<CreateProductPage />} />
+          <Route
+            path="/update-product/:productId"
+            element={<UpdateProductPage />}
+          />
         </Routes>
       </div>
     </Router>
