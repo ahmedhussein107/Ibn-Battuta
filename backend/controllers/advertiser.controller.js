@@ -31,6 +31,8 @@ export const createAdvertiser = async (req, res) => {
     }
   } catch (e) {
     console.log(e.message);
+    await Username.findByIdAndDelete(inputUsername);
+    await Email.findByIdAndDelete(inputEmail);
     res.status(400).json({ e: e.message });
   }
 };
@@ -64,7 +66,9 @@ export const updateAdvertiser = async (req, res) => {
     const advertiser = await Advertiser.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      {
+        new: true,
+      }
     );
     if (advertiser) {
       res.status(200).json(advertiser);
@@ -83,38 +87,38 @@ export const deleteAdvertiser = async (req, res) => {
     if (advertiser) {
       await Username.findByIdAndDelete(advertiser.username);
       await Email.findByIdAndDelete(advertiser.email);
+
+      // If there are notifications, delete each one
+      if (advertiser.notifications && advertiser.notifications.length > 0) {
+        await Promise.all(
+          advertiser.notifications.map(async (notificationId) => {
+            await Notification.findByIdAndDelete(notificationId);
+          })
+        );
+      }
+
+      // Delete all activities associated with the advertiser
+      const activities = await Activity.find({ advertiserID: advertiser._id });
+      if (activities.length > 0) {
+        // Delete each activity and its related ratings
+        await Promise.all(
+          activities.map(async (activity) => {
+            // Delete all ratings associated with this activity
+            if (activity.ratings && activity.ratings.length > 0) {
+              await Promise.all(
+                activity.ratings.map(async (ratingId) => {
+                  await Rating.findByIdAndDelete(ratingId);
+                })
+              );
+            }
+            // Delete the activity itself
+            await Activity.findByIdAndDelete(activity._id);
+          })
+        );
+      }
       res.status(200).json({ message: "Advertiser deleted successfully" });
     } else {
       res.status(404).json({ e: "Advertiser not found" });
-    }
-
-    // If there are notifications, delete each one
-    if (advertiser.notifications && advertiser.notifications.length > 0) {
-      await Promise.all(
-        advertiser.notifications.map(async (notificationId) => {
-          await Notification.findByIdAndDelete(notificationId);
-        })
-      );
-    }
-
-    // Delete all activities associated with the advertiser
-    const activities = await Activity.find({ advertiserID: advertiser._id });
-    if (activities.length > 0) {
-      // Delete each activity and its related ratings
-      await Promise.all(
-        activities.map(async (activity) => {
-          // Delete all ratings associated with this activity
-          if (activity.ratings && activity.ratings.length > 0) {
-            await Promise.all(
-              activity.ratings.map(async (ratingId) => {
-                await Rating.findByIdAndDelete(ratingId);
-              })
-            );
-          }
-          // Delete the activity itself
-          await Activity.findByIdAndDelete(activity._id);
-        })
-      );
     }
   } catch (e) {
     console.log(e.message);

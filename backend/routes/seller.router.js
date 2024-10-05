@@ -1,10 +1,10 @@
 import express from "express";
 import {
-  createSeller,
-  getAllSellers,
-  getSellerById,
-  updateSeller,
-  deleteSeller,
+    createSeller,
+    getAllSellers,
+    getSellerById,
+    updateSeller,
+    deleteSeller,
 } from "../controllers/seller.controller.js";
 
 const sellerRouter = express.Router();

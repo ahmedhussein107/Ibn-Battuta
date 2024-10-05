@@ -1,14 +1,15 @@
 import express from "express";
 import {
-  createUsername,
-  getUsernames,
-  updateUsername,
-  deleteUsername,
+    createUsername,
+    getUsernames,
+    updateUsername,
+    deleteUsername,
 } from "../controllers/username.controller.js";
 
 const usernameRouter = express.Router();
 
 usernameRouter.post("/createUsername", createUsername);
+
 
 usernameRouter.get("/allUsernames", getUsernames);
 

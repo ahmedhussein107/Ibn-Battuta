@@ -37,7 +37,8 @@ export const createTourist = async (req, res) => {
       }
     }
   } catch (e) {
-    //console.log(e.message);
+    await Username.findByIdAndDelete(inputUsername);
+    await Email.findByIdAndDelete(inputEmail);
     res.status(400).json({ e: e.message });
   }
 };
@@ -70,8 +71,8 @@ export const deleteTourist = async (req, res) => {
       }
 
       // Delete Entries in TouristActivityNotification related to this tourist
-      await TouristActivityNotification.deleteMany({touristID: tourist._id});
-      
+      await TouristActivityNotification.deleteMany({ touristID: tourist._id });
+
       res.status(200).json({ message: "Tourist deleted successfully" });
     } else {
       res.status(404).json({ e: "Tourist not found" });
