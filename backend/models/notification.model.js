@@ -55,64 +55,53 @@ notificationSchema.pre("save", async function (next) {
     } catch (error) {
         next(error);
     }
-=======
-    relatedId: {
-      type: mongoose.Schema.Types.ObjectId,
-      refPath: "relatedType",
-      required: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
+});
 
 // a helper function for validation
 const validateRelatedTypeAndId = async (relatedType, relatedId, next) => {
-  try {
-    const validModels = ["Complaint", "Activity", "Itinerary", "Product"];
-    if (!validModels.includes(relatedType)) {
-      return next(new Error(`Invalid relatedType: ${relatedType}`));
+    try {
+        const validModels = ["Complaint", "Activity", "Itinerary", "Product"];
+        if (!validModels.includes(relatedType)) {
+            return next(new Error(`Invalid relatedType: ${relatedType}`));
+        }
+        await validateReference(relatedId, relatedType, next);
+    } catch (err) {
+        return next(err);
     }
-    await validateReference(relatedId, relatedType, next);
-  } catch (err) {
-    return next(err);
-  }
 };
 
 // validation for creation
 notificationSchema.pre("save", async function (next) {
-  try {
-    const { relatedType, relatedId } = this;
+    try {
+        const { relatedType, relatedId } = this;
 
-    if (!relatedType || !relatedId) {
-      return next(new Error("Both relatedType and relatedId are required."));
+        if (!relatedType || !relatedId) {
+            return next(new Error("Both relatedType and relatedId are required."));
+        }
+        await validateRelatedTypeAndId(relatedType, relatedId, next);
+    } catch (error) {
+        next(error);
     }
-    await validateRelatedTypeAndId(relatedType, relatedId, next);
-  } catch (error) {
-    next(error);
-  }
 });
 
 // validation for update
 const validateReferencesMiddleware = async function (next) {
-  try {
-    const update = this.getUpdate();
-    const updatedRelatedType = update.relatedType || update["$set.relatedType"];
-    const updatedRelatedId = update.relatedId || update["$set.relatedId"];
+    try {
+        const update = this.getUpdate();
+        const updatedRelatedType = update.relatedType || update["$set.relatedType"];
+        const updatedRelatedId = update.relatedId || update["$set.relatedId"];
 
-    if (!updatedRelatedType && !updatedRelatedId) {
-      return next();
+        if (!updatedRelatedType && !updatedRelatedId) {
+            return next();
+        }
+
+        const relatedType = updatedRelatedType;
+        const relatedId = updatedRelatedId;
+        if (relatedType && relatedId) await validateRelatedTypeAndId(relatedType, relatedId, next);
+        else next();
+    } catch (error) {
+        next(error);
     }
-
-    const relatedType = updatedRelatedType;
-    const relatedId = updatedRelatedId;
-    if (relatedType && relatedId)
-      await validateRelatedTypeAndId(relatedType, relatedId, next);
-    else next();
-  } catch (error) {
-    next(error);
-  }
 };
 
 notificationSchema.pre("findOneAndUpdate", validateReferencesMiddleware);
