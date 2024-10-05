@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 
 const touristActivityNotificationSchema = new mongoose.Schema(
   {
-    touristId: {
+    touristID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Tourist",
       required: true,
     },
-    activityId: {
+    activityID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Activity",
       required: true,
@@ -16,8 +16,8 @@ const touristActivityNotificationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-touristActivityNotificationSchema.index({ touristId: 1 });
-touristActivityNotificationSchema.index({ activityId: 1 });
+touristActivityNotificationSchema.index({ touristID: 1 });
+touristActivityNotificationSchema.index({ activityID: 1 });
 
 export default mongoose.model(
   "TouristActivityNotification",

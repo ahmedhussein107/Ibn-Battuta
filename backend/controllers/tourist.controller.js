@@ -2,7 +2,7 @@ import Tourist from "../models/tourist.model.js";
 import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
 import Notification from "../models/notification.model.js";
-
+import TouristActivityNotification from "../models/touristActivityNotification.model.js";
 export const getTourist = async (req, res) => {
   try {
     const tourguides = await Tourist.find();
@@ -70,7 +70,7 @@ export const deleteTourist = async (req, res) => {
       }
 
       // Delete Entries in TouristActivityNotification related to this tourist
-      await TouristActivityNotification.deletMany({touristId: tourist._id});
+      await TouristActivityNotification.deleteMany({touristID: tourist._id});
       
       res.status(200).json({ message: "Tourist deleted successfully" });
     } else {
