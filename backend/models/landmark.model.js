@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const landmarkSchema = new mongoose.Schema(
   {
     governorID: { type: mongoose.Schema.Types.ObjectId, ref: "Governor" },
+    name: String,
     description: String,
     pictures: [String],
     location: String,

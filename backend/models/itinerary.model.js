@@ -9,22 +9,24 @@ const itinerarySchema = new mongoose.Schema(
       ref: "TourGuide",
       required: true,
     },
-    activities: [
-      {
-        activityType: {
-          type: String,
-          enum: ["Activity", "CustomActivity"],
-          required: true,
+    activities: { type: [
+        {
+          activityType: {
+            type: String,
+            enum: ["Activity", "CustomActivity"],
+            required: true,
+          },
+          activity: {
+            type: mongoose.Schema.Types.ObjectId,
+            refPath: "activityType",
+            required: true,
+          },
+          startTime: Date, // to be upadated
+          endTime: Date, // to be updated
         },
-        activity: {
-          type: mongoose.Schema.Types.ObjectId,
-          refPath: "activityType",
-          required: true,
-        },
-        startTime: Date, // to be upadated
-        endTime: Date, // to be updated
-      },
-    ],
+      ],
+      default: []
+    },
     language: String,
     accessibility: [String],
     price: { type: Number, required: true },
