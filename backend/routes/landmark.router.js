@@ -1,5 +1,6 @@
 import express from "express"
 import Landmark from "../models/landmark.model.js";
+import { getLandmarks } from "../controllers/landmark.controller.js";
 
 const landmarkRouter = express.Router();
 
@@ -14,14 +15,7 @@ landmarkRouter.post("/createLandmark", async (req, res) => {
 });
 
 
-landmarkRouter.get("/allLandmark", async (req, res) => {
-try {
-    const landmark = await Landmark.find();
-    res.json(landmark);
-} catch (e) {
-    res.status(400).json({e: e.message});
-}
-});
+landmarkRouter.get("/", getLandmarks); //get all landmarks
 
 landmarkRouter.get("/ticketPricesFromLandmark", async (req, res) => {
     try {
