@@ -1,55 +1,34 @@
-import express from "express"
-import Landmark from "../models/landmark.model.js";
+import express from "express";
+import {
+  createLandmark,
+  getLandmarkById,
+  getTicketPricesFromLandmark,
+  getAllLandmarks,
+  updateLandmark,
+  deleteLandmark,
+  filterLandmarks,
+  getGovernorLandmarks,
+} from "../controllers/landmark.controller.js";
 
 const landmarkRouter = express.Router();
 
-landmarkRouter.post("/createLandmark", async (req, res) => {
-    try {
-      console.log(req.body);
-      const landmark = await Landmark.create(req.body);
-      res.json(landmark);
-    } catch (e) {
-        res.status(400).json({e: e.message});
-    }
-});
+landmarkRouter.post("/createLandmark", createLandmark);
 
+landmarkRouter.get("/allLandmark", getAllLandmarks);
 
-landmarkRouter.get("/allLandmark", async (req, res) => {
-try {
-    const landmark = await Landmark.find();
-    res.json(landmark);
-} catch (e) {
-    res.status(400).json({e: e.message});
-}
-});
+landmarkRouter.get("/landmark/:id", getLandmarkById);
 
-landmarkRouter.get("/ticketPricesFromLandmark", async (req, res) => {
-    try {
-        const landmark = await Landmark.find({},"ticketPrices");
-        res.json(landmark);
-    } catch (e) {
-        res.status(400).json({e: e.message});
-    }
-    });
+landmarkRouter.get(
+  "/ticketPricesFromLandmark/:id",
+  getTicketPricesFromLandmark
+);
 
-landmarkRouter.put("/updateLandmark", async (req, res) => {
-    const {landmark} = req.body
-    try {
-        const landmark = await Landmark.updateOne({}, {landmark});
-        res.json(landmark);
-    } catch (e) {
-        res.status(400).json({e: e.message});
-    }
-    });
+landmarkRouter.patch("/updateLandmark/:id", updateLandmark);
 
+landmarkRouter.delete("/deleteLandmark/:id", deleteLandmark);
 
-    landmarkRouter.delete("/deleteLandmark", async (req, res) => {
-        try {
-            const landmark = await Landmark.deleteOne({});
-            res.json(landmark);
-        } catch (e) {
-            res.status(400).json({e: e.message});
-        }
-        });
+landmarkRouter.get("/filterLandmarks", filterLandmarks);
+
+landmarkRouter.get("/getGovernorLandmarks/:id", getGovernorLandmarks);
 
 export default landmarkRouter;
