@@ -1,29 +1,25 @@
 import { mongoose } from "mongoose";
 import { validateReferences, validateReference } from "./validatingUtils.js";
 const advertiserSchema = new mongoose.Schema(
-  {
-    username: {
-      type: String,
-      ref: "Username",
-      required: true,
-      unique: true,
+    {
+        username: {
+            type: String,
+            ref: "Username",
+            required: true,
+            unique: true,
+        },
+        password: { type: String, required: true },
+        email: { type: String, ref: "Email", required: true },
+        name: { type: String, required: true },
+        isAccepted: { type: Boolean, default: true },
+        document: [String],
+        website: String,
+        hotline: String,
+        companyProfile: String,
+        picture: String,
+        notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
     },
-    password: { type: String, required: true },
-    email: {
-      type: String,
-      ref: "Email",
-      required: true,
-    },
-    name: { type: String, required: true },
-    isAccepted: { type: Boolean, default: false },
-    document: [String],
-    website: String,
-    hotline: String,
-    companyProfile: String,
-    picture: String,
-    notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 advertiserSchema.pre("save", async function (next) {

@@ -2,21 +2,18 @@ import mongoose from "mongoose";
 import { validateReference } from "./validatingUtils.js";
 
 const governorSchema = new mongoose.Schema(
-  {
-    username: {
-      type: String,
-      ref: "Username",
-      required: true,
-      unique: true,
+    {
+        username: {
+            type: String,
+            ref: "Username",
+            required: true,
+            unique: true,
+        },
+        password: { type: String, required: true },
+        name: { type: String, required: true },
+        email: { type: String, ref: "Email" },
     },
-    password: { type: String, required: true },
-    name: { type: String, required: true },
-    email: {
-      type: String,
-      ref: "Email",
-    },
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 governorSchema.pre("save", async function (next) {

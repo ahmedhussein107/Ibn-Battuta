@@ -2,44 +2,33 @@ import mongoose from "mongoose";
 import { validateReference, validateReferences } from "./validatingUtils.js";
 
 const landmarkSchema = new mongoose.Schema(
-  {
-    governorID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Governor",
+    {
+        governorID: { type: mongoose.Schema.Types.ObjectId, ref: "Governor" },
+        description: String,
+        pictures: [String],
+        location: String,
+        ticketPrices: { type: Map, of: Number },
+        openingHours: [
+            {
+                day: {
+                    type: String,
+                    enum: [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday",
+                    ],
+                },
+                open: Date,
+                close: Date, // hours and minutes only
+            },
+        ],
+        tags: [{ type: String, ref: "Tag" }],
     },
-    description: String,
-    pictures: [String],
-    location: String,
-    ticketPrices: {
-      type: Map,
-      of: Number,
-    },
-    openingHours: [
-      {
-        day: {
-          type: String,
-          enum: [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday",
-          ],
-        },
-        open: Date,
-        close: Date,
-      },
-    ],
-    tags: [
-      {
-        type: String,
-        ref: "Tag",
-      },
-    ],
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 landmarkSchema.pre("save", async function (next) {
