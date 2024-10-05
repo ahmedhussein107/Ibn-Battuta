@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import { validateReference } from "./validatingUtils.js";
 const notificationSchema = new mongoose.Schema(
     {
         message: { type: String, required: true },
@@ -55,64 +55,68 @@ notificationSchema.pre("save", async function (next) {
     } catch (error) {
         next(error);
     }
+=======
+    relatedId: {
+      type: mongoose.Schema.Types.ObjectId,
+      refPath: "relatedType",
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+// a helper function for validation
+const validateRelatedTypeAndId = async (relatedType, relatedId, next) => {
+  try {
+    const validModels = ["Complaint", "Activity", "Itinerary", "Product"];
+    if (!validModels.includes(relatedType)) {
+      return next(new Error(`Invalid relatedType: ${relatedType}`));
+    }
+    await validateReference(relatedId, relatedType, next);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// validation for creation
+notificationSchema.pre("save", async function (next) {
+  try {
+    const { relatedType, relatedId } = this;
+
+    if (!relatedType || !relatedId) {
+      return next(new Error("Both relatedType and relatedId are required."));
+    }
+    await validateRelatedTypeAndId(relatedType, relatedId, next);
+  } catch (error) {
+    next(error);
+  }
 });
 
-// Middleware for updates to validate referenced collections
+// validation for update
 const validateReferencesMiddleware = async function (next) {
-    try {
-        const update = this.getUpdate();
-        const query = this.getQuery();
+  try {
+    const update = this.getUpdate();
+    const updatedRelatedType = update.relatedType || update["$set.relatedType"];
+    const updatedRelatedId = update.relatedId || update["$set.relatedId"];
 
-        // Extract relatedId and relatedType from the update query if they are being modified
-        const updatedRelatedType = update.relatedType;
-        const updatedRelatedId = update.relatedId;
-
-        // Get the current document state to identify any changes
-        const currentDoc = await this.model.findOne(query).select("relatedType relatedId");
-
-        // Determine the actual relatedType and relatedId to validate
-        const relatedType = updatedRelatedType || (currentDoc ? currentDoc.relatedType : null);
-        const relatedId = updatedRelatedId || (currentDoc ? currentDoc.relatedId : null);
-
-        // Check if we have a valid relatedType and relatedId to validate
-        if (!relatedType || !relatedId) {
-            return next(); // Skip validation if we don't have both fields
-        }
-
-        // Use a switch-case to handle validation for each type
-        let exists = false;
-        switch (relatedType) {
-            case "Complaint":
-                exists = await mongoose.model("Complaint").exists({ _id: relatedId });
-                break;
-            case "Activity":
-                exists = await mongoose.model("Activity").exists({ _id: relatedId });
-                break;
-            case "Event":
-                exists = await mongoose.model("Event").exists({ _id: relatedId });
-                break;
-            case "Product":
-                exists = await mongoose.model("Product").exists({ _id: relatedId });
-                break;
-            default:
-                return next(new Error(`Invalid relatedType: ${relatedType}`));
-        }
-
-        // If the document does not exist, throw an error
-        if (!exists) {
-            return next(new Error(`${relatedType} with ID ${relatedId} does not exist.`));
-        }
-
-        // Proceed with the update
-        next();
-    } catch (error) {
-        next(error);
+    if (!updatedRelatedType && !updatedRelatedId) {
+      return next();
     }
+
+    const relatedType = updatedRelatedType;
+    const relatedId = updatedRelatedId;
+    if (relatedType && relatedId)
+      await validateRelatedTypeAndId(relatedType, relatedId, next);
+    else next();
+  } catch (error) {
+    next(error);
+  }
 };
 
 notificationSchema.pre("findOneAndUpdate", validateReferencesMiddleware);
 notificationSchema.pre("updateOne", validateReferencesMiddleware);
-notificationSchema.pre("updateMany", validateReferencesMiddleware);
 notificationSchema.pre("findByIdAndUpdate", validateReferencesMiddleware);
 
 export default mongoose.model("Notification", notificationSchema);
