@@ -28,6 +28,8 @@ export const createAdvertiser = async (req, res) => {
     }
   } catch (e) {
     console.log(e.message);
+    await Username.findByIdAndDelete(inputUsername);
+    await Email.findByIdAndDelete(inputEmail);
     res.status(400).json({ e: e.message });
   }
 };
