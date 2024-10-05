@@ -1,10 +1,10 @@
 import express from "express";
 import Activity from "../models/activity.model.js";
-import { getActivities } from "../controllers/activity.controller.js";
+import { getUpcomingActivities } from "../controllers/activity.controller.js";
 
 const activityRouter = express.Router();
 
-activityRouter.get("/", getActivities);
+activityRouter.get("/", getUpcomingActivities);
 
 activityRouter.post("/", async (req, res) => {
   const activityData = req.body;
