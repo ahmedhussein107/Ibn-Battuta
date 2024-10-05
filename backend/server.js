@@ -18,6 +18,7 @@ import complaintRouter from "./routes/complaint.router.js";
 import advertiserRouter from "./routes/advertiser.router.js";
 import tourGuideRouter from "./routes/tourguide.router.js";
 import sellerRouter from "./routes/seller.router.js";
+import ratingRouter from "./routes/rating.router.js";
 dotenv.config();
 const app = express();
 
@@ -50,3 +51,4 @@ app.use("/api/itinerary", itineraryRouter);
 app.use("/api/advertiser", advertiserRouter);
 app.use("/api/tourguide", tourGuideRouter);
 app.use("/api/seller", sellerRouter);
+app.use("/api/rating", ratingRouter);

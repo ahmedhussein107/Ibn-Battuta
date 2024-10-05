@@ -28,7 +28,7 @@ const activitySchema = new Schema(
     isFlagged: { type: Boolean, default: false },
     sumOfRatings: { type: Number, default: 0 },
     freeSpots: { type: Number, required: true },
-    specialDiscount: Number,
+    specialDiscount: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
