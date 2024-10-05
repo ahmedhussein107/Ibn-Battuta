@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { validateReference } from "./validatingUtils.js";
 
 const orderSchema = new mongoose.Schema(
   {
@@ -12,8 +13,8 @@ const orderSchema = new mongoose.Schema(
       ref: "Product",
       required: true,
     },
-    price: { type: Number, required: true },
-    count: { type: Number, required: true },
+    price: { type: Number, required: true, min: 0 },
+    count: { type: Number, required: true, min: 1 },
 
     address: String,
     method: { type: String, enum: ["card", "wallet", "cash on delivery"] },
@@ -21,5 +22,37 @@ const orderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+orderSchema.pre("save", async function (next) {
+  try {
+    const { buyer, product } = this;
+
+    await validateReference(buyer, "Tourist", next);
+    await validateReference(product, "Product", next);
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+orderSchema.pre("findOneAndUpdate", async function (next) {
+  try {
+    const update = this.getUpdate();
+    const updatedBuyer = update.buyer || update["$set.buyer"];
+    const updatedProduct = update.product || update["$set.product"];
+
+    if (updatedBuyer) {
+      await validateReference(updatedBuyer, "Tourist", next);
+    }
+    if (updatedProduct) {
+      await validateReference(updatedProduct, "Product", next);
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default mongoose.model("Order", orderSchema);

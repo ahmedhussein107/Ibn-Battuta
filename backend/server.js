@@ -17,6 +17,10 @@ import governorRouter from "./routes/governor.router.js";
 import complaintRouter from "./routes/complaint.router.js";
 import advertiserRouter from "./routes/advertiser.router.js";
 import landmarkRouter from "./routes/landmark.router.js";
+import commentRouter from "./routes/comment.router.js";
+import tourGuideRouter from "./routes/tourguide.router.js";
+import sellerRouter from "./routes/seller.router.js";
+
 dotenv.config();
 const app = express();
 
@@ -48,3 +52,7 @@ app.use("/api/notifications", notificationRouter);
 app.use("/api/itinerary", itineraryRouter);
 app.use("/api/advertiser", advertiserRouter);
 app.use("/api/landmark", landmarkRouter);
+app.use("/api/comment", commentRouter);
+app.use("/api/tourguide", tourGuideRouter);
+app.use("/api/seller", sellerRouter);
+
