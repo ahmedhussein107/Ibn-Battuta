@@ -56,4 +56,18 @@ governorRouter.delete("/deleteGovernor/:id", async (req, res) => {
     } 
 });
 
+governorRouter.patch("/updateGovernor/:id", async (req, res) => {
+    try{
+        const governor = await Governor.findByIdAndUpdate(req.params.id, req.body, {new: true});
+        if(governor){
+            res.json(governor);
+        }
+        else{
+            res.status(404).json({message: "Governor not found"});
+        }
+    }catch(err){
+        res.status(404).json({message: "Governor not found"});
+    }
+});
+
 export default governorRouter;
