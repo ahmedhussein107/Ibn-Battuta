@@ -107,7 +107,7 @@ export const filterItineraries = async (req, res) => {
 
     // Add language filter if provided
     if (language) {
-        query.language = language;
+        query.language = { $in: language };
     }
 
     try {
