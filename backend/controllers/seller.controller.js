@@ -2,7 +2,8 @@ import Seller from "../models/seller.model.js";
 import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
 import Notification from "../models/notification.model.js";
-
+import Product from "../models/product.model.js";
+import Rating from "../models/rating.model.js";
 export const createSeller = async (req, res) => {
   //console.log(req.body);
   const inputUsername = req.body.username;
@@ -88,6 +89,29 @@ export const deleteSeller = async (req, res) => {
           })
         );
       }
+
+      // Find all products associated with this seller
+      const products = await Product.find({
+        ownerID: req.params.id,
+        ownerType: "Seller",
+      });
+
+      // Iterate over the products and delete each product's ratings
+      await Promise.all(
+        products.map(async (product) => {
+          if (product.ratings && product.ratings.length > 0) {
+            await Promise.all(
+              product.ratings.map(async (ratingId) => {
+                await Rating.findByIdAndDelete(ratingId);
+              })
+            );
+          }
+        })
+      );
+
+      // Delete all products associated with this seller
+      await Product.deleteMany({ ownerID: req.params.id, ownerType: "Seller" });
+
       res.status(200).json({ message: "Seller deleted successfully" });
     } else {
       res.status(404).json({ e: "Seller not found" });
