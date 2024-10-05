@@ -120,4 +120,10 @@ const validateUpdateReferences = async function (next) {
 touristSchema.pre("findOneAndUpdate", validateUpdateReferences);
 touristSchema.pre("updateOne", validateUpdateReferences);
 touristSchema.pre("findByIdAndUpdate", validateUpdateReferences);
+touristSchema.virtual("age").get(function () {
+  const ageInMs = Date.now() - this.DOB.getTime();
+  const ageInYears = Math.floor(ageInMs / (1000 * 60 * 60 * 24 * 365.25));
+  return ageInYears;
+});
+
 export default mongoose.model("Tourist", touristSchema);

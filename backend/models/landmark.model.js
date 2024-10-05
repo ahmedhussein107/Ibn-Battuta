@@ -84,4 +84,5 @@ landmarkSchema.pre("findOneAndUpdate", validateReferencesMiddleware);
 landmarkSchema.pre("updateOne", validateReferencesMiddleware);
 landmarkSchema.pre("findByIdAndUpdate", validateReferencesMiddleware);
 
+landmarkSchema.index({ location: 1 });
 export default mongoose.model("Landmark", landmarkSchema);

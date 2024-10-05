@@ -5,6 +5,7 @@ const usernameSchema = new mongoose.Schema({
   userType: {
     type: String,
     enum: ["Tourist", "TourGuide", "Seller", "Governor", "Advertiser"],
+    required: true,
   },
 });
 
