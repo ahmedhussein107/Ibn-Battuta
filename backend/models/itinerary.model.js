@@ -18,7 +18,7 @@ const itinerarySchema = new mongoose.Schema(
         },
         activity: {
           type: mongoose.Schema.Types.ObjectId,
-          refPath: "activityType",
+          refPath: "activities.activityType",
           required: true,
         },
         startTime: Date, // to be upadated
