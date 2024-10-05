@@ -4,7 +4,7 @@ import {getUpcomingItineraries} from "../controllers/itinerary.controller.js";
 
 const itineraryRouter = express.Router();
 
-itineraryRouter.get("/", getUpcomingItineraries);
+itineraryRouter.get("/", getUpcomingItineraries); // get all upcoming itineraries
 
 itineraryRouter.post("/createItinerary", async (req, res) => {
   try {

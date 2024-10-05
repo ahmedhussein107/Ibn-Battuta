@@ -4,7 +4,7 @@ import { getUpcomingActivities } from "../controllers/activity.controller.js";
 
 const activityRouter = express.Router();
 
-activityRouter.get("/", getUpcomingActivities);
+activityRouter.get("/", getUpcomingActivities); // get all upcoming activities
 
 activityRouter.post("/", async (req, res) => {
   const activityData = req.body;
