@@ -22,20 +22,21 @@ import sellerRouter from "./routes/seller.router.js";
 import tagRouter from "./routes/tag.router.js";
 import ratingRouter from "./routes/rating.router.js";
 import landmarkRouter from "./routes/landmark.router.js";
+import customActivityRouter from "./routes/customActivity.router.js";
 
 dotenv.config();
 const app = express();
 
 connect(process.env.MONGO_URI)
-    .then(() => {
-        app.listen(process.env.PORT, () => {
-            console.log(`Connected to DB`);
-            console.log(`Listening to port ${process.env.PORT}`);
-        });
-    })
-    .catch((err) => {
-        console.log(err);
+  .then(() => {
+    app.listen(process.env.PORT, () => {
+      console.log(`Connected to DB`);
+      console.log(`Listening to port ${process.env.PORT}`);
     });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.use(express.json());
 app.use("/api/tourist", touristRouter);
@@ -60,4 +61,4 @@ app.use("/api/tag", tagRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/rating", ratingRouter);
 app.use("/api/landmark", landmarkRouter);
-
+app.use("/api/customActivity", customActivityRouter);
