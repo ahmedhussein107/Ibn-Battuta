@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import { validateReference, validateReferences } from "./validatingUtils.js";
 const sellerSchema = new mongoose.Schema(
   {
     username: {
@@ -24,4 +24,52 @@ const sellerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+sellerSchema.pre("save", async function (next) {
+  try {
+    const { username, email, notifications } = this;
+
+    await validateReference(username, "Username", next);
+
+    if (email) {
+      await validateReference(email, "Email", next);
+    }
+
+    if (notifications) {
+      await validateReferences(notifications, "Notification", next);
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+const validateUpdateReferences = async function (next) {
+  try {
+    const update = this.getUpdate();
+    const username = update.username || update["$set.username"];
+    const email = update.email || update["$set.email"];
+    const notifications = update.notifications || update["$set.notifications"];
+
+    if (username) {
+      await validateReference(username, "Username", next);
+    }
+
+    if (email) {
+      await validateReference(email, "Email", next);
+    }
+
+    if (notifications) {
+      await validateReferences(notifications, "Notification", next);
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+sellerSchema.pre("findOneAndUpdate", validateUpdateReferences);
+sellerSchema.pre("updateOne", validateUpdateReferences);
+sellerSchema.pre("findByIdAndUpdate", validateUpdateReferences);
 export default mongoose.model("Seller", sellerSchema);

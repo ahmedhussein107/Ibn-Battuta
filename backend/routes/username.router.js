@@ -15,6 +15,7 @@ usernameRouter.post("/createUsername", async (req, res) => {
 
 usernameRouter.get("/allUsernames", async (req, res) => {
   try {
+    console.log("i am here");
     const usernames = await Username.find();
     res.json(usernames);
   } catch (e) {
