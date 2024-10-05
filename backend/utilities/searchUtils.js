@@ -10,7 +10,8 @@ export const genericSearch = async (Model, queryParams) => {
 
   // If `categories` is provided, match the categories exactly
   if (categories) {
-    query.categories = { $in: categories };
+    const categoriesArray = Array.isArray(tags) ? tags : tags.split(",");
+    query.categories = { $in: categoriesArray };
   }
 
   // If `tags` are provided, check for any of the tags
@@ -19,6 +20,7 @@ export const genericSearch = async (Model, queryParams) => {
     query.tags = { $in: tagsArray };
   }
 
+  // debugging
   console.log("Constructed MongoDB Query:", query);
 
   // Perform the search using the constructed query
