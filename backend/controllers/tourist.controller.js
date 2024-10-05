@@ -1,6 +1,7 @@
 import Tourist from "../models/tourist.model.js";
 import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
+import Notification from "../models/notification.model.js";
 
 export const getTourist = async (req, res) => {
   try {
@@ -58,7 +59,16 @@ export const deleteTourist = async (req, res) => {
     if (tourist) {
       await Username.findByIdAndDelete(tourist.username);
       await Email.findByIdAndDelete(tourist.email);
-      res.json(tourist);
+
+      // If there are notifications, delete each one
+      if (tourist.notifications && tourist.notifications.length > 0) {
+        await Promise.all(
+          tourist.notifications.map(async (notificationId) => {
+            await Notification.findByIdAndDelete(notificationId);
+          })
+        );
+      }
+      res.status(200).json({ message: "Tourist deleted successfully" });
     } else {
       res.status(404).json({ e: "Tourist not found" });
     }
