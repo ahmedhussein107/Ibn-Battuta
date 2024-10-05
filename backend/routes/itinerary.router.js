@@ -1,7 +1,10 @@
 import express from "express";
 import Itinerary from "../models/itinerary.model.js";
+import {getUpcomingItineraries} from "../controllers/itinerary.controller.js";
 
 const itineraryRouter = express.Router();
+
+itineraryRouter.get("/", getUpcomingItineraries);
 
 itineraryRouter.post("/createItinerary", async (req, res) => {
   try {

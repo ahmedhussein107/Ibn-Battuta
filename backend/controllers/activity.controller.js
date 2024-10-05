@@ -1,6 +1,6 @@
 import Activity from "../models/activity.model.js";
 
-// view upcoming activities
+// view upcoming activities that are open for booking and are not flagged
 export const getActivities = async (req, res) => { 
   
   try {
@@ -10,4 +10,4 @@ export const getActivities = async (req, res) => {
   catch (error) {
     res.status(400).json({ error: error.message });
   }
-}
+};
