@@ -19,9 +19,12 @@ import advertiserRouter from "./routes/advertiser.router.js";
 import commentRouter from "./routes/comment.router.js";
 import tourGuideRouter from "./routes/tourguide.router.js";
 import sellerRouter from "./routes/seller.router.js";
+import cors from "cors";
+
 dotenv.config();
 const app = express();
 
+app.use(cors());
 connect(process.env.MONGO_URI)
   .then(() => {
     app.listen(process.env.PORT, () => {

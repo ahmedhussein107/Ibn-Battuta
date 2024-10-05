@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema(
     ownerID: { type: mongoose.Schema.Types.ObjectId, refPath: "ownerType" },
     ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
     sumOfRatings: { type: Number, default: 0 },
-    quantity: Number,
+    quantity: { type: Number, min: 1 },
     numberOfSales: { type: Number, default: 0 },
     isArchived: { type: Boolean, default: false },
   },
