@@ -1,26 +1,20 @@
 import express from "express";
-import activity from "../models/activity.model.js";
+import {
+  createActivity,
+  getActivity,
+  updateActivity,
+  deleteActivity,
+  getActivityById,
+  getAdvertiserActivities,
+} from "../controllers/activity.controller.js";
 
 const activityRouter = express.Router();
 
-activityRouter.get("/", async (req, res) => {
-  try {
-    const activities = await activity.find();
-    res.status(200).json(activities);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-activityRouter.post("/", async (req, res) => {
-  const activityData = req.body;
-  const newActivity = new activity(activityData);
-  try {
-    await newActivity.save();
-    res.status(201).json(newActivity);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
+activityRouter.post("/createActivity", createActivity);
+activityRouter.get("/getActivity/:id", getActivityById);
+activityRouter.get("/getAllActivties", getActivity);
+activityRouter.patch("/updateActivity/:id", updateActivity);
+activityRouter.delete("/deleteActivity/:id", deleteActivity);
+activityRouter.get("/getAdvertiserActivities/:id", getAdvertiserActivities);
 
 export default activityRouter;
