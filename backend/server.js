@@ -20,19 +20,20 @@ import commentRouter from "./routes/comment.router.js";
 import tourGuideRouter from "./routes/tourguide.router.js";
 import sellerRouter from "./routes/seller.router.js";
 import ratingRouter from "./routes/rating.router.js";
+import landmarkRouter from "./routes/landmark.router.js";
 dotenv.config();
 const app = express();
 
 connect(process.env.MONGO_URI)
-  .then(() => {
-    app.listen(process.env.PORT, () => {
-      console.log(`Connected to DB`);
-      console.log(`Listening to port ${process.env.PORT}`);
+    .then(() => {
+        app.listen(process.env.PORT, () => {
+            console.log(`Connected to DB`);
+            console.log(`Listening to port ${process.env.PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
     });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 
 app.use(express.json());
 app.use("/api/tourist", touristRouter);
@@ -54,3 +55,4 @@ app.use("/api/comment", commentRouter);
 app.use("/api/tourguide", tourGuideRouter);
 app.use("/api/seller", sellerRouter);
 app.use("/api/rating", ratingRouter);
+app.use("/api/landmark", landmarkRouter);
