@@ -58,6 +58,7 @@ export const getProduct = async (req, res) => {
     res.status(400).json({ e: e.message });
   }
 };
+
 export const deleteProduct = async (req, res) => {
   const { productID } = req.params;
   try {
@@ -65,5 +66,29 @@ export const deleteProduct = async (req, res) => {
     res.json({ message: "deleted successfully" });
   } catch (e) {
     res.status(400).json({ e: e.message });
+  }
+};
+
+export const searchProductsByName = async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    if (!name) {
+      return res
+        .status(400)
+        .json({ error: "Name query parameter is required" });
+    }
+
+    const products = await Product.find({
+      name: { $regex: name, $options: "i" },
+    });
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "No products found" });
+    }
+
+    return res.status(200).json(products);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 };
