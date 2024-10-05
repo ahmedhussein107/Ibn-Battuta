@@ -26,7 +26,6 @@ const touristSchema = new mongoose.Schema(
     cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
     preferences: [{ type: String, ref: "Tag" }],
-    savedActivity: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity" }],
     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     deliveryAddresses: [
       {

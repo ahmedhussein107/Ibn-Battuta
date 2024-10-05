@@ -23,7 +23,6 @@ const activitySchema = new Schema(
     category: { type: String, ref: "Category" },
     tags: [{ type: String, ref: "Tag" }],
     ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
-    toBeNotifiedTourists: [{ type: Schema.Types.ObjectId, ref: "Tourist" }],
     isOpenForBooking: { type: Boolean, default: true },
     isFlagged: { type: Boolean, default: false },
     sumOfRatings: { type: Number, default: 0 },
