@@ -2,6 +2,8 @@ import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
 import Advertiser from "../models/advertiser.model.js";
 import Notification from "../models/notification.model.js";
+import Activity from "../models/activity.model.js";
+import Rating from "../models/rating.model.js";
 
 export const createAdvertiser = async (req, res) => {
   console.log(req.body);
@@ -91,6 +93,26 @@ export const deleteAdvertiser = async (req, res) => {
       await Promise.all(
         advertiser.notifications.map(async (notificationId) => {
           await Notification.findByIdAndDelete(notificationId);
+        })
+      );
+    }
+
+    // Delete all activities associated with the advertiser
+    const activities = await Activity.find({ advertiserID: advertiser._id });
+    if (activities.length > 0) {
+      // Delete each activity and its related ratings
+      await Promise.all(
+        activities.map(async (activity) => {
+          // Delete all ratings associated with this activity
+          if (activity.ratings && activity.ratings.length > 0) {
+            await Promise.all(
+              activity.ratings.map(async (ratingId) => {
+                await Rating.findByIdAndDelete(ratingId);
+              })
+            );
+          }
+          // Delete the activity itself
+          await Activity.findByIdAndDelete(activity._id);
         })
       );
     }
