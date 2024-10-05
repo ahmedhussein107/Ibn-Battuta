@@ -102,16 +102,17 @@ export const filterItineraries = async (req, res) => {
     }
     // Add preferences filter if provided
     if (preferences) {
-        query.preferences = { $in: preferences };
+        query.tags = { $in: preferences };
     }
 
     // Add language filter if provided
     if (language) {
-        query.language = { $in: language };
+        query.language = language;
     }
 
     try {
         // Query the database with the constructed query object
+        console.log(query);
         const itineraries = await Itinerary.find(query);
 
         // Return the filtered itineraries
