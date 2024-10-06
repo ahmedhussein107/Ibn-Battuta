@@ -131,3 +131,5 @@ dist
 
 # vscode
 .vscode
+
+backend/uploads

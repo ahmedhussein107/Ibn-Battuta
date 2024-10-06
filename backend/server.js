@@ -23,6 +23,7 @@ import tagRouter from "./routes/tag.router.js";
 import ratingRouter from "./routes/rating.router.js";
 import landmarkRouter from "./routes/landmark.router.js";
 import customActivityRouter from "./routes/customActivity.router.js";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
@@ -38,6 +39,7 @@ connect(process.env.MONGO_URI)
     console.log(err);
   });
 
+app.use(cors());
 app.use(express.json());
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);

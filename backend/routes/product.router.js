@@ -1,45 +1,39 @@
-import express from "express";
-import Product from "../models/product.model.js";
-
+import express from "express"
+import { upload } from "../routers.middleware/mutler.config.js";
+import {
+    createProduct,
+    updateProduct,
+    allProducts,
+    deleteProduct,
+    getProduct,
+    searchProductsByName,
+    filterProductsByPrice
+} from "../controllers/product.controller.js";
 const productRouter = express.Router();
 
-productRouter.post("/createProduct", async (req, res) => {
-    try {
-        console.log(req.body);
-        const product = await Product.create(req.body);
-        res.json(product);
-    } catch (e) {
-        res.status(400).json({ e: e.message });
-    }
-});
+const _print = function (req, res, next) {
+    console.log("i am here in product router");
+    console.log("body is ", req.body);
+    next();
+};
 
-productRouter.get("/allProducts", async (req, res) => {
-    try {
-        const products = await Product.find().populate("ownerID");
-        res.json(products);
-    } catch (e) {
-        res.status(400).json({ e: e.message });
-    }
-});
+productRouter.post(
+    "/createProduct",
+    _print,
+    upload.array("pictures"),
+    createProduct
+);
 
-productRouter.put("/updateProduct", async (req, res) => {
-    const { product } = req.body;
-    try {
-        const products = await Product.updateOne({}, { product });
-        res.json(products);
-    } catch (e) {
-        res.status(400).json({ e: e.message });
-    }
-});
+productRouter.get("/allProducts", allProducts);
 
-productRouter.delete("/deleteProduct", async (req, res) => {
-    const { product } = req.body;
-    try {
-        const products = await Product.deleteOne({ product });
-        res.json(products);
-    } catch (e) {
-        res.status(400).json({ e: e.message });
-    }
-});
+productRouter.get("/getProduct/:id", getProduct);
+
+productRouter.put("/updateProduct/:id", updateProduct);
+
+productRouter.delete("/deleteProduct/:id", deleteProduct);
+
+productRouter.get("/search", searchProductsByName);
+
+productRouter.get("/filter", filterProductsByPrice);
 
 export default productRouter;
