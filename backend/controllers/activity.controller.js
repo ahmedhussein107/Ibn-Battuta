@@ -2,8 +2,8 @@ import Activity from "../models/activity.model.js";
 
 // view upcoming activities that are open for booking and are not flagged
 export const getUpcomingActivities = async (req, res) => {
-	//const sortField = req.query.sortBy || "price";
-	//const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
+	const sortField = req.query.sortBy || "rating";
+	const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
 
 	try {
 		const activities = await Activity.find({
@@ -11,8 +11,21 @@ export const getUpcomingActivities = async (req, res) => {
 			startDate: { $gt: Date.now() },
 		})
 			.populate("advertiserID")
-			.populate("ratings");
-		//.sort({ [sumOfRatings / getRatings.length]: 1 });
+			.populate("ratings")
+			.lean(); // Returns plain JS objects instead of Mongoose documents
+
+		// Calculate the average rating for each activity
+		activities.map((activity) => {
+			if (activity.ratings && activity.ratings.length > 0) {
+				activity.rating =
+					activity.sumOfRatings / activity.ratings.length;
+			} else {
+				activity.rating = -1; // remember that -1 means "no ratings" and handle in frontend
+			}
+			return activity;
+		});
+
+		activities.sort((a, b) => sortOrder * (a[sortField] - b[sortField])); // sort the activities
 		res.json(activities);
 	} catch (error) {
 		res.status(400).json({ error: error.message });
