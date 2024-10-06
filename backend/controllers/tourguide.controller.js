@@ -62,13 +62,9 @@ export const getTourGuideById = async (req, res) => {
             res.status(404).json({ e: "TourGuide not found" });
         }
     } catch (e) {
-        //console.log(e.message);
-        res.status(400).json({ e: e.message });
+      //console.log(e.message);
+      res.status(400).json({ e: e.message });
     }
-  } catch (e) {
-    //console.log(e.message);
-    res.status(400).json({ e: e.message });
-  }
 };
 
 export const updateTourGuide = async (req, res) => {
@@ -80,12 +76,8 @@ export const updateTourGuide = async (req, res) => {
             res.status(404).json({ e: "TourGuide not found" });
         }
     } catch (e) {
-        res.status(400).json({ e: e.message });
+      res.status(400).json({ e: e.message });
     }
-  } catch (e) {
-    //console.log(e.message);
-    res.status(400).json({ e: e.message });
-  }
 };
 
 export const deleteTourGuide = async (req, res) => {
