@@ -2,15 +2,15 @@ import mongoose from "mongoose";
 import { validateReference } from "./validatingUtils.js";
 
 const ratingSchema = new mongoose.Schema(
-  {
-    touristID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Tourist",
+    {
+        touristID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Tourist",
+        },
+        rating: Number,
+        comment: String,
     },
-    rating: Number,
-    comment: String,
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 const validateTouristID = async (touristID, next) => {

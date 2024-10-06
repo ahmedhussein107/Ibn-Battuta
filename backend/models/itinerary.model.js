@@ -25,29 +25,17 @@ const itinerarySchema = new mongoose.Schema(
         endTime: Date, // to be updated
       },
     ],
-    language: String,
+    language: { type: String, required: true },
     accessibility: [String],
     price: { type: Number, required: true },
-    availableDatesAndTimes: {
-      type: [Date],
-      required: true,
-    },
-    pickup: {
-      type: String,
-      required: true,
-    },
-    dropOff: {
-      type: String,
-      required: true,
-    },
+    availableDatesAndTimes: { type: [Date], required: true },
+    pickup: { type: String, required: true },
+    dropOff: { type: String, required: true },
     tags: [{ type: String, ref: "Tag" }],
     isActivated: { type: Boolean, default: true },
     isFlagged: { type: Boolean, default: false },
     ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
-    sumOfRatings: {
-      type: Number,
-      default: 0,
-    },
+    sumOfRatings: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

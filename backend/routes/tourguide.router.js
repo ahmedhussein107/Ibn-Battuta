@@ -1,10 +1,10 @@
 import express from "express";
 import {
-  createTourGuide,
-  getAllTourGuides,
-  getTourGuideById,
-  updateTourGuide,
-  deleteTourGuide,
+    createTourGuide,
+    getAllTourGuides,
+    getTourGuideById,
+    updateTourGuide,
+    deleteTourGuide,
 } from "../controllers/tourguide.controller.js";
 
 const tourGuideRouter = express.Router();

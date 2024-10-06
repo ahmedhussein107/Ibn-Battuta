@@ -3,23 +3,20 @@ import { Schema } from "mongoose";
 import { validateReference, validateReferences } from "./validatingUtils.js";
 
 const adminSchema = new Schema(
-  {
-    username: {
-      type: String,
-      ref: "Username",
-      required: true,
-      unique: true,
+    {
+        username: {
+            type: String,
+            ref: "Username",
+            required: true,
+            unique: true,
+        },
+        password: { type: String, required: true },
+        name: { type: String, required: true },
+        email: { type: String, ref: "Email" },
+        picture: String,
+        notifications: [{ type: Schema.ObjectId, ref: "Notifiction" }],
     },
-    password: { type: String, required: true },
-    name: { type: String, required: true },
-    email: {
-      type: String,
-      ref: "Email",
-    },
-    picture: String,
-    notifications: [{ type: Schema.Types.ObjectId, ref: "Notification" }],
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 adminSchema.pre("save", async function (next) {

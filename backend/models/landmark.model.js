@@ -4,14 +4,11 @@ import { validateReference, validateReferences } from "./validatingUtils.js";
 const landmarkSchema = new mongoose.Schema(
   {
     governorID: { type: mongoose.Schema.Types.ObjectId, ref: "Governor" },
-    name: String,
     description: String,
     pictures: [String],
     location: String,
-    ticketPrices: {
-      type: Map,
-      of: Number,
-    },
+    ticketPrices: { type: Map, of: Number },
+    name: { type: String, required: true },
     openingHours: [
       {
         day: {
@@ -27,15 +24,10 @@ const landmarkSchema = new mongoose.Schema(
           ],
         },
         open: Date,
-        close: Date,
+        close: Date, // hours and minutes only
       },
     ],
-    tags: [
-      {
-        type: String,
-        ref: "Tag",
-      },
-    ],
+    tags: [{ type: String, ref: "Tag" }],
   },
   { timestamps: true }
 );
