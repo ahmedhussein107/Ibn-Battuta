@@ -6,7 +6,6 @@ import {
   getAllLandmarks,
   updateLandmark,
   deleteLandmark,
-  filterLandmarks,
   getGovernorLandmarks,
   searchLandmarks,
 } from "../controllers/landmark.controller.js";
@@ -27,8 +26,6 @@ landmarkRouter.get(
 landmarkRouter.patch("/updateLandmark/:id", updateLandmark);
 
 landmarkRouter.delete("/deleteLandmark/:id", deleteLandmark);
-
-landmarkRouter.get("/filterLandmarks", filterLandmarks);
 
 landmarkRouter.get("/getGovernorLandmarks/:id", getGovernorLandmarks);
 

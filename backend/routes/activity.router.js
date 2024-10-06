@@ -23,4 +23,6 @@ activityRouter.get("/getAdvertiserActivities/:id", getAdvertiserActivities);
 
 activityRouter.delete("/deleteActivity/:id", deleteActivity);
 
+activityRouter.get("/searchActivities", searchActivities);  
+
 export default activityRouter;
