@@ -1,7 +1,6 @@
 import Itinerary from "../models/itinerary.model.js";
 import { genericSearch } from "../utilities/searchUtils.js";
 
-
 export const createItinerary = async (req, res) => {
   try {
     const itinerary = new Itinerary(req.body);
@@ -104,7 +103,6 @@ export const filterItineraries = async (req, res) => {
   }
   // Add preferences filter if provided
   if (preferences) {
-
     query.tags = { $in: preferences };
   }
 
@@ -139,7 +137,8 @@ export const getTourGuideItinerary = async (req, res) => {
   } catch (error) {
     console.error("Error fetching itineraries:", error);
     res.status(500).json({ message: "Internal Server Error" });
-
+  }
+};
 export const searchItineraries = async (req, res) => {
   try {
     const results = await genericSearch(Itinerary, req.query);

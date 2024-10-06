@@ -72,6 +72,8 @@ export const getAdvertiserActivities = async (req, res) => {
   } catch (error) {
     console.error("Error fetching activities:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
 export const searchActivities = async (req, res) => {
   try {
