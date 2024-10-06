@@ -16,28 +16,27 @@ import activityRouter from "./routes/activity.router.js";
 import governorRouter from "./routes/governor.router.js";
 import complaintRouter from "./routes/complaint.router.js";
 import advertiserRouter from "./routes/advertiser.router.js";
-import landmarkRouter from "./routes/landmark.router.js";
 import commentRouter from "./routes/comment.router.js";
 import tourGuideRouter from "./routes/tourguide.router.js";
 import sellerRouter from "./routes/seller.router.js";
-import customActivityRouter from "./routes/customactivity.router.js";
 import tagRouter from "./routes/tag.router.js";
 import ratingRouter from "./routes/rating.router.js";
+import landmarkRouter from "./routes/landmark.router.js";
+import customActivityRouter from "./routes/customActivity.router.js";
 import cors from "cors";
-
 dotenv.config();
 const app = express();
 
 connect(process.env.MONGO_URI)
-	.then(() => {
-		app.listen(process.env.PORT, () => {
-			console.log(`Connected to DB`);
-			console.log(`Listening to port ${process.env.PORT}`);
-		});
-	})
-	.catch((err) => {
-		console.log(err);
-	});
+  .then(() => {
+    app.listen(process.env.PORT, () => {
+      console.log(`Connected to DB`);
+      console.log(`Listening to port ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.use(cors());
 app.use(express.json());
@@ -60,8 +59,8 @@ app.use("/api/landmark", landmarkRouter);
 app.use("/api/comment", commentRouter);
 app.use("/api/tourguide", tourGuideRouter);
 app.use("/api/seller", sellerRouter);
-app.use("/api/customactivity", customActivityRouter);
 app.use("/api/tag", tagRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/rating", ratingRouter);
 app.use("/api/landmark", landmarkRouter);
+app.use("/api/customActivity", customActivityRouter);

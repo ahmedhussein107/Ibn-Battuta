@@ -1,4 +1,5 @@
 import Activity from "../models/activity.model.js";
+import { genericSearch } from "../utilities/searchUtils.js";
 
 // view upcoming activities that are open for booking and are not flagged
 export const getUpcomingActivities = async (req, res) => {
@@ -131,4 +132,14 @@ export const deleteActivity = async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
+};
+
+export const searchActivities = async (req, res) => {
+  try {
+    const results = await genericSearch(Activity, req.query);
+    res.status(200).json({ results });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
 };

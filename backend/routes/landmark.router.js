@@ -7,6 +7,7 @@ import {
   updateLandmark,
   deleteLandmark,
   filterLandmarks,
+  searchLandmarks,
 } from "../controllers/landmark.controller.js";
 
 const landmarkRouter = express.Router();
@@ -27,5 +28,7 @@ landmarkRouter.patch("/updateLandmark/:id", updateLandmark);
 landmarkRouter.delete("/deleteLandmark/:id", deleteLandmark);
 
 landmarkRouter.get("/filterLandmarks", filterLandmarks);
+
+landmarkRouter.get("/searchLandmarks", searchLandmarks);
 
 export default landmarkRouter;
