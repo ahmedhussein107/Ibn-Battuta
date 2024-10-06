@@ -24,7 +24,6 @@ import ratingRouter from "./routes/rating.router.js";
 import landmarkRouter from "./routes/landmark.router.js";
 import customActivityRouter from "./routes/customActivity.router.js";
 import cors from "cors";
-
 dotenv.config();
 const app = express();
 
