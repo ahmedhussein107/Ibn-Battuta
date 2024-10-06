@@ -1,12 +1,12 @@
 import express from "express";
 import {
-  createActivity,
-  getActivity,
-  updateActivity,
-  deleteActivity,
-  getActivityById,
-  getAdvertiserActivities,
-  searchActivities,
+	createActivity,
+	getActivity,
+	updateActivity,
+	deleteActivity,
+	getActivityById,
+	getAdvertiserActivities,
+	getUpcomingActivities,
 } from "../controllers/activity.controller.js";
 
 const activityRouter = express.Router();
@@ -23,6 +23,6 @@ activityRouter.get("/getAdvertiserActivities/:id", getAdvertiserActivities);
 
 activityRouter.delete("/deleteActivity/:id", deleteActivity);
 
-activityRouter.get("/searchActivities", searchActivities);  
+activityRouter.get("/getUpcomingActivities", getUpcomingActivities);
 
 export default activityRouter;
