@@ -2,13 +2,39 @@ import Activity from "../models/activity.model.js";
 
 // view upcoming activities that are open for booking and are not flagged
 export const getUpcomingActivities = async (req, res) => {
+	const { budget, minDate, maxDate, category, rating } = req.query;
+
+	const filter = {};
+
+	if (budget) {
+		const [minPrice, maxPrice] = budget.split("-").map(Number);
+		filter.price = {};
+		if (minPrice) filter.price.$gte = minPrice;
+		if (maxPrice) filter.price.$lte = maxPrice;
+	}
+
+	if (minDate) {
+		filter.startDate = {};
+		filter.startDate.$gte = new Date(minDate);
+	}
+
+	if (maxDate) {
+		filter.startDate = {};
+		filter.startDate.$lte = new Date(maxDate);
+	}
+
+	if (category) {
+		filter.category = category;
+	}
+
 	const sortField = req.query.sortBy || "rating";
 	const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
 
 	try {
-		const activities = await Activity.find({
+		let activities = await Activity.find({
 			isFlagged: false, // activities that are flagged do not appear to the user according to requirement (33)
 			startDate: { $gt: Date.now() },
+			...filter,
 		})
 			.populate("advertiserID")
 			.populate("ratings")
@@ -24,6 +50,14 @@ export const getUpcomingActivities = async (req, res) => {
 			}
 			return activity;
 		});
+
+		if (rating) {
+			const [minRating, maxRating] = rating.split("-").map(Number);
+			activities = activities.filter(
+				(activity) =>
+					activity.rating >= minRating && activity.rating <= maxRating
+			);
+		}
 
 		activities.sort((a, b) => sortOrder * (a[sortField] - b[sortField])); // sort the activities
 		res.json(activities);
