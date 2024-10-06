@@ -4,7 +4,7 @@ import Email from "../models/email.model.js";
 import Notification from "../models/notification.model.js";
 import Rating from "../models/rating.model.js";
 import Itinerary from "../models/itinerary.model.js";
-import CustomActivity from "../models/customactivity.model.js";
+import CustomActivity from "../models/customActivity.model.js";
 export const createTourGuide = async (req, res) => {
   //console.log(req.body);
   const inputUsername = req.body.username;

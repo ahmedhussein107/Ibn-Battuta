@@ -5,6 +5,7 @@ import Governor from "../models/governor.model.js";
 import Seller from "../models/seller.model.js";
 import TourGuide from "../models/tourguide.model.js";
 import Tourist from "../models/tourist.model.js";
+import Email from "../models/email.model.js";
 
 // Import deletion controller functions
 import { deleteAdvertiser } from "../controllers/advertiser.controller.js";
@@ -52,11 +53,32 @@ export const deleteUser = async (req, res) => {
 // Additional Admin Operations
 // Example for creating an admin
 export const createAdmin = async (req, res) => {
+  const inputUsername = req.body.username;
+  const inputEmail = req.body.email;
+  const username = await Username.findById(inputUsername);
+  const email = await Email.findById(inputEmail);
   try {
-    const admin = await Admin.create(req.body);
-    res.status(201).json(admin);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    if (!username && !email) {
+      const newUsername = await Username.create({
+        _id: inputUsername,
+        userType: "Admin",
+      });
+      const newEmail = await Email.create({
+        _id: inputEmail,
+      });
+      const newAdmin = await Admin.create(req.body);
+      res.status(201).json(newAdmin);
+    } else {
+      if (username) {
+        res.status(400).json({ e: "Username already exists" });
+      } else {
+        res.status(400).json({ e: "Email already exists" });
+      }
+    }
+  } catch (e) {
+    await Username.findByIdAndDelete(inputUsername);
+    await Email.findByIdAndDelete(inputEmail);
+    res.status(500).json({ message: e.message });
   }
 };
 
