@@ -1,4 +1,4 @@
-import customActivity from "../models/customactivity.model.js";
+import customActivity from "../models/customActivity.model.js";
 
 export const getCustomActivities = async (req, res) => {
   try {
