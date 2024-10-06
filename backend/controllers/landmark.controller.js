@@ -1,4 +1,5 @@
 import Landmark from "../models/landmark.model.js";
+
 import { genericSearch } from "../utilities/searchUtils.js";
 
 export const createLandmark = async (req, res) => {
@@ -77,7 +78,7 @@ export const filterLandmarks = async (req, res) => {
   }
 
   try {
-    console.log(query);
+    //console.log(query);
     const landmarks = await Landmark.find(query);
     res.status(200).json(landmarks);
   } catch (err) {
@@ -99,6 +100,7 @@ export const getGovernorLandmarks = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 export const searchLandmarks = async (req, res) => {
   try {
     const results = await genericSearch(Landmark, req.query);
