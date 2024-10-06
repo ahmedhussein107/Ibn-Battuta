@@ -1,9 +1,9 @@
 import express from "express";
 import {
-  getTourist,
-  createTourist,
-  updateTourist,
-  deleteTourist,
+    getTourist,
+    createTourist,
+    updateTourist,
+    deleteTourist,
 } from "../controllers/tourist.controller.js";
 
 const touristRouter = express.Router();

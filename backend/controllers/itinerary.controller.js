@@ -1,4 +1,6 @@
-import Itinerary from "../models/Itinerary.model.js";
+import Itinerary from "../models/itinerary.model.js";
+import { genericSearch } from "../utilities/searchUtils.js";
+
 
 export const createItinerary = async (req, res) => {
   try {
@@ -102,7 +104,8 @@ export const filterItineraries = async (req, res) => {
   }
   // Add preferences filter if provided
   if (preferences) {
-    query.preferences = { $in: preferences };
+
+    query.tags = { $in: preferences };
   }
 
   // Add language filter if provided
@@ -112,6 +115,7 @@ export const filterItineraries = async (req, res) => {
 
   try {
     // Query the database with the constructed query object
+    console.log(query);
     const itineraries = await Itinerary.find(query);
 
     // Return the filtered itineraries
@@ -135,5 +139,12 @@ export const getTourGuideItinerary = async (req, res) => {
   } catch (error) {
     console.error("Error fetching itineraries:", error);
     res.status(500).json({ message: "Internal Server Error" });
+
+export const searchItineraries = async (req, res) => {
+  try {
+    const results = await genericSearch(Itinerary, req.query);
+    res.status(200).json({ results });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

@@ -1,4 +1,5 @@
 import express from "express";
+
 import {
   createTag,
   getTag,
@@ -15,5 +16,6 @@ tagRouter.get("/allTags", getTag);
 tagRouter.put("/updateTag/:id", updateTag);
 
 tagRouter.delete("/deleteTag/:id", deleteTag);
+
 
 export default tagRouter;

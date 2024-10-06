@@ -1,4 +1,5 @@
 import Activity from "../models/activity.model.js";
+import { genericSearch } from "../utilities/searchUtils.js";
 
 export const getActivity = async (req, res) => {
   try {
@@ -71,5 +72,12 @@ export const getAdvertiserActivities = async (req, res) => {
   } catch (error) {
     console.error("Error fetching activities:", error);
     res.status(500).json({ message: "Internal Server Error" });
+
+export const searchActivities = async (req, res) => {
+  try {
+    const results = await genericSearch(Activity, req.query);
+    res.status(200).json({ results });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
