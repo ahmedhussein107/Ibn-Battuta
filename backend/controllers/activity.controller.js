@@ -1,5 +1,5 @@
 import Activity from "../models/activity.model.js";
-import { genericSearch } from "../utilities/searchUtils.js";
+import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 
 export const getActivity = async (req, res) => {
   try {
@@ -77,7 +77,9 @@ export const getAdvertiserActivities = async (req, res) => {
 
 export const searchActivities = async (req, res) => {
   try {
-    const results = await genericSearch(Activity, req.query);
+    const query = buildFilter(req.query);
+    console.log(query);
+    const results = await Activity.find(buildFilter(req.query));
     res.status(200).json({ results });
   } catch (error) {
     res.status(500).json({ message: error.message });
