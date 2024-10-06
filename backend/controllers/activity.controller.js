@@ -25,7 +25,9 @@ export const getActivityById = async (req, res) => {
   try {
     const activity = await Activity.findById(req.params.id);
     if (activity) {
-      res.status(200).json(activity);
+      const { toBeNotifiedTourists, createdAt, updatedAt, __v, ...others } =
+        activity._doc;
+      res.status(200).json(others);
     } else {
       res.status(404).json({ message: "Activity not found" });
     }
