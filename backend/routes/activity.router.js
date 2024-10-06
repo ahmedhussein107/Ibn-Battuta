@@ -1,11 +1,11 @@
 import express from "express";
 import {
-  createActivity,
-  getActivity,
-  updateActivity,
-  deleteActivity,
-  getActivityById,
-  getUpcomingActivities,
+	createActivity,
+	getActivity,
+	updateActivity,
+	deleteActivity,
+	getActivityById,
+	getUpcomingActivities,
 } from "../controllers/activity.controller.js";
 
 const activityRouter = express.Router();
@@ -15,6 +15,6 @@ activityRouter.get("/getActivity/:id", getActivityById);
 activityRouter.get("/getAllActivties", getActivity);
 activityRouter.patch("/updateActivity/:id", updateActivity);
 activityRouter.delete("/deleteActivity/:id", deleteActivity);
-activityRouter.delete("/upcoming", getUpcomingActivities);
+activityRouter.get("/upcoming", getUpcomingActivities);
 
 export default activityRouter;
