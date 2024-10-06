@@ -4,7 +4,7 @@ const InputForm = ({ data, setData }) => {
     return (
         <div>
             {Object.keys(data).map((key) => (
-                <div style={{ marginBottom: "10px" }}>
+                <div style={{ marginBottom: "2vh" }}>
                     <SingleEntryInput
                         label={key}
                         initialValue={data[key]}

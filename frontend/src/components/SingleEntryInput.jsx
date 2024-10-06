@@ -10,6 +10,9 @@ const SingleEntryInput = ({ placeholder, data, setData, label, width }) => {
         console.log(newData);
         setData(newData);
     };
+
+    const types = ["password", "email", "date"];
+
     return (
         <Grid item xs={width}>
             <TextField
@@ -18,7 +21,7 @@ const SingleEntryInput = ({ placeholder, data, setData, label, width }) => {
                 placeholder={placeholder}
                 id={label}
                 name={label}
-                type={label === "password" ? label : "text"}
+                type={label in types ? label : "text"}
                 label={label}
                 variant="filled"
                 value={value}

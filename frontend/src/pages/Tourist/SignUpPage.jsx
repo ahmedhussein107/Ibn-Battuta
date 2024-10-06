@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { TextField, Button, Container, Grid, Typography } from "@mui/material";
+import { TextField, Button, Container, Grid, Typography, Box } from "@mui/material";
 import axiosInstance from "../../api/axiosInstance";
 import MenuItem from "@mui/material/MenuItem";
+import InputForm from "../../components/InputForm";
 
 const SignUpPage = () => {
     const [formData, setFormData] = useState({
@@ -11,9 +12,10 @@ const SignUpPage = () => {
         mobile: "",
         nationality: "",
         DOB: "",
-        job: "",
         name: "",
     });
+
+    const [job, setJob] = useState(null);
     const [response, setResponse] = useState(null);
 
     const handleChange = (e) => {
@@ -27,7 +29,7 @@ const SignUpPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         axiosInstance
-            .post("/tourist/createTourist", formData)
+            .post("/tourist/createTourist", { ...formData, job })
             .then((response) => {
                 console.log("Created Successfully");
                 setResponse("Created Successfully");
@@ -40,133 +42,32 @@ const SignUpPage = () => {
         console.log("Form submitted:", formData);
     };
 
+    const jobs = ["Student", "Engineer", "Doctor"];
+
     return (
         <Container maxWidth="sm">
             <Typography variant="h4" align="center" gutterBottom>
                 Sign Up as Tourist
             </Typography>
-            <form onSubmit={handleSubmit}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            placeholder="Enter your Email"
-                            id="email"
-                            name="email"
-                            label="Email"
-                            variant="filled"
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id="username"
-                            name="username"
-                            label="Username"
-                            variant="filled"
-                            value={formData.username}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id="password"
-                            name="password"
-                            label="Password"
-                            type="password"
-                            variant="filled"
-                            value={formData.password}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id="name"
-                            name="name"
-                            label="name"
-                            type="name"
-                            variant="filled"
-                            value={formData.name}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id="mobile"
-                            name="mobile"
-                            label="Mobile Number"
-                            variant="filled"
-                            value={formData.mobile}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id="nationality"
-                            name="nationality"
-                            label="Nationality"
-                            variant="filled"
-                            value={formData.nationality}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id="DOB"
-                            name="DOB"
-                            label=""
-                            type="date"
-                            variant="filled"
-                            value={formData.DOB}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id="job"
-                            name="job"
-                            select
-                            label="job"
-                            variant="filled"
-                            value={formData.job}
-                            onChange={handleChange}
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value="student">Student</MenuItem>
-                            <MenuItem value="job">Job</MenuItem>
-                        </TextField>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                        >
-                            Sign Up
-                        </Button>
-                    </Grid>
-                </Grid>
-            </form>
-            {response && <p>{response}</p>}
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    marginBottom: "5vh",
+                }}
+            >
+                <InputForm data={formData} setData={setFormData} />
+                <TextField value={job} select onChange={(e) => setJob(e.target.value)}>
+                    {jobs.map((job) => (
+                        <MenuItem value={job}>{job}</MenuItem>
+                    ))}
+                </TextField>
+                <Button variant="contained" onClick={handleSubmit}>
+                    Submit
+                </Button>
+                {response && <p>{response}</p>}
+            </Box>
         </Container>
     );
 };
