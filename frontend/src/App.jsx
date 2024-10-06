@@ -8,6 +8,9 @@ import UpdateProductPage from "./pages/Product/UpdateProductPage";
 import TourGuideProfilePage from "./pages/TourGuide/TourGuideProfilePage";
 import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import NavBar from "./components/NavBar";
+import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
+import SignUpPage from "./pages/Tourist/SignUpPage";
+import AllSignUpPage from "./pages/AllSignUpPage";
 
 function App() {
     return (
@@ -22,7 +25,6 @@ function App() {
                     element={<UpdateProductPage />}
                 />
                 <Route path="/tourguide" element={<TourGuideProfilePage />} />
-                <Route path="/landmark" element={<LandmarkPage />} />{" "}
             </Routes>
         </Router>
     );
