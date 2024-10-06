@@ -29,6 +29,7 @@ export const updateLandmark = async (req, res) => {
                     ? []
                     : tags.split(",").map((tag) => tag.trim()),
         });
+
         res.json(landmarks);
     } catch (e) {
         res.status(400).json({ e: e.message });
