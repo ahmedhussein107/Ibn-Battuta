@@ -1,20 +1,23 @@
-import CustomActivity from "../models/customactivity.model.js";
 import express from "express";
 import {
-  createCustomActivity,
-  getAllCustomActivities,
-  updateCustomActivity,
-  deleteCustomActivity,
+	createCustomActivity,
+	getCustomActivities,
+	getCustomActivityById,
+	updateCustomActivity,
+	deleteCustomActivity,
+	getCustomActivityByTourGuideId,
 } from "../controllers/customactivity.controller.js";
 
 const customActivityRouter = express.Router();
 
-customActivityRouter.post("/", createCustomActivity);
-
-customActivityRouter.get("/", getAllCustomActivities);
-
-customActivityRouter.put("/:id", updateCustomActivity);
-
-customActivityRouter.delete("/:id", deleteCustomActivity);
+customActivityRouter.post("/createCustomActivity", createCustomActivity);
+customActivityRouter.get("/getAllCustomActivities", getCustomActivities);
+customActivityRouter.get("/getCustomActivity/:id", getCustomActivityById);
+customActivityRouter.patch("/updateCustomActivity/:id", updateCustomActivity);
+customActivityRouter.delete("/deleteCustomActivity/:id", deleteCustomActivity);
+customActivityRouter.get(
+	"/getCustomActivityByTourGuideId/:id",
+	getCustomActivityByTourGuideId
+);
 
 export default customActivityRouter;
