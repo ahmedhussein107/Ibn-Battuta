@@ -28,15 +28,15 @@ dotenv.config();
 const app = express();
 
 connect(process.env.MONGO_URI)
-  .then(() => {
-    app.listen(process.env.PORT, () => {
-      console.log(`Connected to DB`);
-      console.log(`Listening to port ${process.env.PORT}`);
+    .then(() => {
+        app.listen(process.env.PORT, () => {
+            console.log(`Connected to DB`);
+            console.log(`Listening to port ${process.env.PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
     });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 
 app.use(cors());
 app.use(express.json());
