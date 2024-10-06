@@ -6,6 +6,7 @@ import {
   createItinerary,
   updateItinerary,
   deleteItinerary,
+  getTourGuideItinerary,
   searchItineraries,
 } from "../controllers/itinerary.controller.js";
 
@@ -22,6 +23,8 @@ itineraryRouter.get("/getAllItineraries", getItineraries);
 itineraryRouter.get("/getItinerary/:id", getItineraryById);
 
 itineraryRouter.get("/filterItineraries", filterItineraries);
+
+itineraryRouter.get("/getTourGuideItinerary/:id", getTourGuideItinerary);
 
 itineraryRouter.get("/searchItineraries", searchItineraries);
 

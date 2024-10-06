@@ -129,6 +129,16 @@ export const filterItineraries = async (req, res) => {
   }
 };
 
+export const getTourGuideItinerary = async (req, res) => {
+  const tourguideId = req.params.id;
+  try {
+    const itineraries = await Itinerary.find({ tourguideID: tourguideId }); // Find all activities for the given advertiser ID
+    res.status(200).json(itineraries);
+  } catch (error) {
+    console.error("Error fetching itineraries:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 export const searchItineraries = async (req, res) => {
   try {
     const results = await genericSearch(Itinerary, req.query);

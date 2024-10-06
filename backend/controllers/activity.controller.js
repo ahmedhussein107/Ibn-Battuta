@@ -64,6 +64,17 @@ export const deleteActivity = async (req, res) => {
   }
 };
 
+export const getAdvertiserActivities = async (req, res) => {
+  const advertiserId = req.params.id;
+  try {
+    const activities = await Activity.find({ advertiserID: advertiserId }); // Find all activities for the given advertiser ID
+    res.status(200).json(activities);
+  } catch (error) {
+    console.error("Error fetching activities:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 export const searchActivities = async (req, res) => {
   try {
     const results = await genericSearch(Activity, req.query);

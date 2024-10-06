@@ -1,5 +1,6 @@
 import Landmark from "../models/landmark.model.js";
 import { genericSearch } from "../utilities/searchUtils.js";
+
 export const createLandmark = async (req, res) => {
   try {
     const landmark = await Landmark.create(req.body);
@@ -88,6 +89,16 @@ export const filterLandmarks = async (req, res) => {
   }
 };
 
+export const getGovernorLandmarks = async (req, res) => {
+  const governorId = req.params.id;
+  try {
+    const landmark = await Landmark.find({ governorID: governorId }); // Find all activities for the given advertiser ID
+    res.status(200).json(landmark);
+  } catch (error) {
+    console.error("Error fetching activities:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 export const searchLandmarks = async (req, res) => {
   try {
     const results = await genericSearch(Landmark, req.query);

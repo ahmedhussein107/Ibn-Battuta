@@ -5,6 +5,7 @@ import {
   updateActivity,
   deleteActivity,
   getActivityById,
+  getAdvertiserActivities,
   searchActivities,
 } from "../controllers/activity.controller.js";
 
@@ -18,8 +19,8 @@ activityRouter.get("/getAllActivties", getActivity);
 
 activityRouter.patch("/updateActivity/:id", updateActivity);
 
-activityRouter.delete("/deleteActivity/:id", deleteActivity);
+activityRouter.get("/getAdvertiserActivities/:id", getAdvertiserActivities);
 
-activityRouter.get("/searchActivities", searchActivities);
+activityRouter.delete("/deleteActivity/:id", deleteActivity);
 
 export default activityRouter;
