@@ -1,7 +1,10 @@
 import TourGuide from "../models/tourguide.model.js";
 import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
-
+import Notification from "../models/notification.model.js";
+import Rating from "../models/rating.model.js";
+import Itinerary from "../models/itinerary.model.js";
+import CustomActivity from "../models/customActivity.model.js";
 export const createTourGuide = async (req, res) => {
   //console.log(req.body);
   const inputUsername = req.body.username;
@@ -86,6 +89,55 @@ export const deleteTourGuide = async (req, res) => {
     if (tourGuide) {
       await Username.findByIdAndDelete(tourGuide.username);
       await Email.findByIdAndDelete(tourGuide.email);
+
+      // If there are notifications, delete each one
+      if (tourGuide.notifications && tourGuide.notifications.length > 0) {
+        await Promise.all(
+          tourGuide.notifications.map(async (notificationId) => {
+            await Notification.findByIdAndDelete(notificationId);
+          })
+        );
+      }
+
+      // If there are ratings, delete each one
+      if (tourGuide.ratings && tourGuide.ratings.length > 0) {
+        await Promise.all(
+          tourGuide.ratings.map(async (ratingId) => {
+            await Rating.findByIdAndDelete(ratingId);
+          })
+        );
+      }
+
+      // Delete related itineraries
+      const itineraries = await Itinerary.find({ tourguideID: tourGuide._id });
+      if (itineraries.length > 0) {
+        await Promise.all(
+          itineraries.map(async (itinerary) => {
+            // Delete ratings associated with each itinerary
+            if (itinerary.ratings && itinerary.ratings.length > 0) {
+              await Promise.all(
+                itinerary.ratings.map(async (ratingId) => {
+                  await Rating.findByIdAndDelete(ratingId);
+                })
+              );
+            }
+            await Itinerary.findByIdAndDelete(itinerary._id);
+          })
+        );
+      }
+
+      // Delete related custom activities
+      const customActivities = await CustomActivity.find({
+        tourguideID: tourGuide._id,
+      });
+      if (customActivities.length > 0) {
+        await Promise.all(
+          customActivities.map(async (customActivity) => {
+            await CustomActivity.findByIdAndDelete(customActivity._id);
+          })
+        );
+      }
+
       res.status(200).json({ message: "TourGuide deleted successfully" });
     } else {
       res.status(404).json({ e: "TourGuide not found" });
