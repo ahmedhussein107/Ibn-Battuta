@@ -44,12 +44,26 @@ export const getAllTourGuides = async (req, res) => {
 };
 
 export const getTourGuideById = async (req, res) => {
-  try {
-    const tourGuide = await TourGuide.findById(req.params.id);
-    if (tourGuide) {
-      res.status(200).json(tourGuide);
-    } else {
-      res.status(404).json({ e: "TourGuide not found" });
+    try {
+        const tourGuide = await TourGuide.findById(req.params.id);
+        if (tourGuide) {
+            const {
+                isAccepted,
+                document,
+                ratings,
+                sumOfRatings,
+                createdAt,
+                updatedAt,
+                __v,
+                ...others
+            } = tourGuide._doc;
+            res.status(200).json(others);
+        } else {
+            res.status(404).json({ e: "TourGuide not found" });
+        }
+    } catch (e) {
+        //console.log(e.message);
+        res.status(400).json({ e: e.message });
     }
   } catch (e) {
     //console.log(e.message);
@@ -58,16 +72,15 @@ export const getTourGuideById = async (req, res) => {
 };
 
 export const updateTourGuide = async (req, res) => {
-  try {
-    const tourGuide = await TourGuide.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (tourGuide) {
-      res.status(200).json(tourGuide);
-    } else {
-      res.status(404).json({ e: "TourGuide not found" });
+    try {
+        const tourGuide = await TourGuide.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (tourGuide) {
+            res.status(200).json(tourGuide);
+        } else {
+            res.status(404).json({ e: "TourGuide not found" });
+        }
+    } catch (e) {
+        res.status(400).json({ e: e.message });
     }
   } catch (e) {
     //console.log(e.message);
