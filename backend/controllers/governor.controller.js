@@ -33,9 +33,11 @@ export const createGovernor = async (req, res) => {
         _id: inputUsername,
         userType: "Governor",
       });
-      const newEmail = await Email.create({
-        _id: inputEmail,
-      });
+      if (inputEmail) {
+        const newEmail = await Email.create({
+          _id: inputEmail,
+        });
+      }
       const newGovernor = await Governor.create(req.body);
       res.status(201).json(newGovernor);
     } else {

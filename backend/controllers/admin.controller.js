@@ -63,9 +63,12 @@ export const createAdmin = async (req, res) => {
         _id: inputUsername,
         userType: "Admin",
       });
-      const newEmail = await Email.create({
-        _id: inputEmail,
-      });
+      if (inputEmail) {
+        const newEmail = await Email.create({
+          _id: inputEmail,
+        });
+      }
+
       const newAdmin = await Admin.create(req.body);
       res.status(201).json(newAdmin);
     } else {
