@@ -47,7 +47,17 @@ export const getTourGuideById = async (req, res) => {
     try {
         const tourGuide = await TourGuide.findById(req.params.id);
         if (tourGuide) {
-            res.status(200).json(tourGuide);
+            const {
+                isAccepted,
+                document,
+                ratings,
+                sumOfRatings,
+                createdAt,
+                updatedAt,
+                __v,
+                ...others
+            } = tourGuide._doc;
+            res.status(200).json(others);
         } else {
             res.status(404).json({ e: "TourGuide not found" });
         }
@@ -66,7 +76,6 @@ export const updateTourGuide = async (req, res) => {
             res.status(404).json({ e: "TourGuide not found" });
         }
     } catch (e) {
-        //console.log(e.message);
         res.status(400).json({ e: e.message });
     }
 };
