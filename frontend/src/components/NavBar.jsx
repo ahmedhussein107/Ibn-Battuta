@@ -29,6 +29,11 @@ const NavBar = () => {
 					</Link>
 				</li>
 				<li style={styles.li}>
+					<Link to="/tourist" style={styles.link}>
+						Tourist Profile
+					</Link>
+				</li>
+				<li style={styles.li}>
 					<Link to="/seller" style={styles.link}>
 						Seller Profile
 					</Link>

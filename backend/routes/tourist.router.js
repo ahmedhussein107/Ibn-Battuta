@@ -1,6 +1,7 @@
 import express from "express";
 import {
-    getTourist,
+    getTourists,
+    getTouristById,
     createTourist,
     updateTourist,
     deleteTourist,
@@ -8,9 +9,11 @@ import {
 
 const touristRouter = express.Router();
 
-touristRouter.get("/allTourists", getTourist);
+touristRouter.get("/allTourists", getTourists);
 
 touristRouter.post("/createTourist", createTourist);
+
+touristRouter.get("/tourist/:id", getTouristById);
 
 touristRouter.patch("/updateTourist/:id", updateTourist);
 
