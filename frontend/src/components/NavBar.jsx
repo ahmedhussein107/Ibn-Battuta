@@ -58,6 +58,11 @@ const NavBar = () => {
             Tourist Profile
           </Link>
         </li>
+        <li style={styles.li}>
+          <Link to="/activities" style={styles.link}>
+            Upcoming Activities
+          </Link>
+        </li>
       </ul>
     </nav>
   );

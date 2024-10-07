@@ -4,28 +4,33 @@ import { validateAdvertiserAndCategory, validateReferences } from "./validatingU
 
 const activitySchema = new Schema(
 
-  {
-    advertiserID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Advertiser",
-      required: true,
-    },
-    title: { type: String, required: true },
-    location: { type: String, required: true },
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
-    price: Number,
-    category: { type: String, ref: "Category", default: null },
-    tags: [{ type: String, ref: "Tag", default: null }],
-    ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
-    isOpenForBooking: { type: Boolean, default: true },
-    isFlagged: { type: Boolean, default: false },
-    sumOfRatings: { type: Number, default: 0 },
-    freeSpots: { type: Number, required: true },
-    specialDiscount: { type: Number, default: 0 },
-  },
+	{
+		name: String,
+		description: String,
+		advertiserID: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Advertiser",
+			required: true,
+		},
+		location: { type: String, required: true },
+		startDate: { type: Date, required: true },
+		endDate: { type: Date, required: true },
+		price: Number,
+		category: { type: String, ref: "Category" },
+		tags: [{ type: String, ref: "Tag" }],
+		ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+		isOpenForBooking: { type: Boolean, default: true },
+		isFlagged: { type: Boolean, default: false },
+		sumOfRatings: { type: Number, default: 0 },
+		freeSpots: { type: Number, required: true },
+		specialDiscount: { type: Number, default: 0 },
+	},
+	{
+		timestamps: true,
 
-  { timestamps: true }
+		toJSON: { virtuals: true }, // Ensure virtuals are included when converting to JSON
+		toObject: { virtuals: true }, // Ensure virtuals are included when converting to plain objects
+	}
 
 );
 
