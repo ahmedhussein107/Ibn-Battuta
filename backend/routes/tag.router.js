@@ -5,6 +5,7 @@ import {
   getTag,
   updateTag,
   deleteTag,
+  getTagByID,
 } from "../controllers/tag.controller.js";
 
 const tagRouter = express.Router();
@@ -17,5 +18,6 @@ tagRouter.put("/updateTag/:id", updateTag);
 
 tagRouter.delete("/deleteTag/:id", deleteTag);
 
+tagRouter.get("/getTagByID/:id", getTagByID);
 
 export default tagRouter;

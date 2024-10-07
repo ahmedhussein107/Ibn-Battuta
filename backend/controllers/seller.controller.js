@@ -35,7 +35,7 @@ export const createSeller = async (req, res) => {
   }
 };
 
-export const getAllSellers = async (req, res) => {
+export const getSellers = async (req, res) => {
   try {
     const sellers = await Seller.find();
     res.status(200).json(sellers);

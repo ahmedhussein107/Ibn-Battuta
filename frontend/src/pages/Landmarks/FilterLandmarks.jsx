@@ -12,7 +12,7 @@ const Landmark = () => {
   // Fetch all landmarks initially to get the available tags
   useEffect(() => {
     axiosInstance
-      .get(`/landmark/allLandmark`)
+      .get(`/landmark/filterLandmarks`)
       .then((response) => {
         const allLandmarks = response.data;
         setLandmarks(allLandmarks);
@@ -40,8 +40,8 @@ const Landmark = () => {
         params: { tags: selectedTag }, // Pass the selected tag as a query parameter
       });
 
-      //console.log("Selected Tag(s):", selectedTag);
-      //console.log("Response Data:", response.data);
+      console.log("Selected Tag(s):", selectedTag);
+      console.log("Response Data:", response.data);
 
       // If selectedTag is null, undefined, or empty, return all landmarks
       if (!selectedTag || selectedTag.length === 0) {
@@ -66,10 +66,11 @@ const Landmark = () => {
         }
 
         // Filter landmarks based on tag match
+        console.log("Selected Tags Array:", selectedTagsArray);
         return selectedTagsArray.some((tag) => landmark.tags.includes(tag));
       });
 
-      // console.log("Filtered Landmarks:", filteredLandmarks);
+      console.log("Filtered Landmarks:", filteredLandmarks);
 
       setLandmarks(filteredLandmarks); // Update landmarks based on the filtered result
       setResponse("Landmarks filtered successfully");
@@ -86,6 +87,25 @@ const Landmark = () => {
     filterLandmarks(tag); // Trigger filtering based on selected tag
   };
 
+  const chooseFields = (landmarks) => {
+    return landmarks.map((landmark) => {
+      const {
+        governerID,
+        pictures,
+        createdAt,
+        updatedAt,
+        __v,
+        _id,
+        id,
+        rating,
+        ...rest
+      } = landmark;
+      return {
+        // Governer: governerID.name,
+        ...rest,
+      };
+    });
+  };
   return (
     <div>
       <h1>Filter Landmarks</h1>
@@ -102,7 +122,7 @@ const Landmark = () => {
       </select>
 
       {/* Display filtered landmarks */}
-      {landmarks && <ObjectList data={landmarks} />}
+      {landmarks && <ObjectList data={chooseFields(landmarks)} />}
       {response && <p>{response}</p>}
     </div>
   );

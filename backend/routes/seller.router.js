@@ -1,7 +1,7 @@
 import express from "express";
 import {
     createSeller,
-    getAllSellers,
+    getSellers,
     getSellerById,
     updateSeller,
     deleteSeller,
@@ -11,7 +11,7 @@ const sellerRouter = express.Router();
 
 sellerRouter.post("/createSeller", createSeller);
 
-sellerRouter.get("/allSellers", getAllSellers);
+sellerRouter.get("/getSellers", getSellers);
 
 sellerRouter.get("/seller/:id", getSellerById);
 

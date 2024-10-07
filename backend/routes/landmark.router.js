@@ -8,6 +8,7 @@ import {
   deleteLandmark,
   getGovernorLandmarks,
   searchLandmarks,
+  filterLandmarks,
 } from "../controllers/landmark.controller.js";
 
 const landmarkRouter = express.Router();
@@ -30,5 +31,7 @@ landmarkRouter.delete("/deleteLandmark/:id", deleteLandmark);
 landmarkRouter.get("/getGovernorLandmarks/:id", getGovernorLandmarks);
 
 landmarkRouter.get("/searchLandmarks", searchLandmarks);
+
+landmarkRouter.get("/filterLandmarks", filterLandmarks);
 
 export default landmarkRouter;

@@ -19,6 +19,16 @@ const NavBar = () => {
                     </Link>
                 </li>
                 <li style={styles.li}>
+                    <Link to="/add-new-user" style={styles.link}>
+                        Add New User
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/user-management" style={styles.link}>
+                        User Management
+                    </Link>
+                </li>
+                <li style={styles.li}>
                     <Link to="/update-product/123" style={styles.link}>
                         Update Product
                     </Link>
@@ -56,6 +66,61 @@ const NavBar = () => {
                 <li style={styles.li}>
                     <Link to="/tourist" style={styles.link}>
                         Tourist Profile
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/activities" style={styles.link}>
+                        Upcoming Activities
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/view-products" style={styles.link}>
+                        Gift Shop
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/category-create" style={styles.link}>
+                        Create Category
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/category-all" style={styles.link}>
+                        All Categories
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/tag-create" style={styles.link}>
+                        Create Tag
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/tag-all" style={styles.link}>
+                        All Tags
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/landmark-governor" style={styles.link}>
+                        Governor's Landmark
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/itinerary" style={styles.link}>
+                        Tour Guide's Itineraries
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/itineraries" style={styles.link}>
+                        Tour Guide's Itineraries Update and Delete
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/itinerary-customAvtivity" style={styles.link}>
+                        Tour Guide's Custom Activities
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/activity" style={styles.link}>
+                        Advertiser's Activities
                     </Link>
                 </li>
                 <li style={styles.li}>

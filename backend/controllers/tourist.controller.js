@@ -3,11 +3,14 @@ import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
 import Notification from "../models/notification.model.js";
 import TouristActivityNotification from "../models/touristActivityNotification.model.js";
+
+
 export const getTourists = async (req, res) => {
     try {
         const tourguides = await Tourist.find();
         res.json(tourguides);
     } catch (e) {
+        res.json(e.message);
         //console.log(e.message);
     }
 };
