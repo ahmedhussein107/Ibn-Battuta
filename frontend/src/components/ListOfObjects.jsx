@@ -62,6 +62,7 @@ const ObjectList = ({ data }) => {
       </ul>
     </div>
   );
+
 };
 
 export default ObjectList;
