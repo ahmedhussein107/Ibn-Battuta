@@ -4,7 +4,7 @@ import axiosInstance from "../../api/axiosInstance";
 import ObjectList from "../../components/ListOfObjects";
 
 const AdvertiserActivities = () => {
-  const advertiserId = "66ffe6a45d59b2127d80df66";
+  const advertiserId = "67040377731df0ac20353236";
   const [activity, setLandmarks] = useState([]);
   const [tags, setTags] = useState([]); // To store all unique tags
   const [selectedTag, setSelectedTag] = useState(""); // For the dropdown

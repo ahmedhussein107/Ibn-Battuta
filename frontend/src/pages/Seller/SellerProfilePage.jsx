@@ -3,7 +3,7 @@ import axiosInstance from "../../api/axiosInstance";
 import UserProfileOptionalEdit from "../../components/UserProfileOptionalEdit";
 
 export default function SellerProfilePage() {
-  const sellerId = "6702d0df019fcb669dfa9d0c";
+  const sellerId = "67035db6b2364df8badd35bd";
   const [seller, setSeller] = useState(null);
   const [nonnmodifiable, setNonmodifiable] = useState(null);
   const [notifications, setNotifications] = useState([]);

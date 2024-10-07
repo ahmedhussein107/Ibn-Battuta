@@ -100,12 +100,19 @@ const LandmarkPage = () => {
 
     if (loading) return <p>Loading...</p>;
     if (!landmark) return <p>Landmark not found.</p>;
+    console.log(landmark.pictures[0]);
 
     return (
         <Container>
             <Typography variant="h4" align="center" gutterBottom>
                 Landmark Page
             </Typography>
+            <img
+                src={landmark.pictures[0]}
+                alt="Landmark"
+                style={{ maxWidth: "100%", height: "auto" }}
+            />
+
             <Box
                 component="form"
                 onSubmit={handleUpdateClick}
@@ -179,7 +186,10 @@ const LandmarkPage = () => {
                 />
 
                 {/* Opening Hours */}
-                <Typography variant="h6">Opening Hours</Typography>
+                <Typography variant="h6" align="left">
+                    Opening Hours
+                </Typography>
+
                 {Object.keys(landmark.openingHours).map((day) => (
                     <Box key={day} sx={{ display: "flex", gap: 2 }}>
                         <TextField

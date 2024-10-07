@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage";
@@ -30,6 +32,7 @@ import UserManagement from "./pages/Admin/UserManagement";
 import ViewProductsPage from "./pages/Product/ViewProductsPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
 import UpcomingActivities from "./pages/Activity/UpcomingActivities";
+import FilterItineraries from "./pages/Itinerary/FilterItineraries";
 import Itinerary from "./pages/Itinerary/Itinerary";
 import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 import LandmarksPage from "./pages/Landmark/LandmarksPage";
@@ -76,6 +79,7 @@ function App() {
                 <Route path="/activities" element={<UpcomingActivities />} />
                 <Route path="/landmark/landmark/" element={<LandmarkPage />} />
                 <Route path="/create-itinerary" element={<CreateItineraryPage />} />
+                <Route path="/filter-itineraries" element={<FilterItineraries />} />
                 <Route path="/landmarks" element={<LandmarksPage />} />
                 <Route path="/create-landmark" element={<CreateLandmarkPage />} />
             </Routes>
