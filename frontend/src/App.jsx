@@ -6,6 +6,16 @@ import AboutPage from "./pages/AboutPage";
 import CreateProductPage from "./pages/Product/CreateProductPage";
 import UpdateProductPage from "./pages/Product/UpdateProductPage";
 import TourGuideProfilePage from "./pages/TourGuide/TourGuideProfilePage";
+import UpdateCategory from "./pages/Category/UpdateCategory";
+import CreateCategory from "./pages/Category/CreateCategory";
+import GetAllCategories from "./pages/Category/GetAllCategories";
+import UpdateTag from "./pages/Tag/UpdateTag";
+import CreateTag from "./pages/Tag/CreateTag";
+import GetAllTags from "./pages/Tag/GetAllTags";
+import GovernorLandmarks from "./pages/Governor/GovernorLandmarks";
+import TourGuideItineraries from "./pages/TourGuide/TourGuideItineraries";
+import TourGuideCustomActivities from "./pages/TourGuide/TourGuideCustomActivities";
+import AdvertiserActivities from "./pages/Advertiser/AdvertiserActivities";
 import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import SellerProfilePage from "./pages/Seller/SellerProfilePage";
 import AdvertiserProfilePage from "./pages/Advertiser/AdvertiserProfilePage";
@@ -15,7 +25,6 @@ import FilterLandmarks from "./pages/Landmarks/FilterLandmarks";
 import NavBar from "./components/NavBar";
 import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 import SignUpPage from "./pages/Tourist/SignUpPage";
-import Itineraries from "./pages/Itinerary/Itineraries";
 import AllSignUpPage from "./pages/AllSignUpPage";
 import ViewProductsPage from "./pages/Product/ViewProductsPage";
 import UpcomingActivities from "./pages/Activity/UpcomingActivities";
@@ -33,6 +42,19 @@ function App() {
                     element={<UpdateProductPage />}
                 />
                 <Route path="/tourguide" element={<TourGuideProfilePage />} />
+                <Route path="/category/:id" element={<UpdateCategory />} />
+                <Route path="/category-create" element={<CreateCategory />} />
+                <Route path="/category-all" element={<GetAllCategories />} />
+                <Route path="/tag/:id" element={<UpdateTag />} />
+                <Route path="/tag-create" element={<CreateTag />} />
+                <Route path="/tag-all" element={<GetAllTags />} />
+                <Route path="/landmark-governor" element={<GovernorLandmarks />} />
+                <Route path="/itinerary" element={<TourGuideItineraries />} />
+                <Route
+                    path="/itinerary-customAvtivity"
+                    element={<TourGuideCustomActivities />}
+                />
+                <Route path="/activity" element={<AdvertiserActivities />} />
                 <Route path="/advertiser" element={<AdvertiserProfilePage />} />
                 <Route path="/create-activity" element={<CreateActivityPage />} />
                 <Route path="/update-activity" element={<UpdateActivityPage />} />

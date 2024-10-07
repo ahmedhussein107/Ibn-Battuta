@@ -1,11 +1,11 @@
 import SingleEntry from "./SingleEntry";
-export default function UserProfile({ data, setData }) {
+export default function ListOfThings({ data, setData }) {
   return (
     <div>
-      {Object.keys(data).map((key) => (
+      {data.map((element, index) => (
         <SingleEntry
-          label={key}
-          initialValue={data[key]}
+          label={index}
+          initialValue={element._id}
           data={data}
           setData={setData}
         />

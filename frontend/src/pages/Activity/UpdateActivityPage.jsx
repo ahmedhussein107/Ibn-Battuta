@@ -4,7 +4,7 @@ import axiosInstance from "../../api/axiosInstance";
 import UserProfile from "../../components/UserProfile";
 
 export default function UpdateActivityPage() {
-  const activityId = "66fffff32d456667fdcf9a62";
+  const activityId = "670109d5ff4d3b94c2d294a9";
   const [activity, setActivity] = useState(null);
   const [response, setResponse] = useState(null);
 
