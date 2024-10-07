@@ -61,6 +61,9 @@ const NavBar = () => {
 				<li style={styles.li}>
 					<Link to="/activities" style={styles.link}>
 						Upcoming Activities
+        <li style={styles.li}>
+					<Link to="/view-products" style={styles.link}>
+						Gift Shop
 					</Link>
 				</li>
 			</ul>

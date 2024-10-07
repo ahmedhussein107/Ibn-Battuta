@@ -16,6 +16,7 @@ import NavBar from "./components/NavBar";
 import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 import SignUpPage from "./pages/Tourist/SignUpPage";
 import AllSignUpPage from "./pages/AllSignUpPage";
+import ViewProductsPage from "./pages/Product/ViewProductsPage";
 import UpcomingActivities from "./pages/Activity/UpcomingActivities";
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         <Route path="/seller" element={<SellerProfilePage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/allsignup" element={<AllSignUpPage />} />
+        <Route path="/view-products" element={<ViewProductsPage />} />
         <Route path="/activities" element={<UpcomingActivities />} />
       </Routes>
     </Router>
