@@ -31,7 +31,6 @@ const SingleEntry = ({ label, initialValue, data, setData }) => {
   return (
     <div style={styles.row}>
       <label style={styles.label}>{label}:</label>
-
       {/* Display either a checkbox or input field (if editing) */}
       {isEditing ? (
         typeof value === "boolean" ? (

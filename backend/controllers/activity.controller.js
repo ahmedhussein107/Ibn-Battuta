@@ -22,16 +22,20 @@ export const createActivity = async (req, res) => {
 };
 
 export const getActivityById = async (req, res) => {
-	try {
-		const activity = await Activity.findById(req.params.id);
-		if (activity) {
-			res.status(200).json(activity);
-		} else {
-			res.status(404).json({ message: "Activity not found" });
-		}
-	} catch (error) {
-		res.status(500).json({ message: error.message });
-	}
+
+  try {
+    const activity = await Activity.findById(req.params.id);
+    if (activity) {
+      const { toBeNotifiedTourists, createdAt, updatedAt, __v, ...others } =
+        activity._doc;
+      res.status(200).json(others);
+    } else {
+      res.status(404).json({ message: "Activity not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
 };
 
 export const updateActivity = async (req, res) => {
@@ -89,10 +93,6 @@ export const getUpcomingActivities = async (req, res) => {
 			.populate("advertiserID")
 			.populate("ratings");
 
-		for (let i = 0; i < activities.length; i++) {
-			const rating = activities[i].rating;
-			console.log(rating);
-		}
 		if (rating) {
 			const bounds = rating.split("-");
 			const minRating = bounds[0] ? parseInt(bounds[0]) : -1;
@@ -102,7 +102,7 @@ export const getUpcomingActivities = async (req, res) => {
 			});
 		}
 
-		res.status(200).json({ activities });
+		res.status(200).json(activities);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
