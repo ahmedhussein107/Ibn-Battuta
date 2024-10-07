@@ -89,10 +89,6 @@ export const getUpcomingActivities = async (req, res) => {
 			.populate("advertiserID")
 			.populate("ratings");
 
-		for (let i = 0; i < activities.length; i++) {
-			const rating = activities[i].rating;
-			console.log(rating);
-		}
 		if (rating) {
 			const bounds = rating.split("-");
 			const minRating = bounds[0] ? parseInt(bounds[0]) : -1;
@@ -102,7 +98,7 @@ export const getUpcomingActivities = async (req, res) => {
 			});
 		}
 
-		res.status(200).json({ activities });
+		res.status(200).json(activities);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
