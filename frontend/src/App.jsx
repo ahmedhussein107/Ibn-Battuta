@@ -15,6 +15,8 @@ import NavBar from "./components/NavBar";
 import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 import SignUpPage from "./pages/Tourist/SignUpPage";
 import AllSignUpPage from "./pages/AllSignUpPage";
+import AddNewUser from "./pages/Admin/AddNewUser";
+import UserManagement from "./pages/Admin/UserManagement";
 
 function App() {
     console.log(" i am in app", import.meta.env.VITE_API_URI);
@@ -25,6 +27,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/create-product" element={<CreateProductPage />} />
+        <Route path="/add-new-user" element={<AddNewUser />} />
+        <Route path="/user-management" element={<UserManagement />} />
         <Route
           path="/update-product/:productId"
           element={<UpdateProductPage />}
