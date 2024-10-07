@@ -37,7 +37,7 @@ export const createAdvertiser = async (req, res) => {
   }
 };
 
-export const getAllAdvertisers = async (req, res) => {
+export const getAdvertisers = async (req, res) => {
   try {
     const advertisers = await Advertiser.find();
     res.status(200).json(advertisers);

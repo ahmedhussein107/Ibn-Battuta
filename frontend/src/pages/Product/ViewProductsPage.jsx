@@ -33,7 +33,7 @@ const ViewProductsPage = () => {
 
   const handleSearch = () => {
     const queryParams = {
-      name: "~" + searchTerm,
+      name: "~"+searchTerm,
       price: `${minPrice}-${maxPrice}`,
     };
     fetchProducts(queryParams);

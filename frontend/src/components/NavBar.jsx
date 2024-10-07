@@ -19,6 +19,16 @@ const NavBar = () => {
           </Link>
         </li>
         <li style={styles.li}>
+          <Link to="/add-new-user" style={styles.link}>
+            Add New User
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/user-management" style={styles.link}>
+            User Management
+          </Link>
+        </li>
+        <li style={styles.li}>
           <Link to="/update-product/123" style={styles.link}>
             Update Product
           </Link>
