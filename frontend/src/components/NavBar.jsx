@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { Link } from "react-router-dom";
 const NavBar = () => {
   return (
@@ -106,6 +107,11 @@ const NavBar = () => {
         <li style={styles.li}>
           <Link to="/activity" style={styles.link}>
             Advertiser's Activities
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/filter-itineraries" style={styles.link}>
+            Filter Itinerary
           </Link>
         </li>
       </ul>

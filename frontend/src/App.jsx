@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
@@ -28,6 +29,7 @@ import SignUpPage from "./pages/Tourist/SignUpPage";
 import AllSignUpPage from "./pages/AllSignUpPage";
 import ViewProductsPage from "./pages/Product/ViewProductsPage";
 import UpcomingActivities from "./pages/Activity/UpcomingActivities";
+import FilterItineraries from "./pages/Itinerary/FilterItineraries";
 
 function App() {
   return (
@@ -65,6 +67,7 @@ function App() {
         <Route path="/allsignup" element={<AllSignUpPage />} />
         <Route path="/view-products" element={<ViewProductsPage />} />
         <Route path="/activities" element={<UpcomingActivities />} />
+        <Route path="/filter-itineraries" element={<FilterItineraries />} />
       </Routes>
     </Router>
   );
