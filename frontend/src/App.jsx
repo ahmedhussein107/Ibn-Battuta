@@ -48,6 +48,7 @@ function App() {
                     element={<UpdateProductPage />}
                 />
                 <Route path="/products/:productId" element={<ViewProductPage />} />
+                <Route path="/tourguide" element={<TourGuideProfilePage />} />
                 <Route path="/category/:id" element={<UpdateCategory />} />
                 <Route path="/category-create" element={<CreateCategory />} />
                 <Route path="/category-all" element={<GetAllCategories />} />
@@ -55,7 +56,6 @@ function App() {
                 <Route path="/tag-create" element={<CreateTag />} />
                 <Route path="/tag-all" element={<GetAllTags />} />
                 <Route path="/landmark-governor" element={<GovernorLandmarks />} />
-                <Route path="/itineraries" element={<Itinerary />} />
                 <Route path="/itinerary" element={<TourGuideItineraries />} />
                 <Route
                     path="/itinerary-customAvtivity"
@@ -72,7 +72,7 @@ function App() {
                 <Route path="/allsignup" element={<AllSignUpPage />} />
                 <Route path="/view-products" element={<ViewProductsPage />} />
                 <Route path="/activities" element={<UpcomingActivities />} />
-                <Route path="/tourguide" element={<TourGuideProfilePage />} />
+                <Route path="/landmark/landmark/" element={<LandmarkPage />} />
                 <Route path="/create-itinerary" element={<CreateItineraryPage />} />
             </Routes>
         </Router>
