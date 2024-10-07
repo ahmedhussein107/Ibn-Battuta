@@ -69,7 +69,8 @@ const NavBar = () => {
             Gift Shop
           </Link>
         </li>
-        <Link to="/category-create" style={styles.link}>
+        <li style={styles.li}>
+          <Link to="/category-create" style={styles.link}>
             Create Category
           </Link>
         </li>
@@ -88,7 +89,7 @@ const NavBar = () => {
             All Tags
           </Link>
         </li>
-       <li style={styles.li}>
+        <li style={styles.li}>
           <Link to="/landmark-governor" style={styles.link}>
             Governor's Landmark
           </Link>
@@ -107,7 +108,7 @@ const NavBar = () => {
           <Link to="/activity" style={styles.link}>
             Advertiser's Activities
           </Link>
-       </li>
+        </li>
       </ul>
     </nav>
   );
