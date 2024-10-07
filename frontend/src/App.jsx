@@ -27,6 +27,7 @@ import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 import SignUpPage from "./pages/Tourist/SignUpPage";
 import AllSignUpPage from "./pages/AllSignUpPage";
 import ViewProductsPage from "./pages/Product/ViewProductsPage";
+import ViewProductPage from "./pages/Product/ViewProductPage";
 import UpcomingActivities from "./pages/Activity/UpcomingActivities";
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
           path="/update-product/:productId"
           element={<UpdateProductPage />}
         />
+        <Route path="/products/:productId" element={<ViewProductPage />} />
         <Route path="/tourguide" element={<TourGuideProfilePage />} />
         <Route path="/category/:id" element={<UpdateCategory />} />
         <Route path="/category-create" element={<CreateCategory />} />
