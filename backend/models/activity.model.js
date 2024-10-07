@@ -24,6 +24,7 @@ const activitySchema = new Schema(
     freeSpots: { type: Number, required: true },
     specialDiscount: { type: Number, default: 0 },
   },
+
   { timestamps: true }
 
 );
