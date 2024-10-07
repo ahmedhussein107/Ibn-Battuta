@@ -1,47 +1,65 @@
 import { Link } from "react-router-dom";
 const NavBar = () => {
-	return (
-		<nav style={styles.nav}>
-			<ul style={styles.ul}>
-				<li style={styles.li}>
-					<Link to="/" style={styles.link}>
-						Home
-					</Link>
-				</li>
-				<li style={styles.li}>
-					<Link to="/about" style={styles.link}>
-						About
-					</Link>
-				</li>
-				<li style={styles.li}>
-					<Link to="/create-product" style={styles.link}>
-						Create Product
-					</Link>
-				</li>
-				<li style={styles.li}>
-					<Link to="/update-product/123" style={styles.link}>
-						Update Product
-					</Link>
-				</li>
-				<li style={styles.li}>
-					<Link to="/tourguide" style={styles.link}>
-						Tour Guide Profile
-					</Link>
-				</li>
-				<li style={styles.li}>
-					<Link to="/tourist" style={styles.link}>
-						Tourist Profile
-					</Link>
-				</li>
-				<li style={styles.li}>
+  return (
+    <nav style={styles.nav}>
+      <ul style={styles.ul}>
+        <li style={styles.li}>
+          <Link to="/" style={styles.link}>
+            Home
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/about" style={styles.link}>
+            About
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/create-product" style={styles.link}>
+            Create Product
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/update-product/123" style={styles.link}>
+            Update Product
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/tourguide" style={styles.link}>
+            Tour Guide Profile
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/advertiser" style={styles.link}>
+            Advertiser Profile
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/create-activity" style={styles.link}>
+            Create Activity
+          </Link>
+        </li>
+        <li style={styles.li}>
 					<Link to="/seller" style={styles.link}>
 						Seller Profile
 					</Link>
 				</li>
-			</ul>
-		</nav>
-	);
-};
+        <li style={styles.li}>
+          <Link to="/update-activity" style={styles.link}>
+            Update Activity
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/filter-landmarks" style={styles.link}>
+            Filter Landmarks
+          </Link>
+          <Link to="/tourist" style={styles.link}>
+            Tourist Profile
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  );
+}
 
 const styles = {
 	nav: {
