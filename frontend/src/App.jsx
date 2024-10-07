@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
-
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import CreateProductPage from "./pages/Product/CreateProductPage";
 import UpdateProductPage from "./pages/Product/UpdateProductPage";
 import TourGuideProfilePage from "./pages/TourGuide/TourGuideProfilePage";
+import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import SellerProfilePage from "./pages/Seller/SellerProfilePage";
 import AdvertiserProfilePage from "./pages/Advertiser/AdvertiserProfilePage";
 import CreateActivityPage from "./pages/Activity/CreateActivityPage";
