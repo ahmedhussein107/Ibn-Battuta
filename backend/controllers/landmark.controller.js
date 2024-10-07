@@ -6,35 +6,67 @@ import { genericSearch,buildFilter } from "../utilities/searchUtils.js";
 export const createLandmark = async (req, res) => {
     try {
         const landmark = await Landmark.create(req.body);
-        res.json(landmark);
+        res.status(201).json(landmark);
     } catch (e) {
-        res.status(400).json({ e: e.message });
+        res.status(400).json({ error: e.message });
     }
 };
 
 export const getAllLandmarks = async (req, res) => {
     try {
         const landmarks = await Landmark.find();
-        res.json(landmarks);
+        res.status(200).json(landmarks);
     } catch (e) {
-        res.status(400).json({ e: e.message });
+        res.status(400).json({ error: e.message });
     }
 };
 
 export const updateLandmark = async (req, res) => {
     try {
-        const { tags, ...other } = req.body;
-        const landmarks = await Landmark.findByIdAndUpdate(req.params.id, {
-            ...other,
-            tags:
-                tags.trim().length === 0
-                    ? []
-                    : tags.split(",").map((tag) => tag.trim()),
-        });
+        const {
+            governorID,
+            description,
+            pictures,
+            location,
+            tags,
+            ticketPrices,
+            openingHours,
+            ...other
+        } = req.body;
 
-        res.json(landmarks);
+        const updatedTags =
+            tags && tags.length > 0
+                ? tags.split(",").map((tag) => tag.trim())
+                : [];
+
+        const updatedData = {
+            ...other,
+            governorID,
+            description,
+            pictures,
+            location,
+            tags: updatedTags,
+            ticketPrices: ticketPrices || {
+                foreigner: 0,
+                native: 0,
+                student: 0,
+            },
+            openingHours: openingHours || {}, // Default if undefined
+        };
+
+        const landmark = await Landmark.findByIdAndUpdate(
+            req.params.id,
+            updatedData,
+            { new: true, runValidators: true }
+        );
+
+        if (!landmark) {
+            return res.status(404).json({ error: "Landmark not found" });
+        }
+
+        res.status(200).json(landmark);
     } catch (e) {
-        res.status(400).json({ e: e.message });
+        res.status(400).json({ error: e.message });
     }
 };
 
@@ -42,38 +74,36 @@ export const getTicketPricesFromLandmark = async (req, res) => {
     try {
         const landmark = await Landmark.findById(req.params.id);
         if (!landmark) {
-            res.status(404).json({ e: "Landmark not found" });
-        } else {
-            res.status(200).json(landmark.ticketPrices);
+            return res.status(404).json({ error: "Landmark not found" });
         }
+        res.status(200).json(landmark.ticketPrices);
     } catch (e) {
-        res.status(400).json({ e: e.message });
+        res.status(400).json({ error: e.message });
     }
 };
 
 export const getLandmarkById = async (req, res) => {
     try {
         const landmark = await Landmark.findById(req.params.id);
-        if (landmark) {
-            res.status(200).json(landmark);
-        } else {
-            res.status(404).json({ e: "Landmark not found" });
+        if (!landmark) {
+            return res.status(404).json({ error: "Landmark not found" });
         }
+
+        res.status(200).json(landmark);
     } catch (e) {
-        res.status(400).json({ e: e.message });
+        res.status(400).json({ error: e.message });
     }
 };
 
 export const deleteLandmark = async (req, res) => {
     try {
         const landmark = await Landmark.findByIdAndDelete(req.params.id);
-        if (landmark) {
-            res.status(200).json(landmark);
-        } else {
-            res.status(404).json({ e: "Landmark not found" });
+        if (!landmark) {
+            return res.status(404).json({ error: "Landmark not found" });
         }
+        res.status(200).json(landmark);
     } catch (e) {
-        res.status(400).json({ e: e.message });
+        res.status(400).json({ error: e.message });
     }
 };
 
@@ -102,10 +132,10 @@ export const filterLandmarks = async (req, res) => {
 export const getGovernorLandmarks = async (req, res) => {
     const governorId = req.params.id;
     try {
-        const landmark = await Landmark.find({ governorID: governorId }); // Find all activities for the given advertiser ID
-        res.status(200).json(landmark);
+        const landmarks = await Landmark.find({ governorID: governorId });
+        res.status(200).json(landmarks);
     } catch (error) {
-        console.error("Error fetching activities:", error);
+        console.error("Error fetching landmarks:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };

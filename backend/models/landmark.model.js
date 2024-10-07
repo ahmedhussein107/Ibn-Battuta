@@ -7,31 +7,25 @@ const landmarkSchema = new mongoose.Schema(
         description: String,
         pictures: [String],
         location: String,
-        ticketPrices: { type: Map, of: Number },
+        ticketPrices: {
+            foreigner: { type: Number, default: 0 },
+            native: { type: Number, default: 0 },
+            student: { type: Number, default: 0 },
+        },
         name: { type: String, required: true },
-        openingHours: [
-            {
-                day: {
-                    type: String,
-                    enum: [
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday",
-                        "Sunday",
-                    ],
-                },
-                open: Date,
-                close: Date, // hours and minutes only
-            },
-        ],
+        openingHours: {
+            Monday: { open: Date, close: Date },
+            Tuesday: { open: Date, close: Date },
+            Wednesday: { open: Date, close: Date },
+            Thursday: { open: Date, close: Date },
+            Friday: { open: Date, close: Date },
+            Saturday: { open: Date, close: Date },
+            Sunday: { open: Date, close: Date },
+        },
         tags: [{ type: String, ref: "Tag" }],
     },
     { timestamps: true }
 );
-
 landmarkSchema.pre("save", async function (next) {
     try {
         const { governorID, tags } = this;
@@ -53,7 +47,8 @@ landmarkSchema.pre("save", async function (next) {
 const validateReferencesMiddleware = async function (next) {
     try {
         const update = this.getUpdate();
-        const updatedGovernorID = update.governorID || update["$set.governorID"];
+        const updatedGovernorID =
+            update.governorID || update["$set.governorID"];
         const updatedTags = update.tags || update["$set.tags"];
 
         if (updatedGovernorID) {
