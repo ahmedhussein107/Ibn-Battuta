@@ -15,6 +15,7 @@ import NavBar from "./components/NavBar";
 import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 import SignUpPage from "./pages/Tourist/SignUpPage";
 import AllSignUpPage from "./pages/AllSignUpPage";
+import ViewProductsPage from "./pages/Product/ViewProductsPage";
 
 function App() {
     console.log(" i am in app", import.meta.env.VITE_API_URI);
@@ -37,6 +38,7 @@ function App() {
         <Route path="/tourist" element={<TouristProfilePage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/allsignup" element={<AllSignUpPage />} />
+        <Route path="/view-products" element={<ViewProductsPage />} />
       </Routes>
     </Router>
   );
