@@ -29,7 +29,6 @@ const NavBar = () => {
           </Link>
         </li>
         <li style={styles.li}>
-<<<<<<< HEAD
           <Link to="/advertiser" style={styles.link}>
             Advertiser Profile
           </Link>
@@ -47,16 +46,16 @@ const NavBar = () => {
         <li style={styles.li}>
           <Link to="/filter-landmarks" style={styles.link}>
             Filter Landmarks
-=======
+          </Link>
           <Link to="/tourist" style={styles.link}>
             Tourist Profile
->>>>>>> main
           </Link>
         </li>
       </ul>
     </nav>
   );
-};
+}
+
 
 const styles = {
   nav: {

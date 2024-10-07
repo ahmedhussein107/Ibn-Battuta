@@ -17,6 +17,7 @@ import SignUpPage from "./pages/Tourist/SignUpPage";
 import AllSignUpPage from "./pages/AllSignUpPage";
 
 function App() {
+    console.log(" i am in app", import.meta.env.VITE_API_URI);
   return (
     <Router>
       <NavBar />
