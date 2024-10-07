@@ -93,7 +93,7 @@ export const createAdmin = async (req, res) => {
 };
 
 // Getting all admins
-export const allAdmins = async (req, res) => {
+export const getAdmins = async (req, res) => {
   try {
     const admins = await Admin.find().populate("username");
     res.status(200).json(admins);

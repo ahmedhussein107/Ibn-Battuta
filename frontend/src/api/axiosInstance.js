@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URI = import.meta.env.VITE_API_URI;
+const URI = "http://localhost:8000/";
 console.log("VITE_API_URI:", URI);
 
 const axiosInstance = axios.create({

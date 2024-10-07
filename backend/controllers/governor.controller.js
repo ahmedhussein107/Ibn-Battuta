@@ -63,7 +63,7 @@ export const createGovernor = async (req, res) => {
   }
 };
 
-export const allGovernors = async (req, res) => {
+export const getGovernors = async (req, res) => {
   try {
     const governors = await Governor.find();
     res.json(governors);

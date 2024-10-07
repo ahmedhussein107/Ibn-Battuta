@@ -2,7 +2,7 @@ import express from "express";
 import Admin from "../models/admin.model.js";
 
 import {
-  allAdmins,
+  getAdmins,
   createAdmin,
   deleteAdmin,
   deleteUser,
@@ -12,7 +12,7 @@ const adminRouter = express.Router();
 
 adminRouter.post("/createAdmin", createAdmin);
 
-adminRouter.get("/getAdmins", allAdmins);
+adminRouter.get("/getAdmins", getAdmins);
 
 adminRouter.delete("/deleteAdmin/:id", deleteAdmin);
 

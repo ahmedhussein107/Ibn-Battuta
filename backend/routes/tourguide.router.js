@@ -1,7 +1,7 @@
 import express from "express";
 import {
     createTourGuide,
-    getAllTourGuides,
+    getTourGuides,
     getTourGuideById,
     updateTourGuide,
     deleteTourGuide,
@@ -11,7 +11,7 @@ const tourGuideRouter = express.Router();
 
 tourGuideRouter.post("/createTourGuide", createTourGuide);
 
-tourGuideRouter.get("/allTourGuides", getAllTourGuides);
+tourGuideRouter.get("/getTourGuides", getTourGuides);
 
 tourGuideRouter.get("/tourGuide/:id", getTourGuideById);
 

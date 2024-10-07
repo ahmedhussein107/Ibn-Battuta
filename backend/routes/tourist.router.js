@@ -9,7 +9,7 @@ import {
 
 const touristRouter = express.Router();
 
-touristRouter.get("/allTourists", getTourists);
+touristRouter.get("/getTourists", getTourists);
 
 touristRouter.post("/createTourist", createTourist);
 
