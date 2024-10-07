@@ -29,7 +29,7 @@ const NavBar = () => {
                     </Link>
                 </li>
                 <li style={styles.li}>
-                    <Link to="/update-product/123" style={styles.link}>
+                    <Link to="/update-product/67015b31da89f2d0b8a94912" style={styles.link}>
                         Update Product
                     </Link>
                 </li>
