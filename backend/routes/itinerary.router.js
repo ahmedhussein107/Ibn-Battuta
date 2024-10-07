@@ -1,13 +1,14 @@
 import express from "express";
 import {
-  getItineraries,
-  filterItineraries,
-  getItineraryById,
-  createItinerary,
-  updateItinerary,
-  deleteItinerary,
-  getTourGuideItinerary,
-  searchItineraries,
+    getItineraries,
+    filterItineraries,
+    getItineraryById,
+    createItinerary,
+    updateItinerary,
+    deleteItinerary,
+    deleteItineraries,
+    getTourGuideItinerary,
+    searchItineraries,
 } from "../controllers/itinerary.controller.js";
 
 const itineraryRouter = express.Router();
@@ -27,5 +28,7 @@ itineraryRouter.get("/filterItineraries", filterItineraries);
 itineraryRouter.get("/getTourGuideItinerary/:id", getTourGuideItinerary);
 
 itineraryRouter.get("/searchItineraries", searchItineraries);
+
+itineraryRouter.delete("/", deleteItineraries);
 
 export default itineraryRouter;
