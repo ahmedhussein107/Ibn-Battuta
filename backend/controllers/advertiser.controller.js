@@ -51,7 +51,9 @@ export const getAdvertiserById = async (req, res) => {
   try {
     const advertiser = await Advertiser.findById(req.params.id);
     if (advertiser) {
-      res.status(200).json(advertiser);
+      const { isAccepted, document, createdAt, updatedAt, __v, ...others } =
+        advertiser._doc;
+      res.status(200).json(others);
     } else {
       res.status(404).json({ e: "Advertiser not found" });
     }

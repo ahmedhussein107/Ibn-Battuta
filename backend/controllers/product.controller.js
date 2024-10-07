@@ -72,7 +72,9 @@ export const deleteProduct = async (req, res) => {
 
 export const searchProducts = async (req, res) => {
     try {
+        console.log(req.query, buildFilter(req.query));
         const products = await Product.find(buildFilter(req.query));
+        console.log(products);
         return res.status(200).json(products);
     } catch (error) {
         return res.status(500).json({ error: error.message });
