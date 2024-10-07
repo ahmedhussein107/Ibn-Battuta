@@ -55,32 +55,39 @@ export const deleteUser = async (req, res) => {
 export const createAdmin = async (req, res) => {
   const inputUsername = req.body.username;
   const inputEmail = req.body.email;
+
   const username = await Username.findById(inputUsername);
   const email = await Email.findById(inputEmail);
-  try {
-    if (!username && !email) {
-      const newUsername = await Username.create({
-        _id: inputUsername,
-        userType: "Admin",
-      });
-      if (inputEmail) {
-        const newEmail = await Email.create({
-          _id: inputEmail,
-        });
-      }
 
-      const newAdmin = await Admin.create(req.body);
-      res.status(201).json(newAdmin);
-    } else {
-      if (username) {
-        res.status(400).json({ e: "Username already exists" });
-      } else {
-        res.status(400).json({ e: "Email already exists" });
-      }
+  if (username) {
+    console.log("duplicate username");
+    return res
+      .status(400)
+      .json({ error: "Username already exists. Please choose another one!." });
+  }
+
+  if (email) {
+    console.log("duplicate email");
+    return res
+      .status(400)
+      .json({ error: "Email already exists!. Please choose another one!" });
+  }
+
+  try {
+    const newUsername = await Username.create({
+      _id: inputUsername,
+      userType: "Admin",
+    });
+    if (inputEmail) {
+      const newEmail = await Email.create({
+        _id: inputEmail,
+      });
     }
+
+    const newAdmin = await Admin.create(req.body);
+    res.status(201).json(newAdmin);
+    console.log("Admin created successfully");
   } catch (e) {
-    await Username.findByIdAndDelete(inputUsername);
-    await Email.findByIdAndDelete(inputEmail);
     res.status(500).json({ message: e.message });
   }
 };
