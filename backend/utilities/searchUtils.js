@@ -34,8 +34,12 @@ export const buildFilter = (filters) => {
 
 	for (const key in filters) {
 		const value = filters[key];
+		// Handle LIKE queries (e.g., name=~John)
+		if (typeof value === "string" && value.startsWith("~")) {
+			query[key] = { $regex: value.substring(1), $options: "i" }; // Case-insensitive regex
+		}
 		// Check for range-like values (e.g., price=50-200, rating=4-5)
-		if (typeof value === "string" && value.includes("~")) {
+		else if (typeof value === "string" && value.includes("~")) {
 			// Special handling for dates in the format "YYYY-MM-DD~YYYY-MM-DD"
 			const [startDate, endDate] = value.split("~");
 			query[key] = {};
@@ -54,10 +58,6 @@ export const buildFilter = (filters) => {
 			const values = value.split("|");
 			console.log("Array value", values);
 			query[key] = { $in: values };
-		}
-		// Handle LIKE queries (e.g., name=~John)
-		else if (typeof value === "string" && value.startsWith("~")) {
-			query[key] = { $regex: value.substring(1), $options: "i" }; // Case-insensitive regex
 		}
 		// Handle exact match
 		else {
