@@ -67,6 +67,7 @@ function App() {
         <Route path="/allsignup" element={<AllSignUpPage />} />
         <Route path="/view-products" element={<ViewProductsPage />} />
         <Route path="/activities" element={<UpcomingActivities />} />
+        <Route path="/landmark" element={<LandmarkPage />} />
       </Routes>
     </Router>
   );
