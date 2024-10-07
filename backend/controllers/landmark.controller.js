@@ -1,5 +1,7 @@
 import Landmark from "../models/landmark.model.js";
-import { buildFilter } from "../utilities/searchUtils.js";
+
+import { genericSearch,buildFilter } from "../utilities/searchUtils.js";
+
 
 export const createLandmark = async (req, res) => {
     try {
@@ -75,6 +77,28 @@ export const deleteLandmark = async (req, res) => {
     }
 };
 
+export const filterLandmarks = async (req, res) => {
+  const { tags } = req.body;
+
+  let query = {};
+
+  if (tags) {
+    query.tags = { $in: tags };
+  }
+
+  try {
+    //console.log(query);
+    const landmarks = await Landmark.find(query);
+    res.status(200).json(landmarks);
+  } catch (err) {
+    console.error("Error fetching itineraries:", err);
+    res.status(500).json({
+      error: "An error occurred while fetching itineraries.",
+      details: err.message,
+    });
+  }
+};
+
 export const getGovernorLandmarks = async (req, res) => {
     const governorId = req.params.id;
     try {
@@ -85,6 +109,7 @@ export const getGovernorLandmarks = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
 export const searchLandmarks = async (req, res) => {
     try {
         const results = await Landmark.find(buildFilter(req.query));

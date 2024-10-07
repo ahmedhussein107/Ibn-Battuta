@@ -3,7 +3,10 @@ import { Schema } from "mongoose";
 import { validateAdvertiserAndCategory, validateReferences } from "./validatingUtils.js";
 
 const activitySchema = new Schema(
+
 	{
+		name: String,
+		description: String,
 		advertiserID: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Advertiser",
@@ -22,7 +25,13 @@ const activitySchema = new Schema(
 		freeSpots: { type: Number, required: true },
 		specialDiscount: { type: Number, default: 0 },
 	},
-	{ timestamps: true }
+	{
+		timestamps: true,
+
+		toJSON: { virtuals: true }, // Ensure virtuals are included when converting to JSON
+		toObject: { virtuals: true }, // Ensure virtuals are included when converting to plain objects
+	}
+
 );
 
 activitySchema.pre("save", async function (next) {
