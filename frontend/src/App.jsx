@@ -11,27 +11,9 @@ import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 import SignUpPage from "./pages/Tourist/SignUpPage";
 import Itineraries from "./pages/Itinerary/Itineraries";
 import AllSignUpPage from "./pages/AllSignUpPage";
-
+import Map from "./pages/map";
 function App() {
-    return (
-        <Router>
-            <NavBar />
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/create-product" element={<CreateProductPage />} />
-                <Route
-                    path="/update-product/:productId"
-                    element={<UpdateProductPage />}
-                />
-                <Route path="/tourguide" element={<TourGuideProfilePage />} />
-                <Route path="/tourist" element={<TouristProfilePage />} />
-                <Route path="/signup" element={<SignUpPage />} />
-                <Route path="/allsignup" element={<AllSignUpPage />} />
-                <Route path="/itineraries" element={<Itineraries />} />
-            </Routes>
-        </Router>
-    );
+    return <Map />;
 }
 
 export default App;
