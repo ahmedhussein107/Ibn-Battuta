@@ -9,7 +9,7 @@ const CreateProductPage = () => {
     description: "",
     quantity: 1,
     ownerType: "Admin",
-    ownerID: "67015b0bda89f2d0b8a9490f",
+    ownerID: "6700d5273d9ef1e85a0f97de",
   });
   const [pictures, setPictures] = useState([]);
 
@@ -34,6 +34,7 @@ const CreateProductPage = () => {
       data.append(key, formData[key]);
     });
 
+    data.append("sumOfRatings", 3);
     for (let i = 0; i < pictures.length; i++) {
       data.append("pictures", pictures[i]);
     }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import InputForm from "../components/InputForm";
+import InputForm from "../components/Form";
 import { Button, Box, MenuItem, TextField } from "@mui/material";
 import axiosInstance from "../api/axiosInstance";
 

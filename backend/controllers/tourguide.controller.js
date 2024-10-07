@@ -36,7 +36,7 @@ export const createTourGuide = async (req, res) => {
   }
 };
 
-export const getAllTourGuides = async (req, res) => {
+export const getTourGuides = async (req, res) => {
   try {
     const tourGuides = await TourGuide.find();
     res.status(200).json(tourGuides);

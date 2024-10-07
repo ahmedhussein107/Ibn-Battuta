@@ -1,7 +1,7 @@
 import express from "express";
 import {
     createAdvertiser,
-    getAllAdvertisers,
+    getAdvertisers,
     getAdvertiserById,
     updateAdvertiser,
     deleteAdvertiser,
@@ -11,7 +11,7 @@ const advertiserRouter = express.Router();
 
 advertiserRouter.post("/createAdvertiser", createAdvertiser);
 
-advertiserRouter.get("/allAdvertisers", getAllAdvertisers);
+advertiserRouter.get("/getAdvertisers", getAdvertisers);
 
 advertiserRouter.get("/advertiser/:id", getAdvertiserById);
 

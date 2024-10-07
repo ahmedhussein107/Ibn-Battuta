@@ -20,6 +20,16 @@ const NavBar = () => {
           </Link>
         </li>
         <li style={styles.li}>
+          <Link to="/add-new-user" style={styles.link}>
+            Add New User
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/user-management" style={styles.link}>
+            User Management
+          </Link>
+        </li>
+        <li style={styles.li}>
           <Link to="/update-product/123" style={styles.link}>
             Update Product
           </Link>
@@ -100,6 +110,11 @@ const NavBar = () => {
           </Link>
         </li>
         <li style={styles.li}>
+          <Link to="/itineraries" style={styles.link}>
+            Tour Guide's Itineraries Update and Delete
+          </Link>
+        </li>
+        <li style={styles.li}>
           <Link to="/itinerary-customAvtivity" style={styles.link}>
             Tour Guide's Custom Activities
           </Link>
@@ -107,6 +122,16 @@ const NavBar = () => {
         <li style={styles.li}>
           <Link to="/activity" style={styles.link}>
             Advertiser's Activities
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/signup" style={styles.link}>
+            Sign Up as Tourist
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/allsignup" style={styles.link}>
+            Sign Up
           </Link>
         </li>
         <li style={styles.li}>

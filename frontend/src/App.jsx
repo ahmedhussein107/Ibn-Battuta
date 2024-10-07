@@ -27,9 +27,14 @@ import NavBar from "./components/NavBar";
 import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 import SignUpPage from "./pages/Tourist/SignUpPage";
 import AllSignUpPage from "./pages/AllSignUpPage";
+import AddNewUser from "./pages/Admin/AddNewUser";
+import UserManagement from "./pages/Admin/UserManagement";
 import ViewProductsPage from "./pages/Product/ViewProductsPage";
+import ViewProductPage from "./pages/Product/ViewProductPage";
 import UpcomingActivities from "./pages/Activity/UpcomingActivities";
 import FilterItineraries from "./pages/Itinerary/FilterItineraries";
+import Itinerary from "./pages/Itinerary/Itinerary";
+import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 
 function App() {
   return (
@@ -39,10 +44,13 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/create-product" element={<CreateProductPage />} />
+        <Route path="/add-new-user" element={<AddNewUser />} />
+        <Route path="/user-management" element={<UserManagement />} />
         <Route
           path="/update-product/:productId"
           element={<UpdateProductPage />}
         />
+        <Route path="/products/:productId" element={<ViewProductPage />} />
         <Route path="/tourguide" element={<TourGuideProfilePage />} />
         <Route path="/category/:id" element={<UpdateCategory />} />
         <Route path="/category-create" element={<CreateCategory />} />
@@ -67,6 +75,8 @@ function App() {
         <Route path="/allsignup" element={<AllSignUpPage />} />
         <Route path="/view-products" element={<ViewProductsPage />} />
         <Route path="/activities" element={<UpcomingActivities />} />
+        <Route path="/landmark/landmark/" element={<LandmarkPage />} />
+        <Route path="/create-itinerary" element={<CreateItineraryPage />} />
         <Route path="/filter-itineraries" element={<FilterItineraries />} />
       </Routes>
     </Router>

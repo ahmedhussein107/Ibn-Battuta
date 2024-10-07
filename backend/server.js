@@ -40,6 +40,9 @@ connect(process.env.MONGO_URI)
 
 app.use(cors());
 app.use(express.json());
+app.use("/uploads/documents", express.static("./uploads/documents"));
+app.use("/uploads/images", express.static("./uploads/images"));
+
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);
 app.use("/api/admin", adminRouter);
