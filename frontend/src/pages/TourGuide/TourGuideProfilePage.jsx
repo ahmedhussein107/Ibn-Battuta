@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import InputForm from "../../components/Form";
 
 export default function TourGuideProfilePage() {
-    const tourGuideId = "670230844c652bfb008464d2";
+    const tourGuideId = "670261a47544403adfa9b425";
     const [tourGuide, setTourGuide] = useState(null);
     const [notifications, setNotifications] = useState([]);
     const [response, setResponse] = useState(null);
@@ -12,7 +13,6 @@ export default function TourGuideProfilePage() {
         axiosInstance
             .get(`/tourguide/tourGuide/${tourGuideId}`)
             .then((response) => {
-                console.log(response.data);
                 const { _id, notifications, ...tourGuide } = response.data;
                 setTourGuide(tourGuide);
                 console.log("tourGuide:", tourGuide);
@@ -37,9 +37,7 @@ export default function TourGuideProfilePage() {
     return (
         <div>
             <h1>Tour Guide Profile Page</h1>
-            {tourGuide && (
-                <InputForm data={tourGuide} setData={setTourGuide} input={false} />
-            )}
+            {tourGuide && <UserProfile data={tourGuide} setData={setTourGuide} />}
             <button onClick={handleClick}>Update</button>
             {response && <p>{response}</p>}
         </div>
