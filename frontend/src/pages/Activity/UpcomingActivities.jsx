@@ -48,7 +48,18 @@ export default function getUpcomingActivities() {
 				// 	...seller
 				// } = response.data;
 				console.log(response.data);
-				setActivities(response.data);
+
+				let sortedActivities = [...response.data]; // Create a shallow copy
+				if (sortBy === "priceAsc") {
+					sortedActivities.sort((a, b) => a.price - b.price);
+				} else if (sortBy === "priceDesc") {
+					sortedActivities.sort((a, b) => b.price - a.price);
+				} else if (sortBy === "ratingAsc") {
+					sortedActivities.sort((a, b) => a.rating - b.rating);
+				} else if (sortBy === "ratingDesc") {
+					sortedActivities.sort((a, b) => b.rating - a.rating);
+				}
+				setActivities(sortedActivities);
 				//console.log("seller:", seller);
 			})
 			.catch((error) => {
@@ -57,16 +68,17 @@ export default function getUpcomingActivities() {
 	}, [selectedCategory, priceRange, ratingRange, startDate, endDate]);
 
 	useEffect(() => {
+		let sortedActivities = [...activities]; // Create a shallow copy
 		if (sortBy === "priceAsc") {
-			activities.sort((a, b) => a.price - b.price);
+			sortedActivities.sort((a, b) => a.price - b.price);
 		} else if (sortBy === "priceDesc") {
-			activities.sort((a, b) => b.price - a.price);
+			sortedActivities.sort((a, b) => b.price - a.price);
 		} else if (sortBy === "ratingAsc") {
-			activities.sort((a, b) => a.rating - b.rating);
+			sortedActivities.sort((a, b) => a.rating - b.rating);
 		} else if (sortBy === "ratingDesc") {
-			activities.sort((a, b) => b.rating - a.rating);
+			sortedActivities.sort((a, b) => b.rating - a.rating);
 		}
-		console.log("activities: ", activities);
+		setActivities(sortedActivities);
 	}, [sortBy]);
 
 	const handleClick = () => {
@@ -164,9 +176,14 @@ export default function getUpcomingActivities() {
 				__v,
 				_id,
 				id,
+				rating,
 				...rest
 			} = activity;
-			return { Advertiser: advertiserID.name, ...rest };
+			return {
+				Advertiser: advertiserID.name,
+				...rest,
+				rating: rating != -1 ? rating : "not yet rated",
+			};
 		});
 	};
 
