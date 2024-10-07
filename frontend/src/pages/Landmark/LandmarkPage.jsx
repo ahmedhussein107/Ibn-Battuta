@@ -27,18 +27,69 @@ const LandmarkPage = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        if (name.startsWith("ticketPrices.")) {
+            const priceType = name.split(".")[1];
+            setLandmark((prev) => ({
+                ...prev,
+                ticketPrices: {
+                    ...prev.ticketPrices,
+                    [priceType]: Number(value) || 0,
+                },
+            }));
+        } else if (name === "tags") {
+            const tagsArray = value.split(",").map((tag) => tag.trim());
+            setLandmark((prev) => ({
+                ...prev,
+                tags: tagsArray,
+            }));
+        } else {
+            setLandmark((prev) => ({
+                ...prev,
+                [name]: value,
+            }));
+        }
+    };
+
+    const handleTimeChange = (day, timeType, value) => {
+        // Convert the time string to a Date object
+        const date = new Date();
+        const [hours, minutes] = value.split(":");
+        date.setHours(hours, minutes, 0, 0); // Set hours and minutes, reset seconds and milliseconds
+
         setLandmark((prev) => ({
             ...prev,
-            [name]: value,
+            openingHours: {
+                ...prev.openingHours,
+                [day]: {
+                    ...prev.openingHours[day],
+                    [timeType]: date.toISOString(), // Save as ISO string
+                },
+            },
         }));
     };
 
     const handleUpdateClick = async (e) => {
         e.preventDefault();
         try {
+            const { openingHours, ...toSend } = landmark;
+            const tagsArray = landmark.tags.map((tag) => tag.trim());
+            toSend.tags = tagsArray;
+
+            Object.keys(openingHours).forEach((day) => {
+                Object.keys(openingHours[day]).forEach((timeType) => {
+                    openingHours[day][timeType] = new Date(
+                        openingHours[day][timeType]
+                    ).toISOString();
+                });
+            });
+
             const response = await axiosInstance.patch(
                 `/landmark/updateLandmark/${landmarkId}`,
-                landmark
+                {
+                    ...toSend,
+                    openingHours,
+                }
             );
             setResponse("Landmark updated successfully!");
         } catch (error) {
@@ -63,36 +114,44 @@ const LandmarkPage = () => {
                 <TextField
                     label="GovernorID"
                     name="governorID"
-                    value={landmark.governorID}
+                    value={landmark.governorID || ""}
                     onChange={handleChange}
                 />
                 <TextField
                     label="Name"
                     name="name"
-                    value={landmark.name}
+                    value={landmark.name || ""}
                     onChange={handleChange}
                 />
                 <TextField
                     label="Description"
                     name="description"
-                    value={landmark.description}
+                    value={landmark.description || ""}
+                    onChange={handleChange}
+                />
+                <TextField
+                    label="Tags"
+                    name="tags"
+                    value={(landmark.tags || []).join(", ") || ""}
                     onChange={handleChange}
                 />
                 <TextField
                     label="Location"
                     name="location"
-                    value={landmark.location}
+                    value={landmark.location || ""}
                     onChange={handleChange}
                 />
                 <TextField
                     label="Pictures (comma separated URLs)"
                     name="pictures"
-                    value={landmark.pictures.join(", ")}
+                    value={(landmark.pictures || []).join(", ") || ""}
                     onChange={(e) =>
                         handleChange({
                             target: {
                                 name: "pictures",
-                                value: e.target.value.split(", "),
+                                value: e.target.value
+                                    .split(",")
+                                    .map((url) => url.trim()),
                             },
                         })
                     }
@@ -101,21 +160,21 @@ const LandmarkPage = () => {
                     label="Foreign Ticket Price"
                     name="ticketPrices.foreigner"
                     type="number"
-                    value={landmark.ticketPrices.foreigner || 0}
+                    value={landmark.ticketPrices.foreigner || ""}
                     onChange={handleChange}
                 />
                 <TextField
                     label="Native Ticket Price"
                     name="ticketPrices.native"
                     type="number"
-                    value={landmark.ticketPrices.native || 0}
+                    value={landmark.ticketPrices.native || ""}
                     onChange={handleChange}
                 />
                 <TextField
                     label="Student Ticket Price"
                     name="ticketPrices.student"
                     type="number"
-                    value={landmark.ticketPrices.student || 0}
+                    value={landmark.ticketPrices.student || ""}
                     onChange={handleChange}
                 />
 
@@ -128,24 +187,36 @@ const LandmarkPage = () => {
                             name={`openingHours.${day}.open`}
                             type="time"
                             value={
-                                landmark.openingHours[day]?.open?.substring(
-                                    11,
-                                    16
-                                ) || ""
+                                landmark.openingHours[day]?.open
+                                    ? new Date(
+                                          landmark.openingHours[day].open
+                                      ).toLocaleTimeString("en-GB", {
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                      })
+                                    : ""
                             }
-                            onChange={handleChange}
+                            onChange={(e) =>
+                                handleTimeChange(day, "open", e.target.value)
+                            }
                         />
                         <TextField
                             label={`${day} Close`}
                             name={`openingHours.${day}.close`}
                             type="time"
                             value={
-                                landmark.openingHours[day]?.close?.substring(
-                                    11,
-                                    16
-                                ) || ""
+                                landmark.openingHours[day]?.close
+                                    ? new Date(
+                                          landmark.openingHours[day].close
+                                      ).toLocaleTimeString("en-GB", {
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                      })
+                                    : ""
                             }
-                            onChange={handleChange}
+                            onChange={(e) =>
+                                handleTimeChange(day, "close", e.target.value)
+                            }
                         />
                     </Box>
                 ))}
