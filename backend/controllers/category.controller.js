@@ -17,6 +17,18 @@ export const getCategories = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+export const getCategoryByID = async (req, res) => {
+  try {
+    const category = await Category.findById(req.params.id);
+    if (category) {
+      res.status(200).json(category);
+    } else {
+      res.status(404).json({ message: "Category not found" });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 export const updateCategory = async (req, res) => {
   try {
