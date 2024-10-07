@@ -1,8 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { FaEdit, FaCheck } from "react-icons/fa"; // Import edit/check icons
 
 const SingleEntry = ({ label, initialValue, data, setData }) => {
-  const [value, setValue] = useState(initialValue); // State to store the value
+  const [value, setValue] = useState(
+    initialValue === null ? `${label} not found` : initialValue
+  ); // State to store the value
   const [isEditing, setIsEditing] = useState(false); // State to track if we're editing
 
   // Function to toggle edit mode
@@ -28,24 +31,35 @@ const SingleEntry = ({ label, initialValue, data, setData }) => {
   return (
     <div style={styles.row}>
       <label style={styles.label}>{label}:</label>
-
-      {/* Display either input field (if editing) or the value */}
+      {/* Display either a checkbox or input field (if editing) */}
       {isEditing ? (
-        <input
-          type="text"
-          value={value}
-          onChange={handleValueChange}
-          onKeyPress={handleKeyPress}
-          style={styles.inputBox}
-        />
+        typeof value === "boolean" ? (
+          <input
+            type="checkbox"
+            checked={value}
+            onChange={(e) =>
+              handleValueChange({ target: { value: e.target.checked } })
+            }
+            style={styles.checkbox} // Optional styling
+          />
+        ) : (
+          <input
+            type="text"
+            value={value}
+            onChange={handleValueChange}
+            onKeyPress={handleKeyPress}
+            style={styles.inputBox}
+          />
+        )
       ) : (
-        <span style={styles.valueBox}>{value}</span>
+        <span style={styles.valueBox}>
+          {typeof value === "boolean" ? (value ? "true" : "false") : value}
+        </span>
       )}
 
       {/* Toggle edit icon */}
       <span onClick={toggleEditMode} style={styles.icon}>
-        {isEditing ? <FaCheck /> : <FaEdit />}{" "}
-        {/* Show check icon when editing */}
+        {isEditing ? <FaCheck /> : <FaEdit />}
       </span>
     </div>
   );

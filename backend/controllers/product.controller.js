@@ -1,4 +1,5 @@
 import Product from "../models/product.model.js";
+import { buildFilter } from "../utilities/searchUtils.js";
 
 export const createProduct = async (req, res) => {
     try {
@@ -69,40 +70,13 @@ export const deleteProduct = async (req, res) => {
     }
 };
 
-export const searchProductsByName = async (req, res) => {
+export const searchProducts = async (req, res) => {
     try {
-        const { name } = req.query;
-
-        if (!name) {
-            return res.status(400).json({ error: "Name query parameter is required" });
-        }
-
-        const products = await Product.find({
-            name: { $regex: name, $options: "i" },
-        });
-
-        if (products.length === 0) {
-            return res.status(404).json({ message: "No products found" });
-        }
-
+        console.log(req.query, buildFilter(req.query));
+        const products = await Product.find(buildFilter(req.query));
+        console.log(products);
         return res.status(200).json(products);
     } catch (error) {
         return res.status(500).json({ error: error.message });
-    }
-};
-
-export const filterProductsByPrice = async (req, res) => {
-    try {
-        const { minPrice, maxPrice } = req.query;
-
-        const query = {};
-        if (minPrice) query.price = { $gte: Number(minPrice) }; 
-        if (maxPrice) query.price = { ...query.price, $lte: Number(maxPrice) };
-
-        const products = await Product.find(query);
-
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
     }
 };
