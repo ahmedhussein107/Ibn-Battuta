@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
-
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import CreateProductPage from "./pages/Product/CreateProductPage";
@@ -17,6 +16,7 @@ import GovernorLandmarks from "./pages/Governor/GovernorLandmarks";
 import TourGuideItineraries from "./pages/TourGuide/TourGuideItineraries";
 import TourGuideCustomActivities from "./pages/TourGuide/TourGuideCustomActivities";
 import AdvertiserActivities from "./pages/Advertiser/AdvertiserActivities";
+import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import SellerProfilePage from "./pages/Seller/SellerProfilePage";
 import AdvertiserProfilePage from "./pages/Advertiser/AdvertiserProfilePage";
 import CreateActivityPage from "./pages/Activity/CreateActivityPage";
