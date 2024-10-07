@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
-import UserProfile from "../../components/UserProfile";
+import InputForm from "../../components/Form";
 
 export default function TourGuideProfilePage() {
     const tourGuideId = "670230844c652bfb008464d2";
@@ -12,6 +12,7 @@ export default function TourGuideProfilePage() {
         axiosInstance
             .get(`/tourguide/tourGuide/${tourGuideId}`)
             .then((response) => {
+                console.log(response.data);
                 const { _id, notifications, ...tourGuide } = response.data;
                 setTourGuide(tourGuide);
                 console.log("tourGuide:", tourGuide);
@@ -36,7 +37,9 @@ export default function TourGuideProfilePage() {
     return (
         <div>
             <h1>Tour Guide Profile Page</h1>
-            {tourGuide && <UserProfile data={tourGuide} setData={setTourGuide} />}
+            {tourGuide && (
+                <InputForm data={tourGuide} setData={setTourGuide} input={false} />
+            )}
             <button onClick={handleClick}>Update</button>
             {response && <p>{response}</p>}
         </div>

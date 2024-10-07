@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextField, Button, Container, Grid, Typography, Box } from "@mui/material";
 import axiosInstance from "../../api/axiosInstance";
 import MenuItem from "@mui/material/MenuItem";
-import InputForm from "../../components/InputForm";
+import InputForm from "../../components/Form";
 
 const SignUpPage = () => {
     const [formData, setFormData] = useState({
