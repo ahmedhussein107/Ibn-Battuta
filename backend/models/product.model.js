@@ -58,9 +58,7 @@ const validateRatings = async function (next) {
 		if (updatedOwnerID && updatedOwnerType) {
 			await validateReference(updatedOwnerID, updatedOwnerType, next);
 		} else if (updatedOwnerID && updatedOwnerType)
-			return next(
-				new Error("You can't change only one of ownerId and ownerType ")
-			);
+			return next(new Error("You can't change only one of ownerId and ownerType "));
 		next();
 	} catch (error) {
 		next(error);
@@ -71,6 +69,13 @@ productSchema.pre("findOneAndUpdate", validateRatings);
 productSchema.pre("updateOne", validateRatings);
 productSchema.pre("findByIdAndUpdate", validateRatings);
 
+productSchema.virtual("rating").get(function () {
+	// Ensure ratings is not empty to avoid division by zero
+	if (this.ratings && this.ratings.length > 0) {
+		return this.sumOfRatings / this.ratings.length;
+	}
+	return -1; // Return -1 if there are no ratings and handle in frontend
+});
 
 productSchema.index({ ownerID: 1 });
 

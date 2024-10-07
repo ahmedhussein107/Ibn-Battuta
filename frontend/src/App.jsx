@@ -7,10 +7,17 @@ import AboutPage from "./pages/AboutPage";
 import CreateProductPage from "./pages/Product/CreateProductPage";
 import UpdateProductPage from "./pages/Product/UpdateProductPage";
 import TourGuideProfilePage from "./pages/TourGuide/TourGuideProfilePage";
+import AdvertiserProfilePage from "./pages/Advertiser/AdvertiserProfilePage";
+import CreateActivityPage from "./pages/Activity/CreateActivityPage";
+import UpdateActivityPage from "./pages/Activity/UpdateActivityPage";
+import FilterLandmarks from "./pages/Landmarks/FilterLandmarks";
 import NavBar from "./components/NavBar";
 import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
+import SignUpPage from "./pages/Tourist/SignUpPage";
+import AllSignUpPage from "./pages/AllSignUpPage";
 
 function App() {
+    console.log(" i am in app", import.meta.env.VITE_API_URI);
   return (
     <Router>
       <NavBar />
@@ -23,10 +30,17 @@ function App() {
           element={<UpdateProductPage />}
         />
         <Route path="/tourguide" element={<TourGuideProfilePage />} />
+        <Route path="/advertiser" element={<AdvertiserProfilePage />} />
+        <Route path="/create-activity" element={<CreateActivityPage />} />
+        <Route path="/update-activity" element={<UpdateActivityPage />} />
+        <Route path="/filter-landmarks" element={<FilterLandmarks />} />
         <Route path="/tourist" element={<TouristProfilePage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/allsignup" element={<AllSignUpPage />} />
       </Routes>
     </Router>
   );
+
 }
 
 export default App;
