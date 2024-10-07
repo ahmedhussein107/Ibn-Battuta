@@ -1,6 +1,7 @@
 import { mongoose } from "mongoose";
 import { validateReference, validateReferences } from "./validatingUtils.js";
 const tourGuideSchema = new mongoose.Schema(
+
   {
     username: {
       type: String,
@@ -78,6 +79,7 @@ const validateUpdateReferences = async function (next) {
   } catch (error) {
     next(error);
   }
+
 };
 
 tourGuideSchema.pre("findOneAndUpdate", validateUpdateReferences);

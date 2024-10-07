@@ -3,6 +3,7 @@ import { Schema } from "mongoose";
 import { validateAdvertiserAndCategory, validateReferences } from "./validatingUtils.js";
 
 const activitySchema = new Schema(
+
   {
     advertiserID: {
       type: mongoose.Schema.Types.ObjectId,
@@ -23,8 +24,9 @@ const activitySchema = new Schema(
     freeSpots: { type: Number, required: true },
     specialDiscount: { type: Number, default: 0 },
   },
-	
-	{ timestamps: true }
+
+  { timestamps: true }
+
 );
 
 activitySchema.pre("save", async function (next) {
