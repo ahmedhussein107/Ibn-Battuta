@@ -1,6 +1,7 @@
 import Landmark from "../models/landmark.model.js";
 
-import { genericSearch } from "../utilities/searchUtils.js";
+import { genericSearch,buildFilter } from "../utilities/searchUtils.js";
+
 
 export const createLandmark = async (req, res) => {
   try {
@@ -103,7 +104,7 @@ export const getGovernorLandmarks = async (req, res) => {
 
 export const searchLandmarks = async (req, res) => {
   try {
-    const results = await genericSearch(Landmark, req.query);
+    const results = await Landmark.find(buildFilter(req.query));
     res.status(200).json({ results });
   } catch (error) {
     res.status(500).json({ message: error.message });
