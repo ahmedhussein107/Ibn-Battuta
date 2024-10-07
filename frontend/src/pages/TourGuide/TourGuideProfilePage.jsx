@@ -4,7 +4,7 @@ import axiosInstance from "../../api/axiosInstance";
 import UserProfile from "../../components/UserProfile";
 
 export default function TourGuideProfilePage() {
-  const tourGuideId = "670261a47544403adfa9b425";
+  const tourGuideId = "670230844c652bfb008464d2";
   const [tourGuide, setTourGuide] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [response, setResponse] = useState(null);
