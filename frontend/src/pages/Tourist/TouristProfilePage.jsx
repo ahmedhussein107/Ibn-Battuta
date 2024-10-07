@@ -3,7 +3,7 @@ import axiosInstance from "../../api/axiosInstance";
 import UserProfile from "../../components/UserProfile";
 
 export default function TouristProfilePage() {
-  const touristId = "6702b0487857026633198d55";
+  const touristId = "670442014aa7c398b29183c9";
   const [tourist, setTourist] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [response, setResponse] = useState(null);
