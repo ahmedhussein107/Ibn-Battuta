@@ -1,6 +1,7 @@
 import { mongoose } from "mongoose";
 import { validateReference, validateReferences } from "./validatingUtils.js";
 const tourGuideSchema = new mongoose.Schema(
+
   {
     username: {
       type: String,
@@ -78,9 +79,19 @@ const validateUpdateReferences = async function (next) {
   } catch (error) {
     next(error);
   }
+
 };
 
 tourGuideSchema.pre("findOneAndUpdate", validateUpdateReferences);
 tourGuideSchema.pre("updateOne", validateUpdateReferences);
 tourGuideSchema.pre("findByIdAndUpdate", validateUpdateReferences);
+
+tourGuideSchema.virtual("rating").get(function () {
+	// Ensure ratings is not empty to avoid division by zero
+	if (this.ratings && this.ratings.length > 0) {
+		return this.sumOfRatings / this.ratings.length;
+	}
+	return -1; // Return -1 if there are no ratings and handle in frontend
+});
+
 export default mongoose.model("TourGuide", tourGuideSchema);
