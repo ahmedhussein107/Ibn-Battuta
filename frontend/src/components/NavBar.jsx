@@ -29,8 +29,28 @@ const NavBar = () => {
           </Link>
         </li>
         <li style={styles.li}>
+<<<<<<< HEAD
+          <Link to="/advertiser" style={styles.link}>
+            Advertiser Profile
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/create-activity" style={styles.link}>
+            Create Activity
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/update-activity" style={styles.link}>
+            Update Activity
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/filter-landmarks" style={styles.link}>
+            Filter Landmarks
+=======
           <Link to="/tourist" style={styles.link}>
             Tourist Profile
+>>>>>>> main
           </Link>
         </li>
       </ul>
