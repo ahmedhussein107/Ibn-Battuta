@@ -58,6 +58,16 @@ const NavBar = () => {
                         Tourist Profile
                     </Link>
                 </li>
+                <li style={styles.li}>
+                    <Link to="/signup" style={styles.link}>
+                        Sign Up as Tourist
+                    </Link>
+                </li>
+                <li style={styles.li}>
+                    <Link to="/allsignup" style={styles.link}>
+                        Sign Up
+                    </Link>
+                </li>
             </ul>
         </nav>
     );
