@@ -29,7 +29,7 @@ const NavBar = () => {
                     </Link>
                 </li>
                 <li style={styles.li}>
-                    <Link to="/update-product/123" style={styles.link}>
+                    <Link to="/update-product" style={styles.link}>
                         Update Product
                     </Link>
                 </li>

@@ -32,6 +32,8 @@ import ViewProductPage from "./pages/Product/ViewProductPage";
 import UpcomingActivities from "./pages/Activity/UpcomingActivities";
 import Itinerary from "./pages/Itinerary/Itinerary";
 import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
+import LandmarksPage from "./pages/Landmark/LandmarksPage";
+import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
 
 function App() {
     return (
@@ -74,6 +76,8 @@ function App() {
                 <Route path="/activities" element={<UpcomingActivities />} />
                 <Route path="/landmark/landmark/" element={<LandmarkPage />} />
                 <Route path="/create-itinerary" element={<CreateItineraryPage />} />
+                <Route path="/landmarks" element={<LandmarksPage />} />
+                <Route path="/create-landmark" element={<CreateLandmarkPage />} />
             </Routes>
         </Router>
     );
