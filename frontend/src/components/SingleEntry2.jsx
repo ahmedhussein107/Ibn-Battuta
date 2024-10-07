@@ -1,12 +1,12 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { FaEdit, FaCheck } from "react-icons/fa"; // Import edit/check icons
+import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 
-const SingleEntry = ({ label, initialValue, data, setData }) => {
-  const [value, setValue] = useState(
-    initialValue === null ? `${label} not found` : initialValue
-  ); // State to store the value
+const SingleEntry2 = ({ label, initialValue, data, setData, path }) => {
+  const [value, setValue] = useState(initialValue); // State to store the value
+  const oldData = data; // State to store the value
   const [isEditing, setIsEditing] = useState(false); // State to track if we're editing
+  const navigate = useNavigate(); // Hook to navigate to another page
 
   // Function to toggle edit mode
   const toggleEditMode = () => {
@@ -17,7 +17,6 @@ const SingleEntry = ({ label, initialValue, data, setData }) => {
   const handleValueChange = (e) => {
     setValue(e.target.value);
     const newData = { ...data, [label]: e.target.value };
-    console.log(newData);
     setData(newData);
   };
 
@@ -28,38 +27,32 @@ const SingleEntry = ({ label, initialValue, data, setData }) => {
     }
   };
 
+  // Function to handle navigation when the icon is clicked
+  const handleNavigate = (value) => {
+    // Redirect to /update-tag (or any route you defined)
+    navigate(`/${path}/${value}`);
+  };
+
   return (
     <div style={styles.row}>
       <label style={styles.label}>{label}:</label>
-      {/* Display either a checkbox or input field (if editing) */}
+
+      {/* Display either input field (if editing) or the value */}
       {isEditing ? (
-        typeof value === "boolean" ? (
-          <input
-            type="checkbox"
-            checked={value}
-            onChange={(e) =>
-              handleValueChange({ target: { value: e.target.checked } })
-            }
-            style={styles.checkbox} // Optional styling
-          />
-        ) : (
-          <input
-            type="text"
-            value={value}
-            onChange={handleValueChange}
-            onKeyPress={handleKeyPress}
-            style={styles.inputBox}
-          />
-        )
+        <input
+          type="text"
+          value={value}
+          onChange={handleValueChange}
+          onKeyPress={handleKeyPress}
+          style={styles.inputBox}
+        />
       ) : (
-        <span style={styles.valueBox}>
-          {typeof value === "boolean" ? (value ? "true" : "false") : value}
-        </span>
+        <span style={styles.valueBox}>{value}</span>
       )}
 
-      {/* Toggle edit icon */}
-      <span onClick={toggleEditMode} style={styles.icon}>
-        {isEditing ? <FaCheck /> : <FaEdit />}
+      {/* Add the new icon button for navigation */}
+      <span onClick={() => handleNavigate(initialValue)} style={styles.icon}>
+        <FaEdit /> {/* Replace this icon with any icon of your choice */}
       </span>
     </div>
   );
@@ -98,4 +91,4 @@ const styles = {
   },
 };
 
-export default SingleEntry;
+export default SingleEntry2;

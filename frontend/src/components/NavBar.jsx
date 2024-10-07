@@ -68,6 +68,46 @@ const NavBar = () => {
             Gift Shop
           </Link>
         </li>
+        <li style={styles.li}>
+          <Link to="/category-create" style={styles.link}>
+            Create Category
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/category-all" style={styles.link}>
+            All Categories
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/tag-create" style={styles.link}>
+            Create Tag
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/tag-all" style={styles.link}>
+            All Tags
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/landmark-governor" style={styles.link}>
+            Governor's Landmark
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/itinerary" style={styles.link}>
+            Tour Guide's Itineraries
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/itinerary-customAvtivity" style={styles.link}>
+            Tour Guide's Custom Activities
+          </Link>
+        </li>
+        <li style={styles.li}>
+          <Link to="/activity" style={styles.link}>
+            Advertiser's Activities
+          </Link>
+        </li>
       </ul>
     </nav>
   );

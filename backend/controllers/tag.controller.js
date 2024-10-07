@@ -19,6 +19,15 @@ export const getTag = async (req, res) => {
   }
 };
 
+export const getTagByID = async (req, res) => {
+  try {
+    const tag = await Tag.findById(req.params.id);
+    res.json(tag);
+  } catch (e) {
+    res.status(400).json({ e: e.message });
+  }
+};
+
 export const updateTag = async (req, res) => {
   try {
     const tagId = req.params.id; // Extract the tag ID from the request params
