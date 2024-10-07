@@ -3,7 +3,7 @@ import axiosInstance from "../../api/axiosInstance";
 import UserProfile from "../../components/UserProfile";
 
 export default function AdvertiserProfilePage() {
-  const advertiserId = "6700d26e899e164e4899e3c0";
+  const advertiserId = "67040377731df0ac20353236";
   const [advertiser, setAdvertiser] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [response, setResponse] = useState(null);

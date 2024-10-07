@@ -87,6 +87,25 @@ const Landmark = () => {
     filterLandmarks(tag); // Trigger filtering based on selected tag
   };
 
+  const chooseFields = (landmarks) => {
+    return landmarks.map((landmark) => {
+      const {
+        governerID,
+        pictures,
+        createdAt,
+        updatedAt,
+        __v,
+        _id,
+        id,
+        rating,
+        ...rest
+      } = landmark;
+      return {
+        // Governer: governerID.name,
+        ...rest,
+      };
+    });
+  };
   return (
     <div>
       <h1>Filter Landmarks</h1>
@@ -103,7 +122,7 @@ const Landmark = () => {
       </select>
 
       {/* Display filtered landmarks */}
-      {landmarks && <ObjectList data={landmarks} />}
+      {landmarks && <ObjectList data={chooseFields(landmarks)} />}
       {response && <p>{response}</p>}
     </div>
   );
