@@ -1,4 +1,5 @@
-
+import jwt from "jsonwebtoken";
+const secretKey = process.env.JWT_SECRET || "put a long string in the .env";
 
 function isAuthenticated(req, res, next) {
   const token = req.cookies.jwt;
@@ -14,7 +15,6 @@ function isAuthenticated(req, res, next) {
     next();
   });
 }
-
 
 function isAdmin(req, res, next) {
   if (req.user && req.user.role === "Admin") {
@@ -32,9 +32,8 @@ function isGovernor(req, res, next) {
   }
 }
 
-
 function isSeller(req, res, next) {
-=  if (req.user && req.user.role === "Seller") {
+  if (req.user && req.user.role === "Seller") {
     next();
   } else {
     res.status(403).json({ message: "Forbidden, you are not a seller" });

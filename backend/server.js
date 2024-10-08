@@ -25,6 +25,7 @@ import landmarkRouter from "./routes/landmark.router.js";
 import customActivityRouter from "./routes/customActivity.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import login from "./controllers/login.controller.js";
 
 dotenv.config();
 const app = express();
@@ -68,3 +69,4 @@ app.use("/api/category", categoryRouter);
 app.use("/api/rating", ratingRouter);
 app.use("/api/landmark", landmarkRouter);
 app.use("/api/customActivity", customActivityRouter);
+app.post("/api/login", login);
