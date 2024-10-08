@@ -25,36 +25,45 @@ export const deleteGovernor = async (req, res) => {
 export const createGovernor = async (req, res) => {
   const inputUsername = req.body.username;
   const inputEmail = req.body.email;
+
   const username = await Username.findById(inputUsername);
   const email = await Email.findById(inputEmail);
+
+  if (username) {
+    console.log("duplicate username");
+    return res
+      .status(400)
+      .json({ error: "Username already exists. Please choose another one!." });
+  }
+
+  if (email) {
+    console.log("duplicate email");
+    return res
+      .status(400)
+      .json({ error: "Email already exists!. Please choose another one!" });
+  }
+
   try {
-    if (!username && !email) {
-      const newUsername = await Username.create({
-        _id: inputUsername,
-        userType: "Governor",
+    const newUsername = await Username.create({
+      _id: inputUsername,
+      userType: "Governor",
+    });
+
+    if (inputEmail) {
+      await Email.create({
+        _id: inputEmail,
       });
-      if (inputEmail) {
-        const newEmail = await Email.create({
-          _id: inputEmail,
-        });
-      }
-      const newGovernor = await Governor.create(req.body);
-      res.status(201).json(newGovernor);
-    } else {
-      if (username) {
-        res.status(400).json({ e: "Username already exists" });
-      } else {
-        res.status(400).json({ e: "Email already exists" });
-      }
     }
+
+    const newGovernor = await Governor.create(req.body);
+    res.status(201).json(newGovernor);
+    console.log("Governor created successfully");
   } catch (e) {
-    await Username.findByIdAndDelete(inputUsername);
-    await Email.findByIdAndDelete(inputEmail);
-    res.status(500).json({ message: e.message });
+    return res.status(500).json({ error: e.message });
   }
 };
 
-export const allGovernors = async (req, res) => {
+export const getGovernors = async (req, res) => {
   try {
     const governors = await Governor.find();
     res.json(governors);

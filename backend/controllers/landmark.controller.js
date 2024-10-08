@@ -1,7 +1,6 @@
 import Landmark from "../models/landmark.model.js";
 
-import { genericSearch,buildFilter } from "../utilities/searchUtils.js";
-
+import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 
 export const createLandmark = async (req, res) => {
     try {
@@ -23,42 +22,16 @@ export const getAllLandmarks = async (req, res) => {
 
 export const updateLandmark = async (req, res) => {
     try {
-        const {
-            governorID,
-            description,
-            pictures,
-            location,
-            tags,
-            ticketPrices,
-            openingHours,
-            ...other
-        } = req.body;
-
-        const updatedTags =
-            tags && tags.length > 0
-                ? tags.split(",").map((tag) => tag.trim())
-                : [];
-
-        const updatedData = {
-            ...other,
-            governorID,
-            description,
-            pictures,
-            location,
-            tags: updatedTags,
-            ticketPrices: ticketPrices || {
-                foreigner: 0,
-                native: 0,
-                student: 0,
-            },
-            openingHours: openingHours || {}, // Default if undefined
-        };
-
+        console.log(req.body);
         const landmark = await Landmark.findByIdAndUpdate(
             req.params.id,
-            updatedData,
-            { new: true, runValidators: true }
+            req.body,
+            {
+                new: true,
+            }
         );
+
+        // console.log(landmark);
 
         if (!landmark) {
             return res.status(404).json({ error: "Landmark not found" });
@@ -108,25 +81,25 @@ export const deleteLandmark = async (req, res) => {
 };
 
 export const filterLandmarks = async (req, res) => {
-  const { tags } = req.body;
+    const { tags } = req.body;
 
-  let query = {};
+    let query = {};
 
-  if (tags) {
-    query.tags = { $in: tags };
-  }
+    if (tags) {
+        query.tags = { $in: tags };
+    }
 
-  try {
-    //console.log(query);
-    const landmarks = await Landmark.find(query);
-    res.status(200).json(landmarks);
-  } catch (err) {
-    console.error("Error fetching itineraries:", err);
-    res.status(500).json({
-      error: "An error occurred while fetching itineraries.",
-      details: err.message,
-    });
-  }
+    try {
+        //console.log(query);
+        const landmarks = await Landmark.find(query);
+        res.status(200).json(landmarks);
+    } catch (err) {
+        console.error("Error fetching itineraries:", err);
+        res.status(500).json({
+            error: "An error occurred while fetching itineraries.",
+            details: err.message,
+        });
+    }
 };
 
 export const getGovernorLandmarks = async (req, res) => {
