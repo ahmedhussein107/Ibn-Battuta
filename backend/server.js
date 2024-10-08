@@ -24,20 +24,22 @@ import ratingRouter from "./routes/rating.router.js";
 import landmarkRouter from "./routes/landmark.router.js";
 import customActivityRouter from "./routes/customActivity.router.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+
 dotenv.config();
 const app = express();
-
 connect(process.env.MONGO_URI)
-    .then(() => {
-        app.listen(process.env.PORT, () => {
-            console.log(`Connected to DB`);
-            console.log(`Listening to port ${process.env.PORT}`);
-        });
-    })
-    .catch((err) => {
-        console.log(err);
+  .then(() => {
+    app.listen(process.env.PORT, () => {
+      console.log(`Connected to DB`);
+      console.log(`Listening to port ${process.env.PORT}`);
     });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
+app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
 app.use("/uploads/documents", express.static("./uploads/documents"));
