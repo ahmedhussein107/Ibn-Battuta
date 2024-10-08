@@ -70,3 +70,5 @@ app.use("/api/rating", ratingRouter);
 app.use("/api/landmark", landmarkRouter);
 app.use("/api/customActivity", customActivityRouter);
 app.post("/api/login", login);
+
+
