@@ -3,17 +3,25 @@ import { buildFilter } from "../utilities/searchUtils.js";
 
 export const createProduct = async (req, res) => {
     try {
-        console.log("i am here at controller of product");
-        const productData = req.body;
+      console.log("i am here at controller of product");
+      const productData = req.body;
+      // this is the part of multer (old)
+      // if (req.files && req.files.length > 0) {
+      //     productData.pictures = req.files.map((file) => file.path);
+      // } else {
+      //     productData.pictures = [];
+      // }
 
-        if (req.files && req.files.length > 0) {
-            productData.pictures = req.files.map((file) => file.path);
-        } else {
-            productData.pictures = [];
-        }
-        console.log("productData: ", productData);
-        const newProduct = await Product.create(productData);
-        res.status(201).json(newProduct);
+      // this is the part of the cloud
+      if (req.image) {
+        productData.pictures = [req.image];
+      }
+      if (req.images) {
+        productData.pictures = req.images;
+      }
+      console.log("productData: ", productData);
+      const newProduct = await Product.create(productData);
+      res.status(201).json(newProduct);
     } catch (e) {
         console.log(e);
         res.status(400).json({ e: e.message });

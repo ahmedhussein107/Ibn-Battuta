@@ -22,9 +22,8 @@ const tempDir = path.join(__dirname, "temp");
 if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir);
 }
-export const uploadImage = async (req, res) => {
+export const uploadImage = async (req, res, next) => {
   try {
-    // Check if the file is present
     if (!req.files || !req.files.pictures) {
       return res.status(400).json({ error: "No file uploaded" });
     }
@@ -43,25 +42,43 @@ export const uploadImage = async (req, res) => {
     console.log("Uploaded image URL:", imageUrl);
 
     fs.unlinkSync(tempFilePath);
-
-    return res.json({ imageUrl }); // Send back the URL
+    req.image = imageUrl;
+    next();
   } catch (error) {
     console.error("Error uploading image:", error);
     return res.status(500).json({ error: "Failed to upload image" });
   }
 };
 
-export const uploadImages = async (req, res) => {
+export const uploadImages = async (req, res, next) => {
   try {
-    req.images = [];
-    for (const file of req.files) {
-      const result = await cloudinary.uploader.upload(file, {
-        folder: "images",
-      });
-      req.images.push(result.secure_url);
+    if (!req.files || !req.files.pictures) {
+      return res.status(400).json({ error: "No file uploaded" });
     }
+
+    const files = req.files.pictures;
+    let images = [];
+    for (const file of files) {
+      const tempFilePath = path.join(__dirname, "temp", file.name);
+
+      await file.mv(tempFilePath);
+
+      const result = await cloudinary.uploader.upload(tempFilePath, {
+        folder: "images",
+        resource_type: "auto",
+      });
+
+      const imageUrl = result.secure_url;
+      images.push(imageUrl);
+      console.log("Uploaded image URL:", imageUrl);
+      fs.unlinkSync(tempFilePath);
+    }
+    req.images = images;
+    next();
   } catch (error) {
-    console.error("Error uploading images:", error);
-    throw new Error("Failed to upload images");
+    console.error("Error uploading image:", error);
+    return res.status(500).json({ error: "Failed to upload image" });
   }
 };
+
+
