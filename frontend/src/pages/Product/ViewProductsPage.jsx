@@ -110,7 +110,7 @@ const ViewProductsPage = () => {
                     <Carousel.Item key={index}>
                       <img
                         className="d-block w-100"
-                        src={`${URI}${picture}`}
+                        src={`${picture}`}
                         alt={`Slide ${index + 1}`}
                         style={{ height: "200px", objectFit: "cover" }}
                       />
