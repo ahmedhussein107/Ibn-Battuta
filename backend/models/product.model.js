@@ -15,8 +15,14 @@ const productSchema = new mongoose.Schema(
 		numberOfSales: { type: Number, default: 0 },
 		isArchived: { type: Boolean, default: false },
 	},
-	{ timestamps: true }
+	{ timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+productSchema.methods.addRating = async function (rating) {
+	this.ratings.push(rating);
+	this.sumOfRatings += rating.rating;
+	await this.save();
+};
 
 const validateOwnerTypeAndId = async (ownerType, ownerID, next) => {
 	try {

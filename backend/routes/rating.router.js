@@ -1,10 +1,11 @@
 import express from "express";
 import {
-    createRating,
-    getRatingById,
-    getRatings,
-    deleteRating,
-    updateRating,
+	createRating,
+	getRatingById,
+	getRatings,
+	deleteRating,
+	updateRating,
+	rateProduct,
 } from "../controllers/rating.controller.js";
 
 const ratingRouter = express.Router();
@@ -14,5 +15,6 @@ ratingRouter.get("/getRating/:id", getRatingById);
 ratingRouter.get("/getRatings", getRatings);
 ratingRouter.patch("/updateRating/:id", updateRating);
 ratingRouter.delete("/deleteRating/:id", deleteRating);
+ratingRouter.post("/rateProduct/:id", rateProduct);
 
 export default ratingRouter;
