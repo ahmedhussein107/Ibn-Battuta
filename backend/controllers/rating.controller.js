@@ -68,8 +68,11 @@ export const rateProduct = async (req, res) => {
 		// rating should have touristID, rating, comment
 		const { touristID, rating, comment } = req.body;
 		const productID = req.params.id; // Extract productID from params
-		const newRating = await Rating.create({ touristID, rating, comment });
 		const product = await Product.findById(productID);
+		if (!product) {
+			return res.status(404).json({ message: "Product not found" });
+		}
+		const newRating = await Rating.create({ touristID, rating, comment });
 		await product.addRating(newRating);
 		res.status(201).json(product);
 	} catch (e) {
