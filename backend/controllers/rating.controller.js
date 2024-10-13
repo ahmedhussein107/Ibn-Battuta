@@ -89,14 +89,12 @@ export const rateTourGuide = async (req, res) => {
 			return res.status(404).json({ message: "Itinerary not found" });
 		}
 		const tourguideID = itinerary.tourguideID;
-
-		const newRating = await Rating.create({ touristID, rating, comment });
 		const tourGuide = await TourGuide.findById(tourguideID);
-		await tourGuide.addRating(newRating);
 		if (!tourGuide) {
 			return res.status(404).json({ message: "Tour guide not found" });
 		}
-
+		const newRating = await Rating.create({ touristID, rating, comment });
+		await tourGuide.addRating(newRating);
 		res.status(200).json({ message: "Rating added to tour guide", tourGuide });
 	} catch (error) {
 		res.status(500).json({ message: "Error rating tour guide", error });
@@ -107,15 +105,15 @@ export const rateItinerary = async (req, res) => {
 	try {
 		const { touristID, rating, comment } = req.body;
 		const itineraryID = req.params.id; // Extract itineraryID from params
-		const newRating = await Rating.create({ touristID, rating, comment });
 
 		const itinerary = await Itinerary.findById(itineraryID);
 		if (!itinerary) {
 			return res.status(404).json({ message: "Itinerary not found" });
 		}
+		const newRating = await Rating.create({ touristID, rating, comment });
 		await itinerary.addRating(newRating);
 		res.status(200).json({ message: "Rating added to itinerary", itinerary });
 	} catch (error) {
-		res.status(500).json({ message: "Error rating itinerary", error });
+		res.status(500).json({ message: "Error rating itinerary", error: error.message });
 	}
 };
