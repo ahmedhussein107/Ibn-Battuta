@@ -23,8 +23,14 @@ const activitySchema = new Schema(
         freeSpots: { type: Number, required: true },
         specialDiscount: { type: Number, default: 0 },
     },
-    { timestamps: true }
+    { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+activitySchema.methods.addRating = async function (rating) {
+    this.ratings.push(rating);
+    this.sumOfRatings += rating.rating;
+    await this.save();
+};
 
 activitySchema.pre("save", async function (next) {
     try {
