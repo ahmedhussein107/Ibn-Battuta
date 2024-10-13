@@ -28,6 +28,12 @@ const tourGuideSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+tourGuideSchema.methods.addRating = async function (rating) {
+  this.ratings.push(rating);
+  this.sumOfRatings += rating.rating;
+	await this.save();
+};
+
 tourGuideSchema.pre("save", async function (next) {
   try {
     const { username, email, notifications, ratings } = this;

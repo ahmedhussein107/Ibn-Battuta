@@ -90,11 +90,6 @@ export const rateTourGuide = async (req, res) => {
 		  return res.status(404).json({ message: 'Tour guide not found' });
 		}
 	
-		// Update the tour guide's ratings
-		tourGuide.ratings.push(newRating._id);
-		tourGuide.sumOfRatings += rating;
-		await tourGuide.save();
-	
 		res.status(200).json({ message: 'Rating added to tour guide', tourGuide });
 	  } catch (error) {
 		res.status(500).json({ message: 'Error rating tour guide', error });
@@ -111,12 +106,7 @@ export const rateTourGuide = async (req, res) => {
 	  if (!itinerary) {
 		return res.status(404).json({ message: 'Itinerary not found' });
 	  }
-  
-	  // Update the itinerary's ratings
-	  itinerary.ratings.push(newRating._id);
-	  itinerary.sumOfRatings += rating;
-	  await itinerary.save();
-  
+	  
 	  res.status(200).json({ message: 'Rating added to itinerary', itinerary });
 	} catch (error) {
 	  res.status(500).json({ message: 'Error rating itinerary', error });

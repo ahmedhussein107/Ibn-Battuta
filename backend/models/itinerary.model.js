@@ -41,6 +41,12 @@ const itinerarySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+itinerarySchema.methods.addRating = async function (rating) {
+  this.ratings.push(rating);
+  this.sumOfRatings += rating.rating;
+  await this.save();
+};
+
 // tourguide, tags, rating, activities;
 
 const validateTourguideID = async (tourguideID, next) => {
