@@ -150,3 +150,23 @@ export const searchItineraries = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const toggleFlaggedItineraries = async (req, res) => {
+    try {
+        const itineraryID = req.params.id;
+        const itinerary = await Itinerary.findById(itineraryID);
+        if (!itinerary) {
+            return res.status(404).json({ message: "Itinerary not found" });
+        }
+        itinerary.isFlagged = !itinerary.isFlagged;
+        await itinerary.save();
+        res.status(200).json({
+            message: "Itinerary flagged status changed successfully",
+            itinerary,
+        });
+
+        // to be continued?
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
