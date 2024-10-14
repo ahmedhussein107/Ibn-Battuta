@@ -13,11 +13,10 @@ export const createProduct = async (req, res) => {
       // }
 
       // this is the part of the cloud
-      if (req.image) {
-        productData.pictures = [req.image];
-      }
-      if (req.images) {
-        productData.pictures = req.images;
+     
+      productData.pictures = [];
+      if (req.documents && req.documents.length > 0) {
+        productData.pictures = req.documents;
       }
       console.log("productData: ", productData);
       const newProduct = await Product.create(productData);

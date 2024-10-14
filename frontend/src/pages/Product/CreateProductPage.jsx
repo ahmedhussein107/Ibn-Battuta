@@ -36,7 +36,7 @@ const CreateProductPage = () => {
 
     data.append("sumOfRatings", 3);
     for (let i = 0; i < pictures.length; i++) {
-      data.append("pictures", pictures[i]);
+      data.append("documents", pictures[i]);
     }
 
     console.log("Contents of FormData:");
