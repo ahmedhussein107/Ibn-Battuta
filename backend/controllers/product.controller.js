@@ -12,20 +12,20 @@ export const createProduct = async (req, res) => {
 		//     productData.pictures = [];
 		// }
 
-		// this is the part of the cloud
-		if (req.image) {
-			productData.pictures = [req.image];
-		}
-		if (req.images) {
-			productData.pictures = req.images;
-		}
-		console.log("productData: ", productData);
-		const newProduct = await Product.create(productData);
-		res.status(201).json(newProduct);
-	} catch (e) {
-		console.log(e);
-		res.status(400).json({ e: e.message });
-	}
+
+      // this is the part of the cloud
+     
+      productData.pictures = [];
+      if (req.documents && req.documents.length > 0) {
+        productData.pictures = req.documents;
+      }
+      console.log("productData: ", productData);
+      const newProduct = await Product.create(productData);
+      res.status(201).json(newProduct);
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({ e: e.message });
+    }
 };
 
 export const updateProduct = async (req, res) => {
