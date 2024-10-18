@@ -24,6 +24,7 @@ import tagRouter from "./routes/tag.router.js";
 import ratingRouter from "./routes/rating.router.js";
 import landmarkRouter from "./routes/landmark.router.js";
 import customActivityRouter from "./routes/customActivity.router.js";
+import generalRouter from "./routes/general.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import login from "./controllers/login.controller.js";
@@ -71,6 +72,8 @@ app.use("/api/category", categoryRouter);
 app.use("/api/rating", ratingRouter);
 app.use("/api/landmark", landmarkRouter);
 app.use("/api/customActivity", customActivityRouter);
+app.use("/api/general", generalRouter);
+
 app.post("/api/login", login);
 
 

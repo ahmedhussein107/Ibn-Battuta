@@ -13,6 +13,7 @@ import { deleteGovernor } from "../controllers/governor.controller.js";
 import { deleteSeller } from "../controllers/seller.controller.js";
 import { deleteTourGuide } from "../controllers/tourguide.controller.js";
 import { deleteTourist } from "../controllers/tourist.controller.js";
+import mongoose, { set } from "mongoose";
 // Create a model mapping to access user models dynamically
 const models = {
   advertiser: Advertiser,
@@ -101,6 +102,28 @@ export const getAdmins = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+export const acceptUserByModel = async (req, res) => {
+  try {
+    const { userType, userId } = req.body;
+    if (!userType || !userId) {
+      return res.status(400).json({ message: "Invalid user type or ID" });
+    }
+    const UserModel = mongoose.model(userType);
+    if (!UserModel) {
+      return res.status(400).json({ message: "Invalid user type" });
+    }
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.isAccepted = true;
+    await user.save();
+    res.status(200).json({ message: "User accepted successfully", user });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 
 // Updating an admin
 export const updateAdmin = async (req, res) => {

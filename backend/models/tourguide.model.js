@@ -1,30 +1,31 @@
 import { mongoose } from "mongoose";
 import { validateReference, validateReferences } from "./validatingUtils.js";
 const tourGuideSchema = new mongoose.Schema(
-	{
-		username: {
-			type: String,
-			ref: "Username",
-			required: true,
-		},
-		password: { type: String, required: true },
-		name: { type: String, required: true },
-		email: {
-			type: String,
-			ref: "Email",
-			required: true,
-		},
-		isAccepted: { type: Boolean, default: true },
-		document: [String],
-		mobileNumber: { type: String, default: null },
-		yearsOfExperience: { type: Number, default: null },
-		previousWork: { type: String, default: null },
-		picture: String,
-		notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
-		ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
-		sumOfRatings: { type: Number, default: 0 },
-	},
-	{ timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  {
+    username: {
+      type: String,
+      ref: "Username",
+      required: true,
+    },
+    password: { type: String, required: true },
+    name: { type: String, required: true },
+    email: {
+      type: String,
+      ref: "Email",
+      required: true,
+    },
+    isAccepted: { type: Boolean, default: false },
+    document: [String],
+    mobileNumber: { type: String, default: null },
+    yearsOfExperience: { type: Number, default: null },
+    previousWork: { type: String, default: null },
+    picture: String,
+    notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
+    ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
+    sumOfRatings: { type: Number, default: 0 },
+    acceptedTerms: { type: Boolean, default: false },
+  },
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 tourGuideSchema.methods.addRating = async function (rating) {

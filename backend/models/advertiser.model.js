@@ -11,13 +11,14 @@ const advertiserSchema = new mongoose.Schema(
     password: { type: String, required: true },
     email: { type: String, ref: "Email", required: true },
     name: { type: String, required: true },
-    isAccepted: { type: Boolean, default: true },
+    isAccepted: { type: Boolean, default: false },
     document: [String],
     website: { type: String, default: null },
     hotline: { type: String, default: null },
     companyProfile: { type: String, default: null },
     picture: String,
     notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
+    acceptedTerms: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

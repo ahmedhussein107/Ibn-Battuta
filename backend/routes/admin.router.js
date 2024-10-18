@@ -7,6 +7,7 @@ import {
   deleteAdmin,
   deleteUser,
   updateAdmin,
+  acceptUserByModel,
 } from "../controllers/admin.controller.js";
 const adminRouter = express.Router();
 
@@ -17,6 +18,7 @@ adminRouter.get("/getAdmins", getAdmins);
 adminRouter.delete("/deleteAdmin/:id", deleteAdmin);
 
 adminRouter.put("/updateAdmin/:id", updateAdmin);
+adminRouter.post("/acceptUserByModel", acceptUserByModel);
 
 // New route for deleting a user based on userType and ID
 adminRouter.delete("/deleteUser/:userType/:id", deleteUser);
