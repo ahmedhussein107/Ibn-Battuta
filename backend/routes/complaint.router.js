@@ -6,6 +6,7 @@ import {
     updateComplaintById,
     deleteComplaintById,
     getTouristComplaints,
+    updateComplaintStatus,
 } from "../controllers/complaint.controller.js";
 
 const complaintRouter = express.Router();
@@ -21,5 +22,7 @@ complaintRouter.put("/updateComplaint/:id", updateComplaintById);
 complaintRouter.delete("/deleteComplaint/:id", deleteComplaintById);
 
 complaintRouter.get("/getComplaintsOfTourist/:id", getTouristComplaints);
+
+complaintRouter.put("/updateComplaintStatus/:id", updateComplaintStatus);
 
 export default complaintRouter;

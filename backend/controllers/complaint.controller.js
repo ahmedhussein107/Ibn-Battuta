@@ -74,3 +74,24 @@ export const getTouristComplaints = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+export const updateComplaintStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    try {
+        const complaint = await Complaint.findByIdAndUpdate(
+            id,
+            { status },
+            {
+                new: true,
+            }
+        );
+        if (complaint) {
+            res.status(200).json(complaint);
+        } else {
+            res.status(404).json({ message: "Complaint not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
