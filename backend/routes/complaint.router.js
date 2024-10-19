@@ -1,12 +1,12 @@
 import express from "express";
 import {
-  createComplaint,
-  getAllComplaints,
-  getComplaintById,
-  updateComplaintById,
-  deleteComplaintById,
+    createComplaint,
+    getAllComplaints,
+    getComplaintById,
+    updateComplaintById,
+    deleteComplaintById,
+    getTouristComplaints,
 } from "../controllers/complaint.controller.js";
-import { get } from "mongoose";
 
 const complaintRouter = express.Router();
 
@@ -19,5 +19,7 @@ complaintRouter.get("/getComplaint/:id", getComplaintById);
 complaintRouter.put("/updateComplaint/:id", updateComplaintById);
 
 complaintRouter.delete("/deleteComplaint/:id", deleteComplaintById);
+
+complaintRouter.get("/getComplaintsOfTourist/:id", getTouristComplaints);
 
 export default complaintRouter;
