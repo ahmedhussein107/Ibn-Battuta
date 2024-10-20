@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputForm from "../components/Form";
 import { Button, Box, MenuItem, TextField } from "@mui/material";
 import axiosInstance from "../api/axiosInstance";
+import { uploadFiles } from "../api/firebase";
 
 const AllSignUpPage = () => {
     const [data, setData] = useState({
@@ -10,10 +11,17 @@ const AllSignUpPage = () => {
         password: "",
         email: "",
     });
-    const [type, setType] = useState(null);
-    const [response, setResponse] = useState(null);
+    const [type, setType] = useState("");
+    const [response, setResponse] = useState("");
+    const [files, setFiles] = useState([]);
 
-    const handleClick = (e) => {
+    const handleFileChange = (e) => {
+        const selectedFiles = Array.from(e.target.files);
+        console.log("Selected files:", selectedFiles);
+        setFiles(selectedFiles);
+    };
+
+    const handleClick = async (e) => {
         const route =
             type === "Advertiser"
                 ? "advertiser/createAdvertiser"
@@ -21,17 +29,16 @@ const AllSignUpPage = () => {
                 ? "tourguide/createTourGuide"
                 : "seller/createSeller";
         e.preventDefault();
-        console.log(data);
-        axiosInstance
-            .post(route, data)
-            .then((response) => {
-                console.log(response);
-                setResponse("Created Successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-                setResponse("error");
-            });
+        const documents = await uploadFiles(files, "documents");
+        console.log("Data to be sent: ", { ...data, documents });
+        try {
+            const response = await axiosInstance.post(route, { ...data, documents });
+            console.log(response);
+            setResponse("Created Successfully");
+        } catch (error) {
+            console.log(error);
+            setResponse("error");
+        }
     };
     return (
         <>
@@ -50,6 +57,20 @@ const AllSignUpPage = () => {
                     <MenuItem value={"Advertiser"}>Advertiser</MenuItem>
                     <MenuItem value={"Seller"}>Seller</MenuItem>
                 </TextField>
+                {/* Hidden File Input */}
+                <input
+                    type="file"
+                    id="upload-button-file"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                />
+
+                {/* Button to Trigger File Input */}
+                <label htmlFor="upload-button-file">
+                    <Button variant="contained" component="span">
+                        Upload File
+                    </Button>
+                </label>
                 <Button variant="contained" onClick={handleClick}>
                     Sign Up
                 </Button>
