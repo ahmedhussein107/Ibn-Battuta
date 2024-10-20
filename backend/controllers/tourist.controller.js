@@ -2,8 +2,8 @@ import Tourist from "../models/tourist.model.js";
 import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
 import Notification from "../models/notification.model.js";
+import Booking from "../models/booking.model.js";
 import TouristActivityNotification from "../models/touristActivityNotification.model.js";
-
 
 export const getTourists = async (req, res) => {
     try {
@@ -88,22 +88,47 @@ export const deleteTourist = async (req, res) => {
     try {
         const tourist = await Tourist.findByIdAndDelete(req.params.id);
         if (tourist) {
-            await Username.findByIdAndDelete(tourist.username);
-            await Email.findByIdAndDelete(tourist.email);
+            const hasUpcoming = await Booking.exists({
+                touristID: req.params.id,
+                $or: [
+                    {
+                        bookingType: "Activity",
+                        typeId: {
+                            $in: await Activity.find({
+                                endDate: { $gt: new Date() },
+                            }).distinct("_id"),
+                        },
+                    },
+                    {
+                        bookingType: "Itinerary",
+                        typeId: {
+                            $in: await Itinerary.find({
+                                "activities.endTime": { $gt: new Date() },
+                            }).distinct("_id"),
+                        },
+                    },
+                ],
+            });
+            if (!hasUpcoming) {
+                await Username.findByIdAndDelete(tourist.username);
+                await Email.findByIdAndDelete(tourist.email);
 
-            // If there are notifications, delete each one
-            if (tourist.notifications && tourist.notifications.length > 0) {
-                await Promise.all(
-                    tourist.notifications.map(async (notificationId) => {
-                        await Notification.findByIdAndDelete(notificationId);
-                    })
-                );
+                // If there are notifications, delete each one
+                if (tourist.notifications && tourist.notifications.length > 0) {
+                    await Promise.all(
+                        tourist.notifications.map(async (notificationId) => {
+                            await Notification.findByIdAndDelete(notificationId);
+                        })
+                    );
+                }
+
+                // Delete Entries in TouristActivityNotification related to this tourist
+                await TouristActivityNotification.deleteMany({ touristID: tourist._id });
+
+                res.status(200).json({ message: "Tourist deleted successfully" });
+            } else {
+                res.status(400).json({ message: "Tourist has upcoming bookings" });
             }
-
-            // Delete Entries in TouristActivityNotification related to this tourist
-            await TouristActivityNotification.deleteMany({ touristID: tourist._id });
-
-            res.status(200).json({ message: "Tourist deleted successfully" });
         } else {
             res.status(404).json({ e: "Tourist not found" });
         }
