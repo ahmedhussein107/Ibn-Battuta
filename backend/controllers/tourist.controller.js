@@ -4,7 +4,6 @@ import Email from "../models/email.model.js";
 import Notification from "../models/notification.model.js";
 import TouristActivityNotification from "../models/touristActivityNotification.model.js";
 
-
 export const getTourists = async (req, res) => {
     try {
         const tourguides = await Tourist.find();
@@ -109,5 +108,23 @@ export const deleteTourist = async (req, res) => {
         }
     } catch (e) {
         res.status(400).json({ e: e.message });
+    }
+};
+
+export const redeemPoints = async (req, res) => {
+    try {
+        const tourist = await Tourist.findById(req.params.id);
+        if (!tourist) {
+            return res.status(404).json({ message: "tourist not found" });
+        }
+        if (tourist.loyalityPoints === 0) {
+            return res.status(400).json({ message: "you don't have any points" });
+        }
+        tourist.wallet += tourist.loyalityPoints / 100.0;
+        tourist.loyalityPoints = 0;
+        await tourist.save();
+        res.status(200).json({ message: "points redeemed successfully" });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 };
