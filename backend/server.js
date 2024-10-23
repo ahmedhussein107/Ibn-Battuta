@@ -27,19 +27,21 @@ import customActivityRouter from "./routes/customActivity.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import login from "./controllers/login.controller.js";
+import amadeusHotelsRouter from "./services/hotels.js";
+import amadeusFlightsRouter from "./services/flights.js";
 
 dotenv.config();
 const app = express();
 connect(process.env.MONGO_URI)
-  .then(() => {
-    app.listen(process.env.PORT, () => {
-      console.log(`Connected to DB`);
-      console.log(`Listening to port ${process.env.PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+	.then(() => {
+		app.listen(process.env.PORT, () => {
+			console.log(`Connected to DB`);
+			console.log(`Listening to port ${process.env.PORT}`);
+		});
+	})
+	.catch((err) => {
+		console.log(err);
+	});
 
 app.use(cookieParser());
 app.use(cors());
@@ -72,5 +74,5 @@ app.use("/api/rating", ratingRouter);
 app.use("/api/landmark", landmarkRouter);
 app.use("/api/customActivity", customActivityRouter);
 app.post("/api/login", login);
-
-
+app.use("/api/amadeus/hotels", amadeusHotelsRouter);
+app.use("/api/amadeus/flights", amadeusFlightsRouter);
