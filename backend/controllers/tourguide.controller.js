@@ -76,6 +76,9 @@ export const getTourGuideById = async (req, res) => {
 
 export const updateTourGuide = async (req, res) => {
   try {
+     if (req.body.password) {
+       req.body.password = await bcrypt.hash(req.body.password, 10);
+     }
     const tourGuide = await TourGuide.findByIdAndUpdate(
       req.params.id,
       req.body,

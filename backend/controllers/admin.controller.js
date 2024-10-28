@@ -133,6 +133,9 @@ export const acceptUserByModel = async (req, res) => {
 // Updating an admin
 export const updateAdmin = async (req, res) => {
   try {
+     if (req.body.password) {
+       req.body.password = await bcrypt.hash(req.body.password, 10);
+     }
     const admin = await Admin.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });

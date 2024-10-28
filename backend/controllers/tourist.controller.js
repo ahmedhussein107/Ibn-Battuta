@@ -80,6 +80,9 @@ export const createTourist = async (req, res) => {
 
 export const updateTourist = async (req, res) => {
     try {
+         if (req.body.password) {
+           req.body.password = await bcrypt.hash(req.body.password, 10);
+         }
         const tourist = await Tourist.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
         });

@@ -68,6 +68,10 @@ export const getAdvertiserById = async (req, res) => {
 
 export const updateAdvertiser = async (req, res) => {
   try {
+
+     if (req.body.password) {
+       req.body.password = await bcrypt.hash(req.body.password, 10);
+     }
     const advertiser = await Advertiser.findByIdAndUpdate(
       req.params.id,
       req.body,

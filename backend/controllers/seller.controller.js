@@ -66,6 +66,9 @@ export const getSellerById = async (req, res) => {
 
 export const updateSeller = async (req, res) => {
   try {
+     if (req.body.password) {
+       req.body.password = await bcrypt.hash(req.body.password, 10);
+     }
     const seller = await Seller.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
