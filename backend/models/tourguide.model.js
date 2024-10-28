@@ -23,7 +23,6 @@ const tourGuideSchema = new mongoose.Schema(
     notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
     ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
     sumOfRatings: { type: Number, default: 0 },
-    acceptedTerms: { type: Boolean, default: false },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

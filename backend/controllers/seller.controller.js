@@ -4,6 +4,7 @@ import Email from "../models/email.model.js";
 import Notification from "../models/notification.model.js";
 import Product from "../models/product.model.js";
 import Rating from "../models/rating.model.js";
+import bcrypt from "bcrypt";
 export const createSeller = async (req, res) => {
   //console.log(req.body);
   const inputUsername = req.body.username;
@@ -19,6 +20,10 @@ export const createSeller = async (req, res) => {
       const newEmail = await Email.create({
         _id: inputEmail,
       });
+      // hashing password 10 times
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      req.body.password = hashedPassword;
+
       const newSeller = await Seller.create(req.body);
       res.status(201).json(newSeller);
     } else {

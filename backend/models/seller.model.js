@@ -15,7 +15,6 @@ const sellerSchema = new mongoose.Schema(
     document: [String],
     description: { type: String, default: "Enter description" },
     picture: String,
-    acceptedTerms: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

@@ -14,6 +14,7 @@ import { deleteSeller } from "../controllers/seller.controller.js";
 import { deleteTourGuide } from "../controllers/tourguide.controller.js";
 import { deleteTourist } from "../controllers/tourist.controller.js";
 import mongoose, { set } from "mongoose";
+import bcrypt from "bcrypt";
 // Create a model mapping to access user models dynamically
 const models = {
   advertiser: Advertiser,
@@ -84,6 +85,10 @@ export const createAdmin = async (req, res) => {
         _id: inputEmail,
       });
     }
+
+    // hashing password 10 times
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    req.body.password = hashedPassword;
 
     const newAdmin = await Admin.create(req.body);
     res.status(201).json(newAdmin);

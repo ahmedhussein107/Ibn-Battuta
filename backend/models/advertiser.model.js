@@ -18,7 +18,6 @@ const advertiserSchema = new mongoose.Schema(
     companyProfile: { type: String, default: null },
     picture: String,
     notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
-    acceptedTerms: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
