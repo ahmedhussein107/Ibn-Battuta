@@ -12,20 +12,19 @@ export const createProduct = async (req, res) => {
 		//     productData.pictures = [];
 		// }
 
+		// this is the part of the cloud
 
-      // this is the part of the cloud
-     
-      productData.pictures = [];
-      if (req.documents && req.documents.length > 0) {
-        productData.pictures = req.documents;
-      }
-      console.log("productData: ", productData);
-      const newProduct = await Product.create(productData);
-      res.status(201).json(newProduct);
-    } catch (e) {
-        console.log(e);
-        res.status(400).json({ e: e.message });
-    }
+		productData.pictures = [];
+		if (req.documents && req.documents.length > 0) {
+			productData.pictures = req.documents;
+		}
+		console.log("productData: ", productData);
+		const newProduct = await Product.create(productData);
+		res.status(201).json(newProduct);
+	} catch (e) {
+		console.log(e);
+		res.status(400).json({ e: e.message });
+	}
 };
 
 export const updateProduct = async (req, res) => {
@@ -46,9 +45,10 @@ export const updateProduct = async (req, res) => {
 
 export const allProducts = async (req, res) => {
 	try {
-		const products = await Product.find({ quantity: { $gt: 0 } }).populate(
-			"ownerID ratings"
-		);
+		const products = await Product.find({
+			quantity: { $gt: 0 },
+			isArchived: false,
+		}).populate("ownerID ratings");
 		res.json(products);
 	} catch (e) {
 		res.status(400).json({ e: e.message });
@@ -87,5 +87,29 @@ export const searchProducts = async (req, res) => {
 		return res.status(200).json(products);
 	} catch (error) {
 		return res.status(500).json({ error: error.message });
+	}
+};
+
+export const archeiveProduct = async (req, res) => {
+	const { productID } = req.params;
+	try {
+		const product = await Product.findByIdAndUpdate(productID, {
+			isArchived: true,
+		});
+		res.json(product);
+	} catch (e) {
+		res.status(400).json({ e: e.message });
+	}
+};
+
+export const unarcheiveProduct = async (req, res) => {
+	const { productID } = req.params;
+	try {
+		const product = await Product.findByIdAndUpdate(productID, {
+			isArchived: false,
+		});
+		res.json(product);
+	} catch (e) {
+		res.status(400).json({ e: e.message });
 	}
 };
