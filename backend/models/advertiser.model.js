@@ -12,7 +12,7 @@ const advertiserSchema = new mongoose.Schema(
         email: { type: String, ref: "Email", required: true },
         name: { type: String, required: true },
         isAccepted: { type: Boolean, default: true },
-        document: [String],
+        documents: [String],
         website: { type: String, default: null },
         hotline: { type: String, default: null },
         companyProfile: { type: String, default: null },

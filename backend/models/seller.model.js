@@ -12,7 +12,7 @@ const sellerSchema = new mongoose.Schema(
         email: { type: String, ref: "Email", required: true },
         isAccepted: { type: Boolean, default: true },
         notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
-        document: [String],
+        documents: [String],
         description: { type: String, default: "Enter description" },
         picture: String,
     },

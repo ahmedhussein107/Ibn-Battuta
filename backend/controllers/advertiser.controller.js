@@ -123,3 +123,19 @@ export const deleteAdvertiser = async (req, res) => {
         res.status(400).json({ e: e.message });
     }
 };
+
+export const getAdvertisersDocuments = async (req, res) => {
+    try {
+        const advertisers = await Advertiser.find();
+        const advertisersDocuments = advertisers.map((advertiser) => {
+            return {
+                username: advertiser.username,
+                documents: advertiser.documents,
+            };
+        });
+        res.status(200).json(advertisersDocuments);
+    } catch (e) {
+        console.log(e.message);
+        res.status(400).json({ e: e.message });
+    }
+};
