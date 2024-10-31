@@ -1,30 +1,23 @@
 import express from "express";
-import { upload } from "../routers.middleware/mutler.config.js";
 import {
-	uploadImage,
-	uploadImages,
-	uploadDocument,
-	uploadDocuments,
-} from "../routers.middleware/cloudinary.config.js";
-import {
-	createProduct,
-	updateProduct,
-	getAllProducts,
-	deleteProduct,
-	getProduct,
-	searchProducts,
-	archeiveProduct,
-	unarcheiveProduct,
+    createProduct,
+	  updateProduct,
+	  getAllProducts,
+	  deleteProduct,
+	  getProduct,
+	  searchProducts,
+	  archeiveProduct,
+	  unarcheiveProduct,
 } from "../controllers/product.controller.js";
 const productRouter = express.Router();
 
 const _print = function (req, res, next) {
-	console.log("i am here in product router");
-	console.log("body is ", req.body);
-	next();
+    console.log("i am here in product router");
+    console.log("body is ", req.body);
+    next();
 };
 
-productRouter.post("/createProduct", _print, uploadDocuments, createProduct);
+productRouter.post("/createProduct", _print, createProduct);
 
 productRouter.get("/getAllProducts", getAllProducts);
 

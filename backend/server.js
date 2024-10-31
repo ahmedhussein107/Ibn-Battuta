@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
 import { connect } from "mongoose";
-import fileUpload from "express-fileupload";
 import touristRouter from "./routes/tourist.router.js";
 import usernameRouter from "./routes/username.router.js";
 import adminRouter from "./routes/admin.router.js";
@@ -31,22 +30,19 @@ import login from "./controllers/login.controller.js";
 dotenv.config();
 const app = express();
 connect(process.env.MONGO_URI)
-  .then(() => {
-    app.listen(process.env.PORT, () => {
-      console.log(`Connected to DB`);
-      console.log(`Listening to port ${process.env.PORT}`);
+    .then(() => {
+        app.listen(process.env.PORT, () => {
+            console.log(`Connected to DB`);
+            console.log(`Listening to port ${process.env.PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
     });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 
 app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
-app.use(fileUpload());
-app.use("/uploads/documents", express.static("./uploads/documents"));
-app.use("/uploads/images", express.static("./uploads/images"));
 
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);
@@ -72,5 +68,3 @@ app.use("/api/rating", ratingRouter);
 app.use("/api/landmark", landmarkRouter);
 app.use("/api/customActivity", customActivityRouter);
 app.post("/api/login", login);
-
-
