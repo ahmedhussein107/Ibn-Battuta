@@ -1,7 +1,7 @@
 import express from "express";
 import {
     getItineraries,
-    filterItineraries,
+    getUpcomingItineraries,
     getItineraryById,
     createItinerary,
     updateItinerary,
@@ -24,7 +24,7 @@ itineraryRouter.get("/getAllItineraries", getItineraries);
 
 itineraryRouter.get("/getItinerary/:id", getItineraryById);
 
-itineraryRouter.get("/filterItineraries", filterItineraries);
+itineraryRouter.get("/getUpcomingItineraries", getUpcomingItineraries);
 
 itineraryRouter.get("/getTourGuideItinerary/:id", getTourGuideItinerary);
 

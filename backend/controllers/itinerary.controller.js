@@ -88,22 +88,6 @@ export const deleteItinerary = async (req, res) => {
 };
 
 export const getUpcomingItineraries = async (req, res) => {
-    try {
-        const itineraries = await Itinerary.find({
-            isActivated: true, // itineraries that are deactivated do not appear to the user according to requirement (25)
-            isFlagged: false, // itineraries that are flagged do not appear to the user according to requirement (33)
-            availableDatesAndTimes: { $gt: Date.now() },
-        })
-            .populate("tourguideID")
-            .populate("activities.activity")
-            .populate("ratings");
-
-        res.json(itineraries);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-};
-export const filterItineraries = async (req, res) => {
     const query = buildFilter(req.query);
 
     try {
