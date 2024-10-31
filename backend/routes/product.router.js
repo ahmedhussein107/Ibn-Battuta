@@ -30,14 +30,14 @@ productRouter.get("/getAllProducts", getAllProducts);
 
 productRouter.get("/getProduct/:id", getProduct);
 
-productRouter.post("/updateProduct/:id", updateProduct);
+productRouter.patch("/updateProduct/:id", updateProduct);
 
 productRouter.delete("/deleteProduct/:id", deleteProduct);
 
 productRouter.get("/search", searchProducts);
 
-productRouter.post("/archiveProduct/:id", archeiveProduct);
+productRouter.patch("/archiveProduct/:id", archeiveProduct);
 
-productRouter.post("/unarchiveProduct/:id", unarcheiveProduct);
+productRouter.patch("/unarchiveProduct/:id", unarcheiveProduct);
 
 export default productRouter;
