@@ -1,9 +1,6 @@
-import express from "express"
+import express from "express";
 import { upload } from "../routers.middleware/mutler.config.js";
-import {
-  uploadImage,
-  uploadImages,
-} from "../routers.middleware/cloudinary.config.js";
+import { uploadImage, uploadImages } from "../routers.middleware/cloudinary.config.js";
 import {
     createProduct,
     updateProduct,
@@ -21,11 +18,11 @@ const _print = function (req, res, next) {
 };
 
 productRouter.post(
-  "/createProduct",
-  _print,
-  // upload.array("pictures"),
-  uploadImages,
-  createProduct
+    "/createProduct",
+    _print,
+    // upload.array("pictures"),
+    uploadImages,
+    createProduct
 );
 
 productRouter.get("/allProducts", allProducts);
