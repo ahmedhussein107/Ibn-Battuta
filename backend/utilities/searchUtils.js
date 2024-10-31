@@ -39,9 +39,9 @@ export const buildFilter = (filters) => {
             query[key] = { $regex: value.substring(1), $options: "i" }; // Case-insensitive regex
         }
         // Check for range-like values (e.g., price=50-200, rating=4-5)
-        else if (typeof value === "string" && value.includes("~")) {
-            // Special handling for dates in the format "YYYY-MM-DD~YYYY-MM-DD"
-            const [startDate, endDate] = value.split("~");
+        else if (typeof value === "string" && value.includes("€")) {
+            // Special handling for dates in the format "YYYY-MM-DD€YYYY-MM-DD"
+            const [startDate, endDate] = value.split("€");
             query[key] = {};
             if (startDate) query[key].$gte = new Date(startDate);
             if (endDate) query[key].$lte = new Date(endDate);
