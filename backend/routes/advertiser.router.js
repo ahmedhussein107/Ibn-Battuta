@@ -5,6 +5,7 @@ import {
     getAdvertiserById,
     updateAdvertiser,
     deleteAdvertiser,
+    getAdvertisersDocuments,
 } from "../controllers/advertiser.controller.js";
 
 const advertiserRouter = express.Router();
@@ -18,5 +19,7 @@ advertiserRouter.get("/advertiser/:id", getAdvertiserById);
 advertiserRouter.patch("/updateAdvertiser/:id", updateAdvertiser);
 
 advertiserRouter.delete("/deleteAdvertiser/:id", deleteAdvertiser);
+
+advertiserRouter.get("/documents", getAdvertisersDocuments);
 
 export default advertiserRouter;
