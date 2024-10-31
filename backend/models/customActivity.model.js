@@ -18,28 +18,28 @@ const customActivitySchema = new mongoose.Schema(
 customActivitySchema.index({ tourguideID: 1 });
 
 customActivitySchema.pre("save", async function (next) {
-  try {
-    const { tourguideID } = this;
+    try {
+        const { tourguideID } = this;
 
-    await validateReference(tourguideID, "TourGuide", next);
-    next();
-  } catch (error) {
-    next(error);
-  }
+        await validateReference(tourguideID, "TourGuide", next);
+        next();
+    } catch (error) {
+        next(error);
+    }
 });
 
 const validateReferencesMiddleware = async function (next) {
-  try {
-    const update = this.getUpdate();
-    const updatedTourguideID = update.tourguideID || update["$set.tourguideID"];
+    try {
+        const update = this.getUpdate();
+        const updatedTourguideID = update.tourguideID || update["$set.tourguideID"];
 
-    if (updatedTourguideID) {
-      await validateReference(updatedTourguideID, "TourGuide", next);
+        if (updatedTourguideID) {
+            await validateReference(updatedTourguideID, "TourGuide", next);
+        }
+        next();
+    } catch (error) {
+        next(error);
     }
-    next();
-  } catch (error) {
-    next(error);
-  }
 };
 
 customActivitySchema.pre("findOneAndUpdate", validateReferencesMiddleware);

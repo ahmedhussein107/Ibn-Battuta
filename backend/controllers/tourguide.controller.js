@@ -91,7 +91,7 @@ export const deleteTourGuide = async (req, res) => {
         if (tourGuide) {
             await Username.findByIdAndDelete(tourGuide.username);
             await Email.findByIdAndDelete(tourGuide.email);
-
+          
             // If there are notifications, delete each one
             if (tourGuide.notifications && tourGuide.notifications.length > 0) {
                 await Promise.all(

@@ -112,7 +112,6 @@ export const deleteSeller = async (req, res) => {
 
             // Delete all products associated with this seller
             await Product.deleteMany({ ownerID: req.params.id, ownerType: "Seller" });
-
             res.status(200).json({ message: "Seller deleted successfully" });
         } else {
             res.status(404).json({ e: "Seller not found" });

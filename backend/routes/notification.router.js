@@ -23,9 +23,13 @@ notificationRouter.get("/allNotifications", async (req, res) => {
 
 notificationRouter.patch("/updateNotification/:id", async (req, res) => {
     try {
-        const notification = await Notification.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        });
+        const notification = await Notification.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+            }
+        );
         if (!notification) return res.status(404).send("Notification not found.");
         res.json(notification);
     } catch (e) {

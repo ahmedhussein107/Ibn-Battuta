@@ -47,8 +47,7 @@ landmarkSchema.pre("save", async function (next) {
 const validateReferencesMiddleware = async function (next) {
     try {
         const update = this.getUpdate();
-        const updatedGovernorID =
-            update.governorID || update["$set.governorID"];
+        const updatedGovernorID = update.governorID || update["$set.governorID"];
         const updatedTags = update.tags || update["$set.tags"];
 
         if (updatedGovernorID) {

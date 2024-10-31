@@ -14,38 +14,38 @@ const ratingSchema = new mongoose.Schema(
 );
 
 const validateTouristID = async (touristID, next) => {
-  try {
-    if (!touristID) {
-      return next(new Error("touristID is required."));
+    try {
+        if (!touristID) {
+            return next(new Error("touristID is required."));
+        }
+        await validateReference(touristID, "Tourist", next);
+    } catch (err) {
+        return next(err);
     }
-    await validateReference(touristID, "Tourist", next);
-  } catch (err) {
-    return next(err);
-  }
 };
 
 ratingSchema.pre("save", async function (next) {
-  try {
-    const { touristID } = this;
-    await validateTouristID(touristID, next);
-  } catch (error) {
-    next(error);
-  }
+    try {
+        const { touristID } = this;
+        await validateTouristID(touristID, next);
+    } catch (error) {
+        next(error);
+    }
 });
 
 const validateUpdateTouristID = async function (next) {
-  try {
-    const update = this.getUpdate();
-    const updatedTouristID = update.touristID || update["$set"].touristID;
+    try {
+        const update = this.getUpdate();
+        const updatedTouristID = update.touristID || update["$set"].touristID;
 
-    if (updatedTouristID) {
-      await validateTouristID(updatedTouristID, next);
+        if (updatedTouristID) {
+            await validateTouristID(updatedTouristID, next);
+        }
+
+        next();
+    } catch (error) {
+        next(error);
     }
-
-    next();
-  } catch (error) {
-    next(error);
-  }
 };
 
 ratingSchema.pre("findOneAndUpdate", validateUpdateTouristID);
