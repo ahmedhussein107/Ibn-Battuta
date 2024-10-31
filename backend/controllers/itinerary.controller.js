@@ -88,22 +88,6 @@ export const deleteItinerary = async (req, res) => {
 };
 
 export const getUpcomingItineraries = async (req, res) => {
-    try {
-        const itineraries = await Itinerary.find({
-            isActivated: true, // itineraries that are deactivated do not appear to the user according to requirement (25)
-            isFlagged: false, // itineraries that are flagged do not appear to the user according to requirement (33)
-            availableDatesAndTimes: { $gt: Date.now() },
-        })
-            .populate("tourguideID")
-            .populate("activities.activity")
-            .populate("ratings");
-
-        res.json(itineraries);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-};
-export const filterItineraries = async (req, res) => {
     const query = buildFilter(req.query);
 
     try {
@@ -146,6 +130,26 @@ export const searchItineraries = async (req, res) => {
     try {
         const results = await genericSearch(Itinerary, req.query);
         res.status(200).json({ results });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const toggleFlaggedItineraries = async (req, res) => {
+    try {
+        const itineraryID = req.params.id;
+        const itinerary = await Itinerary.findById(itineraryID);
+        if (!itinerary) {
+            return res.status(404).json({ message: "Itinerary not found" });
+        }
+        itinerary.isFlagged = !itinerary.isFlagged;
+        await itinerary.save();
+        res.status(200).json({
+            message: "Itinerary flagged status changed successfully",
+            itinerary,
+        });
+
+        // to be continued?
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

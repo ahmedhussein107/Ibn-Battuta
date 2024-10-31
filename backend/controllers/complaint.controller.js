@@ -11,8 +11,15 @@ export const createComplaint = async (req, res) => {
 };
 
 export const getAllComplaints = async (req, res) => {
+    const { status, sort } = req.query; // Accept "sort" query parameter
     try {
-        const complaints = await Complaint.find();
+        // Define query with optional status filtering
+        const query = status ? { status } : {};
+
+        // Determine sorting order, default to newest first
+        const sortOrder = sort === "oldest" ? 1 : -1;
+
+        const complaints = await Complaint.find(query).sort({ createdAt: sortOrder });
         res.status(200).json(complaints);
     } catch (error) {
         res.status(500).json({ message: error.message });

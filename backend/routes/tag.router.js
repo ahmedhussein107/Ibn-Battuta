@@ -1,11 +1,11 @@
 import express from "express";
 
 import {
-  createTag,
-  getTag,
-  updateTag,
-  deleteTag,
-  getTagByID,
+    createTag,
+    getTag,
+    updateTag,
+    deleteTag,
+    getTagByID,
 } from "../controllers/tag.controller.js";
 
 const tagRouter = express.Router();
