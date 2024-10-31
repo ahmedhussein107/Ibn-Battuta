@@ -5,6 +5,7 @@ import {
     getTourGuideById,
     updateTourGuide,
     deleteTourGuide,
+    getTourGuidesDocuments,
 } from "../controllers/tourguide.controller.js";
 
 const tourGuideRouter = express.Router();
@@ -18,5 +19,7 @@ tourGuideRouter.get("/tourGuide/:id", getTourGuideById);
 tourGuideRouter.patch("/updateTourGuide/:id", updateTourGuide);
 
 tourGuideRouter.delete("/deleteTourGuide/:id", deleteTourGuide);
+
+tourGuideRouter.get("/documents", getTourGuidesDocuments);
 
 export default tourGuideRouter;
