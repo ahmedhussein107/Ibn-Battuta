@@ -6,6 +6,8 @@ import {
     updateComment,
     deleteComment,
     getComments,
+    replyToComplaint,
+    replyToComment,
 } from "../controllers/comment.controller.js";
 
 const commentRouter = express.Router();
@@ -21,5 +23,9 @@ commentRouter.get("/getComplaintComments/:id", getComplaintComments);
 commentRouter.put("/updateComment/:id", updateComment);
 
 commentRouter.delete("/deleteComment/:id", deleteComment);
+
+commentRouter.post("/replyToComplaint/:complaintID", replyToComplaint);
+
+commentRouter.post("/replyToComment/:commentID", replyToComment);
 
 export default commentRouter;
