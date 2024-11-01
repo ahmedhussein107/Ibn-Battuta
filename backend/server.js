@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import express from "express";
 import { connect } from "mongoose";
 import touristRouter from "./routes/tourist.router.js";
@@ -26,14 +25,17 @@ import customActivityRouter from "./routes/customActivity.router.js";
 import generalRouter from "./routes/general.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import amadeusHotelsRouter from "./services/hotels.js";
+import amadeusFlightsRouter from "./services/flights.js";
 
-dotenv.config();
+import { PORT, MONGO_URI } from "./config/config.js";
+
 const app = express();
-connect(process.env.MONGO_URI)
+connect(MONGO_URI)
     .then(() => {
-        app.listen(process.env.PORT, () => {
+        app.listen(PORT, () => {
             console.log(`Connected to DB`);
-            console.log(`Listening to port ${process.env.PORT}`);
+            console.log(`Listening to port ${PORT}`);
         });
     })
     .catch((err) => {
@@ -67,4 +69,6 @@ app.use("/api/category", categoryRouter);
 app.use("/api/rating", ratingRouter);
 app.use("/api/landmark", landmarkRouter);
 app.use("/api/customActivity", customActivityRouter);
+app.use("/api/amadeus/hotels", amadeusHotelsRouter);
+app.use("/api/amadeus/flights", amadeusFlightsRouter);
 app.use("/api/general", generalRouter);
