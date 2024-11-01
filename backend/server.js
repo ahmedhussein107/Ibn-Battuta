@@ -22,9 +22,9 @@ import tagRouter from "./routes/tag.router.js";
 import ratingRouter from "./routes/rating.router.js";
 import landmarkRouter from "./routes/landmark.router.js";
 import customActivityRouter from "./routes/customActivity.router.js";
+import generalRouter from "./routes/general.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import login from "./controllers/login.controller.js";
 import amadeusHotelsRouter from "./services/hotels.js";
 import amadeusFlightsRouter from "./services/flights.js";
 
@@ -69,6 +69,6 @@ app.use("/api/category", categoryRouter);
 app.use("/api/rating", ratingRouter);
 app.use("/api/landmark", landmarkRouter);
 app.use("/api/customActivity", customActivityRouter);
-app.post("/api/login", login);
 app.use("/api/amadeus/hotels", amadeusHotelsRouter);
 app.use("/api/amadeus/flights", amadeusFlightsRouter);
+app.use("/api/general", generalRouter);

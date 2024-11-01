@@ -3,7 +3,7 @@ import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
 import Notification from "../models/notification.model.js";
 import TouristActivityNotification from "../models/touristActivityNotification.model.js";
-
+import bcrypt from "bcrypt";
 
 export const getTourists = async (req, res) => {
     try {
@@ -57,6 +57,11 @@ export const createTourist = async (req, res) => {
             const newEmail = await Email.create({
                 _id: inputEmail,
             });
+
+            // hashing password 10 times
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            req.body.password = hashedPassword;
+
             const newTourist = await Tourist.create(req.body);
             res.status(201).json(newTourist);
         } else {
@@ -75,6 +80,9 @@ export const createTourist = async (req, res) => {
 
 export const updateTourist = async (req, res) => {
     try {
+        if (req.body.password) {
+            req.body.password = await bcrypt.hash(req.body.password, 10);
+        }
         const tourist = await Tourist.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
         });

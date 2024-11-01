@@ -1,14 +1,14 @@
 import express from "express";
 import {
-  createLandmark,
-  getLandmarkById,
-  getTicketPricesFromLandmark,
-  getAllLandmarks,
-  updateLandmark,
-  deleteLandmark,
-  getGovernorLandmarks,
-  searchLandmarks,
-  filterLandmarks,
+    createLandmark,
+    getLandmarkById,
+    getTicketPricesFromLandmark,
+    getAllLandmarks,
+    updateLandmark,
+    deleteLandmark,
+    getGovernorLandmarks,
+    searchLandmarks,
+    filterLandmarks,
 } from "../controllers/landmark.controller.js";
 
 const landmarkRouter = express.Router();
@@ -19,10 +19,7 @@ landmarkRouter.get("/allLandmark", getAllLandmarks);
 
 landmarkRouter.get("/landmark/:id", getLandmarkById);
 
-landmarkRouter.get(
-  "/ticketPricesFromLandmark/:id",
-  getTicketPricesFromLandmark
-);
+landmarkRouter.get("/ticketPricesFromLandmark/:id", getTicketPricesFromLandmark);
 
 landmarkRouter.patch("/updateLandmark/:id", updateLandmark);
 

@@ -1,13 +1,13 @@
 import express from "express";
 import {
     createProduct,
-	  updateProduct,
-	  getAllProducts,
-	  deleteProduct,
-	  getProduct,
-	  searchProducts,
-	  archeiveProduct,
-	  unarcheiveProduct,
+    updateProduct,
+    getAllProducts,
+    deleteProduct,
+    getProduct,
+    searchProducts,
+    archeiveProduct,
+    unarcheiveProduct,
 } from "../controllers/product.controller.js";
 const productRouter = express.Router();
 
