@@ -30,6 +30,28 @@ const CreateProductPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+<<<<<<< HEAD
+        const data = new FormData();
+        Object.keys(formData).forEach((key) => {
+            data.append(key, formData[key]);
+        });
+
+        data.append("sumOfRatings", 3);
+        for (let i = 0; i < pictures.length; i++) {
+            data.append("documents", pictures[i]);
+        }
+
+        console.log("Contents of FormData:");
+        for (let pair of data.entries()) {
+            console.log(`${pair[0]}:`, pair[1]);
+        }
+        try {
+            const response = await axiosInstance.post("product/createProduct", data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+=======
         const images = await uploadFiles(pictures, "products"); // TODO: change the path
         console.log("Images uploaded:", images);
 
@@ -38,6 +60,7 @@ const CreateProductPage = () => {
 
         try {
             const response = await axiosInstance.post("product/createProduct", data);
+>>>>>>> main
             console.log("Product created:", response.data);
         } catch (error) {
             console.error("Error creating product:", error);
