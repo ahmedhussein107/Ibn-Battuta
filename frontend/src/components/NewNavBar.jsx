@@ -1,8 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import "../styles/NavBar.css";
 import { useState } from "react";
+import Button from "react-bootstrap/Button";
 const navbarUserItems = {
     Guest: [
         { Home: "link" },
@@ -84,76 +85,71 @@ const NavBar = () => {
 
     return (
         <nav className="navbar">
-            <div className="navbar-container">
-                {/* Left side: Website icon or banner */}
-                <div className="navbar-left-circle">
-                    <Link to="/" className="navbar-logo">
-                        WebsiteLogo
-                    </Link>
-                </div>
-
-                {/* Center: Navbar items */}
-                <div className="navbar-links">
-                    {navbarItems.map((item, index) => {
-                        const [label, linkOrSubMenu] = Object.entries(item)[0];
-                        return Array.isArray(linkOrSubMenu) ? (
-                            <div className="dropdown" key={index}>
-                                <span className="dropdown-title">{label}</span>
-                                <div className="dropdown-content">
-                                    {linkOrSubMenu.map((subItem, subIndex) => {
-                                        const [subLabel, subLink] =
-                                            Object.entries(subItem)[0];
-                                        return (
-                                            <Link key={subIndex} to={subLink}>
-                                                {subLabel}
-                                            </Link>
-                                        );
-                                    })}
-                                </div>
+            <Link to="/" className="navbar-logo">
+                <img src="/logo.png" alt="Website Logo" className="logo-image" />
+            </Link>
+            {/* Center: Navbar items */}
+            <div className="navbar-links">
+                {navbarItems.map((item, index) => {
+                    const [label, linkOrSubMenu] = Object.entries(item)[0];
+                    return Array.isArray(linkOrSubMenu) ? (
+                        <div className="dropdown" key={index}>
+                            <span className="dropdown-title">{label}</span>
+                            <div className="dropdown-content">
+                                {linkOrSubMenu.map((subItem, subIndex) => {
+                                    const [subLabel, subLink] =
+                                        Object.entries(subItem)[0];
+                                    return (
+                                        <Link
+                                            key={subIndex}
+                                            to={subLink}
+                                            className="dropdown-tiem"
+                                        >
+                                            {subLabel}
+                                        </Link>
+                                    );
+                                })}
                             </div>
-                        ) : (
-                            <Link key={index} to={linkOrSubMenu}>
-                                {label}
-                            </Link>
-                        );
-                    })}
-                </div>
-
-                {/* Right side: Profile or login/signup */}
-                <div className="navbar-right-circle">
-                    {userType === "Guest" ? (
-                        <>
-                            <Link to="/login" className="auth-link">
-                                Login
-                            </Link>
-                            <Link to="/signup" className="auth-link">
-                                Sign Up
-                            </Link>
-                        </>
-                    ) : (
-                        <div className="profile-dropdown">
-                            <img
-                                src="/path/to/profile-image.jpg"
-                                alt="Profile"
-                                className="profile-image"
-                                onClick={handleDropdownToggle}
-                            />
-                            {isDropdownOpen && (
-                                <div className="dropdown-menu">
-                                    <Link to="/profile" className="dropdown-item">
-                                        Profile
-                                    </Link>
-                                    <span
-                                        className="dropdown-item"
-                                        onClick={handleLogout}
-                                    >
-                                        Logout
-                                    </span>
-                                </div>
-                            )}
                         </div>
-                    )}
-                </div>
+                    ) : (
+                        <Link key={index} to={linkOrSubMenu} className="simple-link">
+                            {label}
+                        </Link>
+                    );
+                })}
+            </div>
+
+            {/* Right side: Profile or login/signup */}
+            <div className="navbar-profile">
+                {userType === "Guest" ? (
+                    <>
+                        <Link to="/login" className="auth-link">
+                            Login
+                        </Link>
+                        <Button onClick={Navigate("/signup")} className="auth-button">
+                            Sign Up
+                        </Button>
+                    </>
+                ) : (
+                    <div className="profile-dropdown">
+                        <img
+                            src="/path/to/profile-image.jpg"
+                            alt="Profile"
+                            className="profile-image"
+                            onClick={handleDropdownToggle}
+                        />
+                        {isDropdownOpen && (
+                            <div className="dropdown-menu">
+                                <Link to="/profile" className="dropdown-item">
+                                    Profile
+                                </Link>
+                                <span className="dropdown-item" onClick={handleLogout}>
+                                    Logout
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </nav>
     );

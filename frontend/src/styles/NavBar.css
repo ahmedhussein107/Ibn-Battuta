@@ -1,125 +1,167 @@
-/* General Navbar Styles */
+/* NavBar.css */
+
 .navbar {
-    background-color: #333;
-    padding: 10px 0;
+    width: 50em;
     display: flex;
-    justify-content: center;
-    color: #fff;
-}
-
-.navbar-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 90%;
-    max-width: 1200px;
-    border-radius: 30px;
-    background-color: #444;
-    padding: 10px 20px;
-}
-
-.navbar-left-circle,
-.navbar-right-circle {
-    border-radius: 50%;
-    padding: 10px;
-    background-color: #555;
+    justify-content: space-between; /* Distributes space evenly */
+    align-items: center; /* Vertically centers items */
+    padding: 10px 20px; /* Adjust as needed for spacing */
+    background-color: rgba(241, 238, 241, 0.2);
+    border-radius: 50px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
 }
 
 .navbar-logo {
-    font-size: 1.5em;
-    color: #fff;
-    text-decoration: none;
+    display: inline-flex; /* Allow inline and flex properties */
+    border-radius: 15px; /* Rounded edges for the logo container */
+    overflow: hidden; /* Hide overflow to maintain roundness */
+    background-color: white; /* Background color for the logo container */
+    padding: 5px; /* Padding around the logo */
+}
+
+/* Logo image styling */
+.logo-image {
+    height: 40px; /* Adjust logo height */
+    width: auto; /* Maintain aspect ratio */
+    display: block; /* Ensure proper layout */
+    border-radius: 50%; /* Make the logo image circular, adjust to your preference */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
 }
 
 .navbar-links {
-    display: flex;
-    gap: 20px;
-    flex-grow: 1;
-    justify-content: center;
+    display: flex; /* Makes this a flex container */
+    align-items: center; /* Aligns items vertically in the center */
 }
 
-.navbar-links a {
-    color: #fff;
-    text-decoration: none;
-    padding: 5px 10px;
-}
-
-.dropdown {
-    position: relative;
+.navbar-links .dropdown {
+    position: relative; /* Allows absolute positioning of dropdown content */
+    margin: 0 15px; /* Space between links */
 }
 
 .dropdown-title {
-    cursor: pointer;
+    cursor: pointer; /* Shows a pointer cursor on hover */
 }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%;
-    background-color: #444;
-    min-width: 150px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    z-index: 1;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown-content a {
-    color: #fff;
-    padding: 10px;
-    display: block;
-    text-decoration: none;
-}
-
-.dropdown-content a:hover {
-    background-color: #555;
-}
-
-/* Right Side - Profile or Auth Links */
-.navbar-right-circle {
-    display: flex;
-    gap: 10px;
+.simple-link {
+    margin: 0 10px; /* Space between links */
+    text-decoration: none; /* Remove underline from links */
+    color: #333; /* Link color */
 }
 
 .auth-link {
-    color: #fff;
-    text-decoration: none;
-    padding: 5px 10px;
+    margin: 0 10px; /* Space between auth links */
+    text-decoration: none; /* Remove underline from links */
+    color: black; /* Link color */
 }
 
-.profile-image {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
+.auth-button {
+    height: 60px;
+    margin: 0 10px; /* Space between auth links */
+    text-decoration: none; /* Remove underline from links */
+    background-color: orange; /* Link color */
+    border-radius: 30px;
+}
+.navbar-profile {
+    display: flex; /* Flex for profile section */
+    align-items: center; /* Center vertically */
 }
 
 .profile-dropdown {
-    position: relative;
+    position: relative; /* Needed for absolute positioning of dropdown menu */
+}
+
+.profile-image {
+    width: 40px; /* Adjust as needed */
+    height: 40px; /* Adjust as needed */
+    border-radius: 50%; /* Make the image circular */
+    cursor: pointer; /* Shows a pointer cursor on hover */
 }
 
 .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #444;
-    width: 150px;
-    border-radius: 4px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+    display: none; /* Hide dropdown by default */
+    position: absolute; /* Positions it relative to the profile dropdown */
+    background-color: white; /* Background for dropdown */
+    border: 1px solid #ccc; /* Border styling */
+    z-index: 1; /* Ensures it appears above other elements */
+}
+
+.profile-dropdown:hover .dropdown-menu {
+    display: block; /* Shows dropdown on hover */
+}
+
+.dropdown-item {
+    padding: 10px 20px; /* Space inside dropdown items */
+    cursor: pointer; /* Shows pointer cursor on hover */
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0; /* Background color on hover */
+}
+
+.dropdown-content {
+    display: none; /* Hide dropdown by default */
+    position: absolute; /* Position it absolutely */
+    top: 100%; /* Align with dropdown title */
+    background-color: #e5d9d9; /* Background color for dropdown */
+    min-width: 150px; /* Minimum width for dropdown */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Shadow for dropdown */
+    border-radius: 6px; /* Rounded corners for dropdown */
+    z-index: 1; /* Ensure it is above other elements */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block; /* Show dropdown on hover */
+}
+
+.dropdown-content a {
+    color: black; /* Link color in dropdown */
+    padding: 10px; /* Padding for dropdown links */
+    display: block; /* Block display for dropdown links */
+    text-decoration: none; /* No underline */
+}
+
+.dropdown-content a:hover {
+    color: orange;
+}
+
+/* Right Side - Profile or Auth Links */
+.navbar-right {
+    display: flex; /* Flex for right side links */
+    align-items: center; /* Align vertically */
+}
+
+/* Profile Image */
+.profile-image {
+    width: 40px; /* Profile image width */
+    height: 40px; /* Profile image height */
+    border-radius: 50%; /* Circular profile image */
+    cursor: pointer; /* Pointer on hover */
+}
+
+/* Profile Dropdown Menu */
+.profile-dropdown {
+    position: relative; /* Position for dropdown */
+}
+
+.dropdown-menu {
+    position: absolute; /* Absolute position */
+    top: 100%; /* Position below the image */
+    right: 0; /* Align to the right */
+    background-color: #444; /* Background color */
+    width: 150px; /* Width of dropdown */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Shadow for dropdown */
+    z-index: 1; /* Ensure it is above other elements */
 }
 
 .dropdown-menu .dropdown-item {
-    color: #fff;
-    padding: 10px;
-    display: block;
-    cursor: pointer;
-    text-decoration: none;
+    color: #fff; /* Text color for dropdown items */
+    padding: 10px; /* Padding for items */
+    display: block; /* Block display */
+    cursor: pointer; /* Pointer on hover */
+    text-decoration: none; /* No underline */
 }
 
 .dropdown-menu .dropdown-item:hover {
-    background-color: #555;
+    background-color: #555; /* Background on hover */
 }
