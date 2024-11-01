@@ -5,7 +5,7 @@ const InputForm = ({ data, setData, input }) => {
     return (
         <div>
             {Object.keys(data).map((key) => (
-                <div style={{ marginBottom: "2vh" }}>
+                <div style={{ marginBottom: "2vh" }} key={key}>
                     {input && (
                         <SingleEntryInput
                             label={key}

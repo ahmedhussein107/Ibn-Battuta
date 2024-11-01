@@ -120,13 +120,28 @@ export const deleteSeller = async (req, res) => {
 
             // Delete all products associated with this seller
             await Product.deleteMany({ ownerID: req.params.id, ownerType: "Seller" });
-
             res.status(200).json({ message: "Seller deleted successfully" });
         } else {
             res.status(404).json({ e: "Seller not found" });
         }
     } catch (e) {
         //console.log(e.message);
+        res.status(400).json({ e: e.message });
+    }
+};
+
+export const getSellersDocuments = async (req, res) => {
+    try {
+        const sellers = await Seller.find();
+        const sellersDocuments = sellers.map((seller) => {
+            return {
+                username: seller.username,
+                documents: seller.documents,
+            };
+        });
+        res.status(200).json(sellersDocuments);
+    } catch (e) {
+        console.log(e.message);
         res.status(400).json({ e: e.message });
     }
 };

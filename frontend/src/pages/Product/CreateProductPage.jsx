@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
+import { uploadFiles } from "../../api/firebase";
 
 const CreateProductPage = () => {
     const [formData, setFormData] = useState({
@@ -29,6 +30,7 @@ const CreateProductPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+<<<<<<< HEAD
         const data = new FormData();
         Object.keys(formData).forEach((key) => {
             data.append(key, formData[key]);
@@ -49,6 +51,16 @@ const CreateProductPage = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
+=======
+        const images = await uploadFiles(pictures, "products"); // TODO: change the path
+        console.log("Images uploaded:", images);
+
+        const data = { ...formData, pictures: images };
+        console.log("Data:", data);
+
+        try {
+            const response = await axiosInstance.post("product/createProduct", data);
+>>>>>>> main
             console.log("Product created:", response.data);
         } catch (error) {
             console.error("Error creating product:", error);

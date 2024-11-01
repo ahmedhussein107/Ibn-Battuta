@@ -7,6 +7,7 @@ import {
     getActivityById,
     getAdvertiserActivities,
     getUpcomingActivities,
+    toggleFlaggedActivities,
 } from "../controllers/activity.controller.js";
 
 const activityRouter = express.Router();
@@ -24,5 +25,7 @@ activityRouter.get("/getAdvertiserActivities/:id", getAdvertiserActivities);
 activityRouter.delete("/deleteActivity/:id", deleteActivity);
 
 activityRouter.get("/getUpcomingActivities", getUpcomingActivities);
+
+activityRouter.patch("/toggleFlag/:id", toggleFlaggedActivities);
 
 export default activityRouter;

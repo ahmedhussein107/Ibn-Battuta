@@ -3,7 +3,11 @@ import { validateReference, validateReferences } from "./validatingUtils.js";
 
 const commentSchema = new mongoose.Schema(
     {
-        complaintID: { type: mongoose.Schema.Types.ObjectId, ref: "Complaint" },
+        complaintID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Complaint",
+            required: true,
+        },
         body: String,
         authorType: { type: String, enum: ["Tourist", "Admin"], required: true },
         author: {

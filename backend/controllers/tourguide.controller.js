@@ -56,7 +56,7 @@ export const getTourGuideById = async (req, res) => {
         if (tourGuide) {
             const {
                 isAccepted,
-                document,
+                documents,
                 ratings,
                 sumOfRatings,
                 createdAt,
@@ -153,6 +153,22 @@ export const deleteTourGuide = async (req, res) => {
         }
     } catch (e) {
         //console.log(e.message);
+        res.status(400).json({ e: e.message });
+    }
+};
+
+export const getTourGuidesDocuments = async (req, res) => {
+    try {
+        const tourGuides = await TourGuide.find();
+        const tourGuidesDocuments = tourGuides.map((tourGuide) => {
+            return {
+                username: tourGuide.username,
+                documents: tourGuide.documents,
+            };
+        });
+        res.status(200).json(tourGuidesDocuments);
+    } catch (e) {
+        console.log(e.message);
         res.status(400).json({ e: e.message });
     }
 };

@@ -105,3 +105,23 @@ export const getUpcomingActivities = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const toggleFlaggedActivities = async (req, res) => {
+    try {
+        const activityID = req.params.id;
+        const activity = await Activity.findById(activityID);
+        if (!activity) {
+            return res.status(404).json({ message: "Activity not found" });
+        }
+        activity.isFlagged = !activity.isFlagged;
+        await activity.save();
+        res.status(200).json({
+            message: "Activity flagged status changed successfully",
+            activity,
+        });
+
+        // to be continued?
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
 import { connect } from "mongoose";
-import fileUpload from "express-fileupload";
 import touristRouter from "./routes/tourist.router.js";
 import usernameRouter from "./routes/username.router.js";
 import adminRouter from "./routes/admin.router.js";
@@ -44,9 +43,6 @@ connect(process.env.MONGO_URI)
 app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
-app.use(fileUpload());
-app.use("/uploads/documents", express.static("./uploads/documents"));
-app.use("/uploads/images", express.static("./uploads/images"));
 
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);

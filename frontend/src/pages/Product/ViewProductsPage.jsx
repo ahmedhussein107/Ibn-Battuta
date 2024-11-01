@@ -13,7 +13,10 @@ const ViewProductsPage = () => {
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(123456789);
     const [sortOrder, setSortOrder] = useState("asc"); // State for sorting order
+<<<<<<< HEAD
     const URI = import.meta.env.VITE_API_URI;
+=======
+>>>>>>> main
 
     const fetchProducts = async (queryParams = {}) => {
         try {
