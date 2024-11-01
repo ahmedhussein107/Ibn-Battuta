@@ -1,0 +1,21 @@
+/* variables.css */
+:root {
+    --primary-color: black;
+    --secondary-color: #757570;
+    --background-color: #fbf7f5;
+    --text-color: #333;
+    --accent-color: #f86624;
+
+    --font-size-small: 12px;
+    --font-size-medium: 16px;
+    --font-size-large: 24px;
+
+    --spacing-small: 8px;
+    --spacing-medium: 16px;
+    --spacing-large: 24px;
+
+    --border-radius: 8px;
+
+    --opacity-semiopaque: 0.5;
+    --opacity-transparent: 0.2;
+}

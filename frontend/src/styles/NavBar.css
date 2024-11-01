@@ -58,7 +58,7 @@
     height: 60px;
     margin: 0 10px; /* Space between auth links */
     text-decoration: none; /* Remove underline from links */
-    background-color: orange; /* Link color */
+    background-color: var(--primary-color); /* Link color */
     border-radius: 30px;
 }
 .navbar-profile {
