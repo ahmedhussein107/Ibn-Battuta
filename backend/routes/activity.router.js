@@ -1,12 +1,12 @@
 import express from "express";
 import {
-	createActivity,
-	getActivity,
-	updateActivity,
-	deleteActivity,
-	getActivityById,
-	getAdvertiserActivities,
-	getUpcomingActivities,
+    createActivity,
+    getActivity,
+    updateActivity,
+    deleteActivity,
+    getActivityById,
+    getAdvertiserActivities,
+    getUpcomingActivities,
 } from "../controllers/activity.controller.js";
 
 const activityRouter = express.Router();

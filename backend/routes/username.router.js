@@ -10,7 +10,6 @@ const usernameRouter = express.Router();
 
 usernameRouter.post("/createUsername", createUsername);
 
-
 usernameRouter.get("/allUsernames", getUsernames);
 
 usernameRouter.put("/updateUsername", updateUsername);
