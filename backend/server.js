@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import express from "express";
 import { connect } from "mongoose";
 import touristRouter from "./routes/tourist.router.js";
@@ -29,13 +28,14 @@ import login from "./controllers/login.controller.js";
 import amadeusHotelsRouter from "./services/hotels.js";
 import amadeusFlightsRouter from "./services/flights.js";
 
-dotenv.config();
+import { PORT, MONGO_URI } from "./config/config.js";
+
 const app = express();
-connect(process.env.MONGO_URI)
+connect(MONGO_URI)
     .then(() => {
-        app.listen(process.env.PORT, () => {
+        app.listen(PORT, () => {
             console.log(`Connected to DB`);
-            console.log(`Listening to port ${process.env.PORT}`);
+            console.log(`Listening to port ${PORT}`);
         });
     })
     .catch((err) => {
@@ -72,4 +72,3 @@ app.use("/api/customActivity", customActivityRouter);
 app.post("/api/login", login);
 app.use("/api/amadeus/hotels", amadeusHotelsRouter);
 app.use("/api/amadeus/flights", amadeusFlightsRouter);
-
