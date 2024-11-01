@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axiosInstance from "../../api/axiosInstance";
+import axiosInstance from "../api/axiosInstance";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -9,15 +9,20 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axiosInstance.post("general/login", {
-                username,
-                password,
-            });
+            const response = await axiosInstance.post(
+                "/general/login",
+                {
+                    username,
+                    password,
+                },
+                { withCredentials: true }
+            );
             console.log(response.data);
             localStorage.setItem("user", JSON.stringify(response.data.user));
             window.location.href = "/";
         } catch (err) {
-            setError(err.response.data.message);
+            console.log(err);
+            setError(err);
         }
     };
 
