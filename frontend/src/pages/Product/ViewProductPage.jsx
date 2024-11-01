@@ -8,10 +8,6 @@ import Card from "react-bootstrap/Card";
 const ViewProductPage = () => {
     const { productId } = useParams(); // Get product ID from the URL
     const [product, setProduct] = useState(null);
-<<<<<<< HEAD
-    const URI = import.meta.env.VITE_API_URI;
-=======
->>>>>>> main
 
     const fetchProductDetails = async () => {
         try {
@@ -40,11 +36,7 @@ const ViewProductPage = () => {
                             <Carousel.Item key={index}>
                                 <img
                                     className="d-block w-100"
-<<<<<<< HEAD
-                                    src={`${URI}${picture}`}
-=======
                                     src={`${picture}`}
->>>>>>> main
                                     alt={`Slide ${index + 1}`}
                                     style={{ height: "400px", objectFit: "cover" }}
                                 />
