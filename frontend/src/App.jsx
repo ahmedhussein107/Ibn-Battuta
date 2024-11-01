@@ -23,7 +23,7 @@ import AdvertiserProfilePage from "./pages/Advertiser/AdvertiserProfilePage";
 import CreateActivityPage from "./pages/Activity/CreateActivityPage";
 import UpdateActivityPage from "./pages/Activity/UpdateActivityPage";
 import FilterLandmarks from "./pages/Landmarks/FilterLandmarks";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/NewNavBar";
 import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 import SignUpPage from "./pages/Tourist/SignUpPage";
 import AllSignUpPage from "./pages/AllSignUpPage";
