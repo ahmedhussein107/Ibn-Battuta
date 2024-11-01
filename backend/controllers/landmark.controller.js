@@ -23,13 +23,9 @@ export const getAllLandmarks = async (req, res) => {
 export const updateLandmark = async (req, res) => {
     try {
         console.log(req.body);
-        const landmark = await Landmark.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            {
-                new: true,
-            }
-        );
+        const landmark = await Landmark.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        });
 
         // console.log(landmark);
 
