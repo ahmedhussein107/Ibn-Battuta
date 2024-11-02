@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
-const secretKey = process.env.JWT_SECRET || "put a long string in the .env";
+const secretKey =
+    process.env.JWT_SECRET || "any key to cipher the password and decipher ";
 
-function isAuthenticated(req, res, next) {
+export function isAuthenticated(req, res, next) {
     const token = req.cookies.jwt;
     if (!token) {
         return res.status(401).json({ message: "Not logged in" });
@@ -15,8 +16,29 @@ function isAuthenticated(req, res, next) {
         next();
     });
 }
+export function wsIsAuthenticate(ws, req, next) {
+    console.log("i am in wsIsAuthenticate");
+    const token = req.query.token;
+    console.log("token is: ", token);
 
-function isAdmin(req, res, next) {
+    if (!token) {
+        ws.close();
+        return;
+    }
+
+    jwt.verify(token, secretKey, (err, decoded) => {
+        if (err) {
+            ws.close();
+            return;
+        }
+
+        ws.user = decoded;
+        console.log("user is: ", ws.user);
+        next(ws, req);
+    });
+}
+
+export function isAdmin(req, res, next) {
     if (req.user && req.user.role === "Admin") {
         next();
     } else {
@@ -24,7 +46,7 @@ function isAdmin(req, res, next) {
     }
 }
 
-function isGovernor(req, res, next) {
+export function isGovernor(req, res, next) {
     if (req.user && req.user.role === "Governor") {
         next();
     } else {
@@ -32,7 +54,7 @@ function isGovernor(req, res, next) {
     }
 }
 
-function isSeller(req, res, next) {
+export function isSeller(req, res, next) {
     if (req.user && req.user.role === "Seller") {
         next();
     } else {
@@ -40,7 +62,7 @@ function isSeller(req, res, next) {
     }
 }
 
-function isTourGuide(req, res, next) {
+export function isTourGuide(req, res, next) {
     if (req.user && req.user.role === "TourGuide") {
         next();
     } else {
@@ -48,7 +70,7 @@ function isTourGuide(req, res, next) {
     }
 }
 
-function isAdvertiser(req, res, next) {
+export function isAdvertiser(req, res, next) {
     if (req.user && req.user.role === "Advertiser") {
         next();
     } else {

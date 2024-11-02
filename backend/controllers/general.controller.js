@@ -19,7 +19,6 @@ export const updatePassword = async (req, res) => {
         if (!UserModel) {
             return res.status(400).json({ message: "Invalid user type" });
         }
-
         const user = await UserModel.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -67,16 +66,24 @@ export const login = async (req, res) => {
         //   return res.status(401).json({ message: "Invalid credentials" });
         // }
 
-        const token = jwt.sign({ id: user._id, role: user.userType }, secretKey, {
-            expiresIn: "5h",
-        });
+        const token = jwt.sign(
+            { userId: user._id, userType: userRecord.userType },
+            secretKey,
+            {
+                expiresIn: "5h",
+            }
+        );
 
         res.cookie("jwt", token, {
-            httpOnly: true,
+            //httpOnly: true,
+            maxAge: 3600000,
+        });
+        res.cookie("userType", userRecord.userType, {
+            //httpOnly: true,
             maxAge: 3600000,
         });
 
-        res.status(200).json({ message: "Login successful", token });
+        res.status(200).json({ message: "Login successful", token, user });
     } catch (err) {
         console.error("Error during login:", err);
         res.status(500).json({ message: "Server error", error: err.message });

@@ -5,6 +5,7 @@ const notificationRouter = express.Router();
 notificationRouter.post("/createNotification", async (req, res) => {
     try {
         const notification = await Notification.create(req.body);
+
         res.json(notification);
     } catch (e) {
         res.json(e.message);
@@ -25,6 +26,7 @@ notificationRouter.patch("/updateNotification/:id", async (req, res) => {
     try {
         const notification = await Notification.findByIdAndUpdate(
             req.params.id,
+
             req.body,
             {
                 new: true,

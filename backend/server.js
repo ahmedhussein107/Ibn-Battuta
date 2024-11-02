@@ -30,7 +30,11 @@ import amadeusFlightsRouter from "./services/flights.js";
 
 import { PORT, MONGO_URI } from "./config/config.js";
 
-const app = express();
+import expressWs from "express-ws";
+import { sendNotificationCountToUser, setupWebSocketRoutes } from "./routes/ws.router.js";
+
+const app = expressWs(express()).app;
+
 connect(MONGO_URI)
     .then(() => {
         app.listen(PORT, () => {
@@ -42,9 +46,17 @@ connect(MONGO_URI)
         console.log(err);
     });
 
+setupWebSocketRoutes(app);
+
 app.use(cookieParser());
-app.use(cors());
+const corsOptions = {
+    origin: "http://localhost:5173",
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+console.log("i am here");
 
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);
