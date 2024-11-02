@@ -1,7 +1,7 @@
 /* variables.css */
 :root {
     --primary-color: black;
-    --secondary-color: #757570;
+    --secondary-color: rgb(242, 220, 220);
     --background-color: #fbf7f5;
     --text-color: #333;
     --accent-color: #f86624;

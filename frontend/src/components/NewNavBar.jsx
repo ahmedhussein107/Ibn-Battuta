@@ -1,8 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 import "../styles/NavBar.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 const navbarUserItems = {
     Guest: [
@@ -65,22 +67,71 @@ const navbarUserItems = {
                 { Products: "link" },
             ],
         },
-        { Cateogrization: [{ Tags: "link" }, { Category: "link" }] },
+        { Categorization: [{ Tags: "link" }, { Category: "link" }] },
     ],
 };
+const touristProfileDropdonw = [
+    { "My Profile": "link" },
+    { "My Bookings": "link" },
+    { "My Bookmarks": "link" },
+    { "My Complaints": "link" },
+];
+
 const NavBar = () => {
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    let userType = Cookies.get("userType") || "Guest";
+    const [userType, setUserType] = useState("Guest");
+    const [notificationCount, setNotificationCount] = useState(0);
+
+    useEffect(() => {
+        const cookieUserType = Cookies.get("userType") || "Guest";
+        setUserType(cookieUserType);
+        console.log("User type from cookie:", cookieUserType);
+    }, []);
+
+    useEffect(() => {
+        if (userType !== "Guest") {
+            console.log("WebSocket connection establishing");
+            const socket = new WebSocket(
+                `ws://localhost:3000/notifications?token=${Cookies.get("jwt")}`
+            );
+
+            socket.onopen = () => {
+                console.log("WebSocket connection established");
+            };
+
+            socket.onmessage = (event) => {
+                console.log("WebSocket message received:", event.data);
+                const data = JSON.parse(event.data);
+                console.log("Message received:", data); // Log received data
+                if (data.type === "notificationCount") {
+                    setNotificationCount(data.count);
+                }
+            };
+
+            socket.onclose = () => {
+                console.log("WebSocket connection closed");
+            };
+
+            socket.onerror = (error) => {
+                console.error("WebSocket error:", error);
+            };
+
+            return () => {
+                socket.close();
+            };
+        }
+    }, [userType]);
+
     const navbarItems = navbarUserItems[userType];
 
-    const handleDropdownToggle = () => {
-        setIsDropdownOpen(!isDropdownOpen);
+    const handleNotificationClick = () => {
+        // TODO: notification logic is not implemented
+        console.log("Notification clicked");
     };
-
     const handleLogout = () => {
+        // TODO: log out logic is not implemented
         Cookies.remove("userType");
-        // Add logout logic here
-        window.location.reload(); // Refresh the page after logout
+        setUserType("Guest");
+        window.location.reload();
     };
 
     return (
@@ -103,7 +154,7 @@ const NavBar = () => {
                                         <Link
                                             key={subIndex}
                                             to={subLink}
-                                            className="dropdown-tiem"
+                                            className="dropdown-item"
                                         >
                                             {subLabel}
                                         </Link>
@@ -119,35 +170,64 @@ const NavBar = () => {
                 })}
             </div>
 
-            {/* Right side: Profile or login/signup */}
             <div className="navbar-profile">
                 {userType === "Guest" ? (
                     <>
                         <Link to="/login" className="auth-link">
                             Login
                         </Link>
-                        <Button onClick={Navigate("/signup")} className="auth-button">
+                        <Button
+                            onClick={() => navigate("/signup")}
+                            className="auth-button"
+                        >
                             Sign Up
                         </Button>
                     </>
                 ) : (
-                    <div className="profile-dropdown">
-                        <img
-                            src="/path/to/profile-image.jpg"
-                            alt="Profile"
-                            className="profile-image"
-                            onClick={handleDropdownToggle}
-                        />
-                        {isDropdownOpen && (
-                            <div className="dropdown-menu">
-                                <Link to="/profile" className="dropdown-item">
-                                    Profile
-                                </Link>
-                                <span className="dropdown-item" onClick={handleLogout}>
+                    <div className="notifications-profile">
+                        <div
+                            className="notification-icon"
+                            onClick={handleNotificationClick}
+                        >
+                            <FontAwesomeIcon
+                                icon={faBell}
+                                className="notification-image"
+                            />
+                            <span className="notification-badge">
+                                {notificationCount}
+                            </span>
+                        </div>
+                        <div className="profile-dropdown">
+                            <img
+                                src="https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
+                                alt="Profile"
+                                className="profile-image"
+                            />
+                            <div className="dropdown-content">
+                                {userType !== "Tourist" ? (
+                                    <Link to={"/profile"} className="dropdown-item">
+                                        {"My Profile"}
+                                    </Link>
+                                ) : (
+                                    touristProfileDropdonw.map((item, index) => {
+                                        const [label, link] = Object.entries(item)[0];
+                                        return (
+                                            <Link
+                                                key={index}
+                                                to={link}
+                                                className="dropdown-item"
+                                            >
+                                                {label}
+                                            </Link>
+                                        );
+                                    })
+                                )}
+                                <div className="dropdown-separator"></div>
+                                <div className="log-out" onClick={handleLogout}>
                                     Logout
-                                </span>
+                                </div>
                             </div>
-                        )}
+                        </div>
                     </div>
                 )}
             </div>
