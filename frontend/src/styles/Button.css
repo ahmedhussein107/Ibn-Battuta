@@ -1,4 +1,4 @@
-.submit-button {
+.button1 {
   border-radius: var(--spacing-medium);
   padding: var(--spacing-small) var(--spacing-medium);
   background-color: var(--accent-color);
@@ -8,6 +8,18 @@
   margin: 0 var(--spacing-small);
   color: white;
   width: 10px;
+}
+
+.button2 {
+  color: var(--text-color);
+  border-radius: var(--spacing-medium);
+  padding: var(--spacing-small) var(--spacing-medium);
+  background-color: white;
+  border-color: var(--accent-color);
+  cursor: pointer;
+  transition: background-color 0.3s; /* Transition for hover effect */
+  flex: 1; /* Make buttons flexible */
+  margin: 0 var(--spacing-small);
 }
 .submit-button:hover {
   color: var(--text-color);

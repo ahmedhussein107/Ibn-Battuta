@@ -138,15 +138,19 @@ const FilesOfSignup = () => {
             )
           )}
           <div className="button-group">
-            <button
-              className="back-button"
-              type="button"
-              onClick={handlepreviousStep}
-            >
-              Prev
-            </button>
+            <Button
+              stylingMode={2}
+              text={"Previous"}
+              width="10px"
+              handleClick={handlepreviousStep}
+            />
             {step == 1 && (
-              <Button text={"Next"} width="10px" handleClick={handleNextStep} />
+              <Button
+                stylingMode={1}
+                text={"Next"}
+                width="10px"
+                handleClick={handleNextStep}
+              />
             )}
 
             {step == 2 && (
