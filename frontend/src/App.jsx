@@ -38,13 +38,14 @@ import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 import LandmarksPage from "./pages/Landmark/LandmarksPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
 import Login from "./components/Login";
-
+import FilesOfSignup from "./pages/FilesOfSignup";
 function App() {
     return (
         <Router>
             <NavBar />
             <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/test" element={<FilesOfSignup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/create-product" element={<CreateProductPage />} />
