@@ -1,117 +1,119 @@
 .container {
-    color: var(--text-color);
-    margin: 0;
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center; /* Center vertically */
-    justify-content: center; /* Center horizontally */
-    background: url("/logo.png") no-repeat center center fixed; /* Set your image path here */
-    background-size: cover;
+  color: var(--text-color);
+  margin: 0;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  background-image: url("/image24.png"); /* Replace with the path to your image */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
 }
 
 .form-container {
-    background: rgba(255, 255, 255, 0.8); /* White background with transparency */
-    padding: var(--spacing-large);
-    border-radius: var(--border-radius); /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, var(--opacity-transparent)); /* Slight shadow for depth */
-    max-width: 400px; /* Set a maximum width for the form */
-    width: 100%; /* Make it responsive */
-    display: flex;
-    flex-direction: column; /* Stack children vertically */
+  background: rgba(255, 255, 255, 0.8); /* White background with transparency */
+  padding: var(--spacing-large);
+  border-radius: var(--border-radius); /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, var(--opacity-transparent)); /* Slight shadow for depth */
+  width: 85%; /* Width relative to the parent div */
+  height: 85%;
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
 }
 
 .h3 {
-    margin-bottom: 100px;
-    padding-bottom: 100px;
+  margin-bottom: 100px;
+  padding-bottom: 100px;
 }
 .input-group {
-    margin-bottom: var(--spacing-medium); /* Space between input groups */
-    width: 100%; /* Make input groups take full width */
-    display: flex; /* Enable flexbox */
-    flex-direction: column; /* Stack label and input vertically */
-    align-items: center; /* Center children horizontally */
+  margin-bottom: var(--spacing-medium); /* Space between input groups */
+  width: 100%; /* Make input groups take full width */
+  display: flex; /* Enable flexbox */
+  flex-direction: column; /* Stack label and input vertically */
+  align-items: center; /* Center children horizontally */
 }
 .file-input-wrapper {
-    display: flex;
-    align-items: center; /* Center the delete icon vertically */
-    position: relative;
+  display: flex;
+  align-items: center; /* Center the delete icon vertically */
+  position: relative;
 }
 
 .delete-icon {
-    margin-left: var(--spacing-small); /* Space between the input and the icon */
-    color: #666; /* Initial color */
-    transition: color 0.3s; /* Smooth transition for hover effect */
-    cursor: pointer; /* Pointer cursor on hover */
+  margin-left: var(--spacing-small); /* Space between the input and the icon */
+  color: #666; /* Initial color */
+  transition: color 0.3s; /* Smooth transition for hover effect */
+  cursor: pointer; /* Pointer cursor on hover */
 }
 
 .delete-icon:hover {
-    color: red; /* Change color to red on hover */
+  color: red; /* Change color to red on hover */
 }
 
 .input-group label {
-    display: block; /* Ensure label is above the input */
-    margin-bottom: var(--spacing-small); /* Space between label and input */
-    text-align: center; /* Center text in the label */
+  display: block; /* Ensure label is above the input */
+  margin-bottom: var(--spacing-small); /* Space between label and input */
+  text-align: center; /* Center text in the label */
 }
 
 .input-group input {
-    width: 80%; /* Set input width */
-    padding: 10px; /* Add padding for better appearance */
-    border-radius: 5px; /* Rounded edges */
-    border: 1px solid #ccc; /* Border style */
-    text-align: center; /* Center text in input field */
+  width: 80%; /* Set input width */
+  padding: 10px; /* Add padding for better appearance */
+  border-radius: 5px; /* Rounded edges */
+  border: 1px solid #ccc; /* Border style */
+  text-align: center; /* Center text in input field */
 }
 .delete-icon {
-    cursor: pointer; /* Pointer cursor on hover */
-    margin-left: 10px; /* Space between the input and the icon */
-    color: red; /* Color for the delete icon */
+  cursor: pointer; /* Pointer cursor on hover */
+  margin-left: 10px; /* Space between the input and the icon */
+  color: red; /* Color for the delete icon */
 }
 
 .checkbox-group {
-    align-items: center; /* Aligns checkbox and label text */
-    margin-bottom: var(--spacing-medium); /* Space below checkbox */
+  align-items: center; /* Aligns checkbox and label text */
+  margin-bottom: var(--spacing-medium); /* Space below checkbox */
 }
 
 .checkbox-group label {
-    margin-left: var(--spacing-small); /* Reduce gap between checkbox and label */
+  margin-left: var(--spacing-small); /* Reduce gap between checkbox and label */
 }
 
 .button-group {
-    display: flex;
-    justify-content: space-between; /* Space between buttons */
-    width: 100%; /* Make button group take full width */
+  display: flex;
+  justify-content: space-between; /* Space between buttons */
+  width: 100%; /* Make button group take full width */
 }
 
 .back-button {
-    color: var(--text-color);
-    border-radius: var(--spacing-medium);
-    padding: var(--spacing-small) var(--spacing-medium);
-    background-color: white;
-    border-color: var(--accent-color);
-    cursor: pointer;
-    transition: background-color 0.3s; /* Transition for hover effect */
-    flex: 1; /* Make buttons flexible */
-    margin: 0 var(--spacing-small);
+  color: var(--text-color);
+  border-radius: var(--spacing-medium);
+  padding: var(--spacing-small) var(--spacing-medium);
+  background-color: white;
+  border-color: var(--accent-color);
+  cursor: pointer;
+  transition: background-color 0.3s; /* Transition for hover effect */
+  flex: 1; /* Make buttons flexible */
+  margin: 0 var(--spacing-small);
 }
 .back-button:hover {
-    color: var(--accent-color);
-    background-color: white;
-    border-color: var(--accent-color);
+  color: var(--accent-color);
+  background-color: white;
+  border-color: var(--accent-color);
 }
 
 .submit-button {
-    border-radius: var(--spacing-medium);
-    padding: var(--spacing-small) var(--spacing-medium);
-    background-color: var(--accent-color);
-    cursor: pointer;
-    transition: background-color 0.3s; /* Transition for hover effect */
-    flex: 1; /* Make buttons flexible */
-    margin: 0 var(--spacing-small);
-    color: white;
+  border-radius: var(--spacing-medium);
+  padding: var(--spacing-small) var(--spacing-medium);
+  background-color: var(--accent-color);
+  cursor: pointer;
+  transition: background-color 0.3s; /* Transition for hover effect */
+  flex: 1; /* Make buttons flexible */
+  margin: 0 var(--spacing-small);
+  color: white;
 }
 .submit-button:hover {
-    color: var(--text-color);
-    background-color: var(--accent-color);
-    border: none;
+  color: var(--text-color);
+  background-color: var(--accent-color);
+  border: none;
 }
