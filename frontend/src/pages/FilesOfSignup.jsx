@@ -42,6 +42,16 @@ const FilesOfSignup = () => {
     setTermsAccepted(!termsAccepted);
   };
   const handleNextStep = () => {
+    // Get the form element in the current step
+    const form = document.querySelector("#form");
+
+    // Check if the form is valid
+    if (form && !form.checkValidity()) {
+      // Trigger the browser's built-in validation feedback
+      form.reportValidity();
+      return; // Prevent navigation to the next step if invalid
+    }
+
     setSetp(step + 1);
   };
   const handlepreviousStep = () => {
@@ -88,7 +98,7 @@ const FilesOfSignup = () => {
       <div className="form-container">
         <h1 style={{ textAlign: "center" }}>Sign Up</h1>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} id="form">
           {step == 1 ? (
             <CommonFormStep userData={userData} onChange={handleChange} />
           ) : (
@@ -135,7 +145,9 @@ const FilesOfSignup = () => {
             >
               Prev
             </button>
-            {step == 1 && <Button text={"Next"} width="10px" />}
+            {step == 1 && (
+              <Button text={"Next"} width="10px" handleClick={handleNextStep} />
+            )}
 
             {step == 2 && (
               <button className="submit-button" type="submit">
