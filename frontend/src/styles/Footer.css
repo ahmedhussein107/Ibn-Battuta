@@ -1,0 +1,30 @@
+footer {
+	color: white;
+	font-size: 21.9px;
+	display: flex;
+	justify-content: space-between; /* This will distribute the space between items */
+	align-items: center; /* Align items vertically centered */
+	background-color: black;
+	min-height: 120px;
+	width: 100vw;
+}
+
+.footer-item {
+	margin: 20px;
+}
+.custom-link {
+	text-decoration: none; /* Remove underline */
+	transition: color 0.3s ease; /* Smooth transition */
+}
+
+.custom-link:hover {
+	color: #0011ff; /* Color when hovered */
+}
+
+footer p {
+}
+
+footer a {
+	margin-left: 20px;
+	color: white;
+}
