@@ -23,7 +23,7 @@ import AdvertiserProfilePage from "./pages/Advertiser/AdvertiserProfilePage";
 import CreateActivityPage from "./pages/Activity/CreateActivityPage";
 import UpdateActivityPage from "./pages/Activity/UpdateActivityPage";
 import FilterLandmarks from "./pages/Landmarks/FilterLandmarks";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/NewNavBar";
 import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 import SignUpPage from "./pages/Tourist/SignUpPage";
 import AllSignUpPage from "./pages/AllSignUpPage";
@@ -37,6 +37,7 @@ import Itinerary from "./pages/Itinerary/Itinerary";
 import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 import LandmarksPage from "./pages/Landmark/LandmarksPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
+import Login from "./components/Login";
 
 function App() {
     return (
@@ -44,6 +45,7 @@ function App() {
             <NavBar />
             <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/create-product" element={<CreateProductPage />} />
                 <Route path="/add-new-user" element={<AddNewUser />} />

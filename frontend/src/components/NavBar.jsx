@@ -1,6 +1,76 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
+
+const navbarUserItems = {
+    Guest: [
+        { Home: "link" },
+        {
+            Explore: [
+                { Activities: "link" },
+                { Itineraries: "link" },
+                { Landmark: "link" },
+            ],
+        },
+        { Shop: "link" },
+    ],
+    Tourist: [
+        { Home: "link" },
+        {
+            Explore: [
+                { Activities: "link" },
+                { Itineraries: "link" },
+                { Landmark: "link" },
+            ],
+        },
+        { Travel: { Flights: "link", Hotels: "link", Packages: "link" } },
+        { Shop: "link" },
+    ],
+    Seller: [
+        { Home: "link" },
+        { Browse: "link" },
+        { Inventroy: "link" },
+        { Analytics: "link" },
+    ],
+    TourGuide: [
+        { Home: "link" },
+        { Browse: [{ Activites: "link" }, { Itineraries: "link" }] },
+        { Assigned: "link" },
+        { Analytics: "link" },
+    ],
+    Advertiser: [
+        { Home: "link" },
+        { Browse: "link" },
+        { Assigned: "link" },
+        { Analytics: "link" },
+    ],
+    Governor: [{ Home: "link" }, { Browse: "link" }],
+    Admin: [
+        { Dashboard: "link" },
+        { Inventory: "link" },
+        {
+            "Manage Users": [
+                { "Users List": "link" },
+                { "Pending Users": "link" },
+                { Complaints: "link" },
+            ],
+        },
+        {
+            Browse: [
+                { Activities: "link" },
+                { Itineraries: "link" },
+                { Landmarks: "link" },
+                { Products: "link" },
+            ],
+        },
+        { Cateogrization: [{ Tags: "link" }, { Category: "link" }] },
+    ],
+};
 const NavBar = () => {
+    let userType = Cookies.get("userType");
+    if (!userType) userType = "Guest";
+    const navbarItems = navbarUserItems[userType];
+
     return (
         <nav style={styles.nav}>
             <ul style={styles.ul}>
