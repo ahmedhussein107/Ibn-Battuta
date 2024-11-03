@@ -4,10 +4,10 @@
   background-color: var(--accent-color);
   cursor: pointer;
   transition: background-color 0.3s; /* Transition for hover effect */
-  flex: 1; /* Make buttons flexible */
   margin: 0 var(--spacing-small);
   color: white;
   width: 10px;
+  font-weight: bolder !important;
 }
 
 .button2 {
@@ -18,7 +18,7 @@
   border-color: var(--accent-color);
   cursor: pointer;
   transition: background-color 0.3s; /* Transition for hover effect */
-  flex: 1; /* Make buttons flexible */
+  color: #f86624;
   margin: 0 var(--spacing-small);
 }
 .submit-button:hover {

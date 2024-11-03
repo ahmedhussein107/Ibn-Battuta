@@ -4,7 +4,7 @@
   justify-items: center;
   /* justify-content: space-between; */
   align-items: center;
-  height: 50vh;
+  height: 60vh;
 }
 
 .form-group {
@@ -22,4 +22,8 @@
   border-radius: 5px;
   border: 1px solid #ccc;
   margin-left: 0;
+}
+
+.common-form-step p {
+  padding-right: 170px;
 }

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "../styles/CommonForm.css";
 
 import React from "react";
@@ -18,7 +19,6 @@ const CommonFormStep = ({ userData, onChange }) => {
           />
         </label>
       </div>
-
       {/* Name Input */}
       <div className="form-group">
         <label>Name </label>
@@ -31,7 +31,6 @@ const CommonFormStep = ({ userData, onChange }) => {
           required
         />
       </div>
-
       {/* Username Input */}
       <div className="form-group">
         <label>Username</label>
@@ -44,7 +43,6 @@ const CommonFormStep = ({ userData, onChange }) => {
           required
         />
       </div>
-
       {/* Email Input */}
       <div className="form-group">
         <label>Email</label>
@@ -58,7 +56,6 @@ const CommonFormStep = ({ userData, onChange }) => {
           required
         />
       </div>
-
       {/* Password Input */}
       <div className="form-group">
         <label>Password</label>
@@ -71,6 +68,9 @@ const CommonFormStep = ({ userData, onChange }) => {
           required
         />
       </div>
+      <p>
+        Already have and account? <Link to={"/signin"}> Sign in</Link>
+      </p>
     </div>
   );
 };

@@ -81,7 +81,8 @@
 
 .button-group {
   display: flex;
-  justify-content: space-between; /* Space between buttons */
+  align-items: center;
+  justify-content: center; /* Space between buttons */
   width: 100%; /* Make button group take full width */
 }
 

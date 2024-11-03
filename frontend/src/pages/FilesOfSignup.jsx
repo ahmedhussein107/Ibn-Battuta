@@ -141,15 +141,27 @@ const FilesOfSignup = () => {
             <Button
               stylingMode={2}
               text={"Previous"}
-              width="10px"
               handleClick={handlepreviousStep}
+              customStyle={{
+                marginLeft: "20px",
+                width: "173px",
+                height: "55px",
+                minHieght: "70px",
+                borderRadius: "60px",
+              }}
             />
             {step == 1 && (
               <Button
                 stylingMode={1}
                 text={"Next"}
-                width="10px"
                 handleClick={handleNextStep}
+                customStyle={{
+                  marginLeft: "20px",
+                  width: "173px",
+                  height: "55px",
+                  minHieght: "70px",
+                  borderRadius: "60px",
+                }}
               />
             )}
 
