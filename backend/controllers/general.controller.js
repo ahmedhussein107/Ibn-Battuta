@@ -66,26 +66,27 @@ export const login = async (req, res) => {
         //   return res.status(401).json({ message: "Invalid credentials" });
         // }
 
-        const token = jwt.sign(
-            { userId: user._id, userType: userRecord.userType },
-            secretKey,
-            {
-                expiresIn: "5h",
-            }
-        );
-
-        res.cookie("jwt", token, {
-            //httpOnly: true,
-            maxAge: 3600000,
-        });
-        res.cookie("userType", userRecord.userType, {
-            //httpOnly: true,
-            maxAge: 3600000,
-        });
-
-        res.status(200).json({ message: "Login successful", token, user });
+        assignCookies(res, user.userType, user._id)
+            .status(200)
+            .json({ message: "Login successful", token, user });
     } catch (err) {
         console.error("Error during login:", err);
         res.status(500).json({ message: "Server error", error: err.message });
     }
+};
+
+export const assignCookies = (res, userType, userId) => {
+    const token = jwt.sign({ userId, userType }, secretKey, {
+        expiresIn: "5h",
+    });
+
+    res.cookie("jwt", token, {
+        //httpOnly: true,
+        maxAge: 3600000,
+    });
+    res.cookie("userType", userType, {
+        //httpOnly: true,
+        maxAge: 3600000,
+    });
+    return res;
 };

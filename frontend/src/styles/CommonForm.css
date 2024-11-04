@@ -1,96 +1,117 @@
 .common-form-step {
-	display: flex;
-	flex-direction: column;
-	justify-items: center;
-	/* justify-content: space-between; */
-	align-items: center;
-	height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    /* justify-content: space-between; */
+    align-items: center;
+    height: 60vh;
 }
 .form-group {
-	display: flex;
-	flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-	margin-top: 10px;
-	font-size: 24px;
+    margin-top: 10px;
+    font-size: 24px;
 }
 
 .form-group input,
 .form-group .react-tel-input {
-	width: 400px;
-	min-height: 30px;
-	padding: 10px;
-	border-radius: 5px;
-	border: 1px solid #ccc;
-	margin-left: 0;
+    width: 400px;
+    min-height: 30px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-left: 0;
+}
+
+.custom-icon-label {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 50%;
+}
+.custom-icon-label:hover {
+    cursor: pointer;
 }
 
 .react-tel-input input {
-	min-width: 100%;
+    min-width: 100%;
+}
+
+.uploaded-image {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.uploaded-image:hover,
+.custom-icon-label:hover {
+    cursor: pointer;
 }
 
 .common-form-step p {
-	color: (--accent-color);
-	cursor: pointer;
-	transition: background-color 0.3s;
-	padding-right: 170px;
+    color: (--accent-color);
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding-right: 170px;
 }
 
 .photo-upload {
-	display: flex;
-	justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .photo-preview {
-	width: 120px; /* Adjust width as needed */
-	height: 120px; /* Adjust height as needed */
-	border-radius: 50%; /* Makes the image circular */
-	cursor: pointer; /* Pointer cursor to indicate clickable */
-	border: 2px solid #ccc;
-	object-fit: cover; /* Ensures the image fits nicely */
-	position: relative;
+    width: 120px; /* Adjust width as needed */
+    height: 120px; /* Adjust height as needed */
+    border-radius: 50%; /* Makes the image circular */
+    cursor: pointer; /* Pointer cursor to indicate clickable */
+    border: 2px solid #ccc;
+    object-fit: cover; /* Ensures the image fits nicely */
+    position: relative;
 }
 
 .photo-preview:hover {
-	border-color: #007bff; /* Optional: change border color on hover */
+    border-color: #007bff; /* Optional: change border color on hover */
 }
 
 /* CommonForm.css */
 
 /* Style the input field */
 .react-tel-input {
-	border: 1px solid #ccc; /* Match your input borders */
-	border-radius: 4px; /* Match the border radius */
-	padding: 10px; /* Match padding */
-	font-size: 16px; /* Match font size */
-	width: 100%; /* Make it responsive */
+    border: 1px solid #ccc; /* Match your input borders */
+    border-radius: 4px; /* Match the border radius */
+    padding: 10px; /* Match padding */
+    font-size: 16px; /* Match font size */
+    width: 100%; /* Make it responsive */
 }
 
 /* Style the dropdown */
 .react-tel-input .flag-dropdown {
-	border: 1px solid #ccc; /* Match your input borders */
-	border-radius: 4px; /* Match the border radius */
-	background-color: white; /* Background color */
-	z-index: 1000; /* Ensure it appears above other elements */
+    border: 1px solid #ccc; /* Match your input borders */
+    border-radius: 4px; /* Match the border radius */
+    background-color: white; /* Background color */
+    z-index: 1000; /* Ensure it appears above other elements */
 }
 
 /* Style the input field inside the component */
 .react-tel-input .form-control {
-	height: 40px; /* Match the height of your input fields */
+    height: 40px; /* Match the height of your input fields */
 }
 
 /* If you have specific styling for the dropdown options */
 .react-tel-input .dropdown-menu {
-	max-height: 200px; /* Limit the height of the dropdown */
-	overflow-y: auto; /* Allow scrolling */
+    max-height: 200px; /* Limit the height of the dropdown */
+    overflow-y: auto; /* Allow scrolling */
 }
 
 /* Optional: Style the flag dropdown */
 .react-tel-input .flag-dropdown {
-	border: none; /* Remove default border */
-	background-color: transparent; /* Make it transparent */
+    border: none; /* Remove default border */
+    background-color: transparent; /* Make it transparent */
 }
 
 /* If necessary, you can use !important to ensure your styles take precedence */
 .react-tel-input .form-control {
-	font-size: 16px !important; /* Ensure font size is applied */
+    font-size: 16px !important; /* Ensure font size is applied */
 }

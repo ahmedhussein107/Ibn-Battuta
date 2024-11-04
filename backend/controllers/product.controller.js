@@ -3,7 +3,6 @@ import { buildFilter } from "../utilities/searchUtils.js";
 
 export const createProduct = async (req, res) => {
     try {
-        console.log("i am here at controller of product");
         const productData = req.body;
         console.log("productData: ", productData);
         const newProduct = await Product.create(productData);
@@ -17,7 +16,6 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
     const { id } = req.params;
     try {
-        console.log("i am here at updating product");
         console.log(req.body);
         console.log(await Product.findById(id));
         const product = await Product.findByIdAndUpdate(id, req.body, {
