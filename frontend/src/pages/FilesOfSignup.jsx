@@ -3,7 +3,7 @@ import "../styles/FilesOfSignup.css";
 import FileInput from "../components/FileInput";
 import { useNavigate } from "react-router-dom";
 import { uploadFile, uploadFiles } from "../api/firebase";
-import CommonFormStep from "./CommonForm";
+import CommonFormStep from "../components/CommonForm";
 import Button from "../components/Button";
 const FilesOfSignup = () => {
   const [step, setSetp] = useState(1);
@@ -103,38 +103,7 @@ const FilesOfSignup = () => {
             <CommonFormStep userData={userData} onChange={handleChange} />
           ) : (
             step == 2 && (
-              <>
-                <h3 style={{ textAlign: "center" }}>
-                  Please upload Your ID and Certificates below
-                </h3>
-                <FileInput
-                  label="Select ID file:"
-                  onChange={handleFileChange1}
-                  onDelete={handleDeleteFile1}
-                  file={file1}
-                  inputRef={fileInput1Ref}
-                />
-
-                <FileInput
-                  label="Select certificate file(s):"
-                  onChange={handleFileChange2}
-                  onDelete={handleDeleteFile2}
-                  file={file2.length > 0}
-                  inputRef={fileInput2Ref}
-                  multiple={true}
-                />
-                <div className="checkbox-group">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    checked={termsAccepted}
-                    onChange={handleTermsChange}
-                  />
-                  <label htmlFor="terms">
-                    I accept the terms and conditions
-                  </label>
-                </div>
-              </>
+            <TouristFormStep userData={userData} onChange={handleChange} />
             )
           )}
           <div className="button-group">

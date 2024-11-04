@@ -1,29 +1,49 @@
 .common-form-step {
-  display: flex;
-  flex-direction: column;
-  justify-items: center;
-  /* justify-content: space-between; */
-  align-items: center;
-  height: 60vh;
+	display: flex;
+	flex-direction: column;
+	justify-items: center;
+	/* justify-content: space-between; */
+	align-items: center;
+	height: 60vh;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  font-size: 24px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	font-size: 24px;
 }
 
 .form-group input {
-  width: 400px;
-  min-height: 30px;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  margin-left: 0;
+	width: 400px;
+	min-height: 30px;
+	padding: 10px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	margin-left: 0;
 }
 
 .common-form-step p {
-  padding-right: 170px;
+	padding-right: 170px;
+}
+
+.photo-upload {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
+}
+
+.photo-preview {
+	width: 120px; /* Adjust width as needed */
+	height: 120px; /* Adjust height as needed */
+	border-radius: 50%; /* Makes the image circular */
+	cursor: pointer; /* Pointer cursor to indicate clickable */
+	border: 2px solid #ccc;
+	object-fit: cover; /* Ensures the image fits nicely */
+	position: relative;
+}
+
+.photo-preview:hover {
+	border-color: #007bff; /* Optional: change border color on hover */
 }
