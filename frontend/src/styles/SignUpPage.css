@@ -23,67 +23,14 @@
     flex-direction: column; /* Stack children vertically */
 }
 
-.h3 {
-    margin-bottom: 100px;
-    padding-bottom: 100px;
-}
-.input-group {
-    margin-bottom: var(--spacing-medium); /* Space between input groups */
-    width: 100%; /* Make input groups take full width */
-    display: flex; /* Enable flexbox */
-    flex-direction: column; /* Stack label and input vertically */
-    align-items: center; /* Center children horizontally */
-}
-.file-input-wrapper {
-    display: flex;
-    align-items: center; /* Center the delete icon vertically */
-    position: relative;
-}
-
-.delete-icon {
-    margin-left: var(--spacing-small); /* Space between the input and the icon */
-    color: #666; /* Initial color */
-    transition: color 0.3s; /* Smooth transition for hover effect */
-    cursor: pointer; /* Pointer cursor on hover */
-}
-
-.delete-icon:hover {
-    color: red; /* Change color to red on hover */
-}
-
-.input-group label {
-    display: block; /* Ensure label is above the input */
-    margin-bottom: var(--spacing-small); /* Space between label and input */
-    text-align: center; /* Center text in the label */
-}
-
-.input-group input {
-    width: 80%; /* Set input width */
-    padding: 10px; /* Add padding for better appearance */
-    border-radius: 5px; /* Rounded edges */
-    border: 1px solid #ccc; /* Border style */
-    text-align: center; /* Center text in input field */
-}
-.delete-icon {
-    cursor: pointer; /* Pointer cursor on hover */
-    margin-left: 10px; /* Space between the input and the icon */
-    color: red; /* Color for the delete icon */
-}
-
-.checkbox-group {
-    align-items: center;
-    margin-bottom: var(--spacing-medium); /* Space below checkbox */
-}
-
-.checkbox-group label {
-    margin-left: var(--spacing-small); /* Reduce gap between checkbox and label */
-}
-
 .button-group {
-    display: flex;
     align-items: center;
     justify-content: center; /* Space between buttons */
     width: 100%; /* Make button group take full width */
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap */
+    gap: 20px; /* Adjust spacing between buttons */
+    padding-top: calc(2 * var(--spacing-large));
 }
 
 .back-button {
@@ -104,6 +51,7 @@
 }
 
 .submit-button {
+    width: 80%;
     border-radius: var(--spacing-medium);
     padding: var(--spacing-small) var(--spacing-medium);
     background-color: var(--accent-color);
@@ -112,10 +60,17 @@
     flex: 1; /* Make buttons flexible */
     margin: 0 var(--spacing-small);
     color: white;
-    display: block;
+    flex-direction: block;
+    align-self: center; /* Center the button in the flex container */
 }
 .submit-button:hover {
     color: var(--text-color);
     background-color: var(--accent-color);
     border: none;
+}
+
+.button-group button,
+.button-group .submit-button {
+    flex: none; /* Ensure each button keeps its size */
+    margin-bottom: 20px; /* Add spacing between rows */
 }

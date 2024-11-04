@@ -2,16 +2,23 @@
     margin-bottom: 100px;
     padding-bottom: 100px;
 }
-
-.checkbox-group {
+.checkbox-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: var(--spacing-medium);
-    text-align: center;
+}
+.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* Adjust the spacing between the checkbox and label */
+    margin-top: 1rem; /* Optional: Add spacing from other elements */
 }
 
+.checkbox-group input[type="checkbox"] {
+    margin-right: var(--spacing-small);
+    transform: scale(1.5);
+}
 .checkbox-group label {
     margin-left: var(--spacing-small);
 }

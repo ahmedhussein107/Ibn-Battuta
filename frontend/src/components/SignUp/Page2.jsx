@@ -1,4 +1,5 @@
 import FileInput from "./FileInput";
+import "./Page2.css";
 const Page2 = ({
     handleDeleteFile1,
     handleDeleteFile2,
@@ -32,19 +33,21 @@ const Page2 = ({
                 inputRef={fileInput2Ref}
                 multiple={true}
             />
-            <div className="checkbox-group">
-                <input
-                    type="checkbox"
-                    id="terms"
-                    checked={termsAccepted}
-                    onChange={handleTermsChange}
-                />
-                <label htmlFor="terms">
-                    I accept the
-                    <a href="https://google.com"> terms </a>
-                    and
-                    <a href="https://google.com"> conditions </a>
-                </label>
+            <div className="checkbox-container">
+                <div className="checkbox-group">
+                    <input
+                        type="checkbox"
+                        id="terms"
+                        checked={termsAccepted}
+                        onChange={handleTermsChange}
+                    />
+                    <label htmlFor="terms">
+                        I accept the
+                        <a href="https://google.com"> terms </a>
+                        and
+                        <a href="https://google.com"> conditions </a>
+                    </label>
+                </div>
             </div>
         </>
     );

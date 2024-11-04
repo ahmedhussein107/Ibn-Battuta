@@ -1,11 +1,11 @@
 import React, { useState, useRef } from "react";
-import "../styles/FilesOfSignup.css";
+import "../styles/SignUpPage.css";
 import { useNavigate } from "react-router-dom";
 import { uploadFile, uploadFiles } from "../api/firebase";
 import CommonFormStep from "./CommonForm";
 import Button from "../components/Button";
 import Page2 from "../components/SignUp/Page2";
-const FilesOfSignup = () => {
+const SignUpPage = () => {
     const [step, setSetp] = useState(1);
     const [file1, setFile1] = useState(null);
     const [file2, setFile2] = useState([]);
@@ -117,6 +117,7 @@ const FilesOfSignup = () => {
                             />
                         )
                     )}
+
                     <div className="button-group">
                         <Button
                             stylingMode={2}
@@ -158,4 +159,4 @@ const FilesOfSignup = () => {
     );
 };
 
-export default FilesOfSignup;
+export default SignUpPage;
