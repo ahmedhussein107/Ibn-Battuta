@@ -1,0 +1,24 @@
+.h3 {
+    margin-bottom: 100px;
+    padding-bottom: 100px;
+}
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* Adjust the spacing between the checkbox and label */
+    margin-top: 1rem; /* Optional: Add spacing from other elements */
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: var(--spacing-small);
+    transform: scale(1.5);
+}
+.checkbox-group label {
+    margin-left: var(--spacing-small);
+}

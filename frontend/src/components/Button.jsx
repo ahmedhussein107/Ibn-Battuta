@@ -3,13 +3,14 @@ import PropTypes from "prop-types";
 import "../styles/Button.css"; // Make sure to create and import your styling file
 
 //Styling mode = 1 => White, 2 => Orange button. custumStyle to add additional styling if needed like width, height, margin ...
-const Button = ({ stylingMode, text, handleClick, width, customStyle }) => {
+const Button = ({ stylingMode, text, handleClick, width, customStyle, type }) => {
 	return (
 		<button
-			className={`button${stylingMode}`} // Apply dynamic styling class based on `stylingMode` prop
+			className={`button-${stylingMode}`} // Apply dynamic styling class based on `stylingMode` prop
 			onClick={handleClick}
 			style={{ width: width, ...customStyle }} // Inline style for width
-		>
+            type={type}
+        >
 			{text}
 		</button>
 	);

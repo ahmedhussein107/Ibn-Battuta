@@ -1,4 +1,9 @@
-.button1 {
+button:hover {
+	background-color: initial;
+	border: none;
+}
+
+.button-1 {
 	border-radius: var(--spacing-medium);
 	padding: var(--spacing-small) var(--spacing-medium);
 	background-color: var(--accent-color);
@@ -10,7 +15,7 @@
 	font-weight: bolder !important;
 }
 
-.button2 {
+.button-2 {
 	color: var(--text-color);
 	border-radius: var(--spacing-medium);
 	padding: var(--spacing-small) var(--spacing-medium);
@@ -18,11 +23,28 @@
 	border-color: var(--accent-color);
 	cursor: pointer;
 	transition: background-color 0.3s; /* Transition for hover effect */
-	color: var(--accent-color);
+	color: #f86624;
 	margin: 0 var(--spacing-small);
 }
-.submit-button:hover {
+
+.button-submit {
+	border-radius: var(--spacing-medium);
+	padding: var(--spacing-small) var(--spacing-medium);
+	background-color: var(--accent-color);
+	cursor: pointer;
+	transition: background-color 0.3s; /* Transition for hover effect */
+	flex: 1; /* Make buttons flexible */
+	margin: 0 var(--spacing-small);
+	color: white;
+	flex-direction: block;
+	align-self: center;
+}
+.button-submit:hover {
 	color: var(--text-color);
 	background-color: var(--accent-color);
-	border: none;
+}
+
+.button-2:hover {
+	color: white;
+	background-color: var(--accent-color);
 }

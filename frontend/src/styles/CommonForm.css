@@ -6,11 +6,10 @@
 	align-items: center;
 	height: 60vh;
 }
-
 .form-group {
 	display: flex;
 	flex-direction: column;
-	margin-bottom: 10px;
+
 	margin-top: 10px;
 	font-size: 24px;
 }
@@ -25,13 +24,15 @@
 }
 
 .common-form-step p {
+	color: (--accent-color);
+	cursor: pointer;
+	transition: background-color 0.3s;
 	padding-right: 170px;
 }
 
 .photo-upload {
 	display: flex;
 	justify-content: center;
-	margin-bottom: 20px;
 }
 
 .photo-preview {

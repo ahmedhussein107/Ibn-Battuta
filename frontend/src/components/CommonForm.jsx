@@ -5,28 +5,14 @@ import defaultUserImage from "../../public/default-user-plus.png"; // Path to yo
 import React from "react";
 import { useState } from "react";
 
-const CommonFormStep = ({ userData, onChange }) => {
-	const [photoPreview, setPhotoPreview] = useState( userData.photo || defaultUserImage);
-
-	const handlePhotoChange = (event) => {
-		const file = event.target.files[0];
-		if (file) {
-			// Create a preview URL for the selected image
-			const reader = new FileReader();
-			reader.onload = () => {
-				setPhotoPreview(reader.result); // Update the preview image state
-			};
-			reader.readAsDataURL(file);
-			onChange(event); // Pass the event up for handling
-		}
-	};
+const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
 	return (
 		<div className="common-form-step">
 			{/* Photo Input */}
 			<div className="form-group photo-upload">
 				<label htmlFor="photoInput">
 					<img
-						src={photoPreview}
+						src={image || defaultUserImage}
 						alt="Upload"
 						className="photo-preview"
 						onClick={() =>
@@ -39,7 +25,7 @@ const CommonFormStep = ({ userData, onChange }) => {
 					id="photoInput"
 					name="commonPhoto"
 					accept="image/*"
-					onChange={handlePhotoChange}
+					onChange={handleImageChange}
 					style={{ display: "none" }} // Hide the actual input
 				/>
 			</div>
