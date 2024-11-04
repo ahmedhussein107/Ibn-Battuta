@@ -1,0 +1,17 @@
+.h3 {
+    margin-bottom: 100px;
+    padding-bottom: 100px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-medium);
+    text-align: center;
+}
+
+.checkbox-group label {
+    margin-left: var(--spacing-small);
+}
