@@ -38,6 +38,8 @@ const NavBar = () => {
     const [userType, setUserType] = useState("Guest");
     const [notificationCount, setNotificationCount] = useState(0);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         const cookieUserType = Cookies.get("userType") || "Guest";
         setUserType(cookieUserType);
@@ -88,7 +90,7 @@ const NavBar = () => {
         // TODO: log out logic is not implemented
         Cookies.remove("userType");
         setUserType("Guest");
-        window.location.reload();
+        navigate("/");
     };
 
     const renderDropdownItem = (label, index, dropdown) => {
@@ -134,7 +136,7 @@ const NavBar = () => {
             <div className="navbar-profile">
                 {userType === "Guest" ? (
                     <>
-                        <Link to="/login" className="auth-link">
+                        <Link to="/signin" className="auth-link">
                             Login
                         </Link>
                         <Button

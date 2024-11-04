@@ -37,16 +37,23 @@ import Itinerary from "./pages/Itinerary/Itinerary";
 import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 import LandmarksPage from "./pages/Landmark/LandmarksPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
-import Login from "./components/Login";
+// import Login from "./components/Login";
 import SelectYourRole from "./pages/Signup/SelectYourRole";
+import Footer from "./components/Footer";
+import Signin from "./pages/Signin/Signin";
+import AdminHome from "./pages/Admin/AdminHome";
+import AdvertiserHome from "./pages/Advertiser/AdvertiserHome";
+import TourGuideHome from "./pages/TourGuide/TourGuideHome";
+import SellerHome from "./pages/Seller/SellerHome";
+import GovernorHome from "./pages/Governor/GovernorHome";
 
 function App() {
     return (
         <Router>
-            <NavBar />
             <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/signin" element={<Signin />} />
+                <Route path="/signup" element={<SelectYourRole />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/create-product" element={<CreateProductPage />} />
                 <Route path="/add-new-user" element={<AddNewUser />} />
@@ -85,7 +92,12 @@ function App() {
                 <Route path="/filter-itineraries" element={<FilterItineraries />} />
                 <Route path="/landmarks" element={<LandmarksPage />} />
                 <Route path="/create-landmark" element={<CreateLandmarkPage />} />
-                <Route path="/select" element={<SelectYourRole />} />
+                {/* <Route path="/select" element={<SelectYourRole />} /> */}
+                <Route path="/admin" element={<AdminHome />} />
+                <Route path="/advertiser" element={<AdvertiserHome />} />
+                <Route path="/tourguide" element={<TourGuideHome />} />
+                <Route path="/seller" element={<SellerHome />} />
+                <Route path="/governor" element={<GovernorHome />} />
             </Routes>
         </Router>
     );

@@ -1,0 +1,28 @@
+.button1 {
+	border-radius: var(--spacing-medium);
+	padding: var(--spacing-small) var(--spacing-medium);
+	background-color: var(--accent-color);
+	cursor: pointer;
+	transition: background-color 0.3s; /* Transition for hover effect */
+	margin: 0 var(--spacing-small);
+	color: white;
+	width: 10px;
+	font-weight: bolder !important;
+}
+
+.button2 {
+	color: var(--text-color);
+	border-radius: var(--spacing-medium);
+	padding: var(--spacing-small) var(--spacing-medium);
+	background-color: white;
+	border-color: var(--accent-color);
+	cursor: pointer;
+	transition: background-color 0.3s; /* Transition for hover effect */
+	color: var(--accent-color);
+	margin: 0 var(--spacing-small);
+}
+.submit-button:hover {
+	color: var(--text-color);
+	background-color: var(--accent-color);
+	border: none;
+}
