@@ -1,254 +1,199 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
+import "../styles/NavBar.css";
+import { useState, useEffect } from "react";
+import Button from "react-bootstrap/Button";
+
+import {
+    guestNavbarItems,
+    touristNavbarItems,
+    sellerNavbarItems,
+    tourGuideNavbarItems,
+    advertiserNavbarItems,
+    governorNavbarItems,
+    adminNavbarItems,
+} from "../constants/navbar.constants";
 
 const navbarUserItems = {
-    Guest: [
-        { Home: "link" },
-        {
-            Explore: [
-                { Activities: "link" },
-                { Itineraries: "link" },
-                { Landmark: "link" },
-            ],
-        },
-        { Shop: "link" },
-    ],
-    Tourist: [
-        { Home: "link" },
-        {
-            Explore: [
-                { Activities: "link" },
-                { Itineraries: "link" },
-                { Landmark: "link" },
-            ],
-        },
-        { Travel: { Flights: "link", Hotels: "link", Packages: "link" } },
-        { Shop: "link" },
-    ],
-    Seller: [
-        { Home: "link" },
-        { Browse: "link" },
-        { Inventroy: "link" },
-        { Analytics: "link" },
-    ],
-    TourGuide: [
-        { Home: "link" },
-        { Browse: [{ Activites: "link" }, { Itineraries: "link" }] },
-        { Assigned: "link" },
-        { Analytics: "link" },
-    ],
-    Advertiser: [
-        { Home: "link" },
-        { Browse: "link" },
-        { Assigned: "link" },
-        { Analytics: "link" },
-    ],
-    Governor: [{ Home: "link" }, { Browse: "link" }],
-    Admin: [
-        { Dashboard: "link" },
-        { Inventory: "link" },
-        {
-            "Manage Users": [
-                { "Users List": "link" },
-                { "Pending Users": "link" },
-                { Complaints: "link" },
-            ],
-        },
-        {
-            Browse: [
-                { Activities: "link" },
-                { Itineraries: "link" },
-                { Landmarks: "link" },
-                { Products: "link" },
-            ],
-        },
-        { Cateogrization: [{ Tags: "link" }, { Category: "link" }] },
-    ],
+    Guest: guestNavbarItems,
+    Tourist: touristNavbarItems,
+    Seller: sellerNavbarItems,
+    TourGuide: tourGuideNavbarItems,
+    Advertiser: advertiserNavbarItems,
+    Governor: governorNavbarItems,
+    Admin: adminNavbarItems,
 };
+
+const touristProfileDropdonw = [
+    { "My Profile": "link" },
+    { "My Bookings": "link" },
+    { "My Bookmarks": "link" },
+    { "My Complaints": "link" },
+];
+
 const NavBar = () => {
-    let userType = Cookies.get("userType");
-    if (!userType) userType = "Guest";
+    const [userType, setUserType] = useState("Guest");
+    const [notificationCount, setNotificationCount] = useState(0);
+
+    useEffect(() => {
+        const cookieUserType = Cookies.get("userType") || "Guest";
+        setUserType(cookieUserType);
+        console.log("User type from cookie:", cookieUserType);
+    }, []);
+
+    useEffect(() => {
+        if (userType !== "Guest") {
+            console.log("WebSocket connection establishing");
+            const socket = new WebSocket(
+                `ws://localhost:3000/notifications?token=${Cookies.get("jwt")}`
+            );
+
+            socket.onopen = () => {
+                console.log("WebSocket connection established");
+            };
+
+            socket.onmessage = (event) => {
+                console.log("WebSocket message received:", event.data);
+                const data = JSON.parse(event.data);
+                console.log("Message received:", data); // Log received data
+                if (data.type === "notificationCount") {
+                    setNotificationCount(data.count);
+                }
+            };
+
+            socket.onclose = () => {
+                console.log("WebSocket connection closed");
+            };
+
+            socket.onerror = (error) => {
+                console.error("WebSocket error:", error);
+            };
+
+            return () => {
+                socket.close();
+            };
+        }
+    }, [userType]);
+
     const navbarItems = navbarUserItems[userType];
 
+    const handleNotificationClick = () => {
+        // TODO: notification logic is not implemented
+        console.log("Notification clicked");
+    };
+    const handleLogout = () => {
+        // TODO: log out logic is not implemented
+        Cookies.remove("userType");
+        setUserType("Guest");
+        window.location.reload();
+    };
+
+    const renderDropdownItem = (label, index, dropdown) => {
+        return (
+            <div className="dropdown" key={index}>
+                <span className="dropdown-title">{label}</span>
+                <div className="dropdown-content">
+                    {dropdown.map((subItem, subIndex) => {
+                        const [subLabel, subLink] = Object.entries(subItem)[0];
+                        return (
+                            <Link key={subIndex} to={subLink} className="dropdown-item">
+                                {subLabel}
+                            </Link>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    };
+
+    const renderItem = (item, index) => {
+        const [label, linkOrSubMenu] = Object.entries(item)[0];
+        if (Array.isArray(linkOrSubMenu)) {
+            return renderDropdownItem(label, index, linkOrSubMenu);
+        }
+        return (
+            <Link key={index} to={linkOrSubMenu} className="simple-link">
+                {label}
+            </Link>
+        );
+    };
+
     return (
-        <nav style={styles.nav}>
-            <ul style={styles.ul}>
-                <li style={styles.li}>
-                    <Link to="/" style={styles.link}>
-                        Home
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/about" style={styles.link}>
-                        About
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/create-product" style={styles.link}>
-                        Create Product
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/add-new-user" style={styles.link}>
-                        Add New User
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/user-management" style={styles.link}>
-                        User Management
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link
-                        to="/update-product/67015b31da89f2d0b8a94912"
-                        style={styles.link}
-                    >
-                        Update Product
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/tourguide" style={styles.link}>
-                        Tour Guide Profile
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/advertiser" style={styles.link}>
-                        Advertiser Profile
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/create-activity" style={styles.link}>
-                        Create Activity
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/seller" style={styles.link}>
-                        Seller Profile
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/update-activity" style={styles.link}>
-                        Update Activity
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/filter-landmarks" style={styles.link}>
-                        Filter Landmarks
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/tourist" style={styles.link}>
-                        Tourist Profile
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/activities" style={styles.link}>
-                        Upcoming Activities
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/view-products" style={styles.link}>
-                        Gift Shop
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/category-create" style={styles.link}>
-                        Create Category
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/category-all" style={styles.link}>
-                        All Categories
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/tag-create" style={styles.link}>
-                        Create Tag
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/tag-all" style={styles.link}>
-                        All Tags
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/landmark-governor" style={styles.link}>
-                        Governor's Landmark
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/itinerary" style={styles.link}>
-                        Tour Guide's Itineraries
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/itineraries" style={styles.link}>
-                        Tour Guide's Itineraries Update and Delete
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/itinerary-customAvtivity" style={styles.link}>
-                        Tour Guide's Custom Activities
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/activity" style={styles.link}>
-                        Advertiser's Activities
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/signup" style={styles.link}>
-                        Sign Up as Tourist
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/allsignup" style={styles.link}>
-                        Sign Up
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/filter-itineraries" style={styles.link}>
-                        Filter Itinerary
-                    </Link>
-                </li>
-                <li style={styles.li}>
-                    <Link to="/landmarks" style={styles.link}>
-                        Landmarks
-                    </Link>
-                </li>
-            </ul>
+        <nav className="navbar">
+            <Link to="/" className="navbar-logo">
+                <img src="/logo.png" alt="Website Logo" className="logo-image" />
+            </Link>
+            {/* Center: Navbar items */}
+            <div className="navbar-links">
+                {navbarItems.map((item, index) => renderItem(item, index))}
+            </div>
+
+            <div className="navbar-profile">
+                {userType === "Guest" ? (
+                    <>
+                        <Link to="/login" className="auth-link">
+                            Login
+                        </Link>
+                        <Button
+                            onClick={() => navigate("/signup")}
+                            className="auth-button"
+                        >
+                            Sign Up
+                        </Button>
+                    </>
+                ) : (
+                    <div className="notifications-profile">
+                        <div
+                            className="notification-icon"
+                            onClick={handleNotificationClick}
+                        >
+                            <FontAwesomeIcon
+                                icon={faBell}
+                                className="notification-image"
+                            />
+                            <span className="notification-badge">
+                                {notificationCount}
+                            </span>
+                        </div>
+                        <div className="profile-dropdown">
+                            <img
+                                src="https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
+                                alt="Profile"
+                                className="profile-image"
+                            />
+                            <div className="dropdown-content">
+                                {userType !== "Tourist" ? (
+                                    <Link to={"/profile"} className="dropdown-item">
+                                        {"My Profile"}
+                                    </Link>
+                                ) : (
+                                    touristProfileDropdonw.map((item, index) => {
+                                        const [label, link] = Object.entries(item)[0];
+                                        return (
+                                            <Link
+                                                key={index}
+                                                to={link}
+                                                className="dropdown-item"
+                                            >
+                                                {label}
+                                            </Link>
+                                        );
+                                    })
+                                )}
+                                <div className="dropdown-separator"></div>
+                                <div className="log-out" onClick={handleLogout}>
+                                    Logout
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
         </nav>
     );
-};
-
-const styles = {
-    nav: {
-        backgroundColor: "#f8f9fa", // Light background color for the navbar
-        padding: "10px 20px", // Padding around the navbar
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Slight shadow for depth
-    },
-    ul: {
-        display: "flex", // Flexbox to place items in a row
-        listStyleType: "none", // Remove bullet points
-        margin: 0, // Remove default margin
-        padding: 0, // Remove default padding
-    },
-    li: {
-        margin: "0 15px", // Spacing between the list items
-    },
-    link: {
-        textDecoration: "none", // Remove underline from links
-        color: "#007bff", // Default color for links (Bootstrap-like)
-        fontSize: "16px", // Font size for the links
-        fontWeight: "bold", // Make the text bold
-        padding: "5px 10px", // Padding inside the link
-        borderRadius: "5px", // Slight rounding of corners
-        transition: "background-color 0.3s", // Smooth background color transition
-    },
-    linkHover: {
-        backgroundColor: "#e9ecef", // Change background on hover
-    },
 };
 
 export default NavBar;

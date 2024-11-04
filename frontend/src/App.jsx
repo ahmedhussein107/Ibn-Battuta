@@ -23,7 +23,7 @@ import AdvertiserProfilePage from "./pages/Advertiser/AdvertiserProfilePage";
 import CreateActivityPage from "./pages/Activity/CreateActivityPage";
 import UpdateActivityPage from "./pages/Activity/UpdateActivityPage";
 import FilterLandmarks from "./pages/Landmarks/FilterLandmarks";
-import NavBar from "./components/NewNavBar";
+import NavBar from "./components/NavBar";
 import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 import SignUpPage from "./pages/Tourist/SignUpPage";
 import AllSignUpPage from "./pages/AllSignUpPage";
@@ -38,6 +38,7 @@ import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 import LandmarksPage from "./pages/Landmark/LandmarksPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
 import Login from "./components/Login";
+import SelectYourRole from "./pages/Signup/SelectYourRole";
 
 function App() {
     return (
@@ -84,6 +85,7 @@ function App() {
                 <Route path="/filter-itineraries" element={<FilterItineraries />} />
                 <Route path="/landmarks" element={<LandmarksPage />} />
                 <Route path="/create-landmark" element={<CreateLandmarkPage />} />
+                <Route path="/select" element={<SelectYourRole />} />
             </Routes>
         </Router>
     );
