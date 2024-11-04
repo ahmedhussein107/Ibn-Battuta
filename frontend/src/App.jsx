@@ -23,7 +23,7 @@ import AdvertiserProfilePage from "./pages/Advertiser/AdvertiserProfilePage";
 import CreateActivityPage from "./pages/Activity/CreateActivityPage";
 import UpdateActivityPage from "./pages/Activity/UpdateActivityPage";
 import FilterLandmarks from "./pages/Landmarks/FilterLandmarks";
-import NavBar from "./components/NewNavBar";
+import NavBar from "./components/NavBar";
 import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 import AllSignUpPage from "./pages/AllSignUpPage";
 import AddNewUser from "./pages/Admin/AddNewUser";
@@ -38,6 +38,16 @@ import LandmarksPage from "./pages/Landmark/LandmarksPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
 import Login from "./components/Login";
 import SignUpPage from "./pages/SignUpPage";
+// import Login from "./components/Login";
+import SelectYourRole from "./pages/Signup/SelectYourRole";
+import Footer from "./components/Footer";
+import Signin from "./pages/Signin/Signin";
+import AdminHome from "./pages/Admin/AdminHome";
+import AdvertiserHome from "./pages/Advertiser/AdvertiserHome";
+import TourGuideHome from "./pages/TourGuide/TourGuideHome";
+import SellerHome from "./pages/Seller/SellerHome";
+import GovernorHome from "./pages/Governor/GovernorHome";
+
 function App() {
     return (
         <Router>

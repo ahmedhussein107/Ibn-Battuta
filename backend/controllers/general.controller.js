@@ -56,15 +56,15 @@ export const login = async (req, res) => {
                 .json({ message: `No user found with the username: ${username}` });
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            return res.status(401).json({ message: "Invalid credentials" });
-        }
+        // const isPasswordValid = await bcrypt.compare(password, user.password);
+        // if (!isPasswordValid) {
+        //     return res.status(401).json({ message: "Invalid credentials" });
+        // }
 
         // for test with no encryption
-        // if (password !== user.password) {
-        //   return res.status(401).json({ message: "Invalid credentials" });
-        // }
+        if (password !== user.password) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
 
         assignCookies(res, user.userType, user._id)
             .status(200)
