@@ -31,9 +31,16 @@
     flex-wrap: wrap; /* Allow buttons to wrap */
     gap: 20px; /* Adjust spacing between buttons */
     padding-top: calc(2 * var(--spacing-large));
+    flex-direction: column;
 }
 
-.back-button {
+.buttons-prev-next {
+    display: flex;
+    flex-direction: row;
+}
+
+.back-button,
+.next-button {
     color: var(--text-color);
     border-radius: var(--spacing-medium);
     padding: var(--spacing-small) var(--spacing-medium);
@@ -44,7 +51,8 @@
     flex: 1; /* Make buttons flexible */
     margin: 0 var(--spacing-small);
 }
-.back-button:hover {
+.back-button:hover,
+.next-button:hover {
     color: var(--accent-color);
     background-color: white;
     border-color: var(--accent-color);
@@ -66,7 +74,6 @@
 .submit-button:hover {
     color: var(--text-color);
     background-color: var(--accent-color);
-    border: none;
 }
 
 .button-group button,
