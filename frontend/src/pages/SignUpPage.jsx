@@ -1,11 +1,14 @@
 import React, { useState, useRef } from "react";
 import "../styles/SignUpPage.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { uploadFile, uploadFiles } from "../api/firebase";
 import CommonFormStep from "../components/CommonForm.jsx";
 import Button from "../components/Button";
 import Page2 from "../components/SignUp/Page2";
+import TouristFields from "../components/TouristFields.jsx";
 const SignUpPage = () => {
+	const location = useLocation();
+	const { userType } = location.state || { userType: "TourGuide" };
 	const [step, setSetp] = useState(1);
 	const [imageFile, setImageFile] = useState(null);
 	const [image, setImage] = useState(null);
@@ -13,7 +16,6 @@ const SignUpPage = () => {
 	const [file2, setFile2] = useState([]);
 	const [userData, setUserData] = useState({});
 	const [termsAccepted, setTermsAccepted] = useState(false);
-
 	const fileInput1Ref = useRef(null);
 	const fileInput2Ref = useRef(null);
 	const imageRef = useRef(null);
@@ -69,12 +71,12 @@ const SignUpPage = () => {
 		// Get the form element in the current step
 		const form = document.querySelector("#form");
 
-		// Check if the form is valid
-		if (form && !form.checkValidity()) {
-			// Trigger the browser's built-in validation feedback
-			form.reportValidity();
-			return; // Prevent navigation to the next step if invalid
-		}
+		// // Check if the form is valid
+		// if (form && !form.checkValidity()) {
+		// 	// Trigger the browser's built-in validation feedback
+		// 	form.reportValidity();
+		// 	return; // Prevent navigation to the next step if invalid
+		// }
 
 		setSetp(step + 1);
 	};
@@ -133,20 +135,15 @@ const SignUpPage = () => {
 						/>
 					)}
 
-					{step == 2 && (
-						<Page2
-							handleDeleteFile1={handleDeleteFile1}
-							handleDeleteFile2={handleDeleteFile2}
-							handleFileChange1={handleFileChange1}
-							handleFileChange2={handleFileChange2}
-							file1={file1}
-							file2={file2}
-							fileInput1Ref={fileInput1Ref}
-							fileInput2Ref={fileInput2Ref}
-							termsAccepted={termsAccepted}
-							handleTermsChange={handleTermsChange}
-						/>
-					)}
+					{step == 2 &&
+						(userType == "Tourist" ? (
+							<TouristFields
+								onChange={handleChange}
+								userData={userData}
+							/>
+						) : (
+							<Page2 />
+						))}
 
 					<div className="button-group">
 						<Button
@@ -185,7 +182,7 @@ const SignUpPage = () => {
 							<Button
 								stylingMode="submit"
 								text={"Submit"}
-								handleClick={handleNextStep}
+								handleClick={handleSubmit}
 								disabbled={step == 2}
 								customStyle={{
 									marginLeft: "20px",

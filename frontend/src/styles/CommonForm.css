@@ -14,13 +14,18 @@
 	font-size: 24px;
 }
 
-.form-group input {
+.form-group input,
+.form-group .react-tel-input {
 	width: 400px;
 	min-height: 30px;
 	padding: 10px;
 	border-radius: 5px;
 	border: 1px solid #ccc;
 	margin-left: 0;
+}
+
+.react-tel-input input {
+	min-width: 100%;
 }
 
 .common-form-step p {
@@ -47,4 +52,45 @@
 
 .photo-preview:hover {
 	border-color: #007bff; /* Optional: change border color on hover */
+}
+
+/* CommonForm.css */
+
+/* Style the input field */
+.react-tel-input {
+	border: 1px solid #ccc; /* Match your input borders */
+	border-radius: 4px; /* Match the border radius */
+	padding: 10px; /* Match padding */
+	font-size: 16px; /* Match font size */
+	width: 100%; /* Make it responsive */
+}
+
+/* Style the dropdown */
+.react-tel-input .flag-dropdown {
+	border: 1px solid #ccc; /* Match your input borders */
+	border-radius: 4px; /* Match the border radius */
+	background-color: white; /* Background color */
+	z-index: 1000; /* Ensure it appears above other elements */
+}
+
+/* Style the input field inside the component */
+.react-tel-input .form-control {
+	height: 40px; /* Match the height of your input fields */
+}
+
+/* If you have specific styling for the dropdown options */
+.react-tel-input .dropdown-menu {
+	max-height: 200px; /* Limit the height of the dropdown */
+	overflow-y: auto; /* Allow scrolling */
+}
+
+/* Optional: Style the flag dropdown */
+.react-tel-input .flag-dropdown {
+	border: none; /* Remove default border */
+	background-color: transparent; /* Make it transparent */
+}
+
+/* If necessary, you can use !important to ensure your styles take precedence */
+.react-tel-input .form-control {
+	font-size: 16px !important; /* Ensure font size is applied */
 }
