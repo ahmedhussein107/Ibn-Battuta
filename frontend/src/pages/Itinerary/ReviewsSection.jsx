@@ -215,7 +215,9 @@ const ReviewsList = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1.5em;
+    min-height: calc(3 * 12vh + 3 * 1.5em); 
 `;
+
 
 const ReviewItem = styled.div`
     background-color: #fff;
