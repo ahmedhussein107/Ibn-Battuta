@@ -1,0 +1,93 @@
+.complaint-card {
+    border: 0.0625rem solid #ddd; /* 1px */
+    border-radius: 0.5rem; /* 8px */
+    padding: var(--spacing-medium);
+    width: 100%;
+    max-width: 25rem; /* 400px */
+    background-color: #fff;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px */
+    display: flex;
+    flex-direction: column;
+}
+
+.complaint-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-small);
+}
+
+.complaint-title {
+    font-weight: bold;
+    font-size: var(--font-size-large);
+}
+
+.complaint-status {
+    padding: 0.25em 0.5em; /* 4px 8px */
+    border-radius: 0.25rem; /* 4px */
+    color: #fff;
+    font-size: var(--font-size-small);
+}
+
+.resolved {
+    background-color: green;
+}
+
+.pending {
+    background-color: red;
+}
+
+.complaint-date {
+    font-size: var(--font-size-small);
+    color: #888;
+}
+
+.complaint-user {
+    margin-top: var(--spacing-small);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: var(--spacing-small);
+}
+
+.user-image {
+    width: 2.5rem; /* 40px */
+    height: 2.5rem;
+    border-radius: 50%;
+    margin-right: var(--spacing-small);
+}
+
+.user-name {
+    font-size: var(--font-size-small);
+    font-weight: bold;
+}
+
+.user-name:hover {
+    cursor: pointer;
+}
+
+.complaint-description {
+    font-size: var(--font-size-small);
+    margin-bottom: var(--spacing-medium);
+    margin-top: var(--spacing-small);
+    color: #333;
+}
+
+.complaint-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.view-button {
+    padding: 0.5em 0.75em; /* 8px 12px */
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 0.25rem; /* 4px */
+    cursor: pointer;
+    font-size: var(--font-size-medium);
+}
+
+.view-button:hover {
+    background-color: #0056b3;
+}

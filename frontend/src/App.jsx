@@ -47,6 +47,8 @@ import AdvertiserHome from "./pages/Advertiser/AdvertiserHome";
 import TourGuideHome from "./pages/TourGuide/TourGuideHome";
 import SellerHome from "./pages/Seller/SellerHome";
 import GovernorHome from "./pages/Governor/GovernorHome";
+import ComplaintCard from "./components/Complaint/ComplaintCard";
+import ComplaintList from "./components/Complaint/ComplaintList";
 
 function App() {
     return (
@@ -54,6 +56,8 @@ function App() {
             <NavBar />
             <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/test" element={<ComplaintList />} />
+
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/about" element={<AboutPage />} />

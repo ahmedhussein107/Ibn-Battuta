@@ -81,3 +81,30 @@ export const getTouristComplaints = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+export const getSomeComplaints = async (req, res) => {
+    try {
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.max(1, parseInt(req.query.limit) || 10);
+        const skip = (page - 1) * limit;
+        let query = {};
+        if (req.user?.userType === "Tourist") {
+            query = { touristID: req.user._id };
+        }
+        const totalComplaints = await Complaint.countDocuments(query);
+
+        const complaints = await Complaint.find(query)
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 })
+            .populate("touristID", "name picture");
+
+        res.json({
+            complaints,
+            totalPages: Math.ceil(totalComplaints / limit),
+            currentPage: page,
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server Error" });
+    }
+};
