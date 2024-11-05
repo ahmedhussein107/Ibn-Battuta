@@ -28,7 +28,7 @@ const itinerarySchema = new mongoose.Schema(
         ],
         language: { type: String, required: true },
         accessibility: [String],
-        title: { type: String, required: true },
+        name: { type: String, required: true },
         price: { type: Number, required: true },
         availableDatesAndTimes: { type: [Date], required: true },
         pickup: { type: String, required: true },

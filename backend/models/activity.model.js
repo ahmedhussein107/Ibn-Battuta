@@ -11,7 +11,7 @@ const activitySchema = new Schema(
         },
         Latitude: { type: Number },
         Longitude: { type: Number },
-        title: { type: String, required: true },
+        name: { type: String, required: true },
         description: { type: String, required: true },
         startDate: { type: Date, required: true },
         endDate: { type: Date, required: true },
