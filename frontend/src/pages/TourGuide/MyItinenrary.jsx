@@ -1,11 +1,8 @@
-import React, { act, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import i2 from "../../assets/images/i2.png";
 import i1 from "../../assets/images/iti.png";
-import TextField from "@mui/material/TextField";
-import NavBar from "../../components/NewNavBar";
-import { Router } from "react-router-dom";
+import NavBar from "../../components/NavBar";
 import { Avatar } from "@mui/material";
-import PageviewIcon from "@mui/icons-material/Pageview";
 import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
 import Footer from "../../components/Footer";

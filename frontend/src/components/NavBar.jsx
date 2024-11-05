@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -41,8 +40,10 @@ const NavBar = () => {
 
     useEffect(() => {
         const cookieUserType = Cookies.get("userType") || "Guest";
-        setUserType(cookieUserType);
         console.log("User type from cookie:", cookieUserType);
+        if (cookieUserType && cookieUserType !== "undefined") {
+            setUserType(cookieUserType);
+        }
     }, []);
 
     useEffect(() => {

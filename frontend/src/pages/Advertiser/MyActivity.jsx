@@ -1,11 +1,8 @@
-import React, { act, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import i1 from "../../assets/images/i1.png";
 import i2 from "../../assets/images/i2.png";
-import TextField from "@mui/material/TextField";
-import NavBar from "../../components/NewNavBar";
-import { Router } from "react-router-dom";
+import NavBar from "../../components/NavBar";
 import { Avatar } from "@mui/material";
-import PageviewIcon from "@mui/icons-material/Pageview";
 import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
 import Footer from "../../components/Footer";
@@ -15,7 +12,7 @@ import SwapVert from "@mui/icons-material/SwapVert";
 import ActivityCard from "../../components/ActivityCard";
 import axiosInstance from "../../api/axiosInstance";
 const MyActivity = () => {
-    const [activity, setActivity] = useState([]);
+    const [activities, setActivities] = useState([]);
     useEffect(() => {
         // Fetch data from the backend when the component mounts
         const fetchData = async () => {
@@ -24,7 +21,7 @@ const MyActivity = () => {
                     "/activity/getActivity/670405f81ddb4f53fd971cd8"
                 );
                 const data = response.data;
-                setActivity(data);
+                setActivities([data, data]);
                 console.log("response sata is", data);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -33,15 +30,6 @@ const MyActivity = () => {
 
         fetchData();
     }, []);
-    const activities = [
-        activity,
-        activity,
-        activity,
-        activity,
-        activity,
-        activity,
-        activity,
-    ];
     return (
         <div>
             <div style={{ position: "fixed", left: "50vh", top: "2vh", zIndex: 1 }}>
