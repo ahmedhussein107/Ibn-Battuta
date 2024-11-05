@@ -1,6 +1,7 @@
 import Complaint from "../models/complaint.model.js";
 
 export const createComplaint = async (req, res) => {
+    req.body.touristID = req.user._id;
     const newComplaint = new Complaint(req.body);
     try {
         await newComplaint.save();

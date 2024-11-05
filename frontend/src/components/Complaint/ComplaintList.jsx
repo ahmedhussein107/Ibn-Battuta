@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
 import ComplaintCard from "./ComplaintCard";
 import AdminControls from "./AdminControls";
+import ComplaintFormPopup from "./NewComplaintPopUp";
 import "./ComplaintList.css";
 import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../Pagination";
+
 import Button from "../Button";
+import Cookies from "js-cookie";
+import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
 const ComplaintList = () => {
     const [complaints, setComplaints] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedFilter, setSelectedFilter] = useState("all");
     const [isSorted, setIsSorted] = useState(false);
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
     const itemsPerPage = 4;
+    const userType = Cookies.get("userType") || "Tourist";
 
     useEffect(() => {
         fetchComplaints(currentPage);
@@ -42,12 +48,31 @@ const ComplaintList = () => {
 
     return (
         <div className="complaint-list-container">
-            <AdminControls
-                onFilterChange={handleFilter}
-                selectedFilter={selectedFilter}
-                onSort={handleSort}
-                isSorted={isSorted}
-            />
+            {userType === "Admin" && (
+                <AdminControls
+                    onFilterChange={handleFilter}
+                    selectedFilter={selectedFilter}
+                    onSort={handleSort}
+                    isSorted={isSorted}
+                />
+            )}
+            {userType === "Tourist" && (
+                <>
+                    <button
+                        className="create-complaint-button"
+                        onClick={() => setIsCreateOpen(true)}
+                    >
+                        <AddCircleOutlineSharpIcon
+                            sx={{ marginRight: "5px", verticalAlign: "middle" }}
+                        />
+                        File a Complaint
+                    </button>
+                    <ComplaintFormPopup
+                        isOpen={isCreateOpen}
+                        setIsOpen={setIsCreateOpen}
+                    />
+                </>
+            )}
             <div className="complaint-grid">
                 {complaints.map((complaint) => (
                     <ComplaintCard key={complaint._id} complaint={complaint} />

@@ -14,3 +14,10 @@
     max-width: 800px; /* Optional max width */
     margin-bottom: 20px;
 }
+
+.create-complaint-button {
+    margin-bottom: calc(2 * var(--spacing-large));
+    background-color: var(--background-color);
+    color: black;
+    border: 1px solid black;
+}
