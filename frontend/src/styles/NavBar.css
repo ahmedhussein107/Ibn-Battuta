@@ -1,6 +1,8 @@
 /* NavBar.css */
 
 .navbar {
+    margin-top: 30px;
+    margin-bottom: 30px;
     width: 50em;
     display: flex;
     justify-content: space-between; /* Distributes space evenly */
@@ -157,8 +159,11 @@
     color: var(--text-color); /* Default color for dropdown items */
 }
 
-.dropdown-item:hover {
-    background-color: #f0f0f0;
+.dropdown-item:hover,
+.simple-link:hover,
+.log-out:hover,
+.auth-link:hover {
+    background-color: initial;
     color: var(--accent-color);
 }
 .profile-dropdown {

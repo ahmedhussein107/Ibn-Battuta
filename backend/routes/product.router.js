@@ -12,7 +12,6 @@ import {
 const productRouter = express.Router();
 
 const _print = function (req, res, next) {
-    console.log("i am here in product router");
     console.log("body is ", req.body);
     next();
 };
