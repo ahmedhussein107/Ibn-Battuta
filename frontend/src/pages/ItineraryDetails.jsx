@@ -9,7 +9,7 @@ export default function ItineraryDetails() {
 	return (
 		<div>
 			<h1>Itinerary Details</h1>
-			<AvailableDates width={"30%"} height={"50%"} />
+			<Book price={"$90.00"} text={"Likely to be out"} width={"20vw"} />
 		</div>
 	);
 }

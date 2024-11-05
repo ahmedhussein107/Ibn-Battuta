@@ -1,11 +1,11 @@
 .book-container {
 	display: flex;
 	flex-direction: column;
-	width: 18vw;
+	width: 20vw;
 	padding: 20px;
-	border-width: 2px; /* Sets the width */
-	border-style: solid; /* Sets the style (e.g., solid, dashed) */
-	border-color: red;
+	/* border-width: 2px; 
+	border-style: solid;
+	border-color: red; */
 }
 
 .book-container > span {

@@ -1,8 +1,8 @@
 import "../../styles/Book.css";
 import Button from "../Button.jsx";
-export default function Book({ price, text, onClick }) {
+export default function Book({ price, text, onClick, width, height }) {
 	return (
-		<div className="book-container">
+		<div className="book-container" style={{width:width, height:height}}>
 			<span> {text}</span>
 			<div className="price-button-container">
 				<div className="price-container">
