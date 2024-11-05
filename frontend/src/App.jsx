@@ -47,13 +47,18 @@ import AdvertiserHome from "./pages/Advertiser/AdvertiserHome";
 import TourGuideHome from "./pages/TourGuide/TourGuideHome";
 import SellerHome from "./pages/Seller/SellerHome";
 import GovernorHome from "./pages/Governor/GovernorHome";
+import ShareAndMark from "./components/ShareAndMark";
 
 function App() {
+	function handelClick(){
+		console.log("Button clicked");
+	}
     return (
         <Router>
             <NavBar />
             <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/test" element={<ShareAndMark />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/about" element={<AboutPage />} />
