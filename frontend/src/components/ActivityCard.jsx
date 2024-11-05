@@ -1,4 +1,4 @@
-import React, { act, useState } from "react";
+import React, { useState } from "react";
 import Kayaking from "../assets/images/kayaking.png";
 import LocationIcon from "@mui/icons-material/LocationOn";
 import CategoryIcon from "@mui/icons-material/LocalOffer";
@@ -9,7 +9,7 @@ const ActivityCard = ({ activity }) => {
     const title = activity.name;
     const location = activity.location;
     const category = activity.category;
-    const tags = activity.tags.join(", ");
+    const tags = "School";
     const date = new Date(activity.startDate).toLocaleDateString();
     const description = activity.description;
     const isBookingAvailable = activity.isOpenForBooking;
@@ -18,7 +18,7 @@ const ActivityCard = ({ activity }) => {
     const discountedPrice =
         activity.price - (activity.price * activity.specialDiscount) / 100.0;
     const rating = 3;
-    const ratingCount = activity.ratings.length;
+    const ratingCount = 1203;
     const [isHovered, setIsHovered] = useState(false);
     const [isDeleteHovered, setIsDeleteHovered] = useState(false);
 

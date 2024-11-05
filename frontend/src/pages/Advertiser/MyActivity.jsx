@@ -2,7 +2,7 @@ import React, { act, useEffect, useState } from "react";
 import i1 from "../../assets/images/i1.png";
 import i2 from "../../assets/images/i2.png";
 import TextField from "@mui/material/TextField";
-import NavBar from "../../components/NewNavBar";
+import NavBar from "../../components/NavBar";
 import { Router } from "react-router-dom";
 import { Avatar } from "@mui/material";
 import PageviewIcon from "@mui/icons-material/Pageview";
