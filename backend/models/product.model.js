@@ -2,73 +2,74 @@ import mongoose from "mongoose";
 import { validateReference, validateReferences } from "./validatingUtils.js";
 import Ratings from "./rating.model.js";
 const productSchema = new mongoose.Schema(
-	{
-		pictures: [String],
-		name: String,
-		price: Number,
-		description: String,
-		ownerType: { type: String, required: true, enum: ["Admin", "Seller"] },
-		ownerID: { type: mongoose.Schema.Types.ObjectId, refPath: "ownerType" },
-		ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
-		sumOfRatings: { type: Number, default: 0 },
-		quantity: Number,
-		numberOfSales: { type: Number, default: 0 },
-		isArchived: { type: Boolean, default: false },
-	},
-	{ timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+    {
+        pictures: String,
+
+        name: String,
+        price: Number,
+        description: String,
+        ownerType: { type: String, required: true, enum: ["Admin", "Seller"] },
+        ownerID: { type: mongoose.Schema.Types.ObjectId, refPath: "ownerType" },
+        ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
+        sumOfRatings: { type: Number, default: 0 },
+        quantity: Number,
+        numberOfSales: { type: Number, default: 0 },
+        isArchived: { type: Boolean, default: false },
+    },
+    { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 productSchema.methods.addRating = async function (rating) {
-	this.ratings.push(rating);
-	this.sumOfRatings += rating.rating;
-	await this.save();
+    this.ratings.push(rating);
+    this.sumOfRatings += rating.rating;
+    await this.save();
 };
 
 const validateOwnerTypeAndId = async (ownerType, ownerID, next) => {
-	try {
-		const validModels = ["Admin", "Seller"];
-		if (!validModels.includes(ownerType)) {
-			return next(new Error(`Invalid ownerType: ${ownerType}`));
-		}
-		await validateReference(ownerID, ownerType, next);
-	} catch (err) {
-		return next(err);
-	}
+    try {
+        const validModels = ["Admin", "Seller"];
+        if (!validModels.includes(ownerType)) {
+            return next(new Error(`Invalid ownerType: ${ownerType}`));
+        }
+        await validateReference(ownerID, ownerType, next);
+    } catch (err) {
+        return next(err);
+    }
 };
 
 productSchema.pre("save", async function (next) {
-	try {
-		const { ownerType, ownerID, ratings } = this;
+    try {
+        const { ownerType, ownerID, ratings } = this;
 
-		if (!ownerType || !ownerID) {
-			return next(new Error("Both ownerType and ownerID are required."));
-		}
-		await validateOwnerTypeAndId(ownerType, ownerID, next);
-		if (ratings && ratings.length > 0)
-			await validateReferences(ratings, "Rating", next);
-	} catch (error) {
-		next(error);
-	}
+        if (!ownerType || !ownerID) {
+            return next(new Error("Both ownerType and ownerID are required."));
+        }
+        await validateOwnerTypeAndId(ownerType, ownerID, next);
+        if (ratings && ratings.length > 0)
+            await validateReferences(ratings, "Rating", next);
+    } catch (error) {
+        next(error);
+    }
 });
 
 const validateRatings = async function (next) {
-	try {
-		const update = this.getUpdate();
-		const ratings = update.ratings || update["$set.ratings"];
-		const updatedOwnerType = update.ownerType || update["$set.ownerType"];
-		const updatedOwnerID = update.ownerID || update["$set.ownerID"];
+    try {
+        const update = this.getUpdate();
+        const ratings = update.ratings || update["$set.ratings"];
+        const updatedOwnerType = update.ownerType || update["$set.ownerType"];
+        const updatedOwnerID = update.ownerID || update["$set.ownerID"];
 
-		if (ratings) {
-			await validateReferences(ratings, "Rating", next);
-		}
-		if (updatedOwnerID && updatedOwnerType) {
-			await validateReference(updatedOwnerID, updatedOwnerType, next);
-		} else if (updatedOwnerID && updatedOwnerType)
-			return next(new Error("You can't change only one of ownerId and ownerType "));
-		next();
-	} catch (error) {
-		next(error);
-	}
+        if (ratings) {
+            await validateReferences(ratings, "Rating", next);
+        }
+        if (updatedOwnerID && updatedOwnerType) {
+            await validateReference(updatedOwnerID, updatedOwnerType, next);
+        } else if (updatedOwnerID && updatedOwnerType)
+            return next(new Error("You can't change only one of ownerId and ownerType "));
+        next();
+    } catch (error) {
+        next(error);
+    }
 };
 
 productSchema.pre("findOneAndUpdate", validateRatings);
@@ -76,11 +77,11 @@ productSchema.pre("updateOne", validateRatings);
 productSchema.pre("findByIdAndUpdate", validateRatings);
 
 productSchema.virtual("rating").get(function () {
-	// Ensure ratings is not empty to avoid division by zero
-	if (this.ratings && this.ratings.length > 0) {
-		return this.sumOfRatings / this.ratings.length;
-	}
-	return -1; // Return -1 if there are no ratings and handle in frontend
+    // Ensure ratings is not empty to avoid division by zero
+    if (this.ratings && this.ratings.length > 0) {
+        return this.sumOfRatings / this.ratings.length;
+    }
+    return -1; // Return -1 if there are no ratings and handle in frontend
 });
 
 productSchema.index({ ownerID: 1 });
