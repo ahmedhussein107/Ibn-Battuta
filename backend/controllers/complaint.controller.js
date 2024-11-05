@@ -1,7 +1,7 @@
 import Complaint from "../models/complaint.model.js";
 import { populateReplies } from "./comment.controller.js";
 export const createComplaint = async (req, res) => {
-    req.body.touristID = req.user._id;
+    req.body.touristID = req.user.userId;
     const newComplaint = new Complaint(req.body);
     try {
         await newComplaint.save();
@@ -93,7 +93,7 @@ export const getSomeComplaints = async (req, res) => {
         const skip = (page - 1) * limit;
         let query = {};
         if (req.user?.userType === "Tourist") {
-            query = { touristID: req.user._id };
+            query = { touristID: req.user.userId };
         }
         if (status !== "all") {
             query = { ...query, status };
@@ -121,12 +121,15 @@ export const getComplaintAlongWithReplies = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const complaint = await Complaint.findById(id).populate({
-            path: "reply",
-        });
+        const complaint = await Complaint.findById(id)
+            .populate("touristID", "name picture")
+            .populate({
+                path: "reply",
+            });
         if (complaint.reply) {
             populateReplies(complaint.reply);
         }
+        console.log(complaint);
         res.json(complaint);
     } catch (error) {
         console.error("Failed to fetch complaints:", error);

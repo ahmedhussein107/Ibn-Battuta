@@ -1,7 +1,11 @@
 import React from "react";
 import "./ComplaintCard.css";
 import Button from "../Button";
-const ComplaintCard = ({ complaint }) => {
+import ReplySharpIcon from "@mui/icons-material/ReplySharp";
+import DoneSharpIcon from "@mui/icons-material/DoneSharp";
+import HourglassEmptySharpIcon from "@mui/icons-material/HourglassEmptySharp";
+
+const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
     const { title, status, createdAt, body, touristID } = complaint;
     const formatDate = (date) => {
         const d = new Date(date);
@@ -15,10 +19,8 @@ const ComplaintCard = ({ complaint }) => {
     const formattedDate = formatDate(createdAt);
 
     const renderBody = () => {
+        if (isExpanded || body.length <= 40) return body;
         const maxLength = 40;
-        if (body.length <= maxLength) {
-            return body;
-        }
         return `${body.slice(0, maxLength)}... `;
     };
 
@@ -32,14 +34,37 @@ const ComplaintCard = ({ complaint }) => {
         <div className="complaint-card">
             {/* Complaint Title and Status */}
             <div className="complaint-header">
-                <span className="complaint-title">
-                    {title.length > 16 ? `${title.slice(0, 16)}...` : title}
-                </span>
-                <div className="status-and-date">
+                <div className="title-and-date">
+                    <span className="complaint-title">
+                        {title.length > 16 && !isExpanded
+                            ? `${title.slice(0, 16)}...`
+                            : title}
+                    </span>
+                    <span className="complaint-date">{formattedDate}</span>
+                </div>
+                <div className="status-and-actions">
                     <span className={`complaint-status ${status}`}>
                         {status.toUpperCase()}
                     </span>
-                    <span className="complaint-date">{formattedDate}</span>
+                    <div className={`change-status-${status}`}>
+                        {status === "pending" && (
+                            <DoneSharpIcon
+                                sx={{
+                                    verticalAlign: "middle",
+                                    marginRight: "5px",
+                                }}
+                            />
+                        )}
+                        {status === "resolved" && (
+                            <HourglassEmptySharpIcon
+                                sx={{
+                                    verticalAlign: "middle",
+                                    marginRight: "5px",
+                                }}
+                            />
+                        )}
+                        mark as {status === "pending" ? "resolved" : "pending"}
+                    </div>
                 </div>
             </div>
 
@@ -58,23 +83,34 @@ const ComplaintCard = ({ complaint }) => {
             </div>
 
             <div className="complaint-description">{renderBody()}</div>
-
             <div className="complaint-footer">
-                <Button
-                    stylingMode="submit"
-                    text={"View"}
-                    handleClick={handleViewComplaint}
-                    isLoading={false}
-                    width={"40px"}
-                    customStyle={{
-                        marginLeft: "20px",
-                        width: "40px",
-                        height: "55px",
-                        minHieght: "70px",
-                        borderRadius: "60px",
-                        maxWidth: "100px",
-                    }}
-                />
+                {!isExpanded ? (
+                    <Button
+                        stylingMode="submit"
+                        text={"View"}
+                        handleClick={handleViewComplaint}
+                        isLoading={false}
+                        width={"40px"}
+                        customStyle={{
+                            marginLeft: "20px",
+                            width: "40px",
+                            height: "55px",
+                            minHieght: "70px",
+                            borderRadius: "60px",
+                            maxWidth: "100px",
+                        }}
+                    />
+                ) : (
+                    <div
+                        className="reply-div"
+                        onClick={() => props?.onReply(complaint._id)}
+                    >
+                        <ReplySharpIcon
+                            sx={{ verticalAlign: "middle", marginRight: "5px" }}
+                        />
+                        reply
+                    </div>
+                )}
             </div>
         </div>
     );

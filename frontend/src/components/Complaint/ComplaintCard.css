@@ -3,7 +3,6 @@
     border-radius: 0.5rem; /* 8px */
     padding: var(--spacing-medium);
     width: auto;
-    max-width: 25rem; /* 400px */
     background-color: #fff;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px */
     display: flex;
@@ -16,12 +15,18 @@
     justify-content: space-between;
     margin-bottom: var(--spacing-small);
 }
+.title-and-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
 .complaint-title {
     font-weight: bold;
     font-size: var(--font-size-large);
 }
-.status-and-date {
+.status-and-actions {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -97,4 +102,32 @@
 
 .view-button:hover {
     background-color: #0056b3;
+}
+
+.change-status-pending {
+    margin-top: 20px;
+    color: green;
+    font-weight: bold;
+}
+.change-status-resolved {
+    margin-top: 20px;
+    font-weight: bold;
+    color: red;
+}
+
+.change-status-pending:hover {
+    cursor: pointer;
+    color: darkgreen;
+}
+.change-status-resolved:hover {
+    cursor: pointer;
+    color: darkered;
+}
+
+.reply-div {
+    margin-right: 8%;
+}
+.reply-div:hover {
+    cursor: pointer;
+    color: var(--accent-color);
 }

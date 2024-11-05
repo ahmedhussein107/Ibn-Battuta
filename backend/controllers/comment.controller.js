@@ -2,7 +2,17 @@ import Comment from "../models/comment.model.js";
 import Complaint from "../models/complaint.model.js";
 
 export const createComment = async (req, res) => {
-    const comment = new Comment(req.body);
+    const data = { body: req.body.body, complaintID: req.body.complaintID };
+
+    // there must be a user but this is just for testing;
+    if (req.user) {
+        data = { ...data, authorType: req.user.UserType, author: req.user.userId };
+    } else {
+        data = { ...data, authorType: req.body.authorType, author: req.body.author };
+    }
+
+    const comment = new Comment(data);
+
     try {
         await comment.save();
         res.status(201).json(comment);
@@ -112,7 +122,11 @@ export const replyToComment = async (req, res) => {
 };
 
 export const populateReplies = async (comment) => {
-    const populatedComment = await Comment.populate(comment, { path: "replies" });
+    const populatedComment = await Comment.populate(
+        comment,
+        { path: "author" },
+        { path: "replies" }
+    );
 
     for (let i = 0; i < populatedComment.replies.length; i++) {
         populatedComment.replies[i] = await populateReplies(populatedComment.replies[i]);

@@ -66,7 +66,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        assignCookies(res, user.userType, user._id)
+        assignCookies(res, userRecord.userType, user._id)
             .status(200)
             .json({ message: "Login successful", token, user });
     } catch (err) {
@@ -75,7 +75,7 @@ export const login = async (req, res) => {
     }
 };
 
-export const assignCookies = (res, userType, userId) => {
+export const assignCookies = async (res, userType, userId) => {
     const token = jwt.sign({ userId, userType }, secretKey, {
         expiresIn: "5h",
     });
@@ -84,7 +84,7 @@ export const assignCookies = (res, userType, userId) => {
         //httpOnly: true,
         maxAge: 3600000,
     });
-    res.cookie("userType", userType, {
+    res.cookie("userType", userRecord.userType, {
         //httpOnly: true,
         maxAge: 3600000,
     });

@@ -49,14 +49,15 @@ import SellerHome from "./pages/Seller/SellerHome";
 import GovernorHome from "./pages/Governor/GovernorHome";
 import ComplaintCard from "./components/Complaint/ComplaintCard";
 import ComplaintList from "./components/Complaint/ComplaintList";
-
+import ViewSingleComplaint from "./components/Complaint/ViewSingleComplaint";
 function App() {
     return (
         <Router>
             <NavBar />
             <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/test" element={<ComplaintList />} />
+                <Route path="/complaints" element={<ComplaintList />} />
+                <Route path="/complaint/:complaintId" element={<ViewSingleComplaint />} />
 
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/login" element={<Login />} />

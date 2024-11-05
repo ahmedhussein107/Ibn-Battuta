@@ -8,7 +8,7 @@ const complaintSchema = new mongoose.Schema(
             ref: "Tourist",
             required: true,
         },
-        title: String,
+        title: { type: String, default: "your complaint" },
         body: { type: String, required: true },
         status: { type: String, enum: ["resolved", "pending"], default: "pending" },
         reply: { type: mongoose.Schema.Types.ObjectId, ref: "Comment" },

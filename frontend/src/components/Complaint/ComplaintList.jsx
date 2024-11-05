@@ -75,7 +75,11 @@ const ComplaintList = () => {
             )}
             <div className="complaint-grid">
                 {complaints.map((complaint) => (
-                    <ComplaintCard key={complaint._id} complaint={complaint} />
+                    <ComplaintCard
+                        key={complaint._id}
+                        complaint={complaint}
+                        isExpanded={false}
+                    />
                 ))}
             </div>
             <PaginationComponent
