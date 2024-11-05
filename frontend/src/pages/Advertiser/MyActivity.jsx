@@ -12,28 +12,34 @@ import SwapVert from "@mui/icons-material/SwapVert";
 import ActivityCard from "../../components/ActivityCard";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 const MyActivity = () => {
     const navigate = useNavigate();
 
     const [activities, setActivities] = useState([]);
+    const [searchedTerm, setSearchedTerm] = useState("");
+
+    const fetchData = async (query) => {
+        const advertiserID = Cookies.get("userId").replaceAll('"', "").substring(2);
+        console.log("advertiserID", advertiserID);
+        try {
+            const response = await axiosInstance.get(
+                `/activity/getAdvertiserActivities/${advertiserID}`,
+                {
+                    params: query,
+                }
+            );
+            const data = response.data;
+            setActivities(data);
+            console.log("response sata is", data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
     useEffect(() => {
-        // Fetch data from the backend when the component mounts
-        const fetchData = async () => {
-            try {
-                const response = await axiosInstance.get(
-                    "/activity/getActivity/670405f81ddb4f53fd971cd8"
-                );
-                const data = response.data;
-                setActivities([data, data]);
-                console.log("response sata is", data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-
         fetchData();
-    }, []);
+    }, [searchedTerm]);
 
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>
@@ -103,6 +109,8 @@ const MyActivity = () => {
                         <input
                             type="text"
                             placeholder="Search for activities"
+                            value={searchedTerm}
+                            onChange={(e) => setSearchedTerm(e.target.value)}
                             style={{
                                 borderRadius: "4vh",
                                 minWidth: "30vh",

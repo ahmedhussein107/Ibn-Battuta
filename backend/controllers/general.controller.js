@@ -88,5 +88,9 @@ export const assignCookies = (res, userType, userId) => {
         //httpOnly: true,
         maxAge: 3600000,
     });
+    res.cookie("userId", userId, {
+        //httpOnly: true,
+        maxAge: 3600000,
+    });
     return res;
 };
