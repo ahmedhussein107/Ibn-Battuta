@@ -15,7 +15,7 @@ const ComplaintCard = ({ complaint }) => {
     const formattedDate = formatDate(createdAt);
 
     const renderBody = () => {
-        const maxLength = 100;
+        const maxLength = 40;
         if (body.length <= maxLength) {
             return body;
         }
@@ -33,10 +33,12 @@ const ComplaintCard = ({ complaint }) => {
             {/* Complaint Title and Status */}
             <div className="complaint-header">
                 <span className="complaint-title">{title}</span>
-                <span className={`complaint-status ${status}`}>
-                    {status.toUpperCase()}
-                </span>
-                <span className="complaint-date">{formattedDate}</span>
+                <div className="status-and-date">
+                    <span className={`complaint-status ${status}`}>
+                        {status.toUpperCase()}
+                    </span>
+                    <span className="complaint-date">{formattedDate}</span>
+                </div>
             </div>
 
             <div className="complaint-user">

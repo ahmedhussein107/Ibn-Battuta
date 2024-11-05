@@ -84,20 +84,28 @@ export const getTouristComplaints = async (req, res) => {
 
 export const getSomeComplaints = async (req, res) => {
     try {
+        console.log(req.query);
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 10);
+        const isSorted = req.query.isSorted;
+        const status = req.query.status;
         const skip = (page - 1) * limit;
         let query = {};
         if (req.user?.userType === "Tourist") {
             query = { touristID: req.user._id };
         }
+        if (status !== "all") {
+            query = { ...query, status };
+        }
         const totalComplaints = await Complaint.countDocuments(query);
 
-        const complaints = await Complaint.find(query)
-            .skip(skip)
-            .limit(limit)
-            .sort({ createdAt: -1 })
-            .populate("touristID", "name picture");
+        let complaintsQuery = Complaint.find(query).populate("touristID", "name picture");
+
+        if (isSorted === "true") {
+            complaintsQuery = complaintsQuery.sort({ createdAt: -1 }); // Sort by createdAt descending
+        }
+
+        const complaints = await complaintsQuery.skip(skip).limit(limit);
 
         res.json({
             complaints,

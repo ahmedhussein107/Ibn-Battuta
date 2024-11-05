@@ -1,0 +1,37 @@
+.admin-control {
+    display: flex;
+    justify-content: space-between; /* Space between filter and sort button */
+    align-items: center; /* Align items vertically */
+    margin: calc(2 * var(--spacing-large)) 0; /* Margin around the control panel */
+    width: 100%; /* Optional max width */
+}
+.admin-control button {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border-radius: 30px;
+    border-color: black;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition for hover */
+}
+
+button:hover {
+    background-color: var(--accent-color-light);
+    border: 1px solid black;
+}
+
+button.selected {
+    background-color: var(--accent-color);
+    color: white;
+    border-color: black;
+}
+
+button:hover:not(.selected) {
+    background-color: var(--accent-color);
+    border-color: black;
+}
+
+.sort-div {
+    align-items: center;
+    justify-content: center;
+}
