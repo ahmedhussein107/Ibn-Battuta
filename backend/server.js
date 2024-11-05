@@ -56,7 +56,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-console.log("i am here");
 
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);

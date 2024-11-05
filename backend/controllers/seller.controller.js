@@ -5,6 +5,8 @@ import Notification from "../models/notification.model.js";
 import Product from "../models/product.model.js";
 import Rating from "../models/rating.model.js";
 import bcrypt from "bcrypt";
+import { assignCookies } from "./general.controller.js";
+
 export const createSeller = async (req, res) => {
     //console.log(req.body);
     const inputUsername = req.body.username;
@@ -25,7 +27,9 @@ export const createSeller = async (req, res) => {
             req.body.password = hashedPassword;
 
             const newSeller = await Seller.create(req.body);
-            res.status(201).json(newSeller);
+            assignCookies(res, "Seller", newSeller._id)
+                .status(201)
+                .json({ message: "Sign up successful" });
         } else {
             if (username) {
                 res.status(400).json({ e: "Username already exists" });

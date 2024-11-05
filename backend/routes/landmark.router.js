@@ -7,15 +7,13 @@ import {
     updateLandmark,
     deleteLandmark,
     getGovernorLandmarks,
-    searchLandmarks,
-    filterLandmarks,
 } from "../controllers/landmark.controller.js";
 
 const landmarkRouter = express.Router();
 
 landmarkRouter.post("/createLandmark", createLandmark);
 
-landmarkRouter.get("/allLandmark", getAllLandmarks);
+landmarkRouter.get("/allLandmarks", getAllLandmarks);
 
 landmarkRouter.get("/landmark/:id", getLandmarkById);
 
@@ -26,9 +24,5 @@ landmarkRouter.patch("/updateLandmark/:id", updateLandmark);
 landmarkRouter.delete("/deleteLandmark/:id", deleteLandmark);
 
 landmarkRouter.get("/getGovernorLandmarks/:id", getGovernorLandmarks);
-
-landmarkRouter.get("/searchLandmarks", searchLandmarks);
-
-landmarkRouter.get("/filterLandmarks", filterLandmarks);
 
 export default landmarkRouter;

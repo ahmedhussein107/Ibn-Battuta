@@ -11,6 +11,7 @@ const customActivitySchema = new mongoose.Schema(
         title: String,
         description: String,
         location: String, // search for it in the lamdmarks
+        picture: String,
     },
     { timestamps: true }
 );
