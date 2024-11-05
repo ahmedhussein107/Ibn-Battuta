@@ -15,6 +15,8 @@ import {
     adminNavbarItems,
 } from "../constants/navbar.constants";
 
+const URI = import.meta.env.VITE_API_URI;
+
 const navbarUserItems = {
     Guest: guestNavbarItems,
     Tourist: touristNavbarItems,
@@ -50,7 +52,9 @@ const NavBar = () => {
         if (userType !== "Guest") {
             console.log("WebSocket connection establishing");
             const socket = new WebSocket(
-                `ws://localhost:3000/notifications?token=${Cookies.get("jwt")}`
+                `${URI.replace("http://", "ws://")}/notifications?token=${Cookies.get(
+                    "jwt"
+                )}`
             );
 
             socket.onopen = () => {
