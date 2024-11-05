@@ -41,6 +41,9 @@ import Itineraries from "./pages/Itinerary/Itineraries";
 import Landmarks from "./pages/Landmark/Landmarks";
 
 function App() {
+	function handelClick(){
+		console.log("Button clicked");
+	}
     return (
         <Router>
             <Routes>
