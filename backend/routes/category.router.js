@@ -1,10 +1,10 @@
 import express from "express";
 import {
-  createCategory,
-  getCategories,
-  updateCategory,
-  deleteCategory,
-  getCategoryByID,
+    createCategory,
+    getCategories,
+    updateCategory,
+    deleteCategory,
+    getCategoryByID,
 } from "../controllers/category.controller.js";
 
 const categoryRouter = express.Router();

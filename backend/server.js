@@ -1,7 +1,5 @@
-import dotenv from "dotenv";
 import express from "express";
 import { connect } from "mongoose";
-import fileUpload from "express-fileupload";
 import touristRouter from "./routes/tourist.router.js";
 import usernameRouter from "./routes/username.router.js";
 import adminRouter from "./routes/admin.router.js";
@@ -24,29 +22,40 @@ import tagRouter from "./routes/tag.router.js";
 import ratingRouter from "./routes/rating.router.js";
 import landmarkRouter from "./routes/landmark.router.js";
 import customActivityRouter from "./routes/customActivity.router.js";
+import generalRouter from "./routes/general.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import login from "./controllers/login.controller.js";
+import amadeusHotelsRouter from "./services/hotels.js";
+import amadeusFlightsRouter from "./services/flights.js";
 
-dotenv.config();
-const app = express();
-connect(process.env.MONGO_URI)
-  .then(() => {
-    app.listen(process.env.PORT, () => {
-      console.log(`Connected to DB`);
-      console.log(`Listening to port ${process.env.PORT}`);
+import { PORT, MONGO_URI } from "./config/config.js";
+
+import expressWs from "express-ws";
+import { sendNotificationCountToUser, setupWebSocketRoutes } from "./routes/ws.router.js";
+
+const app = expressWs(express()).app;
+
+connect(MONGO_URI)
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Connected to DB`);
+            console.log(`Listening to port ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
     });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+
+setupWebSocketRoutes(app);
 
 app.use(cookieParser());
-app.use(cors());
+const corsOptions = {
+    origin: "http://localhost:5173",
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(fileUpload());
-app.use("/uploads/documents", express.static("./uploads/documents"));
-app.use("/uploads/images", express.static("./uploads/images"));
 
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);
@@ -71,6 +80,6 @@ app.use("/api/category", categoryRouter);
 app.use("/api/rating", ratingRouter);
 app.use("/api/landmark", landmarkRouter);
 app.use("/api/customActivity", customActivityRouter);
-app.post("/api/login", login);
-
-
+app.use("/api/amadeus/hotels", amadeusHotelsRouter);
+app.use("/api/amadeus/flights", amadeusFlightsRouter);
+app.use("/api/general", generalRouter);

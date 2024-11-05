@@ -1,0 +1,193 @@
+/* NavBar.css */
+
+.navbar {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    width: 50em;
+    display: flex;
+    justify-content: space-between; /* Distributes space evenly */
+    align-items: center; /* Vertically centers items */
+    padding: 10px 20px; /* Adjust as needed for spacing */
+    background-color: var(--secondary-color);
+    border-radius: 50px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+}
+
+.navbar-logo {
+    display: inline-flex; /* Allow inline and flex properties */
+    border-radius: 15px; /* Rounded edges for the logo container */
+    overflow: hidden; /* Hide overflow to maintain roundness */
+    background-color: var(
+        --background-color
+    ); /* Background color for the logo container */
+    padding: 5px; /* Padding around the logo */
+}
+
+/* Logo image styling */
+.logo-image {
+    height: 40px; /* Adjust logo height */
+    width: auto; /* Maintain aspect ratio */
+    display: block; /* Ensure proper layout */
+    border-radius: 50%; /* Make the logo image circular, adjust to your preference */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+.navbar-links {
+    display: flex; /* Makes this a flex container */
+    align-items: center; /* Aligns items vertically in the center */
+}
+
+.navbar-links .dropdown {
+    position: relative; /* Allows absolute positioning of dropdown content */
+    margin: 0 var(--spacing-medium); /* Space between links */
+}
+
+.dropdown-title {
+    cursor: pointer; /* Shows a pointer cursor on hover */
+}
+
+.simple-link {
+    margin: 0 var(--spacing-small); /* Space between links */
+    text-decoration: none; /* Remove underline from links */
+    color: var(--text-color); /* Link color */
+}
+
+.auth-link {
+    margin: 0 var(--spacing-small); /* Space between auth links */
+    text-decoration: none; /* Remove underline from links */
+    color: var(--primary-color); /* Link color */
+}
+
+.auth-button {
+    height: 60px;
+    margin: 0 var(--spacing-small); /* Space between auth links */
+    text-decoration: none; /* Remove underline from links */
+    background-color: var(--accent-color); /* Link color */
+    border-radius: 30px;
+}
+.navbar-profile {
+    display: flex; /* Flex for profile section */
+    align-items: center; /* Center vertically */
+}
+
+.dropdown-item:hover {
+    background-color: var(--background-color); /* Background color on hover */
+}
+
+.dropdown-content {
+    display: none; /* Hide dropdown by default */
+    position: absolute; /* Position it absolutely */
+    top: 100%; /* Align with dropdown title */
+    background-color: var(--background-color); /* Background color for dropdown */
+    min-width: 150px; /* Minimum width for dropdown */
+    box-shadow: 0 var(--spacing-small) var(--spacing-medium) rgba(0, 0, 0, 0.2); /* Shadow for dropdown */
+    border-radius: var(--border-radius); /* Rounded corners for dropdown */
+    z-index: 1; /* Ensure it is above other elements */
+    text-align: center;
+    width: 100%;
+}
+
+/* Right Side - Profile or Auth Links */
+.navbar-right {
+    display: flex; /* Flex for right side links */
+    align-items: center; /* Align vertically */
+}
+
+/* Profile Image */
+.profile-image {
+    width: 40px; /* Profile image width */
+    height: 40px; /* Profile image height */
+    border-radius: 50%; /* Circular profile image */
+    cursor: pointer; /* Pointer on hover */
+}
+
+/* Profile Dropdown Menu */
+.profile-dropdown {
+    position: relative; /* Position for dropdown */
+}
+
+.profile-dropdown {
+    display: flex;
+    align-items: center; /* Ensure alignment within the dropdown */
+    position: relative;
+}
+
+.notification-icon {
+    position: relative;
+    height: 30px;
+    margin-right: 20px; /* Space between notification icon and profile image */
+    display: flex;
+    align-items: center; /* Align icon and badge */
+}
+
+.notification-icon {
+    position: relative;
+    width: 40px; /* Set a fixed width */
+    height: 40px; /* Set a fixed height */
+    margin-right: 20px; /* Space between notification icon and profile image */
+    display: flex;
+    align-items: center; /* Align icon and badge vertically */
+    justify-content: center; /* Center the icon horizontally */
+    cursor: pointer; /* Change cursor to indicate clickability */
+}
+
+.notification-image {
+    width: 20px; /* Adjust as necessary */
+    height: 20px; /* Adjust as necessary */
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0; /* Position it at the top right corner */
+    right: 0;
+    background: var(--accent-color); /* Example badge color */
+    color: white; /* Example badge text color */
+    border-radius: 50%; /* Make it circular */
+    padding: 2px 5px; /* Padding for the badge */
+    font-size: 12px; /* Adjust font size */
+}
+
+.dropdown:hover .dropdown-content {
+    align-items: center;
+    display: block; /* Show dropdown on hover */
+}
+
+.dropdown-item {
+    display: block;
+    padding: 10px; /* Padding for dropdown items */
+    text-decoration: none; /* Remove underline */
+    color: var(--text-color); /* Default color for dropdown items */
+}
+
+.dropdown-item:hover,
+.simple-link:hover,
+.log-out:hover,
+.auth-link:hover {
+    background-color: initial;
+    color: var(--accent-color);
+}
+.profile-dropdown {
+    position: relative; /* Make sure this is positioned relative to position dropdown content */
+}
+
+.profile-dropdown:hover .dropdown-content {
+    display: block; /* Show dropdown on hover */
+}
+
+.dropdown-separator {
+    height: 1px; /* Thickness of the separator */
+    background-color: var(--primary-color); /* Color of the separator */
+    margin: var(--spacing-small) var(--spacing-small); /* Spacing around separator */
+}
+
+.log-out {
+    color: red; /* Color for logout option */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-bottom: var(--spacing-small);
+}
+
+.notifications-profile {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+}

@@ -1,0 +1,52 @@
+button:hover {
+    background-color: initial;
+    border: none;
+}
+
+.button-1 {
+    border-radius: var(--spacing-medium);
+    padding: var(--spacing-small) var(--spacing-medium);
+    background-color: var(--accent-color);
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transition for hover effect */
+    margin: 0 var(--spacing-small);
+    color: white;
+    width: 10px;
+    font-weight: bolder !important;
+}
+
+.button-2 {
+    color: var(--text-color);
+    border-radius: var(--spacing-medium);
+    padding: var(--spacing-small) var(--spacing-medium);
+    background-color: white;
+    border-color: var(--accent-color);
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transition for hover effect */
+    color: #f86624;
+    margin: 0 var(--spacing-small);
+}
+
+.button-submit {
+    border-radius: var(--spacing-medium);
+    padding: var(--spacing-small) var(--spacing-medium);
+    background-color: var(--accent-color);
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transition for hover effect */
+    flex: 1; /* Make buttons flexible */
+    margin: 0 var(--spacing-small);
+    color: white;
+    flex-direction: block;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+}
+.button-submit:hover {
+    color: var(--text-color);
+    background-color: var(--accent-color);
+}
+
+.button-2:hover {
+    color: white;
+    background-color: var(--accent-color);
+}

@@ -25,9 +25,11 @@ const touristSchema = new mongoose.Schema(
         points: { type: Number, default: 0 },
         cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
         notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
+        hotelBookings: [{ type: Object }],
+        flightBookings: [{ type: Object }],
         preferences: [{ type: String, ref: "Tag" }],
         wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
-        deliveryAddresses: [{ name: String, location: String }],
+        address: [{ name: String, location: String }],
     },
     { timestamps: true }
 );

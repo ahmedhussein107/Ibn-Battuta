@@ -1,0 +1,37 @@
+.input-group {
+    margin-bottom: var(--spacing-medium); /* Space between input groups */
+    width: 100%; /* Make input groups take full width */
+    display: flex; /* Enable flexbox */
+    flex-direction: column; /* Stack label and input vertically */
+    align-items: center; /* Center children horizontally */
+}
+
+.input-group label {
+    display: block; /* Ensure label is above the input */
+    margin-bottom: var(--spacing-small); /* Space between label and input */
+    text-align: center; /* Center text in the label */
+}
+
+.input-group input {
+    width: 80%; /* Set input width */
+    padding: 10px; /* Add padding for better appearance */
+    border-radius: 5px; /* Rounded edges */
+    border: 1px solid #ccc; /* Border style */
+    text-align: center; /* Center text in input field */
+}
+.file-input-wrapper {
+    display: flex;
+    align-items: center; /* Center the delete icon vertically */
+    position: relative;
+}
+
+.delete-icon {
+    margin-left: var(--spacing-small); /* Space between the input and the icon */
+    color: #666; /* Initial color */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.delete-icon:hover {
+    color: red; /* Change color to red on hover */
+}
