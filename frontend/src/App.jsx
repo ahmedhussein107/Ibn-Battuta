@@ -27,6 +27,8 @@ import Activities from "./pages/Activity/Activities";
 import FilterItineraries from "./pages/Itinerary/FilterItineraries";
 import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
+import MyActivity from "./pages/Advertiser/MyActivity";
+import MyItinenrary from "./pages/TourGuide/MyItinenrary";
 import SignUpPage from "./pages/Signup/SignUpPage";
 import SelectYourRole from "./pages/Signup/SelectYourRole";
 import Signin from "./pages/Signin/Signin";
@@ -83,6 +85,8 @@ function App() {
                     element={<TourGuideCustomActivities />}
                 />
                 <Route path="/activity" element={<AdvertiserActivities />} />
+                <Route path="/advertiser/assigned" element={<MyActivity />} />
+                <Route path="/tourguide/assigned" element={<MyItinenrary />} />
                 <Route path="/create-activity" element={<CreateActivityPage />} />
                 <Route path="/update-activity" element={<UpdateActivityPage />} />
                 <Route path="/filter-landmarks" element={<FilterLandmarks />} />
