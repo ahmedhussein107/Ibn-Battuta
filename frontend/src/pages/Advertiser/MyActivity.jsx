@@ -11,8 +11,12 @@ import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
 import ActivityCard from "../../components/ActivityCard";
 import axiosInstance from "../../api/axiosInstance";
+import { useNavigate } from "react-router-dom";
 const MyActivity = () => {
+    const navigate = useNavigate();
+
     const [activities, setActivities] = useState([]);
+
     useEffect(() => {
         // Fetch data from the backend when the component mounts
         const fetchData = async () => {
@@ -30,42 +34,52 @@ const MyActivity = () => {
 
         fetchData();
     }, []);
+
     return (
-        <div>
-            <div style={{ position: "fixed", left: "50vh", top: "2vh", zIndex: 1 }}>
+        <div style={{ position: "absolute", left: 0, top: 0 }}>
+            <div
+                style={{
+                    position: "fixed",
+                    left: 0,
+                    top: 0,
+                    zIndex: 1,
+                    marginLeft: "23vw",
+                    marginTop: "1vh",
+                }}
+            >
                 <NavBar />
             </div>
 
             <div>
-                <img
-                    src={i1}
-                    style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "166.27vh",
-                        height: "35%",
-                        pointerEvents: "none",
-                    }}
-                />
-                <img
-                    src={i2}
-                    style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "166.27vh",
-                        height: "35%",
-                        pointerEvents: "none",
-                    }}
-                />
+                <div style={{ position: "relative" }}>
+                    <img
+                        src={i1}
+                        style={{
+                            width: "100vw",
+                            height: "35vh",
+                            pointerEvents: "none",
+                            zIndex: -1,
+                        }}
+                    />
+                    <img
+                        src={i2}
+                        style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100vw",
+                            height: "35vh",
+                            pointerEvents: "none",
+                            zIndex: 0, // This will place the second image on top of the first
+                        }}
+                    />
+                </div>
 
-                {/* "My Activity" text above the search bar */}
                 <div
                     style={{
                         position: "absolute",
-                        top: "17vh",
-                        left: "74vh",
+                        top: "18vh",
+                        left: "45vw",
                         fontSize: "3.2vh",
                         fontWeight: "bold",
                         color: "White",
@@ -80,7 +94,7 @@ const MyActivity = () => {
                     style={{
                         position: "absolute",
                         top: "24vh",
-                        left: "67vh",
+                        left: "41vw",
                         display: "flex",
                         alignItems: "center",
                     }}
@@ -107,7 +121,7 @@ const MyActivity = () => {
                                 marginLeft: "29.6vh",
                                 marginTop: "-4.82vh",
                                 bgcolor: orange[700],
-                                cursor: "pointer",
+                                cursor: "pointer", // TODO: resolve the bug
                             }}
                             onClick={() => {
                                 console.log("clicked");
@@ -121,8 +135,7 @@ const MyActivity = () => {
                 </div>
                 <Button
                     style={{
-                        marginTop: "35vh",
-                        marginLeft: "2.5vh",
+                        marginLeft: "3vh",
                         borderRadius: "4vh",
                         minWidth: "15vh",
                         color: "black",
@@ -130,13 +143,13 @@ const MyActivity = () => {
                         maxHeight: "4.2vh",
                     }}
                     variant="outlined"
+                    onClick={() => {}}
                 >
                     <SwapVert sx={{ fontSize: "3vh" }} />
                     <p style={{ marginLeft: ".3vw" }}>Sort by Date</p>
                 </Button>
                 <Button
                     style={{
-                        marginTop: "35vh",
                         marginLeft: "3vh",
                         borderRadius: "4vh",
                         minWidth: "15vh",
@@ -145,6 +158,9 @@ const MyActivity = () => {
                         maxHeight: "4vh",
                     }}
                     variant="outlined"
+                    onClick={() => {
+                        navigate("/create-activity");
+                    }}
                 >
                     <AddIcon sx={{ fontSize: "3vh" }} />
                     <p style={{ marginLeft: ".3vw" }}>Create Activity</p>
