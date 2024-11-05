@@ -71,8 +71,16 @@ const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
                     required
                 />
             </div>
-            <p>
-                Already have and account? <Link to={"/signin"}> Sign in</Link>
+            <p style={{ marginLeft: "10%" }}>
+                Already have an account?{" "}
+                {
+                    <Link
+                        to={"/signin"}
+                        style={{ textDecoration: "underline", cursor: "pointer" }}
+                    >
+                        Sign in
+                    </Link>
+                }
             </p>
         </div>
     );

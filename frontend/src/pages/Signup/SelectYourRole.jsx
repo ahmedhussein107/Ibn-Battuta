@@ -120,12 +120,10 @@ const SelectYourRoleComponent = ({ navigate }) => {
                                     setResponse("Please select your role!");
                                     return;
                                 }
-                                localStorage.setItem("selectedRole", selectedRole);
-                                navigate(
-                                    `/signup/${selectedRole
-                                        .replace(/\s+/g, "")
-                                        .toLowerCase()}`
-                                );
+
+                                navigate("/signup", {
+                                    state: { userType: selectedRole.replace(/\s+/g, "") },
+                                });
                             }}
                         />
                     </div>
@@ -136,7 +134,10 @@ const SelectYourRoleComponent = ({ navigate }) => {
                 <p style={{ marginLeft: "10%" }}>
                     Already have an account?{" "}
                     {
-                        <Link to={"/signin"} style={{ textDecoration: "underline" }}>
+                        <Link
+                            to={"/signin"}
+                            style={{ textDecoration: "underline", cursor: "pointer" }}
+                        >
                             Sign in
                         </Link>
                     }

@@ -85,7 +85,7 @@ const SignUpPage = () => {
     const handlepreviousStep = () => {
         console.log("Current step before going back:", step); // Debug line
         if (step < 2) {
-            navigate("/");
+            navigate("/select-your-role");
         } else {
             setSetp(step - 1);
         }

@@ -142,7 +142,7 @@ const NavBar = () => {
                         <Button
                             stylingMode="submit"
                             text={"Sign Up"}
-                            handleClick={() => navigate("/signup")}
+                            handleClick={() => navigate("/select-your-role")}
                             isLoading={false}
                             width="auto"
                             customStyle={{
