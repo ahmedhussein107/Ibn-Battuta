@@ -5,7 +5,6 @@ import fs from "fs";
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         let uploadPath = "uploads/";
-        console.log("i am here in multer - before type check");
 
         const ext = path.extname(file.originalname).toLowerCase();
         if (ext === ".jpg" || ext === ".jpeg" || ext === ".png" || ext === ".gif") {
