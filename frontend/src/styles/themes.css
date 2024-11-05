@@ -2,9 +2,11 @@
     --primary-color: black;
     --secondary-color: rgb(242, 220, 220);
     --background-color: #fbf7f5;
+
     --text-color: #333;
     --accent-color: #f86624;
-    --accent-color-dark: #b0460d;
+    --accent-color-dark: #c34704;
+    --accent-color-light: #f0b69b;
 
     --spacing-small: 1rem;
     --spacing-medium: 1.5rem;

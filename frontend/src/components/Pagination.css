@@ -1,0 +1,6 @@
+.pagination-div {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin-top: calc(2 * var(--spacing-large));
+}
