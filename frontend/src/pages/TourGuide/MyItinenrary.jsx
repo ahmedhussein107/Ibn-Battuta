@@ -1,6 +1,6 @@
 import React, { act, useEffect, useState } from "react";
-import i1 from "../../assets/images/i1.png";
 import i2 from "../../assets/images/i2.png";
+import i1 from "../../assets/images/iti.png";
 import TextField from "@mui/material/TextField";
 import NavBar from "../../components/NewNavBar";
 import { Router } from "react-router-dom";
@@ -14,34 +14,34 @@ import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
 import ActivityCard from "../../components/ActivityCard";
 import axiosInstance from "../../api/axiosInstance";
-const MyActivity = () => {
-    const [activity, setActivity] = useState([]);
-    useEffect(() => {
-        // Fetch data from the backend when the component mounts
-        const fetchData = async () => {
-            try {
-                const response = await axiosInstance.get(
-                    "/activity/getActivity/670405f81ddb4f53fd971cd8"
-                );
-                const data = response.data;
-                setActivity(data);
-                console.log("response sata is", data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
+const MyItinenrary = () => {
+    // const [activity, setActivity] = useState([]);
+    // useEffect(() => {
+    //     // Fetch data from the backend when the component mounts
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await axiosInstance.get(
+    //                 "/activity/getActivity/670405f81ddb4f53fd971cd8"
+    //             );
+    //             const data = response.data;
+    //             setActivity(data);
+    //             console.log("response sata is", data);
+    //         } catch (error) {
+    //             console.error("Error fetching data:", error);
+    //         }
+    //     };
 
-        fetchData();
-    }, []);
-    const activities = [
-        activity,
-        activity,
-        activity,
-        activity,
-        activity,
-        activity,
-        activity,
-    ];
+    //     fetchData();
+    // }, []);
+    // const activities = [
+    //     activity,
+    //     activity,
+    //     activity,
+    //     activity,
+    //     activity,
+    //     activity,
+    //     activity,
+    // ];
     return (
         <div>
             <div style={{ position: "fixed", left: "50vh", top: "2vh", zIndex: 1 }}>
@@ -85,7 +85,7 @@ const MyActivity = () => {
                         // this is to prevent the text from being highlighted when clicked
                     }}
                 >
-                    My Activities
+                    My Itinenrary
                 </div>
 
                 <div
@@ -100,7 +100,7 @@ const MyActivity = () => {
                     <div>
                         <input
                             type="text"
-                            placeholder="Search for activities"
+                            placeholder="Search for an Itinenrary"
                             style={{
                                 borderRadius: "4vh",
                                 minWidth: "30vh",
@@ -159,9 +159,9 @@ const MyActivity = () => {
                     variant="outlined"
                 >
                     <AddIcon sx={{ fontSize: "3vh" }} />
-                    <p style={{ marginLeft: ".3vw" }}>Create Activity</p>
+                    <p style={{ marginLeft: ".3vw" }}>Create Itinenrary</p>
                 </Button>
-                <div
+                {/* <div
                     style={{
                         display: "flex",
                         flexWrap: "wrap",
@@ -176,11 +176,11 @@ const MyActivity = () => {
                             <ActivityCard activity={activity} />
                         </div>
                     ))}
-                </div>
+                </div> */}
                 <Footer />
             </div>
         </div>
     );
 };
 
-export default MyActivity;
+export default MyItinenrary;

@@ -40,6 +40,7 @@ import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
 import Login from "./components/Login";
 import Footer from "./components/Footer";
 import MyActivity from "./pages/Advertiser/MyActivity";
+import MyItinenrary from "./pages/TourGuide/MyItinenrary";
 
 function App() {
     return (
@@ -87,6 +88,7 @@ function App() {
                 <Route path="/landmarks" element={<LandmarksPage />} />
                 <Route path="/create-landmark" element={<CreateLandmarkPage />} />
                 <Route path="/advertiser/assigned" element={<MyActivity />} />
+                <Route path="/tourguide/assigned" element={<MyItinenrary />} />
             </Routes>
             {/* <Footer /> */}
         </Router>
