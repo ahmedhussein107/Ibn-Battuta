@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import "../styles/CommonForm.css";
+import "./CommonForm.css";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 const TouristFields = ({ userData, onChange }) => {

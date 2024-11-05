@@ -51,6 +51,7 @@ import GovernorHome from "./pages/Governor/GovernorHome";
 function App() {
     return (
         <Router>
+            <NavBar />
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/signup" element={<SignUpPage />} />

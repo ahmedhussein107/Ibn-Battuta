@@ -2,10 +2,10 @@ import React, { useState, useRef } from "react";
 import "../styles/SignUpPage.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { uploadFile, uploadFiles } from "../api/firebase";
-import CommonFormStep from "../components/CommonForm";
+import CommonFormStep from "../components/SignUp/CommonForm.jsx";
 import Button from "../components/Button";
 import Page2 from "../components/SignUp/Page2";
-import TouristFields from "../components/TouristFields.jsx";
+import TouristFields from "../components/SignUp/TouristFields.jsx";
 import axiosInstance from "../api/axiosInstance.js";
 const SignUpPage = () => {
     const location = useLocation();

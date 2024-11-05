@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-import "../styles/CommonForm.css";
+import "./CommonForm.css";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import React from "react";
-import { useState } from "react";
 
 const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
     return (

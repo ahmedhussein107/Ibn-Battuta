@@ -5,8 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import "../styles/NavBar.css";
 import { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
-
+import Button from "./Button";
 import {
     guestNavbarItems,
     touristNavbarItems,
@@ -139,12 +138,21 @@ const NavBar = () => {
                         <Link to="/signin" className="auth-link">
                             Login
                         </Link>
+
                         <Button
-                            onClick={() => navigate("/signup")}
-                            className="auth-button"
-                        >
-                            Sign Up
-                        </Button>
+                            stylingMode="submit"
+                            text={"Sign Up"}
+                            handleClick={() => navigate("/signup")}
+                            isLoading={false}
+                            width="auto"
+                            customStyle={{
+                                marginLeft: "20px",
+                                width: "120",
+                                height: "55px",
+                                minHieght: "70px",
+                                borderRadius: "60px",
+                            }}
+                        />
                     </>
                 ) : (
                     <div className="notifications-profile">
