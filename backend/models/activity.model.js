@@ -11,6 +11,8 @@ const activitySchema = new Schema(
         },
         Latitude: { type: Number },
         Longitude: { type: Number },
+        title: { type: String, required: true },
+        description: { type: String, required: true },
         startDate: { type: Date, required: true },
         endDate: { type: Date, required: true },
         price: Number,
@@ -22,6 +24,7 @@ const activitySchema = new Schema(
         sumOfRatings: { type: Number, default: 0 },
         freeSpots: { type: Number, required: true },
         specialDiscount: { type: Number, default: 0 },
+        picture: String,
     },
     { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
