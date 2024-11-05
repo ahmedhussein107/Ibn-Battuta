@@ -16,6 +16,9 @@ export default function Book({ price, text, onClick, width, height }) {
 					customStyle={{
 						maxHeight: "40px",
 						borderRadius: "80px",
+						padding:'10px',
+						width: '40%',
+						minHeight: '60%',
 					}}
 					handleClick={onClick}
 				/>

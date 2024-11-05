@@ -3,9 +3,10 @@
 	flex-direction: column;
 	width: 20vw;
 	padding: 20px;
-	/* border-width: 2px; 
+	border-width: 2px;
 	border-style: solid;
-	border-color: red; */
+	border-color: #dcdfe4;
+	border-radius: 8px;
 }
 
 .book-container > span {

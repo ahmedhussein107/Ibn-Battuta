@@ -1,15 +1,13 @@
 /* Tags.css */
 
 .tags-container {
-    margin-left: 22px;
-
+	margin-left: 22px;
 }
 .tags {
 	display: flex; /* Use flexbox to arrange tags horizontally */
 	flex-wrap: wrap; /* Allow tags to wrap onto the next line */
 	gap: 8px; /* Space between tags */
 	padding: 10px; /* Optional padding around the container */
-
 
 	margin-left: 1.5%;
 }
