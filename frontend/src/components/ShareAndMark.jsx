@@ -2,7 +2,13 @@ import "../styles/ShareAndMark.css";
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-export default function ShareAndMark({ width, height, onSecondIconClick }) {
+export default function ShareAndMark({
+	width = "25%",
+	height = "100%",
+	onSecondIconClick = () => {
+		console.log("Balabizak"); // Default function for onSecondIconClick
+	},
+}) {
 	const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
 	const copyToClipboard = () => {
@@ -23,8 +29,16 @@ export default function ShareAndMark({ width, height, onSecondIconClick }) {
 	};
 
 	return (
-		<div className="icon-dropdown-container">
-			{/* First Icon with Dropdown */}
+		<div
+			className="icon-dropdown-container"
+			style={{ width: width, height: height }}
+		>
+			{/* Mark Icon */}
+			<div className="icon" onClick={onSecondIconClick}>
+				<img src="/markIcon.png" alt="Second Icon" />
+			</div>
+
+			{/* Share with Dropdown */}
 			<div className="icon">
 				<img src="/shareIcon.png" alt="Dropdown Icon" />
 
@@ -43,24 +57,11 @@ export default function ShareAndMark({ width, height, onSecondIconClick }) {
 					</div>
 				</div>
 			</div>
-
-			{/* Second Icon */}
-			<div className="icon" onClick={onSecondIconClick}>
-				<img src="/markIcon.png" alt="Second Icon" />
-			</div>
 		</div>
 	);
 }
-ShareAndMark.ptopTypes = {
+ShareAndMark.propTypes = {
 	width: PropTypes.string,
 	height: PropTypes.string,
 	onSecondIconClick: PropTypes.func.isRequired,
-};
-
-ShareAndMark.defaultProps = {
-	width: "100	%",
-	height: "100%",
-	onSecondIconClick: () => {
-		console.log("Balabizak");
-	},
 };
