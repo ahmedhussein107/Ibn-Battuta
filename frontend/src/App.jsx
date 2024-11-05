@@ -23,13 +23,11 @@ import AddNewUser from "./pages/Admin/AddNewUser";
 import UserManagement from "./pages/Admin/UserManagement";
 import ViewProductsPage from "./pages/Product/ViewProductsPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
-import UpcomingActivities from "./pages/Activity/UpcomingActivities";
+import Activities from "./pages/Activity/Activities";
 import FilterItineraries from "./pages/Itinerary/FilterItineraries";
-import Itinerary from "./pages/Itinerary/Itinerary";
 import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
-import LandmarksPage from "./pages/Landmark/LandmarksPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
-import SignUpPage from "./pages/SignUpPage";
+import SignUpPage from "./pages/Signup/SignUpPage";
 import SelectYourRole from "./pages/Signup/SelectYourRole";
 import Signin from "./pages/Signin/Signin";
 import AdminHome from "./pages/Admin/AdminHome";
@@ -37,6 +35,8 @@ import AdvertiserHome from "./pages/Advertiser/AdvertiserHome";
 import TourGuideHome from "./pages/TourGuide/TourGuideHome";
 import SellerHome from "./pages/Seller/SellerHome";
 import GovernorHome from "./pages/Governor/GovernorHome";
+import Itineraries from "./pages/Itinerary/Itineraries";
+import Landmarks from "./pages/Landmark/Landmarks";
 
 function App() {
     return (
@@ -56,6 +56,9 @@ function App() {
                 <Route path="/" element={<HomePage />} />
 
                 {/* other pages */}
+                <Route path="/activities" element={<Activities />} />
+                <Route path="/itineraries" element={<Itineraries />} />
+                <Route path="/landmarks" element={<Landmarks />} />
 
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/create-product" element={<CreateProductPage />} />
@@ -84,11 +87,10 @@ function App() {
                 <Route path="/update-activity" element={<UpdateActivityPage />} />
                 <Route path="/filter-landmarks" element={<FilterLandmarks />} />
                 <Route path="/view-products" element={<ViewProductsPage />} />
-                <Route path="/activities" element={<UpcomingActivities />} />
+
                 <Route path="/landmark/landmark/" element={<LandmarkPage />} />
                 <Route path="/create-itinerary" element={<CreateItineraryPage />} />
                 <Route path="/filter-itineraries" element={<FilterItineraries />} />
-                <Route path="/landmarks" element={<LandmarksPage />} />
                 <Route path="/create-landmark" element={<CreateLandmarkPage />} />
             </Routes>
         </Router>

@@ -3,21 +3,21 @@ import axiosInstance from "../../api/axiosInstance";
 import "react-datetime/css/react-datetime.css";
 import SideBar from "../../components/SideBar/SideBar";
 import SearchField from "../../components/SearchField/SearchField";
-import Sorter from "../../components/Sorter";
-import PriceRange from "../../components/PriceRange";
-import RatingRange from "../../components/RatingRange";
 import CheckboxList from "../../components/CheckBoxList";
 
 const minPrice = 0;
 const maxPrice = 1000;
 
-const Itineraries = () => {
-    const [itineraries, setItineraries] = useState([]);
+const Landmarks = () => {
+    const [landmarks, setLandmarks] = useState([]);
     const [tags, setTags] = useState([""]);
+    const [categories, setCategories] = useState([""]);
     const [selectedTags, setSelectedTags] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-    const [sortBy, setSortBy] = useState("priceAsc");
     const [name, setName] = useState("");
+    const [searchedTag, setSearchedTag] = useState("");
+    const [searchedCategory, setSearchedCategory] = useState("");
     const [location, setLocation] = useState("");
 
     const fetchTags = async () => {
@@ -33,32 +33,27 @@ const Itineraries = () => {
         }
     };
 
-    const sortItineraries = (itineraries) => {
-        let sortItineraries = [...itineraries]; // Create a shallow copy
-        if (sortBy === "priceAsc") {
-            sortItineraries.sort((a, b) => a.price - b.price);
-        } else if (sortBy === "priceDesc") {
-            sortItineraries.sort((a, b) => b.price - a.price);
-        } else if (sortBy === "ratingAsc") {
-            sortItineraries.sort((a, b) => a.rating - b.rating);
-        } else if (sortBy === "ratingDesc") {
-            sortItineraries.sort((a, b) => b.rating - a.rating);
+    const fetchCategories = async () => {
+        try {
+            const response = await axiosInstance.get(`/category/allCategories/`);
+            let categs = [];
+            for (let category of response.data) {
+                categs.push(category._id);
+            }
+            setCategories(categs);
+        } catch (error) {
+            console.error("Error fetching Categories:", error);
         }
-        console.log("sortedItineraries", sortItineraries);
-        setItineraries(sortItineraries);
     };
 
-    const fetchItineraries = async (query) => {
+    const fetchLandmarks = async (query) => {
         try {
             console.log("query", query);
-            const response = await axiosInstance.get(
-                `/itinerary/getUpcomingItineraries/`,
-                {
-                    params: query,
-                }
-            );
+            const response = await axiosInstance.get(`/landmark/allLandmarks/`, {
+                params: query,
+            });
             console.log("response", response.data);
-            sortItineraries(response.data);
+            setLandmarks(response.data);
         } catch (error) {
             console.error("Error fetching Activities:", error);
         }
@@ -66,30 +61,35 @@ const Itineraries = () => {
 
     useEffect(() => {
         fetchTags();
+        fetchCategories();
     }, []);
 
     useEffect(() => {
         const query = buildQuery();
-        fetchItineraries(query);
-    }, [priceRange, name, location]);
-
-    useEffect(() => {
-        sortItineraries(itineraries);
-    }, [sortBy]);
+        fetchLandmarks(query);
+    }, [searchedTag, searchedCategory, selectedTags, selectedCategories, name, location]);
 
     const buildQuery = () => {
         let query = {};
 
-        if (selectedTags && selectedTags.length > 0) {
-            query.tags = selectedTags.join("|");
+        if (searchedTag) {
+            query.tags = searchedTag;
         } else {
-            delete query.tags;
+            if (selectedTags && selectedTags.length > 0) {
+                query.tags = selectedTags.join("|");
+            } else {
+                delete query.tags;
+            }
         }
 
-        if (priceRange[0] || priceRange[1]) {
-            query.price = priceRange[0] + "-" + priceRange[1];
+        if (searchedCategory) {
+            query.category = searchedCategory;
         } else {
-            delete query.price;
+            if (selectedCategories && selectedCategories.length > 0) {
+                query.category = selectedCategories.join("|");
+            } else {
+                delete query.category;
+            }
         }
 
         if (name) {
@@ -109,39 +109,37 @@ const Itineraries = () => {
 
     const nonCollapsibleItems = [
         <SearchField
-            placeholder="Search by name"
+            placeholder="Search by Name"
             searchText={name}
             setSearchText={setName}
         />,
-    ];
-    const titles = ["Sort By", "Locations", "Price Range", "Tags"];
-    const collapsibleItems = [
-        <Sorter
-            values={["priceAsc", "priceDesc", "ratingAsc", "ratingDesc"]}
-            labels={[
-                "Price (Low to High)",
-                "Price (High to Low)",
-                "Rating (Low to High)",
-                "Rating (How to High)",
-            ]}
-            value={sortBy}
-            setValue={setSortBy}
+        <SearchField
+            placeholder="Search by Tag"
+            searchText={searchedTag}
+            setSearchText={setSearchedTag}
         />,
+        <SearchField
+            placeholder="Search by Category"
+            searchText={searchedCategory}
+            setSearchText={setSearchedCategory}
+        />,
+    ];
+    const titles = ["Locations", "Tags", "Category"];
+    const collapsibleItems = [
         <SearchField
             placeholder="Search by location"
             searchText={location}
             setSearchText={setLocation}
         />,
-        <PriceRange
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-            min={minPrice}
-            max={maxPrice}
-        />,
         <CheckboxList
             items={tags}
             checkedItems={selectedTags}
             setCheckedItems={setSelectedTags}
+        />,
+        <CheckboxList
+            items={categories}
+            checkedItems={selectedCategories}
+            setCheckedItems={setSelectedCategories}
         />,
     ];
     return (
@@ -153,4 +151,4 @@ const Itineraries = () => {
     );
 };
 
-export default Itineraries;
+export default Landmarks;
