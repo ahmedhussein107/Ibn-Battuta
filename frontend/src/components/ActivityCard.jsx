@@ -1,5 +1,4 @@
-import React, { act, useState } from "react";
-import Kayaking from "../assets/images/kayaking.png";
+import React, { useState } from "react";
 import LocationIcon from "@mui/icons-material/LocationOn";
 import CategoryIcon from "@mui/icons-material/LocalOffer";
 import TagsIcon from "@mui/icons-material/LocalOffer";
@@ -9,7 +8,7 @@ const ActivityCard = ({ activity }) => {
     const title = activity.name;
     const location = activity.location;
     const category = activity.category;
-    const tags = activity.tags.join(", ");
+    const tags = "School";
     const date = new Date(activity.startDate).toLocaleDateString();
     const description = activity.description;
     const isBookingAvailable = activity.isOpenForBooking;
@@ -18,7 +17,7 @@ const ActivityCard = ({ activity }) => {
     const discountedPrice =
         activity.price - (activity.price * activity.specialDiscount) / 100.0;
     const rating = 3;
-    const ratingCount = activity.ratings.length;
+    const ratingCount = 1203;
     const [isHovered, setIsHovered] = useState(false);
     const [isDeleteHovered, setIsDeleteHovered] = useState(false);
 
@@ -135,7 +134,7 @@ const ActivityCard = ({ activity }) => {
         editButton: {
             position: "absolute",
             top: "26vh",
-            right: "4vh",
+            right: "3.5vw",
             backgroundColor: isHovered ? "#e55a00" : "#ff6200",
             color: "white",
             padding: "0.8vh 1.6vh",
@@ -145,18 +144,18 @@ const ActivityCard = ({ activity }) => {
             fontWeight: "bold",
             transition: "background-color 0.25s",
             outline: "none",
-            width: "10vh",
+            width: "5.5vw",
         },
         deleteButton: {
             position: "absolute",
             top: "1vh",
-            right: "5vh",
+            right: "3vw",
             padding: "0.8vh 1.6vh",
             color: "red",
             fontWeight: "bold",
             cursor: "pointer",
             fontSize: "2.4vh",
-            borderRadius: "4px", // Adds rounded corners for hover background
+            borderRadius: "4vh",
             backgroundColor: isDeleteHovered ? "#ffe6e6" : "transparent", // Background on hover
             transition: "background-color 0.25s",
         },

@@ -113,7 +113,7 @@ const MyActivity = () => {
                             onChange={(e) => setSearchedTerm(e.target.value)}
                             style={{
                                 borderRadius: "4vh",
-                                minWidth: "30vh",
+                                minWidth: "18vw",
                                 minHeight: "3vh",
                                 backgroundColor: "white",
                                 outline: "none",
@@ -124,9 +124,9 @@ const MyActivity = () => {
                         <Avatar
                             sx={{
                                 position: "absolute",
-                                width: "4.8vh",
+                                width: "2.7vw",
                                 height: "4.8vh",
-                                marginLeft: "29.6vh",
+                                marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
                                 bgcolor: orange[700],
                                 cursor: "pointer", // TODO: resolve the bug
@@ -143,9 +143,9 @@ const MyActivity = () => {
                 </div>
                 <Button
                     style={{
-                        marginLeft: "3vh",
+                        marginLeft: "2vw",
                         borderRadius: "4vh",
-                        minWidth: "15vh",
+                        minWidth: "2vw",
                         color: "black",
                         borderColor: "black",
                         maxHeight: "4.2vh",
@@ -158,12 +158,12 @@ const MyActivity = () => {
                 </Button>
                 <Button
                     style={{
-                        marginLeft: "3vh",
+                        marginLeft: "2vw",
                         borderRadius: "4vh",
-                        minWidth: "15vh",
+                        minWidth: "1vw",
                         color: "black",
                         borderColor: "black",
-                        maxHeight: "4vh",
+                        maxHeight: "4.2vh",
                     }}
                     variant="outlined"
                     onClick={() => {
@@ -180,7 +180,6 @@ const MyActivity = () => {
                         gap: "4vh",
                         padding: "3vh",
                         marginTop: "-1vh",
-                        marginLeft: "0vh",
                     }}
                 >
                     {activities.map((activity, index) => (
