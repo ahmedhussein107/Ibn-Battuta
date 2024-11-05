@@ -110,3 +110,13 @@ export const replyToComment = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
+export const populateReplies = async (comment) => {
+    const populatedComment = await Comment.populate(comment, { path: "replies" });
+
+    for (let i = 0; i < populatedComment.replies.length; i++) {
+        populatedComment.replies[i] = await populateReplies(populatedComment.replies[i]);
+    }
+
+    return populatedComment;
+};

@@ -1,5 +1,5 @@
 import Complaint from "../models/complaint.model.js";
-
+import { populateReplies } from "./comment.controller.js";
 export const createComplaint = async (req, res) => {
     req.body.touristID = req.user._id;
     const newComplaint = new Complaint(req.body);
@@ -114,6 +114,22 @@ export const getSomeComplaints = async (req, res) => {
             currentPage: page,
         });
     } catch (error) {
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+export const getComplaintAlongWithReplies = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const complaint = await Complaint.findById(id).populate({
+            path: "reply",
+        });
+        if (complaint.reply) {
+            populateReplies(complaint.reply);
+        }
+        res.json(complaint);
+    } catch (error) {
+        console.error("Failed to fetch complaints:", error);
         res.status(500).json({ message: "Server Error" });
     }
 };

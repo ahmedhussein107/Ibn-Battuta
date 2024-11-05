@@ -7,6 +7,7 @@ import {
     deleteComplaintById,
     getTouristComplaints,
     getSomeComplaints,
+    getComplaintAlongWithReplies,
 } from "../controllers/complaint.controller.js";
 
 const complaintRouter = express.Router();
@@ -16,6 +17,7 @@ complaintRouter.post("/createComplaint", createComplaint);
 complaintRouter.get("/getComplaints", getAllComplaints);
 
 complaintRouter.get("/getComplaint/:id", getComplaintById);
+complaintRouter.get("/getComplaintAlongWithReplies/:id", getComplaintAlongWithReplies);
 
 complaintRouter.put("/updateComplaint/:id", updateComplaintById);
 

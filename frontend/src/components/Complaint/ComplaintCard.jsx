@@ -32,7 +32,9 @@ const ComplaintCard = ({ complaint }) => {
         <div className="complaint-card">
             {/* Complaint Title and Status */}
             <div className="complaint-header">
-                <span className="complaint-title">{title}</span>
+                <span className="complaint-title">
+                    {title.length > 16 ? `${title.slice(0, 16)}...` : title}
+                </span>
                 <div className="status-and-date">
                     <span className={`complaint-status ${status}`}>
                         {status.toUpperCase()}
