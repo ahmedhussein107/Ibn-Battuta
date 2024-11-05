@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { act, useState } from "react";
+import Kayaking from "../assets/images/kayaking.png";
 import LocationIcon from "@mui/icons-material/LocationOn";
 import CategoryIcon from "@mui/icons-material/LocalOffer";
 import TagsIcon from "@mui/icons-material/LocalOffer";
 import DateIcon from "@mui/icons-material/Today";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-const ActivityCard = ({ activity }) => {
+const ActivityCard = ({ activity, handleDelete }) => {
     const title = activity.name;
     const location = activity.location;
     const category = activity.category;
-    const tags = "School";
+    const tags = activity.tags.join(", ");
     const date = new Date(activity.startDate).toLocaleDateString();
     const description = activity.description;
     const isBookingAvailable = activity.isOpenForBooking;
@@ -17,7 +18,7 @@ const ActivityCard = ({ activity }) => {
     const discountedPrice =
         activity.price - (activity.price * activity.specialDiscount) / 100.0;
     const rating = 3;
-    const ratingCount = 1203;
+    const ratingCount = activity.ratings.length;
     const [isHovered, setIsHovered] = useState(false);
     const [isDeleteHovered, setIsDeleteHovered] = useState(false);
 
@@ -134,7 +135,7 @@ const ActivityCard = ({ activity }) => {
         editButton: {
             position: "absolute",
             top: "26vh",
-            right: "3.5vw",
+            right: "4vh",
             backgroundColor: isHovered ? "#e55a00" : "#ff6200",
             color: "white",
             padding: "0.8vh 1.6vh",
@@ -144,18 +145,18 @@ const ActivityCard = ({ activity }) => {
             fontWeight: "bold",
             transition: "background-color 0.25s",
             outline: "none",
-            width: "5.5vw",
+            width: "10vh",
         },
         deleteButton: {
             position: "absolute",
             top: "1vh",
-            right: "3vw",
+            right: "5vh",
             padding: "0.8vh 1.6vh",
             color: "red",
             fontWeight: "bold",
             cursor: "pointer",
             fontSize: "2.4vh",
-            borderRadius: "4vh",
+            borderRadius: "4px", // Adds rounded corners for hover background
             backgroundColor: isDeleteHovered ? "#ffe6e6" : "transparent", // Background on hover
             transition: "background-color 0.25s",
         },
@@ -172,6 +173,7 @@ const ActivityCard = ({ activity }) => {
                         style={styles.deleteButton}
                         onMouseEnter={() => setIsDeleteHovered(true)}
                         onMouseLeave={() => setIsDeleteHovered(false)}
+                        onClick={handleDelete}
                     />
                 </div>
 
