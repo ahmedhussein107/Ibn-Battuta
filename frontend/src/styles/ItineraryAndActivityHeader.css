@@ -1,0 +1,57 @@
+.itinerary-and-activity-header-container {
+	display: flex;
+	align-items: center; /* Optional: aligns items vertically */
+
+	border-style: solid;
+	border-width: 2px;
+	border-color: blue;
+}
+
+.icon-dropdown-container:last-child {
+	margin-right: 2%;
+	margin-left: auto; /* Pushes the last item to the right */
+	border-color: blue;
+}
+
+.activity-title h1 {
+	margin-left: 5px;
+	padding-left: 15px;
+	text-align: left;
+	/* border-style: solid;
+	border-width: 2px;
+	border-color: blue; */
+	font-family: Arial, sans-serif;
+	min-width: 30vw;
+	margin-bottom: 10px;
+}
+
+.activity-title {
+}
+.booking-state {
+	display: flex;
+	align-items: center;
+}
+.booking-state {
+	min-width: 10vw;
+	margin-right: 4vh;
+}
+
+.category {
+	margin-left: 4vw;
+}
+.booking-state img {
+	display: inline;
+	flex: none;
+	margin-right: 8px;
+
+}
+
+
+
+.activity-info-container {
+	display: flex;
+	font-size: 20px;
+	padding-bottom: 20px;
+	font-family: "Helvetica Neue", "Arial", sans-serif;
+}
+
