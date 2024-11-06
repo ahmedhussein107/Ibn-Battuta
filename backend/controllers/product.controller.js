@@ -53,7 +53,17 @@ export const getProduct = async (req, res) => {
         res.status(400).json({ e: e.message });
     }
 };
-
+// find product by sellerID
+export const getProductBySellerID = async (req, res) => {
+    const query = buildFilter(req.query);
+    const _id = req.params.id;
+    try {
+        const products = await Product.find({ ownerID: _id, ...query });
+        res.status(200).json(products);
+    } catch (e) {
+        res.status(400).json({ e: e.message });
+    }
+};
 export const deleteProduct = async (req, res) => {
     const { id } = req.params;
     try {
