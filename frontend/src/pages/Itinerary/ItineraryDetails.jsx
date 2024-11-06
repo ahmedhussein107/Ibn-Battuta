@@ -1,79 +1,93 @@
-import ReviewsSection from "./ReviewsSection";
-import React, { useState, useEffect } from "react";
-import axiosInstance from "../../api/axiosInstance";
+    import ReviewsSection from "./ReviewsSection";
+    import React, { useState, useEffect } from "react";
+    import axiosInstance from "../../api/axiosInstance";
+    import ProfileAndDescription from "./ProfileAndDescription.jsx";
+    import CyclicPhotoDisplay from "./CyclicPhotoDisplay.jsx";
 
-const ItineraryDetails = () => {
-    const reviews = [
-        {
-            reviewer: "Roba Hesham",
-            rating: 5,
-            comment: "Great experience!",
-            createdAt: "2024-11-02T08:57:38.000Z",
-        },
-        {
-            reviewer: "Ahmed Hussein",
-            rating: 3,
-            comment: "Not bad",
-            createdAt: "2024-11-02T08:57:38.000Z",
-        },
-        {
-            reviewer: "Arwa hatem",
-            rating: 3,
-            comment: "Could be better",
-            createdAt: "2024-11-02T08:57:38.000Z",
-        },
-        {
-            reviewer: "Hana Elmalah",
-            rating: 5,
-            comment: "Wow!",
-            createdAt: "2024-11-02T08:57:38.000Z",
-        },
-        {
-            reviewer: "Ahmed kamal",
-            rating: 3,
-            comment: "Codeforces is much better",
-            createdAt: "2024-11-02T08:57:38.000Z",
-        },
-        {
-            reviewer: "Ahmed Yasser",
-            rating: 4,
-            comment: "Okay expersience",
-            createdAt: "2024-11-02T08:57:38.000Z",
-        },
-        {
-            reviewer: "Ahmed El-Gohary",
-            rating: 1,
-            comment: "I hope you like this component",
-            createdAt: "2024-11-02T08:57:38.000Z",
-        },
-        {
-            reviewer: "Rahaf Alfarrash",
-            rating: 5,
-            comment: "Great experience!",
-            createdAt: "2024-11-02T08:57:38.000Z",
-        },
-        {
-            reviewer: "Rofaeil Samuel",
-            rating: 5,
-            comment: "Gamed ya Gohary",
-            createdAt: "2024-11-02T08:57:38.000Z",
-        },
-        {
-            reviewer: "Abdelrahim Abdelazim",
-            rating: 2,
-            comment: "My component is better",
-            createdAt: "2024-11-02T08:57:38.000Z",
-        },
-    ];
 
-    return (
-        <div>
+    const ItineraryDetails = () => {
+        const reviews = [
+            {
+                reviewer: "Roba Hesham",
+                rating: 5,
+                comment: "Great experience!",
+                createdAt: "2024-11-02T08:57:38.000Z",
+            },
+            {
+                reviewer: "Ahmed Hussein",
+                rating: 3,
+                comment: "Not bad",
+                createdAt: "2024-11-02T08:57:38.000Z",
+            },
+            {
+                reviewer: "Arwa Khattab",
+                rating: 3,
+                comment: "Could be better",
+                createdAt: "2024-11-02T08:57:38.000Z",
+            },
+            {
+                reviewer: "Hana Elmalah",
+                rating: 5,
+                comment: "Wow!",
+                createdAt: "2024-11-02T08:57:38.000Z",
+            },
+            {
+                reviewer: "Ahmed kamal",
+                rating: 3,
+                comment: "Codeforces is much better",
+                createdAt: "2024-11-02T08:57:38.000Z",
+            },
+            {
+                reviewer: "Ahmed Yasser",
+                rating: 4,
+                comment: "Okay experience",
+                createdAt: "2024-11-02T08:57:38.000Z",
+            },
+            {
+                reviewer: "Ahmed El-Gohary",
+                rating: 1,
+                comment: "I hope you like this component",
+                createdAt: "2024-11-02T08:57:38.000Z",
+            },
+            {
+                reviewer: "Rahaf Alfarrash",
+                rating: 5,
+                comment: "Great experience!",
+                createdAt: "2024-11-02T08:57:38.000Z",
+            },
+            {
+                reviewer: "Rofaeil Samuel",
+                rating: 5,
+                comment: "Gamed ya Gohary",
+                createdAt: "2024-11-02T08:57:38.000Z",
+            },
+            {
+                reviewer: "Abdelrahim Abdelazim",
+                rating: 2,
+                comment: "My component is better",
+                createdAt: "2024-11-02T08:57:38.000Z",
+            },
+        ];
+
+        const description = "This itinerary offers a mix of cultural exploration, outdoor adventures, and relaxation, allowing you to experience the destination's highlights. With guided tours, free time, and scenic excursions, it's designed to provide both excitement and leisure.";
+
+        const photoList = [
+            'https://images.unsplash.com/photo-1691147318681-e4f092efc350?q=80&w=3348&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            'https://images.unsplash.com/photo-1663616132535-e1e14b514c0f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzJ8fGJlYXV0aWZ1bCUyMHBsYWNlc3xlbnwwfHwwfHx8MA%3D%3D',
+            'https://plus.unsplash.com/premium_photo-1676049111274-3ec809c03516?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjF8fGJlYXV0aWZ1bCUyMHBsYWNlc3xlbnwwfHwwfHx8MA%3D%3D',
+            'https://plus.unsplash.com/premium_photo-1671358446946-8bd43ba08a6a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGJlYXV0aWZ1bCUyMHBsYWNlc3xlbnwwfHwwfHx8MA%3D%3D',
+            'https://images.unsplash.com/photo-1616034887086-61dcbbcc787e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTcyfHxiZWF1dGlmdWwlMjBwbGFjZXN8ZW58MHx8MHx8fDA%3D'
+        ];
+
+        return (
             <div>
-                {/* <ReviewsSection reviews={reviews} width={"30%"} height={"50%"} fontSize={"10px"}/> */}
-
+                <div>
+                    <CyclicPhotoDisplay photos={photoList} width="50%" height="40vh"/>
+                    <ProfileAndDescription name={"Kevin Banana"} description={description} width={"38.2%"} height={"80%"} fontSize={"14px"}></ProfileAndDescription>
+                    <ReviewsSection reviews={reviews} width={"40%"} height={"50%"} fontSize={"12px"}/>
+                </div>
             </div>
-        </div>
-    );
-};
+        );
+    };
 
-export default ItineraryDetails;
+    export default ItineraryDetails;
