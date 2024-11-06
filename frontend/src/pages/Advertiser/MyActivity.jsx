@@ -37,8 +37,7 @@ const MyActivity = () => {
     };
 
     const fetchData = async (query) => {
-        const advertiserID = Cookies.get("userId").replaceAll('"', "").substring(2);
-        console.log("advertiserID", advertiserID);
+        const advertiserID = Cookies.get("userId");
         try {
             const response = await axiosInstance.get(
                 `/activity/getAdvertiserActivities/${advertiserID}`,
