@@ -10,7 +10,7 @@ const HomePage = () => (
             justifyContent: "center",
         }}
     >
-        <div style={{ position: "fixed", top: 0, left: "20%" }}>
+        <div style={{ position: "fixed", top: 0, left: "9%" }}>
             <NavBar />
         </div>
         <h1>Home Page</h1>

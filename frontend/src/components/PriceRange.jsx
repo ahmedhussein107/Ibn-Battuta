@@ -13,7 +13,7 @@ const PriceRange = ({ priceRange, setPriceRange, min, max }) => {
     };
 
     return (
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "90%", marginLeft: "5%" }}>
             <Slider
                 value={priceRange}
                 onChange={handleChange}

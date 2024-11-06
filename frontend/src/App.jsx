@@ -23,7 +23,6 @@ import AddNewUser from "./pages/Admin/AddNewUser";
 import UserManagement from "./pages/Admin/UserManagement";
 import ViewProductsPage from "./pages/Product/ViewProductsPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
-import Activities from "./pages/Activity/Activities";
 import FilterItineraries from "./pages/Itinerary/FilterItineraries";
 import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
@@ -37,13 +36,12 @@ import AdvertiserHome from "./pages/Advertiser/AdvertiserHome";
 import TourGuideHome from "./pages/TourGuide/TourGuideHome";
 import SellerHome from "./pages/Seller/SellerHome";
 import GovernorHome from "./pages/Governor/GovernorHome";
+import Activities from "./pages/Activity/Activities";
 import Itineraries from "./pages/Itinerary/Itineraries";
 import Landmarks from "./pages/Landmark/Landmarks";
+import Inventory from "./pages/Seller/Inventory";
 
 function App() {
-	function handelClick(){
-		console.log("Button clicked");
-	}
     return (
         <Router>
             <Routes>
@@ -56,6 +54,7 @@ function App() {
                 <Route path="/advertiser" element={<AdvertiserHome />} />
                 <Route path="/tourguide" element={<TourGuideHome />} />
                 <Route path="/seller" element={<SellerHome />} />
+
                 <Route path="/governor" element={<GovernorHome />} />
                 {/* Home page for Tourist and Guest */}
                 <Route path="/" element={<HomePage />} />
@@ -90,6 +89,8 @@ function App() {
                 <Route path="/activity" element={<AdvertiserActivities />} />
                 <Route path="/advertiser/assigned" element={<MyActivity />} />
                 <Route path="/tourguide/assigned" element={<MyItinenrary />} />
+                <Route path="/seller/inventory" element={<Inventory />} />
+
                 <Route path="/create-activity" element={<CreateActivityPage />} />
                 <Route path="/update-activity" element={<UpdateActivityPage />} />
                 <Route path="/filter-landmarks" element={<FilterLandmarks />} />

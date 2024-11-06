@@ -8,6 +8,7 @@ import {
     searchProducts,
     archeiveProduct,
     unarcheiveProduct,
+    getProductBySellerID,
 } from "../controllers/product.controller.js";
 const productRouter = express.Router();
 
@@ -31,5 +32,7 @@ productRouter.get("/search", searchProducts);
 productRouter.patch("/archiveProduct/:id", archeiveProduct);
 
 productRouter.patch("/unarchiveProduct/:id", unarcheiveProduct);
+
+productRouter.get("/getProductBySellerID/:id", getProductBySellerID);
 
 export default productRouter;

@@ -16,21 +16,11 @@ const SearchField = ({ placeholder, searchText, setSearchText }) => {
             onChange={(e) => setSearchText(e.target.value)}
             placeholder={placeholder}
             variant="outlined"
-            sx={{
-                "& .MuiInputBase-input": {
-                    padding: "1vw 5vh",
-                    backgroundColor: "white",
-                    borderRadius: "5vh",
-                    height: "3vh",
-                    width: "9vw",
-                    margin: "1vh 0",
-                },
-            }}
             InputProps={{
                 startAdornment: (
                     <InputAdornment position="start">
                         <div style={{ cursor: "pointer" }}>
-                            <SearchIcon sx={{ fontSize: "5vh", marginTop: "1vh" }} />
+                            <SearchIcon sx={{ fontSize: "4vh", marginTop: "1vh" }} />
                         </div>
                     </InputAdornment>
                 ),
