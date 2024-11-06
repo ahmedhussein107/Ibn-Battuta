@@ -171,7 +171,7 @@ const MyItinenrary = () => {
                 </div>
                 <Button
                     style={{
-                        marginTop: "35vh",
+                        marginTop: "5vh",
                         marginLeft: "2.5vh",
                         borderRadius: "4vh",
                         minWidth: "15vh",
@@ -189,7 +189,7 @@ const MyItinenrary = () => {
                 </Button>
                 <Button
                     style={{
-                        marginTop: "35vh",
+                        marginTop: "5vh",
                         marginLeft: "3vh",
                         borderRadius: "4vh",
                         minWidth: "15vh",
