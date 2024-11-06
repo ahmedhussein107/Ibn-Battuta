@@ -36,10 +36,13 @@ import AdvertiserHome from "./pages/Advertiser/AdvertiserHome";
 import TourGuideHome from "./pages/TourGuide/TourGuideHome";
 import SellerHome from "./pages/Seller/SellerHome";
 import GovernorHome from "./pages/Governor/GovernorHome";
+
 import Activities from "./pages/Activity/Activities";
 import Itineraries from "./pages/Itinerary/Itineraries";
 import Landmarks from "./pages/Landmark/Landmarks";
 import Inventory from "./pages/Seller/Inventory";
+import ViewTags from "./pages/Admin/ViewTags";
+import ViewCategories from "./pages/Admin/ViewCategories";
 
 function App() {
     return (
@@ -100,6 +103,9 @@ function App() {
                 <Route path="/create-itinerary" element={<CreateItineraryPage />} />
                 <Route path="/filter-itineraries" element={<FilterItineraries />} />
                 <Route path="/create-landmark" element={<CreateLandmarkPage />} />
+                  
+                <Route path="/admin/view-tags" element={<ViewTags />} />
+				        <Route path="/admin/view-categories" element={<ViewCategories />} />
             </Routes>
         </Router>
     );
