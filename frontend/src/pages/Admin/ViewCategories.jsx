@@ -77,11 +77,11 @@ const styles = {
 	},
 };
 
-const ViewTags = () => {
-	const [tags, setTags] = useState([]);
+const ViewCategories = () => {
+	const [Categories, setCategories] = useState([]);
 	const [open, setOpen] = useState(false);
 
-	const [newTag, setNewTag] = useState("");
+	const [newCategory, setNewCategory] = useState("");
 
 	const handleOpen = () => {
 		setOpen(true);
@@ -89,76 +89,80 @@ const ViewTags = () => {
 
 	const handleClose = () => {
 		setOpen(false);
-		setNewTag("");
+		setNewCategory("");
 	};
 
-	const handleAddTag = () => {
+	const handleAddCategory = () => {
 		axiosInstance
-			.post("/tag/createTag", { _id: newTag })
+			.post("/category/createCategory", { _id: newCategory })
 			.then((res) => {
-				console.log("Tag created: ", res.data);
-				setTags([...tags, res.data]);
+				console.log("Category created: ", res.data);
+				setCategories([...Categories, res.data]);
 			})
 			.catch((error) => {
-				console.error("Error creating tag: ", error);
+				console.error("Error creating category: ", error);
 			});
 		setOpen(false);
-		setNewTag("");
+		setNewCategory("");
 	};
 
 	useEffect(() => {
 		axiosInstance
-			.get("/tag/allTags")
+			.get("/category/allCategories")
 			.then((res) => {
-				setTags(res.data);
+				setCategories(res.data);
 			})
 			.catch((error) => {
-				console.error("Error fetching tags: ", error);
+				console.error("Error fetching Categories: ", error);
 			});
 	}, []);
 
-	const handleDelete = (tagId) => {
+	const handleDelete = (categoryId) => {
 		axiosInstance
-			.delete(`/tag/deleteTag/${tagId}`)
+			.delete(`/category/deleteCategoty/${categoryId}`)
 			.then((res) => {
-				console.log("Tag deleted: ", res.data);
-				setTags(tags.filter((tag) => tag._id !== tagId));
+				console.log("Category deleted: ", res.data);
+				setCategories(
+					Categories.filter((category) => category._id !== categoryId)
+				);
 			})
 			.catch((error) => {
-				console.error("Error deleting tag: ", error);
+				console.error("Error deleting category: ", error);
 			});
 	};
 
-	const handleUpdate = (tagId) => {
+	const handleUpdate = (categoryId) => {
 		axiosInstance
-			.put(`/tag/updateTag/${tagId}`)
+			.put(`/category/updateCategory/${categoryId}`)
 			.then((res) => {
-				console.log("Tag updated: ", res.data);
-				setTags(tags.filter((tag) => tag._id !== tagId));
+				console.log("Category updated: ", res.data);
+				setCategories(
+					Categories.filter((category) => category._id !== categoryId)
+				);
 			})
 			.catch((error) => {
-				console.error("Error updating tag: ", error);
+				console.error("Error updating category: ", error);
 			});
 	};
 
 	return (
 		<div style={styles.container}>
-			{/* Search and New Tag Button Section */}
+			{/* Search and New Category Button Section */}
 			<Box sx={styles.searchBox}>
 				{/* Search Bar */}
 				<SearchBar />
-				{/* New Tag Button */}
+				{/* New Category Button */}
 				<Button
 					sx={styles.dialogButton}
 					onClick={handleOpen}
 					variant="outlined"
 					startIcon={<AddIcon />}
 				>
-					New Tag
+					New Category
 				</Button>
 			</Box>
 
-			{/* Tags Grid Section */}
+			{/* Categories Grid Section */}
 			<Paper
 				elevation={3}
 				sx={{
@@ -176,10 +180,10 @@ const ViewTags = () => {
 						gap: 1.5,
 					}}
 				>
-					{tags.map((tag) => (
+					{Categories.map((category) => (
 						<Chip
-							key={tag._id}
-							label={tag._id}
+							key={category._id}
+							label={category._id}
 							sx={styles.chip}
 							deleteIcon={
 								<Box sx={{ display: "flex", gap: 0.5, mr: 1 }}>
@@ -199,7 +203,7 @@ const ViewTags = () => {
 											color: "#666666",
 											":hover": { color: "#333333" },
 										}}
-										onClick={() => handleDelete(tag._id)}
+										onClick={() => handleDelete(category._id)}
 									/>
 								</Box>
 							}
@@ -250,7 +254,7 @@ const ViewTags = () => {
 					>
 						<CloseIcon />
 					</IconButton>
-					Add Tag
+					Add Category
 				</DialogTitle>
 				<DialogContent
 					sx={{
@@ -265,9 +269,9 @@ const ViewTags = () => {
 					<TextField
 						autoFocus
 						variant="outlined"
-						label="Tag"
-						value={newTag}
-						onChange={(e) => setNewTag(e.target.value)}
+						label="Category"
+						value={newCategory}
+						onChange={(e) => setNewCategory(e.target.value)}
 						sx={{
 							"& .MuiOutlinedInput-root": {
 								borderRadius: "20px",
@@ -286,7 +290,7 @@ const ViewTags = () => {
 					}}
 				>
 					<Button
-						onClick={handleAddTag}
+						onClick={handleAddCategory}
 						variant="contained"
 						sx={{
 							borderRadius: "20px",
@@ -306,4 +310,4 @@ const ViewTags = () => {
 	);
 };
 
-export default ViewTags;
+export default ViewCategories;

@@ -48,6 +48,7 @@ import TourGuideHome from "./pages/TourGuide/TourGuideHome";
 import SellerHome from "./pages/Seller/SellerHome";
 import GovernorHome from "./pages/Governor/GovernorHome";
 import ViewTags from "./pages/Admin/ViewTags";
+import ViewCategories from "./pages/Admin/ViewCategories";
 
 function App() {
 	return (
@@ -95,6 +96,7 @@ function App() {
 				<Route path="/landmarks" element={<LandmarksPage />} />
 				<Route path="/create-landmark" element={<CreateLandmarkPage />} />
 				<Route path="/admin/view-tags" element={<ViewTags />} />
+				<Route path="/admin/view-categories" element={<ViewCategories />} />
 			</Routes>
 		</Router>
 	);
