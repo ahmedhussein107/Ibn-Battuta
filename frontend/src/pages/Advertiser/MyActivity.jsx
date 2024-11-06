@@ -18,6 +18,23 @@ const MyActivity = () => {
 
     const [activities, setActivities] = useState([]);
     const [searchedTerm, setSearchedTerm] = useState("");
+    const [sortBy, setSortBy] = useState("Newest");
+
+    const sortActivities = (activities) => {
+        console.log("Sort By", sortBy);
+        let sortedActivities = [...activities]; // Create a shallow copy
+        if (sortBy === "Newest") {
+            sortedActivities.sort(
+                (a, b) => new Date(b.startDate) - new Date(a.startDate)
+            );
+        } else if (sortBy === "Oldest") {
+            sortedActivities.sort(
+                (a, b) => new Date(a.startDate) - new Date(b.startDate)
+            );
+        }
+        console.log("sortedActivities", sortedActivities);
+        setActivities(sortedActivities);
+    };
 
     const fetchData = async (query) => {
         const advertiserID = Cookies.get("userId").replaceAll('"', "").substring(2);
@@ -30,16 +47,31 @@ const MyActivity = () => {
                 }
             );
             const data = response.data;
-            setActivities(data);
+            sortActivities(data);
             console.log("response sata is", data);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     };
 
+    const buildQuery = () => {
+        const query = {};
+
+        if (searchedTerm) {
+            query.name = "~" + searchedTerm;
+        }
+
+        return query;
+    };
+
     useEffect(() => {
-        fetchData();
+        const query = buildQuery();
+        fetchData(query);
     }, [searchedTerm]);
+
+    useEffect(() => {
+        sortActivities(activities);
+    }, [sortBy]);
 
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>
@@ -129,10 +161,6 @@ const MyActivity = () => {
                                 marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
                                 bgcolor: orange[700],
-                                cursor: "pointer", // TODO: resolve the bug
-                            }}
-                            onClick={() => {
-                                console.log("clicked");
                             }}
                         >
                             <SearchIcon />
@@ -151,7 +179,9 @@ const MyActivity = () => {
                         maxHeight: "4.2vh",
                     }}
                     variant="outlined"
-                    onClick={() => {}}
+                    onClick={() => {
+                        setSortBy((prev) => (prev === "Newest" ? "Oldest" : "Newest"));
+                    }}
                 >
                     <SwapVert sx={{ fontSize: "3vh" }} />
                     <p style={{ marginLeft: ".3vw" }}>Sort by Date</p>
@@ -184,7 +214,15 @@ const MyActivity = () => {
                 >
                     {activities.map((activity, index) => (
                         <div key={index} style={{ flex: "1 2 calc(50% - 2vh)" }}>
-                            <ActivityCard activity={activity} />
+                            <ActivityCard
+                                activity={activity}
+                                handleDelete={async () => {
+                                    await axiosInstance.delete(
+                                        `/activity/deleteActivity/${activity._id}`
+                                    );
+                                    window.location.reload();
+                                }}
+                            />
                         </div>
                     ))}
                 </div>
