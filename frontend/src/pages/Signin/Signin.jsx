@@ -181,7 +181,7 @@ const Signin = () => {
                     backgroundRepeat: "no-repeat",
                 }}
             >
-                <Welcome style={{ marginTop: "40vh" }} title={"Welcome Back"} />;
+                <Welcome title={"Welcome Back"} />;
             </div>
             <div style={{ width: "45vw", height: "100vh" }}>
                 <SigninComponent />
