@@ -200,7 +200,7 @@ const ItineraryDetails = () => {
 	// ];
 
 	const tags = itinerary.tags;
-
+	
 	const bookDate = { text: "Likely to be sell out", price: "$" + itinerary.price };
 
 	const [tourGuide, setTourGuide] = useState(null);
