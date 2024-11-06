@@ -7,9 +7,10 @@ const CreateProductPage = () => {
         title: '',
         description: '',
         price: '',
-        stock: 2,
+        stock: 1,
         archived: false,
     });
+    const [imagePreviews, setImagePreviews] = useState([]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -23,9 +24,33 @@ const CreateProductPage = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
+
+        try {
+            const files = imagePreviews.map(preview => preview.file);
+
+            const uploadedFileUrls = await uploadFiles(files, 'products');
+
+            const finalFormData = {
+                ...formData,
+                imageUrls: uploadedFileUrls
+            };
+
+            console.log('Form submitted:', finalFormData);
+        } catch (error) {
+            console.error('Error uploading files:', error);
+        }
+    };
+
+    const handleImageAdd = (newImages) => {
+        console.log("adding new images");
+        setImagePreviews(prev => [...prev, ...newImages]);
+    };
+
+    const handleImageRemove = (idToRemove) => {
+        console.log("removing image");
+        setImagePreviews(prev => prev.filter(image => image.id !== idToRemove));
     };
 
     return (
@@ -84,7 +109,12 @@ const CreateProductPage = () => {
                     </div>
 
                     <div>
-                        <PhotosUpload label="Product Photos" />
+                        <PhotosUpload
+                            label="Product Photos"
+                            imagePreviews={imagePreviews}
+                            onImageAdd={handleImageAdd}
+                            onImageRemove={handleImageRemove}
+                        />
 
                         <FormSection>
                             <FlexGroup>

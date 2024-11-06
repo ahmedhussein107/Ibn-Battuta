@@ -1,32 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-const PhotosUpload = ({ label }) => {
-    const [imagePreviews, setImagePreviews] = useState([]);
-
+const PhotosUpload = ({ label, imagePreviews, onImageAdd, onImageRemove }) => {
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
 
-        files.forEach(file => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreviews(prev => [...prev, {
-                    id: Date.now() + Math.random(),
-                    url: reader.result,
-                    file: file
-                }]);
-            };
-            reader.readAsDataURL(file);
-        });
+        const newImages = [];
+        const processFile = (file) => {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    resolve({
+                        id: Date.now() + Math.random(),
+                        url: reader.result,
+                        file: file
+                    });
+                };
+                reader.readAsDataURL(file);
+            });
+        };
+
+
+
+        Promise.all(files.map(processFile))
+            .then(processedImages => {
+                onImageAdd(processedImages);
+            });
 
         e.target.value = '';
     };
 
-    const handleRemoveImage = (idToRemove) => {
-        setImagePreviews(prev => prev.filter(image => image.id !== idToRemove));
-    };
-
-    // Calculate grid columns based on number of images
     const getGridColumns = (count) => {
         if (count <= 1) return 1;
         if (count <= 2) return 2;
@@ -44,7 +47,7 @@ const PhotosUpload = ({ label }) => {
                         {imagePreviews.map((image) => (
                             <PreviewContainer key={image.id}>
                                 <RemoveButton
-                                    onClick={() => handleRemoveImage(image.id)}
+                                    onClick={() => onImageRemove(image.id)}
                                     aria-label="Remove image"
                                 >
                                     ×
