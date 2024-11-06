@@ -215,7 +215,7 @@ const Activities = () => {
         />,
     ];
     return (
-        <div style={{ width: "100vw" }}>
+        <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
             <div
                 style={{
                     width: "100vw",
@@ -249,7 +249,6 @@ const Activities = () => {
                         top: "14vh",
                         left: "8vw",
                         fontSize: "8vh",
-                        // fontWeight: "bold",
                         color: "white",
                         pointerEvents: "none",
                         fontFamily: "serif", // Try "" or "serif" for other options
