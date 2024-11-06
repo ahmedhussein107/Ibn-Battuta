@@ -5,7 +5,6 @@ import SideBar from "../../components/SideBar/SideBar";
 import SearchField from "../../components/SearchField/SearchField";
 import Sorter from "../../components/Sorter";
 import PriceRange from "../../components/PriceRange";
-import RatingRange from "../../components/RatingRange";
 import CheckboxList from "../../components/CheckBoxList";
 
 const minPrice = 0;

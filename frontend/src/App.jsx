@@ -38,10 +38,6 @@ import SellerHome from "./pages/Seller/SellerHome";
 import GovernorHome from "./pages/Governor/GovernorHome";
 import ComplaintList from "./components/Complaint/ComplaintList";
 import ViewSingleComplaint from "./components/Complaint/ViewSingleComplaint";
-import Itineraries from "./pages/Itinerary/Itineraries";
-import Landmarks from "./pages/Landmark/Landmarks";
-import { Nav } from "react-bootstrap";
-import NavBar from "./components/NavBar";
 import Activities from "./pages/Activity/Activities";
 import Itineraries from "./pages/Itinerary/Itineraries";
 import Landmarks from "./pages/Landmark/Landmarks";
@@ -52,7 +48,6 @@ import ViewCategories from "./pages/Admin/ViewCategories";
 function App() {
     return (
         <Router>
-            <NavBar />
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/complaints" element={<ComplaintList />} />
