@@ -91,7 +91,7 @@ export const createAdmin = async (req, res) => {
         req.body.password = hashedPassword;
 
         const newAdmin = await Admin.create(req.body);
-        assignCookies(res, "Advertiser", newAdmin._id)
+        assignCookies(res, "Admin", newAdmin._id)
             .status(201)
             .json({ message: "Sign up successful" });
         console.log("Admin created successfully");

@@ -1,7 +1,10 @@
 import Complaint from "../models/complaint.model.js";
+import Comment from "../models/comment.model.js";
 import { populateReplies } from "./comment.controller.js";
 export const createComplaint = async (req, res) => {
-    req.body.touristID = req.user.userId;
+    if (!req.body.touristID) {
+        req.body.touristID = req.user?.userId;
+    }
     const newComplaint = new Complaint(req.body);
     try {
         await newComplaint.save();
@@ -47,7 +50,7 @@ export const updateComplaintById = async (req, res) => {
     try {
         const complaint = await Complaint.findByIdAndUpdate(id, updates, {
             new: true,
-        });
+        }).populate("touristID", "name picture");
         if (complaint) {
             res.status(200).json(complaint);
         } else {
@@ -121,16 +124,17 @@ export const getComplaintAlongWithReplies = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const complaint = await Complaint.findById(id)
-            .populate("touristID", "name picture")
-            .populate({
-                path: "reply",
-            });
+        const complaint = await Complaint.findById(id).populate(
+            "touristID",
+            "name picture"
+        );
         if (complaint.reply) {
-            populateReplies(complaint.reply);
-        }
-        console.log(complaint);
-        res.json(complaint);
+            let comment = await Comment.findById(complaint.reply);
+            comment = await populateReplies(comment);
+            console.log(complaint);
+            console.log("full comment is:", comment);
+            res.json({ data: { complaint, comment } });
+        } else res.status(200).json(complaint);
     } catch (error) {
         console.error("Failed to fetch complaints:", error);
         res.status(500).json({ message: "Server Error" });

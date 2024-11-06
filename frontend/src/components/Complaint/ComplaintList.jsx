@@ -17,7 +17,7 @@ const ComplaintList = () => {
     const [isSorted, setIsSorted] = useState(false);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const itemsPerPage = 4;
-    const userType = Cookies.get("userType") || "Tourist";
+    const userType = Cookies.get("userType") || "Admin";
 
     useEffect(() => {
         fetchComplaints(currentPage);
@@ -79,6 +79,7 @@ const ComplaintList = () => {
                         key={complaint._id}
                         complaint={complaint}
                         isExpanded={false}
+                        setComplaint={setComplaints}
                     />
                 ))}
             </div>

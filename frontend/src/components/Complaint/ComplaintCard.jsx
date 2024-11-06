@@ -4,9 +4,15 @@ import Button from "../Button";
 import ReplySharpIcon from "@mui/icons-material/ReplySharp";
 import DoneSharpIcon from "@mui/icons-material/DoneSharp";
 import HourglassEmptySharpIcon from "@mui/icons-material/HourglassEmptySharp";
-
+import axiosInstance from "../../api/axiosInstance";
+import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
-    const { title, status, createdAt, body, touristID } = complaint;
+    const navigate = useNavigate();
+
+    const { title, createdAt, body, status, touristID, ...moree } = complaint;
+    const userType = Cookies.get("userType") || "Admin";
     const formatDate = (date) => {
         const d = new Date(date);
         const month = String(d.getMonth() + 1).padStart(2, "0");
@@ -28,7 +34,28 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
         console.log("Profile clicked");
     };
     const handleViewComplaint = () => {
+        console.log("id of complaint", complaint._id);
+        navigate(`/complaint/${complaint._id}`);
         console.log("View clicked");
+    };
+    const handleUpdateStatus = async () => {
+        try {
+            const newStatus = status === "pending" ? "resolved" : "pending";
+            const res = await axiosInstance.put(
+                `complaint/updateComplaint/${complaint._id}`,
+                {
+                    status: newStatus,
+                },
+                {
+                    withCredentials: true,
+                }
+            );
+            console.log("res:", res);
+            if (isExpanded) props?.setComplaint(res.data);
+            else window.location.reload();
+        } catch (error) {
+            console.log(error);
+        }
     };
     return (
         <div className="complaint-card">
@@ -46,25 +73,30 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
                     <span className={`complaint-status ${status}`}>
                         {status.toUpperCase()}
                     </span>
-                    <div className={`change-status-${status}`}>
-                        {status === "pending" && (
-                            <DoneSharpIcon
-                                sx={{
-                                    verticalAlign: "middle",
-                                    marginRight: "5px",
-                                }}
-                            />
-                        )}
-                        {status === "resolved" && (
-                            <HourglassEmptySharpIcon
-                                sx={{
-                                    verticalAlign: "middle",
-                                    marginRight: "5px",
-                                }}
-                            />
-                        )}
-                        mark as {status === "pending" ? "resolved" : "pending"}
-                    </div>
+                    {userType === "Admin" && isExpanded && (
+                        <div
+                            className={`change-status-${status}`}
+                            onClick={handleUpdateStatus}
+                        >
+                            {status === "pending" && (
+                                <DoneSharpIcon
+                                    sx={{
+                                        verticalAlign: "middle",
+                                        marginRight: "5px",
+                                    }}
+                                />
+                            )}
+                            {status === "resolved" && (
+                                <HourglassEmptySharpIcon
+                                    sx={{
+                                        verticalAlign: "middle",
+                                        marginRight: "5px",
+                                    }}
+                                />
+                            )}
+                            mark as {status === "pending" ? "resolved" : "pending"}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -101,10 +133,7 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
                         }}
                     />
                 ) : (
-                    <div
-                        className="reply-div"
-                        onClick={() => props?.onReply(complaint._id)}
-                    >
+                    <div className="reply-div" onClick={() => props?.onReply(null)}>
                         <ReplySharpIcon
                             sx={{ verticalAlign: "middle", marginRight: "5px" }}
                         />

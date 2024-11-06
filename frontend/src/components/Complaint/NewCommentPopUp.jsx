@@ -1,5 +1,5 @@
 import React from "react";
-import "./NewCommentPopUp.css";
+import "./NewComplaintPopUp";
 
 import Button from "../Button";
 import HighlightOffSharpIcon from "@mui/icons-material/HighlightOffSharp";
