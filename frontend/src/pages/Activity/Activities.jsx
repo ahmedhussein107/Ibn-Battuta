@@ -6,16 +6,22 @@ import SearchField from "../../components/SearchField/SearchField";
 import Sorter from "../../components/Sorter";
 import PriceRange from "../../components/PriceRange";
 import RatingRange from "../../components/RatingRange";
+import DatePicker from "../../components/DatePicker";
 import CheckboxList from "../../components/CheckBoxList";
 
 const minPrice = 0;
 const maxPrice = 1000;
 
-const Itineraries = () => {
-    const [itineraries, setItineraries] = useState([]);
+const Activities = () => {
+    const [activities, setActivities] = useState([]);
     const [tags, setTags] = useState([""]);
+    const [categories, setCategories] = useState([""]);
     const [selectedTags, setSelectedTags] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
+    const [ratingRange, setRatingRange] = useState([1, 5]);
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
     const [sortBy, setSortBy] = useState("priceAsc");
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
@@ -33,32 +39,42 @@ const Itineraries = () => {
         }
     };
 
-    const sortItineraries = (itineraries) => {
-        let sortItineraries = [...itineraries]; // Create a shallow copy
-        if (sortBy === "priceAsc") {
-            sortItineraries.sort((a, b) => a.price - b.price);
-        } else if (sortBy === "priceDesc") {
-            sortItineraries.sort((a, b) => b.price - a.price);
-        } else if (sortBy === "ratingAsc") {
-            sortItineraries.sort((a, b) => a.rating - b.rating);
-        } else if (sortBy === "ratingDesc") {
-            sortItineraries.sort((a, b) => b.rating - a.rating);
+    const fetchCategories = async () => {
+        try {
+            const response = await axiosInstance.get(`/category/allCategories/`);
+            let categs = [];
+            for (let category of response.data) {
+                categs.push(category._id);
+            }
+            setCategories(categs);
+        } catch (error) {
+            console.error("Error fetching Categories:", error);
         }
-        console.log("sortedItineraries", sortItineraries);
-        setItineraries(sortItineraries);
     };
 
-    const fetchItineraries = async (query) => {
+    const sortActivities = (activities) => {
+        let sortedActivities = [...activities]; // Create a shallow copy
+        if (sortBy === "priceAsc") {
+            sortedActivities.sort((a, b) => a.price - b.price);
+        } else if (sortBy === "priceDesc") {
+            sortedActivities.sort((a, b) => b.price - a.price);
+        } else if (sortBy === "ratingAsc") {
+            sortedActivities.sort((a, b) => a.rating - b.rating);
+        } else if (sortBy === "ratingDesc") {
+            sortedActivities.sort((a, b) => b.rating - a.rating);
+        }
+        console.log("sortedActivities", sortedActivities);
+        setActivities(sortedActivities);
+    };
+
+    const fetchActivities = async (query) => {
         try {
             console.log("query", query);
-            const response = await axiosInstance.get(
-                `/itinerary/getUpcomingItineraries/`,
-                {
-                    params: query,
-                }
-            );
+            const response = await axiosInstance.get(`/activity/getUpcomingActivities/`, {
+                params: query,
+            });
             console.log("response", response.data);
-            sortItineraries(response.data);
+            sortActivities(response.data);
         } catch (error) {
             console.error("Error fetching Activities:", error);
         }
@@ -66,15 +82,25 @@ const Itineraries = () => {
 
     useEffect(() => {
         fetchTags();
+        fetchCategories();
     }, []);
 
     useEffect(() => {
         const query = buildQuery();
-        fetchItineraries(query);
-    }, [priceRange, name, location]);
+        fetchActivities(query);
+    }, [
+        selectedTags,
+        selectedCategories,
+        priceRange,
+        ratingRange,
+        startDate,
+        endDate,
+        name,
+        location,
+    ]);
 
     useEffect(() => {
-        sortItineraries(itineraries);
+        sortActivities(activities);
     }, [sortBy]);
 
     const buildQuery = () => {
@@ -86,10 +112,32 @@ const Itineraries = () => {
             delete query.tags;
         }
 
+        if (selectedCategories && selectedCategories.length > 0) {
+            query.category = selectedCategories.join("|");
+        } else {
+            delete query.category;
+        }
+
         if (priceRange[0] || priceRange[1]) {
             query.price = priceRange[0] + "-" + priceRange[1];
         } else {
             delete query.price;
+        }
+
+        if (ratingRange[0] || ratingRange[1]) {
+            if (ratingRange[0] === 1) {
+                query.rating = "-" + ratingRange[1];
+            } else {
+                query.rating = ratingRange[0] + "-" + ratingRange[1];
+            }
+        } else {
+            delete query.rating;
+        }
+
+        if (startDate || endDate) {
+            query.startDate = startDate + "€" + endDate;
+        } else {
+            delete query.startDate;
         }
 
         if (name) {
@@ -114,7 +162,15 @@ const Itineraries = () => {
             setSearchText={setName}
         />,
     ];
-    const titles = ["Sort By", "Locations", "Price Range", "Tags"];
+    const titles = [
+        "Sort By",
+        "Locations",
+        "Price Range",
+        "Rating Range",
+        "Date Range",
+        "Tags",
+        "Category",
+    ];
     const collapsibleItems = [
         <Sorter
             values={["priceAsc", "priceDesc", "ratingAsc", "ratingDesc"]}
@@ -138,10 +194,20 @@ const Itineraries = () => {
             min={minPrice}
             max={maxPrice}
         />,
+        <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
+        <div style={{ display: "flex", flexDirection: "column" }}>
+            <DatePicker label="Start Date" setValue={setStartDate} />
+            <DatePicker label="End Date" setValue={setEndDate} />
+        </div>,
         <CheckboxList
             items={tags}
             checkedItems={selectedTags}
             setCheckedItems={setSelectedTags}
+        />,
+        <CheckboxList
+            items={categories}
+            checkedItems={selectedCategories}
+            setCheckedItems={setSelectedCategories}
         />,
     ];
     return (
@@ -153,4 +219,4 @@ const Itineraries = () => {
     );
 };
 
-export default Itineraries;
+export default Activities;

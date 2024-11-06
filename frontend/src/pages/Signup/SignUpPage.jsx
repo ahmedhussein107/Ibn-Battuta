@@ -1,12 +1,12 @@
 import React, { useState, useRef } from "react";
-import "../styles/SignUpPage.css";
+import "../../styles/SignUpPage.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { uploadFile, uploadFiles } from "../api/firebase";
-import CommonFormStep from "../components/SignUp/CommonForm.jsx";
-import Button from "../components/Button";
-import Page2 from "../components/SignUp/Page2";
-import TouristFields from "../components/SignUp/TouristFields.jsx";
-import axiosInstance from "../api/axiosInstance.js";
+import { uploadFile, uploadFiles } from "../../api/firebase.js";
+import CommonFormStep from "../../components/SignUp/CommonForm.jsx";
+import Button from "../../components/Button.jsx";
+import Page2 from "../../components/SignUp/Page2.jsx";
+import TouristFields from "../../components/SignUp/TouristFields.jsx";
+import axiosInstance from "../../api/axiosInstance.js";
 const SignUpPage = () => {
     const location = useLocation();
     const { userType } = location.state || { userType: "TourGuide" };
@@ -85,7 +85,7 @@ const SignUpPage = () => {
     const handlepreviousStep = () => {
         console.log("Current step before going back:", step); // Debug line
         if (step < 2) {
-            navigate("/");
+            navigate("/select-your-role");
         } else {
             setSetp(step - 1);
         }
