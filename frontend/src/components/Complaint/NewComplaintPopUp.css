@@ -102,3 +102,50 @@
     background-color: #007bff;
     color: white;
 }
+
+.ticket-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    font-family: Arial, sans-serif;
+}
+
+.ticket-counter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.counter-btn {
+    font-size: 18px;
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
+
+.counter-btn:hover {
+    background-color: #0056b3;
+}
+
+.price-info {
+    font-size: 14px;
+    color: #333;
+}
+
+.price-info p {
+    margin: 5px 0;
+}
+
+.price-per-person,
+#total-price {
+    font-weight: bold;
+}

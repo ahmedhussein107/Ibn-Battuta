@@ -74,7 +74,7 @@ const CommentPopUp = ({ isOpen, setIsOpen, complaintId, parentComment }) => {
                         stylingMode="submit"
                         text={"reply"}
                         handleClick={handleSubmit}
-                        disabbled={isLoading}
+                        disabled={isLoading}
                         isLoading={isLoading}
                         customStyle={{
                             marginLeft: "20px",
