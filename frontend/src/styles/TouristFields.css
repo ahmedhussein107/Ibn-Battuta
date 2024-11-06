@@ -1,0 +1,109 @@
+.common-form-step {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.date-input-group select {
+    margin-right: 10px; /* Adds space to the right of each select box */
+    padding: 5px; /* Optional: adds inner padding for better readability */
+    border-radius: 5px; /* Optional: adds rounded corners */
+}
+
+.date-input-group select:last-child {
+    margin-right: 0; /* Removes margin on the last select to avoid extra spacing */
+}
+.form-group label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    color: #333;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #f86624;
+    outline: none;
+}
+
+.date-input-group {
+    display: flex;
+    gap: 30px;
+    flex-direction: row;
+}
+
+.date-input-group select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    flex: 1;
+    transition: border-color 0.3s;
+    margin-right: 20px;
+}
+
+.date-input-group select:focus {
+    border-color: #f86624;
+}
+
+.custom-phone-input .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+    height: auto; /* Ensures consistent height */
+}
+
+.custom-phone-input .form-control:focus {
+    border-color: #f86624;
+    outline: none;
+}
+
+/* Override Phone Input height and border */
+
+.react-tel-input .form-control {
+    border: none; /* Remove extra border */
+    border-radius: 5px;
+    font-size: 14px;
+    padding-left: 50px; /* Adjust for flag icon space */
+    box-shadow: none;
+}
+
+/* Styling the flag container */
+.react-tel-input .flag-container {
+    display: flex;
+    align-items: center;
+    height: 100%; /* Ensure the flag container matches input height */
+    border-right: 1px solid #ccc;
+}
+
+.react-tel-input .selected-flag {
+    height: 100%; /* Align the flag icon with the input height */
+}
+
+.react-tel-input .flag-dropdown {
+    height: 35px;
+    margin-top: 11px;
+    border: none;
+    background-color: #f9f9f9;
+}

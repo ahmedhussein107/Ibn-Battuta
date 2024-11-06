@@ -56,36 +56,41 @@ export const login = async (req, res) => {
                 .json({ message: `No user found with the username: ${username}` });
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
+        // const isPasswordValid = await bcrypt.compare(password, user.password);
+        // if (!isPasswordValid) {
+        //     return res.status(401).json({ message: "Invalid credentials" });
+        // }
+
+        // for test with no encryption
+        if (password !== user.password) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        // for test with no encryption
-        // if (password !== user.password) {
-        //   return res.status(401).json({ message: "Invalid credentials" });
-        // }
-
-        const token = jwt.sign(
-            { userId: user._id, userType: userRecord.userType },
-            secretKey,
-            {
-                expiresIn: "5h",
-            }
-        );
-
-        res.cookie("jwt", token, {
-            //httpOnly: true,
-            maxAge: 3600000,
-        });
-        res.cookie("userType", userRecord.userType, {
-            //httpOnly: true,
-            maxAge: 3600000,
-        });
-
-        res.status(200).json({ message: "Login successful", token, user });
+        assignCookies(res, userRecord.userType, user._id)
+            .status(200)
+            .json({ message: "Login successful", user });
     } catch (err) {
         console.error("Error during login:", err);
         res.status(500).json({ message: "Server error", error: err.message });
     }
+};
+
+export const assignCookies = (res, userType, userId) => {
+    const token = jwt.sign({ userId, userType }, secretKey, {
+        expiresIn: "5h",
+    });
+
+    res.cookie("jwt", token, {
+        //httpOnly: true,
+        maxAge: 3600000,
+    });
+    res.cookie("userType", userType, {
+        //httpOnly: true,
+        maxAge: 3600000,
+    });
+    res.cookie("userId", userId, {
+        //httpOnly: true,
+        maxAge: 3600000,
+    });
+    return res;
 };

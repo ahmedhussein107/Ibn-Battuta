@@ -6,6 +6,8 @@ import Rating from "../models/rating.model.js";
 import Itinerary from "../models/itinerary.model.js";
 import CustomActivity from "../models/customActivity.model.js";
 import bcrypt from "bcrypt";
+import { assignCookies } from "./general.controller.js";
+
 export const createTourGuide = async (req, res) => {
     //console.log(req.body);
     const inputUsername = req.body.username;
@@ -25,7 +27,9 @@ export const createTourGuide = async (req, res) => {
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
             req.body.password = hashedPassword;
             const newTourGuide = await TourGuide.create(req.body);
-            res.status(201).json(newTourGuide);
+            assignCookies(res, "TourGuide", newTourGuide._id)
+                .status(200)
+                .json({ message: "Sign up successful" });
         } else {
             if (username) {
                 res.status(400).json({ e: "Username already exists" });
