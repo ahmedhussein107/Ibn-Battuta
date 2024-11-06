@@ -89,15 +89,15 @@ const ItineraryDetails = () => {
 	const tags = ["refo", "refo", "refo", "refo", "refo", "refo", "refo"];
 
 	const bookDate = { text: "Likely to be sell out", price: "$90.00" };
-
+	const language = "English";
 	return (
 		<div className="itinerary-details-container">
 			<NavBar />
 			<ItineraryAndActivityHeader mode="itinerary" width />
-			<CyclicPhotoDisplay photos={photoList} width="90%" height="40vh" />
+			<CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
 
 			<div className="itinerary-info">
-				<div className="placeholder">Hello</div>
+				<div className="placeholder"> </div>
 				<div className="profile-refo-container">
 					<ProfileAndDescription
 						name={"Kevin Banana"}
@@ -107,7 +107,18 @@ const ItineraryDetails = () => {
 						fontSize={"1.2em"}
 					></ProfileAndDescription>
 					<div className="refo-container">
-						<div className="accessiblity-tags-reviewssection">	
+						<div className="accessiblity-tags-reviewssection">
+
+							<div className="language-container">
+								<div className="language-header"  style={{fontSize:'0.8em'}}>
+									<img
+										src="/languageIcon.png"
+										alt=""
+										className="language-icon"
+									/>
+									<span>Language: {language}</span>
+								</div>
+							</div>
 							<Accessibility fontSize={"0.8em"} />
 							<Tags tags={tags} fontSize={"0.8em"} />
 							<ReviewsSection

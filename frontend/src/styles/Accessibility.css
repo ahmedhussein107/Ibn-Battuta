@@ -21,11 +21,12 @@
 }
 
 .accessibility-header {
+	display: flex;
+	align-items: center;
 
-	
 }
 
-.accessibility-header-header > span {
+.accessibility-header > span {
 	font-size: 2em;
 }
 .accessibility-icon {
