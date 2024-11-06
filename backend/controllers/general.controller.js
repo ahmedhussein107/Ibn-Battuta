@@ -66,9 +66,9 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        assignCookies(res, user.userType, user._id)
+        assignCookies(res, userRecord.userType, user._id)
             .status(200)
-            .json({ message: "Login successful", token, user });
+            .json({ message: "Login successful", user });
     } catch (err) {
         console.error("Error during login:", err);
         res.status(500).json({ message: "Server error", error: err.message });
@@ -85,6 +85,10 @@ export const assignCookies = (res, userType, userId) => {
         maxAge: 3600000,
     });
     res.cookie("userType", userType, {
+        //httpOnly: true,
+        maxAge: 3600000,
+    });
+    res.cookie("userId", userId, {
         //httpOnly: true,
         maxAge: 3600000,
     });

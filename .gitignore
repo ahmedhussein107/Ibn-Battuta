@@ -132,5 +132,4 @@ dist
 # vscode
 .vscode
 .idea/
-
 backend/uploads

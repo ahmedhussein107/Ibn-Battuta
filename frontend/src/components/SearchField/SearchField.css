@@ -1,0 +1,21 @@
+.search-field {
+    border-radius: 5vh;
+}
+
+.custom-outline {
+    border-color: #e0e3e7 !important;
+    border-radius: 5vh;
+}
+
+.search-field .MuiInputBase-root {
+    padding-left: 2vw;
+}
+
+.search-field .MuiOutlinedInput-root {
+    border-radius: 5vh;
+    background-color: #f3f6f9;
+}
+
+.search-field .MuiInputBase-input {
+    padding: 2vw 2vh;
+}

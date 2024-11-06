@@ -1,12 +1,11 @@
 import React from "react";
+import HomePage from "../HomePage";
 
 const SellerHome = () => {
     return (
         <>
-            <NavBar />
             <h1>Seller Home</h1>
             <HomePage />
-            <Footer />
         </>
     );
 };

@@ -10,13 +10,13 @@ export const genericSearch = async (Model, queryParams) => {
 
     // If `categories` is provided, match the categories exactly
     if (categories) {
-        const categoriesArray = Array.isArray(tags) ? tags : tags.split(",");
+        const categoriesArray = Array.isArray(tags) ? tags : tags.split("|");
         query.categories = { $in: categoriesArray };
     }
 
     // If `tags` are provided, check for any of the tags
     if (tags) {
-        const tagsArray = Array.isArray(tags) ? tags : tags.split(",");
+        const tagsArray = Array.isArray(tags) ? tags : tags.split("|");
         query.tags = { $in: tagsArray };
     }
 
