@@ -1,3 +1,10 @@
+
+.itinerary-details-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 300%;
+}
 .refo-container {
 	display: flex;
 	gap: 30px;
@@ -15,15 +22,25 @@
     display: flex;
     flex-direction: column  ;
     gap: 10px;
+    width: 60%
 }
 
 .itinerary-info {
-	/* display: flex; */
+	display: flex;
+    margin-top: 2vh;
 }
 .placeholder {
-
+    margin-left:2%;
     display: inline;
-    min-width: 15vw;
+    min-width: 20vw;
     min-height: 15vh;
-    background-color: blue;
+    background-color: #FFFAFA;
+    margin-top: 4% ;
+    border-radius: 30px;
+
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* Soft shadow */
+}
+
+.profile-refo-container{
+    padding-left: 2vw
 }

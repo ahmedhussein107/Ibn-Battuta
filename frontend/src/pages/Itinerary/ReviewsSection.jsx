@@ -134,7 +134,7 @@ const ReviewsSection = ({ reviews, width, height, fontSize }) => {
 
 const ReviewsWrapper = styled.div`
     padding: 2em;
-    background-color: #f5f5f5;
+    // background-color: #f5f5f5;
 `;
 
 const ReviewsHeader = styled.div`

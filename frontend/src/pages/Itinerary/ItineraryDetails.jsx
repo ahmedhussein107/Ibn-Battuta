@@ -6,6 +6,7 @@ import CyclicPhotoDisplay from "./CyclicPhotoDisplay.jsx";
 import ItineraryAndActivityHeader from "../../components/ItineraryAndActivityHeader.jsx";
 import NavBar from "../../components/NavBar.jsx";
 import Tags from "../../components/Tags.jsx";
+import Accessibility from "../../components/Accessibility.jsx";
 import Book from "../../components/ItineraryDetails/Book.jsx";
 import Footer from "../../components/Footer.jsx";
 import AvailableDates from "../../components/ItineraryDetails/AvailableDates.jsx";
@@ -90,29 +91,28 @@ const ItineraryDetails = () => {
 	const bookDate = { text: "Likely to be sell out", price: "$90.00" };
 
 	return (
-		<div>
+		<div className="itinerary-details-container">
 			<NavBar />
-			<ItineraryAndActivityHeader />
-			<CyclicPhotoDisplay photos={photoList} width="50%" height="40vh" />
+			<ItineraryAndActivityHeader mode="itinerary" width />
+			<CyclicPhotoDisplay photos={photoList} width="90%" height="40vh" />
 
 			<div className="itinerary-info">
-				<div className="placeholder"></div>
+				<div className="placeholder">Hello</div>
 				<div className="profile-refo-container">
 					<ProfileAndDescription
 						name={"Kevin Banana"}
 						description={description}
-						width={"38.2%"}
-						height={"80%"}
+						width={"80%"}
+						// height={"50%"}
 						fontSize={"1.2em"}
 					></ProfileAndDescription>
 					<div className="refo-container">
-						<div className="accessiblity-tags-reviewssection">
-							<span>Accessibility</span>
+						<div className="accessiblity-tags-reviewssection">	
+							<Accessibility fontSize={"0.8em"} />
 							<Tags tags={tags} fontSize={"0.8em"} />
 							<ReviewsSection
 								reviews={reviews}
 								width={"100%"}
-								height={"50%"}
 								fontSize={"12px"}
 							/>
 						</div>

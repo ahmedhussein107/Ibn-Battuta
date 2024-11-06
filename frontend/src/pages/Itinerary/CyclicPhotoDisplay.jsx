@@ -36,6 +36,7 @@ const LeftPhoto = styled.div`
     background-size: cover;
     background-position: center;
     transition: background-image 1.2s ease; 
+    border-radius:30px
 `;
 
 const RightColumn = styled.div`
@@ -51,6 +52,7 @@ const TopRightPhoto = styled.div`
     background-size: cover;
     background-position: center;
     transition: background-image 1.2s ease;
+     border-radius:30px
 `;
 
 const BottomRightPhoto = styled.div`
@@ -59,6 +61,7 @@ const BottomRightPhoto = styled.div`
     background-size: cover;
     background-position: center;
     transition: background-image 1.2s ease;
+     border-radius:30px
 `;
 
 export default CyclicPhotoDisplay;

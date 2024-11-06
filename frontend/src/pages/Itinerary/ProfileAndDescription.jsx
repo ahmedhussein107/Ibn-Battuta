@@ -52,7 +52,7 @@ const Name = styled.h3`
 `;
 
 const AboutSection = styled.div`
-    flex: 1;
+    // flex: 1;
 `;
 
 const SectionTitle = styled.h3`
