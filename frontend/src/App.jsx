@@ -97,7 +97,7 @@ function App() {
                 <Route path="/activity" element={<AdvertiserActivities />} />
                 <Route path="/advertiser/assigned" element={<MyActivity />} />
                 <Route path="/tourguide/assigned" element={<MyItinenrary />} />
-                <Route path="/seller/inventory" element={<Inventory />} />
+                <Route path="/inventory" element={<Inventory />} />
 
                 <Route path="/create-activity" element={<CreateActivityPage />} />
                 <Route path="/update-activity" element={<UpdateActivityPage />} />

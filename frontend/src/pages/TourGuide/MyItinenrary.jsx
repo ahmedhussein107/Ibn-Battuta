@@ -37,8 +37,7 @@ const MyItinenrary = () => {
     };
 
     const fetchData = async (query) => {
-        const tourGuideID = Cookies.get("userId").replaceAll('"', "").substring(2);
-        console.log("tourGuideID", tourGuideID);
+        const tourGuideID = Cookies.get("userId");
         try {
             const response = await axiosInstance.get(
                 `/itinerary/getTourGuideItinerary/${tourGuideID}`,
@@ -75,7 +74,14 @@ const MyItinenrary = () => {
 
     return (
         <div>
-            <div style={{ position: "fixed", left: "50vh", top: "2vh", zIndex: 1 }}>
+            <div
+                style={{
+                    position: "fixed",
+                    top: 0,
+                    left: "9%",
+                    zIndex: 1,
+                }}
+            >
                 <NavBar />
             </div>
 

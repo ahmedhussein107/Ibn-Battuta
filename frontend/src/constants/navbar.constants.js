@@ -32,7 +32,7 @@ export const touristNavbarItems = [
 export const sellerNavbarItems = [
     { Home: "/seller" },
     { Browse: "/shop" },
-    { Inventory: "/seller/inventory" },
+    { Inventory: "/inventory" },
     { Analytics: "/analytics" },
 ];
 

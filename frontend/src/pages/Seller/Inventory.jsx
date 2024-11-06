@@ -33,12 +33,10 @@ const Inventory = () => {
     };
 
     const fetchData = async (query) => {
-        const sellerID = Cookies.get("userId").replaceAll('"', "").substring(2);
-        console.log("sellerID", sellerID);
-        console.log("a", sellerID);
+        const userId = Cookies.get("userId");
         try {
             const response = await axiosInstance.get(
-                `/product/getProductBySellerID/${sellerID}`,
+                `/product/getProductsById/${userId}`,
                 {
                     params: query,
                 }
@@ -75,11 +73,9 @@ const Inventory = () => {
             <div
                 style={{
                     position: "fixed",
-                    left: 0,
                     top: 0,
+                    left: "9%",
                     zIndex: 1,
-                    marginLeft: "23vw",
-                    marginTop: "1vh",
                 }}
             >
                 <NavBar />
