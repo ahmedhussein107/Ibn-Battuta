@@ -2,9 +2,9 @@
 	display: flex;
 	align-items: center; /* Optional: aligns items vertically */
 
-	border-style: solid;
+	/* border-style: solid;
 	border-width: 2px;
-	border-color: blue;
+	border-color: blue; */
 }
 
 .icon-dropdown-container:last-child {

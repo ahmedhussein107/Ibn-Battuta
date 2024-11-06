@@ -40,11 +40,13 @@ import Activities from "./pages/Activity/Activities";
 import Itineraries from "./pages/Itinerary/Itineraries";
 import Landmarks from "./pages/Landmark/Landmarks";
 import Inventory from "./pages/Seller/Inventory";
+import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 
 function App() {
     return (
         <Router>
             <Routes>
+                <Route path="/test" element={<ItineraryDetails />} />
                 {/* signin and signup pages */}
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/signin" element={<Signin />} />

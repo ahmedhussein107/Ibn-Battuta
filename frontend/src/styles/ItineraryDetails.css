@@ -1,0 +1,29 @@
+.refo-container {
+	display: flex;
+	gap: 30px;
+}
+
+.book-availabledates {
+	display: flex;
+	flex-direction: column;
+	align-items: first;
+	justify-content: first;
+}
+
+.accessiblity-tags-reviewssection {
+    padding-top:5vh;
+    display: flex;
+    flex-direction: column  ;
+    gap: 10px;
+}
+
+.itinerary-info {
+	/* display: flex; */
+}
+.placeholder {
+
+    display: inline;
+    min-width: 15vw;
+    min-height: 15vh;
+    background-color: blue;
+}
