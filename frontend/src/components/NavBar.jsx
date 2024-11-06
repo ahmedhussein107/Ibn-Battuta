@@ -5,6 +5,7 @@ import { faBell } from "@fortawesome/free-solid-svg-icons";
 import "../styles/NavBar.css";
 import { useState, useEffect } from "react";
 import Button from "./Button";
+
 import {
     guestNavbarItems,
     touristNavbarItems,

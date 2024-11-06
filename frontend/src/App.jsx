@@ -36,15 +36,28 @@ import AdvertiserHome from "./pages/Advertiser/AdvertiserHome";
 import TourGuideHome from "./pages/TourGuide/TourGuideHome";
 import SellerHome from "./pages/Seller/SellerHome";
 import GovernorHome from "./pages/Governor/GovernorHome";
+import ComplaintList from "./components/Complaint/ComplaintList";
+import ViewSingleComplaint from "./components/Complaint/ViewSingleComplaint";
+import Itineraries from "./pages/Itinerary/Itineraries";
+import Landmarks from "./pages/Landmark/Landmarks";
+import { Nav } from "react-bootstrap";
+import NavBar from "./components/NavBar";
 import Activities from "./pages/Activity/Activities";
 import Itineraries from "./pages/Itinerary/Itineraries";
 import Landmarks from "./pages/Landmark/Landmarks";
 import Inventory from "./pages/Seller/Inventory";
+import ViewTags from "./pages/Admin/ViewTags";
+import ViewCategories from "./pages/Admin/ViewCategories";
 
 function App() {
     return (
         <Router>
+            <NavBar />
             <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/complaints" element={<ComplaintList />} />
+                <Route path="/complaint/:complaintId" element={<ViewSingleComplaint />} />
+
                 {/* signin and signup pages */}
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/signin" element={<Signin />} />
@@ -100,6 +113,9 @@ function App() {
                 <Route path="/create-itinerary" element={<CreateItineraryPage />} />
                 <Route path="/filter-itineraries" element={<FilterItineraries />} />
                 <Route path="/create-landmark" element={<CreateLandmarkPage />} />
+
+                <Route path="/admin/view-tags" element={<ViewTags />} />
+                <Route path="/admin/view-categories" element={<ViewCategories />} />
             </Routes>
         </Router>
     );

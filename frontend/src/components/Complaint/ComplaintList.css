@@ -1,0 +1,22 @@
+.complaint-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    margin: 20px; /* Optional spacing around the container */
+    margin-top: 60px;
+}
+
+.complaint-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 16px; /* Space between each card */
+    width: 150%; /* Full width of the container */
+    margin-bottom: 20px;
+}
+
+.create-complaint-button {
+    margin-bottom: calc(2 * var(--spacing-large));
+    background-color: var(--background-color);
+    color: black;
+    border: 1px solid black;
+}
