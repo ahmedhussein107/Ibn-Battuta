@@ -53,8 +53,7 @@ export const getProduct = async (req, res) => {
         res.status(400).json({ e: e.message });
     }
 };
-// find product by sellerID
-export const getProductBySellerID = async (req, res) => {
+export const getProductsById = async (req, res) => {
     const query = buildFilter(req.query);
     const _id = req.params.id;
     try {

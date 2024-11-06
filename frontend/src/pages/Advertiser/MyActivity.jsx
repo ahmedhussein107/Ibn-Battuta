@@ -77,11 +77,9 @@ const MyActivity = () => {
             <div
                 style={{
                     position: "fixed",
-                    left: 0,
                     top: 0,
+                    left: "9%",
                     zIndex: 1,
-                    marginLeft: "23vw",
-                    marginTop: "1vh",
                 }}
             >
                 <NavBar />
