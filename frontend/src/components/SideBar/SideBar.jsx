@@ -19,7 +19,7 @@ const CollapsibleSection = ({ title, children }) => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    padding: "10px 0",
+                    padding: "1vh 0",
                 }}
             >
                 <strong>{title}</strong>
@@ -42,15 +42,15 @@ const CollapsibleSection = ({ title, children }) => {
 
 const SideBar = ({ collapsibleItems, nonCollapsibleItems, titles }) => {
     return (
-        <div className="sidebar" style={{ width: "25vw" }}>
+        <div className="sidebar" style={{ width: "90%", padding: "1vw 3vh" }}>
             {nonCollapsibleItems.map((item, index) => (
-                <div key={index} style={{ marginBottom: "2vh" }}>
+                <div key={index} style={{ marginBottom: "1vh" }}>
                     {item}
                 </div>
             ))}
 
             {collapsibleItems.map((item, index) => (
-                <div key={index} style={{ marginBottom: "2vh" }}>
+                <div key={index} style={{ marginBottom: "1vh" }}>
                     <CollapsibleSection title={titles[index]}>{item}</CollapsibleSection>
                 </div>
             ))}

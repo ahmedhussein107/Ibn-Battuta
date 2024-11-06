@@ -23,7 +23,6 @@ import AddNewUser from "./pages/Admin/AddNewUser";
 import UserManagement from "./pages/Admin/UserManagement";
 import ViewProductsPage from "./pages/Product/ViewProductsPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
-import Activities from "./pages/Activity/Activities";
 import FilterItineraries from "./pages/Itinerary/FilterItineraries";
 import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
@@ -37,14 +36,12 @@ import AdvertiserHome from "./pages/Advertiser/AdvertiserHome";
 import TourGuideHome from "./pages/TourGuide/TourGuideHome";
 import SellerHome from "./pages/Seller/SellerHome";
 import GovernorHome from "./pages/Governor/GovernorHome";
+import Activities from "./pages/Activity/Activities";
 import Itineraries from "./pages/Itinerary/Itineraries";
 import Landmarks from "./pages/Landmark/Landmarks";
 import Inventory from "./pages/Seller/Inventory";
 
 function App() {
-    function handelClick() {
-        console.log("Button clicked");
-    }
     return (
         <Router>
             <Routes>
