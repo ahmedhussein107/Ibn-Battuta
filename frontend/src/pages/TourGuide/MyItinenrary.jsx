@@ -2,21 +2,103 @@ import React, { useEffect, useState } from "react";
 import i2 from "../../assets/images/i2.png";
 import i1 from "../../assets/images/iti.png";
 import NavBar from "../../components/NavBar";
-import { Avatar } from "@mui/material";
+import { Avatar, Button, Grid } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
 import Footer from "../../components/Footer";
-import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
 import ItineraryCard from "../../components/ItineraryCard";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import CardItinerary from "../../components/CardItinerary";
+import travellerBackground from "../../assets/backgrounds/travellerBackground.png";
+import TwoColumnFlexbox from "../../components/TwoColumnFlexBox";
+
 const MyItinenrary = () => {
     const navigate = useNavigate();
 
-    const [itineraries, setitineraries] = useState([]);
+    const [itineraries, setitineraries] = useState([
+        {
+            language: "Arabic",
+            location: "Cairo, Egypt",
+            accessibility: ["Wheelchair", "Acc"],
+            name: "Tour in GUC",
+            price: 1000,
+            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
+            tags: ["shopping"],
+            description: "this is the description of the itinerary",
+            isActivated: true,
+            ratings: [],
+            picture: travellerBackground,
+        },
+        {
+            language: "Arabic",
+            location: "Cairo, Egypt",
+            accessibility: ["Wheelchair", "Acc"],
+            name: "Tour in GUC",
+            price: 1000,
+            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
+            tags: ["shopping"],
+            description: "this is the description of the itinerary",
+            isActivated: true,
+            ratings: [],
+            picture: travellerBackground,
+        },
+        {
+            language: "Arabic",
+            location: "Cairo, Egypt",
+            accessibility: ["Wheelchair, Acc"],
+            name: "Tour in GUC",
+            price: 1000,
+            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
+            tags: ["shopping"],
+            description: "this is the description of the itinerary",
+            isActivated: true,
+            ratings: [],
+            picture: travellerBackground,
+        },
+        {
+            language: "Arabic",
+            location: "Cairo, Egypt",
+            accessibility: ["Wheelchair, Acc"],
+            name: "Tour in GUC",
+            price: 1000,
+            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
+            tags: ["shopping"],
+            description: "this is the description of the itinerary",
+            isActivated: true,
+            ratings: [],
+            picture: travellerBackground,
+        },
+        {
+            language: "Arabic",
+            location: "Cairo, Egypt",
+            accessibility: ["Wheelchair, Acc"],
+            name: "Tour in GUC",
+            price: 1000,
+            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
+            tags: ["shopping"],
+            description: "this is the description of the itinerary",
+            isActivated: true,
+            ratings: [],
+            picture: travellerBackground,
+        },
+        {
+            language: "Arabic",
+            location: "Cairo, Egypt",
+            accessibility: ["Wheelchair, Acc"],
+            name: "Tour in GUC",
+            price: 1000,
+            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
+            tags: ["shopping"],
+            description: "this is the description of the itinerary",
+            isActivated: true,
+            ratings: [],
+            picture: travellerBackground,
+        },
+    ]);
     const [searchedTerm, setSearchedTerm] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
 
@@ -89,12 +171,10 @@ const MyItinenrary = () => {
                 <img
                     src={i1}
                     style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "166.27vh",
-                        height: "35%",
+                        width: "100vw",
+                        height: "35vh",
                         pointerEvents: "none",
+                        zIndex: -1,
                     }}
                 />
                 <img
@@ -103,17 +183,18 @@ const MyItinenrary = () => {
                         position: "absolute",
                         top: 0,
                         left: 0,
-                        width: "166.27vh",
-                        height: "35%",
+                        width: "100vw",
+                        height: "35vh",
                         pointerEvents: "none",
+                        zIndex: 0, // This will place the second image on top of the first
                     }}
                 />
 
                 <div
                     style={{
                         position: "absolute",
-                        top: "17vh",
-                        left: "74vh",
+                        top: "18vh",
+                        left: "45vw",
                         fontSize: "3.2vh",
                         fontWeight: "bold",
                         color: "White",
@@ -128,7 +209,7 @@ const MyItinenrary = () => {
                     style={{
                         position: "absolute",
                         top: "24vh",
-                        left: "67vh",
+                        left: "41vw",
                         display: "flex",
                         alignItems: "center",
                     }}
@@ -141,7 +222,7 @@ const MyItinenrary = () => {
                             onChange={(e) => setSearchedTerm(e.target.value)}
                             style={{
                                 borderRadius: "4vh",
-                                minWidth: "30vh",
+                                minWidth: "18vw",
                                 minHeight: "3vh",
                                 backgroundColor: "white",
                                 outline: "none",
@@ -152,15 +233,11 @@ const MyItinenrary = () => {
                         <Avatar
                             sx={{
                                 position: "absolute",
-                                width: "4.8vh",
+                                width: "2.7vw",
                                 height: "4.8vh",
-                                marginLeft: "29.6vh",
+                                marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
                                 bgcolor: orange[700],
-                                cursor: "pointer",
-                            }}
-                            onClick={() => {
-                                console.log("clicked");
                             }}
                         >
                             <SearchIcon />
@@ -171,10 +248,9 @@ const MyItinenrary = () => {
                 </div>
                 <Button
                     style={{
-                        marginTop: "35vh",
-                        marginLeft: "2.5vh",
+                        marginLeft: "2vw",
                         borderRadius: "4vh",
-                        minWidth: "15vh",
+                        minWidth: "2vw",
                         color: "black",
                         borderColor: "black",
                         maxHeight: "4.2vh",
@@ -189,13 +265,12 @@ const MyItinenrary = () => {
                 </Button>
                 <Button
                     style={{
-                        marginTop: "35vh",
-                        marginLeft: "3vh",
+                        marginLeft: "2vw",
                         borderRadius: "4vh",
-                        minWidth: "15vh",
+                        minWidth: "1vw",
                         color: "black",
                         borderColor: "black",
-                        maxHeight: "4vh",
+                        maxHeight: "4.2vh",
                     }}
                     variant="outlined"
                     onClick={() => {
@@ -209,24 +284,21 @@ const MyItinenrary = () => {
                     style={{
                         display: "flex",
                         flexWrap: "wrap",
-                        gap: "4vh",
-                        padding: "3vh",
                         marginTop: "-1vh",
+                        minHeight: "50vh",
                     }}
                 >
-                    {itineraries.map((itinerary, index) => (
-                        <div key={index} style={{ flex: "1 2 calc(50% - 2vh)" }}>
-                            <ItineraryCard
-                                itinerary={itinerary}
-                                handleDelete={async () => {
-                                    await axiosInstance.delete(
-                                        `/itinerary/deleteItinerary/${itinerary._id}`
-                                    );
-                                    window.location.reload();
-                                }}
-                            />
-                        </div>
-                    ))}
+                    {
+                        <TwoColumnFlexbox
+                            divs={itineraries.map((itinerary) => (
+                                <CardItinerary
+                                    itinerary={itinerary}
+                                    width={"42vw"}
+                                    height={"33vh"}
+                                />
+                            ))}
+                        />
+                    }
                 </div>
 
                 <Footer />
