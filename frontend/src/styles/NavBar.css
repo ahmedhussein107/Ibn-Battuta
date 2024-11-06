@@ -1,14 +1,14 @@
 /* NavBar.css */
 
 .navbar {
-    margin-top: 30px;
-    margin-bottom: 30px;
-    width: 50em;
+    margin-top: 1vh;
+    margin-bottom: 2vh;
+    width: 80vw;
     display: flex;
     justify-content: space-between; /* Distributes space evenly */
     align-items: center; /* Vertically centers items */
     padding: 10px 20px; /* Adjust as needed for spacing */
-    background-color: var(--secondary-color);
+    background-color: var(--background-color); /* TODO: change opacity */
     border-radius: 50px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
 }

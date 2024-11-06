@@ -8,6 +8,10 @@ import PriceRange from "../../components/PriceRange";
 import RatingRange from "../../components/RatingRange";
 import DatePicker from "../../components/DatePicker";
 import CheckboxList from "../../components/CheckBoxList";
+import NavBar from "../../components/NavBar";
+import Footer from "../../components/Footer";
+import ActivityCard from "../../components/ActivityCard";
+import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
 
 const minPrice = 0;
 const maxPrice = 1000;
@@ -211,11 +215,44 @@ const Activities = () => {
         />,
     ];
     return (
-        <SideBar
-            collapsibleItems={collapsibleItems}
-            nonCollapsibleItems={nonCollapsibleItems}
-            titles={titles}
-        />
+        <div style={{ width: "100vw" }}>
+            <div
+                style={{
+                    width: "100vw",
+                    height: "35vh",
+                    backgroundImage: `url(${activitiesBackground})`,
+                    backgroundSize: "100% 100%",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                }}
+            ></div>
+            <div style={{ position: "fixed", top: 0, left: "9%" }}>
+                <NavBar />
+            </div>
+            <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
+                <div
+                    style={{
+                        width: "25vw",
+                        boxShadow: "0 5vh 5vh rgba(0, 0, 0, 0.1)",
+                        borderRadius: "3vh",
+                    }}
+                >
+                    <SideBar
+                        collapsibleItems={collapsibleItems}
+                        nonCollapsibleItems={nonCollapsibleItems}
+                        titles={titles}
+                    />
+                </div>
+                <div style={{ width: "75vw" }}>
+                    {activities.map((activity) => {
+                        return (
+                            <ActivityCard activity={activity} handleDelete={() => {}} />
+                        );
+                    })}
+                </div>
+            </div>
+            <Footer />
+        </div>
     );
 };
 

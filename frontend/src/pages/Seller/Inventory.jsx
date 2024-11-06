@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
+import i1 from "../../assets/images/inventory.png";
 import i2 from "../../assets/images/i2.png";
-import i1 from "../../assets/images/iti.png";
 import NavBar from "../../components/NavBar";
 import { Avatar } from "@mui/material";
 import { orange } from "@mui/material/colors";
@@ -9,46 +9,43 @@ import Footer from "../../components/Footer";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
-import ItineraryCard from "../../components/ItineraryCard";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-const MyItinenrary = () => {
+import InventoryCard from "../../components/InventoryCard";
+const Inventory = () => {
     const navigate = useNavigate();
 
-    const [itineraries, setitineraries] = useState([]);
+    const [products, setProducts] = useState([]);
     const [searchedTerm, setSearchedTerm] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
-
-    const sortItineraries = (itineraries) => {
+    // I want to change every thing to products
+    const sortProducts = (products) => {
         console.log("Sort By", sortBy);
-        let sortedItineraries = [...itineraries]; // Create a shallow copy
+        let sortedProducts = [...products]; // Create a shallow copy
         if (sortBy === "Newest") {
-            sortedItineraries.sort(
-                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-            );
+            sortedProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         } else if (sortBy === "Oldest") {
-            sortedItineraries.sort(
-                (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-            );
+            sortedProducts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         }
-        console.log("sortedItineraries", sortedItineraries);
-        setitineraries(sortedItineraries);
+        console.log("sortedProducts", sortedProducts);
+        setProducts(sortedProducts);
     };
 
     const fetchData = async (query) => {
-        const tourGuideID = Cookies.get("userId").replaceAll('"', "").substring(2);
-        console.log("tourGuideID", tourGuideID);
+        const sellerID = Cookies.get("userId").replaceAll('"', "").substring(2);
+        console.log("sellerID", sellerID);
+        console.log("a", sellerID);
         try {
             const response = await axiosInstance.get(
-                `/itinerary/getTourGuideItinerary/${tourGuideID}`,
+                `/product/getProductBySellerID/${sellerID}`,
                 {
                     params: query,
                 }
             );
             const data = response.data;
-            sortItineraries(data);
-            console.log("response sata is", data);
+            sortProducts(data);
+            console.log("response gata is", data);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -70,59 +67,68 @@ const MyItinenrary = () => {
     }, [searchedTerm]);
 
     useEffect(() => {
-        sortItineraries(itineraries);
+        sortProducts(products);
     }, [sortBy]);
 
     return (
-        <div>
-            <div style={{ position: "fixed", left: "50vh", top: "2vh", zIndex: 1 }}>
+        <div style={{ position: "absolute", left: 0, top: 0 }}>
+            <div
+                style={{
+                    position: "fixed",
+                    left: 0,
+                    top: 0,
+                    zIndex: 1,
+                    marginLeft: "23vw",
+                    marginTop: "1vh",
+                }}
+            >
                 <NavBar />
             </div>
 
             <div>
-                <img
-                    src={i1}
-                    style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "166.27vh",
-                        height: "35%",
-                        pointerEvents: "none",
-                    }}
-                />
-                <img
-                    src={i2}
-                    style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "166.27vh",
-                        height: "35%",
-                        pointerEvents: "none",
-                    }}
-                />
+                <div style={{ position: "relative" }}>
+                    <img
+                        src={i1}
+                        style={{
+                            width: "100vw",
+                            height: "35vh",
+                            pointerEvents: "none",
+                            zIndex: -1,
+                        }}
+                    />
+                    <img
+                        src={i2}
+                        style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100vw",
+                            height: "35vh",
+                            pointerEvents: "none",
+                            zIndex: 0, // This will place the second image on top of the first
+                        }}
+                    />
+                </div>
 
                 <div
                     style={{
                         position: "absolute",
-                        top: "17vh",
-                        left: "74vh",
+                        top: "18vh",
+                        left: "46.5vw",
                         fontSize: "3.2vh",
                         fontWeight: "bold",
                         color: "White",
                         pointerEvents: "none",
-                        // this is to prevent the text from being highlighted when clicked
                     }}
                 >
-                    My Itinenrary
+                    Inventory
                 </div>
 
                 <div
                     style={{
                         position: "absolute",
                         top: "24vh",
-                        left: "67vh",
+                        left: "41vw",
                         display: "flex",
                         alignItems: "center",
                     }}
@@ -130,12 +136,12 @@ const MyItinenrary = () => {
                     <div>
                         <input
                             type="text"
-                            placeholder="Search for an Itinenrary"
+                            placeholder="Search for Products"
                             value={searchedTerm}
                             onChange={(e) => setSearchedTerm(e.target.value)}
                             style={{
                                 borderRadius: "4vh",
-                                minWidth: "30vh",
+                                minWidth: "18vw",
                                 minHeight: "3vh",
                                 backgroundColor: "white",
                                 outline: "none",
@@ -146,15 +152,11 @@ const MyItinenrary = () => {
                         <Avatar
                             sx={{
                                 position: "absolute",
-                                width: "4.8vh",
+                                width: "2.7vw",
                                 height: "4.8vh",
-                                marginLeft: "29.6vh",
+                                marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
                                 bgcolor: orange[700],
-                                cursor: "pointer",
-                            }}
-                            onClick={() => {
-                                console.log("clicked");
                             }}
                         >
                             <SearchIcon />
@@ -165,10 +167,9 @@ const MyItinenrary = () => {
                 </div>
                 <Button
                     style={{
-                        marginTop: "35vh",
-                        marginLeft: "2.5vh",
+                        marginLeft: "2vw",
                         borderRadius: "4vh",
-                        minWidth: "15vh",
+                        minWidth: "2vw",
                         color: "black",
                         borderColor: "black",
                         maxHeight: "4.2vh",
@@ -183,21 +184,20 @@ const MyItinenrary = () => {
                 </Button>
                 <Button
                     style={{
-                        marginTop: "35vh",
-                        marginLeft: "3vh",
+                        marginLeft: "2vw",
                         borderRadius: "4vh",
-                        minWidth: "15vh",
+                        minWidth: "1vw",
                         color: "black",
                         borderColor: "black",
-                        maxHeight: "4vh",
+                        maxHeight: "4.2vh",
                     }}
                     variant="outlined"
                     onClick={() => {
-                        navigate("/create-itinerary");
+                        navigate("/create-product");
                     }}
                 >
                     <AddIcon sx={{ fontSize: "3vh" }} />
-                    <p style={{ marginLeft: ".3vw" }}>Create Itinenrary</p>
+                    <p style={{ marginLeft: ".3vw" }}>Create Product</p>
                 </Button>
                 <div
                     style={{
@@ -208,13 +208,13 @@ const MyItinenrary = () => {
                         marginTop: "-1vh",
                     }}
                 >
-                    {itineraries.map((itinerary, index) => (
+                    {products.map((product, index) => (
                         <div key={index} style={{ flex: "1 2 calc(50% - 2vh)" }}>
-                            <ItineraryCard
-                                itinerary={itinerary}
+                            <InventoryCard
+                                product={product}
                                 handleDelete={async () => {
                                     await axiosInstance.delete(
-                                        `/itinerary/deleteItinerary/${itinerary._id}`
+                                        `/product/deleteProduct/${product._id}`
                                     );
                                     window.location.reload();
                                 }}
@@ -222,11 +222,10 @@ const MyItinenrary = () => {
                         </div>
                     ))}
                 </div>
-
                 <Footer />
             </div>
         </div>
     );
 };
 
-export default MyItinenrary;
+export default Inventory;

@@ -1,10 +1,4 @@
 import mongoose from "mongoose";
-import Seller from "../models/seller.model.js";
-import Advertiser from "../models/advertiser.model.js";
-import TourGuide from "../models/tourguide.model.js";
-import Tourist from "../models/tourist.model.js";
-import admin from "../models/admin.model.js";
-import Governor from "../models/governor.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 

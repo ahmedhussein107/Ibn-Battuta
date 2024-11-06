@@ -7,15 +7,18 @@
     border-radius: 5vh;
 }
 
-.search-field .MuiInputBase-root {
-    padding-left: 2vw;
-}
-
 .search-field .MuiOutlinedInput-root {
     border-radius: 5vh;
     background-color: #f3f6f9;
 }
 
 .search-field .MuiInputBase-input {
-    padding: 2vw 2vh;
+    padding: 1vw 5vh;
+    background-color: white;
+    border-radius: 5vh;
+    height: 2vh;
+    width: 9vw;
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+    font-size: 2vh;
 }
