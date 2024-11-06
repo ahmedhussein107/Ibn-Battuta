@@ -1,110 +1,317 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from "react";
-import axiosInstance from "../../api/axiosInstance";
-import { uploadFiles } from "../../api/firebase";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import PhotosUpload from './PhotosUpload';
 
 const CreateProductPage = () => {
     const [formData, setFormData] = useState({
-        name: "",
-        price: 0,
-        description: "",
-        quantity: 1,
-        ownerType: "Admin",
-        ownerID: "6700d5273d9ef1e85a0f97de",
+        title: '',
+        description: '',
+        price: '',
+        stock: 1,
+        archived: false,
     });
-    const [pictures, setPictures] = useState([]);
+    const [imagePreviews, setImagePreviews] = useState([]);
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleFileChange = (e) => {
-        const selectedFiles = Array.from(e.target.files);
-        console.log("Selected files:", selectedFiles);
-        setPictures(selectedFiles);
+    const handleStockChange = (change) => {
+        setFormData(prev => ({
+            ...prev,
+            stock: Math.max(0, prev.stock + change)
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const images = await uploadFiles(pictures, "products"); // TODO: change the path
-        console.log("Images uploaded:", images);
-
-        const data = { ...formData, pictures: images };
-        console.log("Data:", data);
-
         try {
-            const response = await axiosInstance.post("product/createProduct", data);
-            console.log("Product created:", response.data);
+            const files = imagePreviews.map(preview => preview.file);
+
+            const uploadedFileUrls = await uploadFiles(files, 'products');
+
+            const finalFormData = {
+                ...formData,
+                imageUrls: uploadedFileUrls
+            };
+
+            console.log('Form submitted:', finalFormData);
         } catch (error) {
-            console.error("Error creating product:", error);
+            console.error('Error uploading files:', error);
         }
     };
 
+    const handleImageAdd = (newImages) => {
+        console.log("adding new images");
+        setImagePreviews(prev => [...prev, ...newImages]);
+    };
+
+    const handleImageRemove = (idToRemove) => {
+        console.log("removing image");
+        setImagePreviews(prev => prev.filter(image => image.id !== idToRemove));
+    };
+
     return (
-        <div>
-            <h2>Create New Product</h2>
+        <PageContainer>
+            <Header>
+                <Title>Create a New Product</Title>
+            </Header>
+
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Name:</label>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Product Name"
-                        onChange={handleChange}
-                        value={formData.name}
-                    />
-                </div>
+                <FormContainer>
+                    <div>
+                        <FormSection>
+                            <InputGroup>
+                                <Label>Title</Label>
+                                <Input
+                                    type="text"
+                                    name="title"
+                                    placeholder="Insert title here..."
+                                    value={formData.title}
+                                    onChange={handleInputChange}
+                                />
+                            </InputGroup>
 
-                <div>
-                    <label>Price:</label>
-                    <input
-                        type="number"
-                        name="price"
-                        placeholder="Product Price"
-                        onChange={handleChange}
-                        value={formData.price}
-                    />
-                </div>
+                            <InputGroup>
+                                <Label>Description</Label>
+                                <TextArea
+                                    name="description"
+                                    placeholder="Insert description here...."
+                                    value={formData.description}
+                                    onChange={handleInputChange}
+                                />
+                            </InputGroup>
+                        </FormSection>
 
-                <div>
-                    <label>Description:</label>
-                    <textarea
-                        name="description"
-                        placeholder="Product Description"
-                        onChange={handleChange}
-                        value={formData.description}
-                    />
-                </div>
+                        <FormSection>
+                            <FlexGroup>
+                                <Label>Price</Label>
+                                <Input
+                                    type="number"
+                                    name="price"
+                                    placeholder="Insert price here..."
+                                    value={formData.price}
+                                    onChange={handleInputChange}
+                                />
+                            </FlexGroup>
 
-                <div>
-                    <label>Quantity:</label>
-                    <input
-                        type="number"
-                        name="quantity"
-                        placeholder="Quantity"
-                        onChange={handleChange}
-                        value={formData.quantity}
-                    />
-                </div>
+                            <FlexGroup>
+                                <Label>Stock</Label>
+                                <StockControl>
+                                    <StockButton onClick={() => handleStockChange(-1)}>-</StockButton>
+                                    <StockDisplay>{formData.stock}</StockDisplay>
+                                    <StockButton onClick={() => handleStockChange(1)}>+</StockButton>
+                                </StockControl>
+                            </FlexGroup>
+                        </FormSection>
+                    </div>
 
-                <div>
-                    <label>Pictures:</label>
-                    <input
-                        type="file"
-                        name="pictures"
-                        multiple
-                        onChange={handleFileChange}
-                    />
-                </div>
+                    <div>
+                        <PhotosUpload
+                            label="Product Photos"
+                            imagePreviews={imagePreviews}
+                            onImageAdd={handleImageAdd}
+                            onImageRemove={handleImageRemove}
+                        />
 
-                <button type="submit">Create Product</button>
+                        <FormSection>
+                            <FlexGroup>
+                                <Label>Archive</Label>
+                                <ArchiveToggle>
+                                    <ArchiveButton
+                                        type="button"
+                                        active={formData.archived}
+                                        onClick={() => setFormData(prev => ({ ...prev, archived: true }))}
+                                    >
+                                        Yes
+                                    </ArchiveButton>
+                                    <ArchiveButton
+                                        type="button"
+                                        active={!formData.archived}
+                                        onClick={() => setFormData(prev => ({ ...prev, archived: false }))}
+                                    >
+                                        No
+                                    </ArchiveButton>
+                                </ArchiveToggle>
+                            </FlexGroup>
+                        </FormSection>
+                    </div>
+                </FormContainer>
+
+                <ButtonGroup>
+                    <CancelButton type="button">Cancel</CancelButton>
+                    <CreateButton type="submit">Create Product</CreateButton>
+                </ButtonGroup>
             </form>
-        </div>
+        </PageContainer>
     );
 };
+
+const PageContainer = styled.div`
+    width: 90vw;
+    max-width: 75em;
+    margin: 0 auto;
+    padding: 2em;
+`;
+
+const Header = styled.div`
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('/store-background.jpg') center/cover;
+    height: 25vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 2em;
+`;
+
+const Title = styled.h1`
+    font-size: clamp(1.5em, 4vw, 2.5em);
+    font-weight: bold;
+`;
+
+const FormContainer = styled.div`
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 4em;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+`;
+
+const FormSection = styled.div`
+    background: #FAF4F4;
+    padding: clamp(1em, 3vw, 2em);
+    border-radius: 1em;
+    box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.1);
+    margin-bottom: 2em;
+`;
+
+const InputGroup = styled.div`
+    margin-bottom: 1.5em;
+`;
+
+const FlexGroup = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    margin-bottom: 1.5em;
+`;
+
+const Label = styled.label`
+    display: block;
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-bottom: 0.5em;
+`;
+
+const Input = styled.input`
+    width: 50%;
+    padding: 0.75em;
+    border: 0.0625em solid #e0e0e0;
+    border-radius: 0.5em;
+    font-size: 1em;
+    &::placeholder {
+        color: #9e9e9e;
+    }
+`;
+
+const TextArea = styled.textarea`
+    width: 100%;
+    padding: 0.75em;
+    border: 0.0625em solid #e0e0e0;
+    border-radius: 0.5em;
+    font-size: 1em;
+    min-height: 7.5em;
+    resize: vertical;
+    &::placeholder {
+        color: #9e9e9e;
+    }
+`;
+
+const ButtonGroup = styled.div`
+    display: flex;
+    gap: 1em;
+    margin-top: 2em;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
+`;
+
+const Button = styled.button`
+    padding: 0.75em 2em;
+    border-radius: 0.5em;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
+`;
+
+const CancelButton = styled(Button)`
+    background-color: transparent;
+    border: 0.0625em solid #ff5722;
+    color: #ff5722;
+    &:hover {
+        background-color: #fff5f2;
+    }
+`;
+
+const CreateButton = styled(Button)`
+    background-color: #ff5722;
+    color: white;
+    &:hover {
+        background-color: #f4511e;
+    }
+`;
+
+const StockControl = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 1em;
+`;
+
+const StockButton = styled.button`
+    background-color: #f28b82;
+    color: #fff;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+`;
+
+const StockDisplay = styled.span`
+    font-size: 1.2em;
+    font-weight: 500;
+`;
+
+const ArchiveToggle = styled.div`
+    display: flex;
+    gap: 0.5em;
+`;
+
+const ArchiveButton = styled.button`
+    padding: 0.5em 1.5em;
+    border-radius: 20px;
+    background-color: ${({ active }) => (active ? '#f28b82' : '#f5f5f5')};
+    color: ${({ active }) => (active ? '#fff' : '#757575')};
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: ${({ active }) => (active ? '#e64a19' : '#e0e0e0')};
+    }
+`;
 
 export default CreateProductPage;
