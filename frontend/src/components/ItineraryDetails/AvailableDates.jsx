@@ -2,7 +2,7 @@ import "../../styles/AvailableDates.css";
 import { useState } from "react";
 export default function AvailableDates({ dates, width, height, fontSize }) {
 	const [showAll, setShowAll] = useState(false);
-	const dateArray = dates || [
+	const dateArray = dates.map((date) => {return new Date(date)}) || [
 		new Date("2024-11-05T09:00:00.000Z"),
 		new Date("2024-11-05T14:00:00.000Z"),
 		new Date("2024-11-06T10:30:00.000Z"),
@@ -13,7 +13,9 @@ export default function AvailableDates({ dates, width, height, fontSize }) {
 		new Date("2024-11-06T10:30:00.000Z"),
 	];
 
+	console.log(dateArray);
 	const dateTimeArray = dateArray.map((dateObj) => {
+
 		return {
 			date: dateObj.toLocaleDateString("en-GB", {
 				weekday: "short", // Adds the day prefix like "Sun"
