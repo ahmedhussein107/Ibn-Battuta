@@ -45,7 +45,10 @@ button:hover {
     color: var(--text-color);
     background-color: var(--accent-color);
 }
-
+.button-1:hover {
+    color: var(--text-color);
+    background-color: var(--accent-color);
+}
 .button-2:hover {
     color: white;
     background-color: var(--accent-color);

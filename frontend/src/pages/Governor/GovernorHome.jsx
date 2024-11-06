@@ -1,12 +1,11 @@
 import React from "react";
+import HomePage from "../HomePage";
 
 const GovernorHome = () => {
     return (
         <>
-            <NavBar />
             <h1>Governor Home</h1>
             <HomePage />
-            <Footer />
         </>
     );
 };

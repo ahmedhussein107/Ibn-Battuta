@@ -1,10 +1,4 @@
 import mongoose from "mongoose";
-import Seller from "../models/seller.model.js";
-import Advertiser from "../models/advertiser.model.js";
-import TourGuide from "../models/tourguide.model.js";
-import Tourist from "../models/tourist.model.js";
-import admin from "../models/admin.model.js";
-import Governor from "../models/governor.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -66,9 +60,9 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        assignCookies(res, user.userType, user._id)
+        assignCookies(res, userRecord.userType, user._id)
             .status(200)
-            .json({ message: "Login successful", token, user });
+            .json({ message: "Login successful", user });
     } catch (err) {
         console.error("Error during login:", err);
         res.status(500).json({ message: "Server error", error: err.message });
@@ -85,6 +79,10 @@ export const assignCookies = (res, userType, userId) => {
         maxAge: 3600000,
     });
     res.cookie("userType", userType, {
+        //httpOnly: true,
+        maxAge: 3600000,
+    });
+    res.cookie("userId", userId, {
         //httpOnly: true,
         maxAge: 3600000,
     });

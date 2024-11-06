@@ -3,7 +3,7 @@ import { validateReference, validateReferences } from "./validatingUtils.js";
 import Ratings from "./rating.model.js";
 const productSchema = new mongoose.Schema(
     {
-        pictures: [String],
+        picture: String,
         name: String,
         price: Number,
         description: String,

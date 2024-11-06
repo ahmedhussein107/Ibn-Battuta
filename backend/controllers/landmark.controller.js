@@ -13,7 +13,8 @@ export const createLandmark = async (req, res) => {
 
 export const getAllLandmarks = async (req, res) => {
     try {
-        const landmarks = await Landmark.find();
+        const query = buildFilter(req.query);
+        const landmarks = await Landmark.find(query);
         res.status(200).json(landmarks);
     } catch (e) {
         res.status(400).json({ error: e.message });
@@ -76,28 +77,6 @@ export const deleteLandmark = async (req, res) => {
     }
 };
 
-export const filterLandmarks = async (req, res) => {
-    const { tags } = req.body;
-
-    let query = {};
-
-    if (tags) {
-        query.tags = { $in: tags };
-    }
-
-    try {
-        //console.log(query);
-        const landmarks = await Landmark.find(query);
-        res.status(200).json(landmarks);
-    } catch (err) {
-        console.error("Error fetching itineraries:", err);
-        res.status(500).json({
-            error: "An error occurred while fetching itineraries.",
-            details: err.message,
-        });
-    }
-};
-
 export const getGovernorLandmarks = async (req, res) => {
     const governorId = req.params.id;
     try {
@@ -106,14 +85,5 @@ export const getGovernorLandmarks = async (req, res) => {
     } catch (error) {
         console.error("Error fetching landmarks:", error);
         res.status(500).json({ message: "Internal Server Error" });
-    }
-};
-
-export const searchLandmarks = async (req, res) => {
-    try {
-        const results = await Landmark.find(buildFilter(req.query));
-        res.status(200).json({ results });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
     }
 };
