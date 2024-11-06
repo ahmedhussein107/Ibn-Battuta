@@ -15,6 +15,9 @@
     transition: background-color 0.3s; /* Smooth transition for hover */
 }
 
+button {
+    margin-right: 10px;
+}
 button:hover {
     background-color: var(--accent-color-light);
     border: 1px solid black;
@@ -31,6 +34,9 @@ button:hover:not(.selected) {
     border-color: black;
 }
 
+.filter-buttons {
+    gap: 20px;
+}
 .sort-div {
     align-items: center;
     justify-content: center;

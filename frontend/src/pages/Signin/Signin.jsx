@@ -131,7 +131,7 @@ const SigninComponent = () => {
             <p style={{ display: "flex", flexDirection: "row", marginLeft: "12%" }}>
                 Don't have an account?{" "}
                 {
-                    <Link to={"/signup"}>
+                    <Link to={"/select-your-role"}>
                         <p
                             style={{
                                 width: "100%",

@@ -10,8 +10,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Two columns */
     gap: 16px; /* Space between each card */
-    width: 100%; /* Full width of the container */
-    max-width: 800px; /* Optional max width */
+    width: 150%; /* Full width of the container */
     margin-bottom: 20px;
 }
 

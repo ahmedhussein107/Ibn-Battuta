@@ -1,12 +1,10 @@
 import React from "react";
-
+import HomePage from "../HomePage";
 const AdvertiserHome = () => {
     return (
         <>
-            <NavBar />
             <h1>Advertiser Home</h1>
             <HomePage />
-            <Footer />
         </>
     );
 };

@@ -21,6 +21,7 @@ const ComplaintList = () => {
 
     useEffect(() => {
         fetchComplaints(currentPage);
+        console.log("Here at useEffect:");
     }, [currentPage, isSorted, selectedFilter]);
     const handleSort = () => {
         setIsSorted(!isSorted);
