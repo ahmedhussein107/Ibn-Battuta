@@ -90,19 +90,3 @@ export const login = async (req, res) => {
         res.status(500).json({ message: "Server error", error: err.message });
     }
 };
-
-export const assignCookies = (res, userType, userId) => {
-    const token = jwt.sign({ userId, userType }, secretKey, {
-        expiresIn: "5h",
-    });
-
-    res.cookie("jwt", token, {
-        //httpOnly: true,
-        maxAge: 3600000,
-    });
-    res.cookie("userType", userType, {
-        //httpOnly: true,
-        maxAge: 3600000,
-    });
-    return res;
-};
