@@ -1,7 +1,6 @@
 .hotels-controls-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     gap: 20px; /* Controls spacing between items */
     padding: 20px;
     width: 100%;
@@ -11,7 +10,7 @@
 .hotels-controls-search,
 .hotels-controls-date,
 .hotels-controls-adult-counter {
-    flex: 1;
+    flex: 3;
 }
 
 .hotels-controls-search .hotels-controls-search {
@@ -42,12 +41,17 @@
     gap: 5px;
 }
 
+.hotels-controls-adult-counter,
+.hotels-controls-date {
+    border: 1px solid #898686;
+    border-radius: 40px;
+    padding: 10px;
+}
 .hotels-controls-counter button {
     width: 30px;
     height: 30px;
     font-size: 18px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+
     background-color: #ffffff;
     cursor: pointer;
 }
