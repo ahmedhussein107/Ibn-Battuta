@@ -32,6 +32,7 @@ const itinerarySchema = new mongoose.Schema(
         price: { type: Number, required: true },
         availableDatesAndTimes: { type: [Date], required: true },
         pickup: { type: String, required: true },
+        pickupTime: { type: Date, required: true }, // Added pickupTime field
         dropOff: { type: String, required: true },
         tags: [{ type: String, ref: "Tag" }],
         description: { type: String, required: true },
