@@ -20,7 +20,7 @@ const ComplaintList = () => {
     const [isSorted, setIsSorted] = useState(false);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const itemsPerPage = 4;
-    const userType = Cookies.get("userType") || "Admin";
+    const userType = Cookies.get("userType") || "Tourist";
     usePageHeader(
         "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
         "Welcome to the Home Page"
