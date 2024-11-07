@@ -6,6 +6,9 @@ import SearchField from "../../components/SearchField/SearchField";
 import Sorter from "../../components/Sorter";
 import PriceRange from "../../components/PriceRange";
 import CheckboxList from "../../components/CheckBoxList";
+import itineraryBackground from "../../assets/images/Itinerariesbackground.png";
+import NavBar from "../../components/NavBar";
+import Footer from "../../components/Footer";
 
 const minPrice = 0;
 const maxPrice = 1000;
@@ -142,11 +145,58 @@ const Itineraries = () => {
         />,
     ];
     return (
-        <SideBar
-            collapsibleItems={collapsibleItems}
-            nonCollapsibleItems={nonCollapsibleItems}
-            titles={titles}
-        />
+        <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+            <div style={{ position: "fixed", top: 0, left: "9%" }}>
+                <NavBar />
+            </div>
+            <div
+                style={{
+                    width: "100vw",
+                    height: "30vh",
+                    backgroundImage: `url(${itineraryBackground})`,
+                    backgroundSize: "100% 100%",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                }}
+            ></div>
+
+            <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
+                <div
+                    style={{
+                        width: "25vw",
+                        boxShadow: "0 5vh 5vh rgba(0, 0, 0, 0.1)",
+                        borderRadius: "3vh",
+                    }}
+                >
+                    <SideBar
+                        collapsibleItems={collapsibleItems}
+                        nonCollapsibleItems={nonCollapsibleItems}
+                        titles={titles}
+                    />
+                </div>
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "14vh",
+                        left: "8vw",
+                        fontSize: "8vh",
+                        color: "white",
+                        pointerEvents: "none",
+                        fontFamily: "serif", // Try "" or "serif" for other options
+                    }}
+                >
+                    Itineraries
+                </div>
+                {/* <div style={{ width: "75vw" }}>
+                    {activities.map((activity) => {
+                        return (
+                            <ActivityCard activity={activity} handleDelete={() => {}} />
+                        );
+                    })}
+                </div> */}
+            </div>
+            <Footer />
+        </div>
     );
 };
 

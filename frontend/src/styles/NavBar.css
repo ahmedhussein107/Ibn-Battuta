@@ -1,7 +1,7 @@
 /* NavBar.css */
 
 .navbar {
-    margin-top: 1vh;
+    margin-top: 4vh;
     margin-bottom: 2vh;
     width: 80vw;
     display: flex;
@@ -11,6 +11,11 @@
     background-color: var(--background-color); /* TODO: change opacity */
     border-radius: 50px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    position: fixed; /* Fix navbar at the top of the page */
+    top: 0; /* Position at the top */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100000;
 }
 
 .navbar-logo {

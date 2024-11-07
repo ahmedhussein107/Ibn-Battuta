@@ -1,0 +1,54 @@
+.ticket-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    max-width: 400px;
+    font-family: Arial, sans-serif;
+}
+
+.ticket-counter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.counter-btn {
+    font-size: 18px;
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    border-radius: 5px;
+    border-color: var(--accent-color);
+    outline: none;
+    width: 2rem;
+    height: 2rem;
+}
+
+.counter-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--background-color);
+}
+.counter-btn:hover:disabled {
+    background-color: #ccc;
+    border-color: grey;
+}
+
+.price-info {
+    font-size: 14px;
+    color: #333;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.price-info p {
+    margin: 5px 0;
+}
+
+.price-per-person,
+#total-price {
+    font-weight: bold;
+}

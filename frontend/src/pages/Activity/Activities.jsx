@@ -217,11 +217,11 @@ const Activities = () => {
         />,
     ];
     return (
-        <div style={{ width: "100vw" }}>
+        <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
             <div
                 style={{
                     width: "100vw",
-                    height: "35vh",
+                    height: "30vh",
                     backgroundImage: `url(${activitiesBackground})`,
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center",

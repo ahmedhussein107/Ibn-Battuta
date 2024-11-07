@@ -42,7 +42,16 @@ const CollapsibleSection = ({ title, children }) => {
 
 const SideBar = ({ collapsibleItems, nonCollapsibleItems, titles }) => {
     return (
-        <div className="sidebar" style={{ width: "90%", padding: "1vw 3vh" }}>
+        <div
+            className="sidebar"
+            style={{
+                width: "80%",
+                padding: "1vw 3vh",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                borderRadius: "8px",
+                backgroundColor: "white",
+            }}
+        >
             {nonCollapsibleItems.map((item, index) => (
                 <div key={index} style={{ marginBottom: "1vh" }}>
                     {item}

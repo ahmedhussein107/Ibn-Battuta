@@ -10,15 +10,11 @@ import {
     unarcheiveProduct,
     getProductsById,
 } from "../controllers/product.controller.js";
+
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 const productRouter = express.Router();
 
-const _print = function (req, res, next) {
-    console.log("body is ", req.body);
-    next();
-};
-
-productRouter.post("/createProduct", _print, createProduct);
+productRouter.post("/createProduct", isAuthenticated, createProduct);
 
 productRouter.get("/getAllProducts", getAllProducts);
 

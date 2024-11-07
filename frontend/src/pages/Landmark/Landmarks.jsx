@@ -4,7 +4,9 @@ import "react-datetime/css/react-datetime.css";
 import SideBar from "../../components/SideBar/SideBar";
 import SearchField from "../../components/SearchField/SearchField";
 import CheckboxList from "../../components/CheckBoxList";
-
+import NavBar from "../../components/NavBar";
+import Footer from "../../components/Footer";
+import landmarkbackground from "../../assets/backgrounds/landmarksBackground.png";
 const minPrice = 0;
 const maxPrice = 1000;
 
@@ -143,11 +145,58 @@ const Landmarks = () => {
         />,
     ];
     return (
-        <SideBar
-            collapsibleItems={collapsibleItems}
-            nonCollapsibleItems={nonCollapsibleItems}
-            titles={titles}
-        />
+        <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+            <div style={{ position: "fixed", top: 0, left: "9%" }}>
+                <NavBar />
+            </div>
+            <div
+                style={{
+                    width: "100vw",
+                    height: "30vh",
+                    backgroundImage: `url(${landmarkbackground})`,
+                    backgroundSize: "100% 100%",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                }}
+            ></div>
+
+            <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
+                <div
+                    style={{
+                        width: "25vw",
+                        boxShadow: "0 5vh 5vh rgba(0, 0, 0, 0.1)",
+                        borderRadius: "3vh",
+                    }}
+                >
+                    <SideBar
+                        collapsibleItems={collapsibleItems}
+                        nonCollapsibleItems={nonCollapsibleItems}
+                        titles={titles}
+                    />
+                </div>
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "14vh",
+                        left: "8vw",
+                        fontSize: "8vh",
+                        color: "white",
+                        pointerEvents: "none",
+                        fontFamily: "serif", // Try "" or "serif" for other options
+                    }}
+                >
+                    LandMarks
+                </div>
+                {/* <div style={{ width: "75vw" }}>
+                    {activities.map((activity) => {
+                        return (
+                            <ActivityCard activity={activity} handleDelete={() => {}} />
+                        );
+                    })}
+                </div> */}
+            </div>
+            <Footer />
+        </div>
     );
 };
 

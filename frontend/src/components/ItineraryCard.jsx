@@ -155,7 +155,7 @@ const ItineraryCard = ({ itinerary, handleDelete }) => {
             borderRadius: "2vh",
             cursor: "pointer",
             fontWeight: "bold",
-            width: "5.8vw",
+            width: "6.9vw",
             outline: "none",
         },
 

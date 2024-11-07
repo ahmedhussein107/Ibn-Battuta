@@ -3,13 +3,12 @@ import "./NewComplaintPopUp.css";
 import Button from "../Button";
 import HighlightOffSharpIcon from "@mui/icons-material/HighlightOffSharp";
 import axiosInstance from "../../api/axiosInstance";
+import PopUp from "../PopUpsGeneric/PopUp";
 const ComplaintFormPopup = ({ isOpen, setIsOpen }) => {
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async () => {
-        setIsLoading(true);
         try {
             const response = await axiosInstance.post(
                 "complaint/createComplaint",
@@ -23,74 +22,35 @@ const ComplaintFormPopup = ({ isOpen, setIsOpen }) => {
                 }
             );
             setIsOpen(false);
-        } catch (err) {
-        } finally {
-            setIsLoading(false);
-        }
-        // submit
+        } catch (err) {}
     };
 
-    if (!isOpen) return null;
     return (
-        <div className="popup-overlay">
-            <div className="popup">
-                {/* Header with Title and Close Button */}
-                <div className="popup-header">
-                    <h2>File a Complaint</h2>
-                    <button className="close-btn" onClick={() => setIsOpen(false)}>
-                        <HighlightOffSharpIcon />
-                    </button>
-                </div>
+        <PopUp
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            headerText={"File a Complaint"}
+            actionText={"Submit"}
+            handleSubmit={handleSubmit}
+        >
+            <div className="popup-body">
+                <label>Title</label>
+                <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Enter complaint title"
+                />
 
-                <div className="popup-body">
-                    <label>Title</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Enter complaint title"
-                    />
-
-                    <label>Body</label>
-                    <textarea
-                        value={body}
-                        onChange={(e) => setBody(e.target.value)}
-                        placeholder="Enter complaint details"
-                        rows="4"
-                    />
-                </div>
-
-                {/* Cancel and Submit Buttons */}
-                <div className="popup-footer">
-                    <Button
-                        stylingMode="2"
-                        text={"cancel"}
-                        handleClick={() => setIsOpen(false)}
-                        customStyle={{
-                            marginLeft: "20px",
-                            width: "173px",
-                            height: "55px",
-                            minHieght: "70px",
-                            borderRadius: "60px",
-                        }}
-                    />{" "}
-                    <Button
-                        stylingMode="submit"
-                        text={"Submit"}
-                        handleClick={handleSubmit}
-                        disabbled={isLoading}
-                        isLoading={isLoading}
-                        customStyle={{
-                            marginLeft: "20px",
-                            width: "173px",
-                            height: "55px",
-                            minHieght: "70px",
-                            borderRadius: "60px",
-                        }}
-                    />
-                </div>
+                <label>Body</label>
+                <textarea
+                    value={body}
+                    onChange={(e) => setBody(e.target.value)}
+                    placeholder="Enter complaint details"
+                    rows="4"
+                />
             </div>
-        </div>
+        </PopUp>
     );
 };
 

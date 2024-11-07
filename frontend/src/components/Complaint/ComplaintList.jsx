@@ -5,10 +5,13 @@ import ComplaintFormPopup from "./NewComplaintPopUp";
 import "./ComplaintList.css";
 import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../Pagination";
+import complaintHeader from "../../assets/backgrounds/complaintHeader.png";
 
 import Button from "../Button";
 import Cookies from "js-cookie";
 import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
+import usePageHeader from "../Header/UseHeaderPage";
+
 const ComplaintList = () => {
     const [complaints, setComplaints] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -17,12 +20,17 @@ const ComplaintList = () => {
     const [isSorted, setIsSorted] = useState(false);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const itemsPerPage = 4;
-    const userType = Cookies.get("userType") || "Admin";
+    const userType = Cookies.get("userType") || "Tourist";
+    usePageHeader(
+        "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
+        "Welcome to the Home Page"
+    );
 
     useEffect(() => {
         fetchComplaints(currentPage);
         console.log("Here at useEffect:");
     }, [currentPage, isSorted, selectedFilter]);
+
     const handleSort = () => {
         setIsSorted(!isSorted);
         //handle sorting;

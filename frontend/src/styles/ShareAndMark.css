@@ -3,6 +3,7 @@
 	align-items: center;
 	justify-content: flex-start; /* Aligns items starting from the right */
 	flex-direction: row-reverse; /* Items will start from the right */
+	padding-right: 90px;
 }
 
 .icon {
