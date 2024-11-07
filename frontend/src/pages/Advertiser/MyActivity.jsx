@@ -37,8 +37,7 @@ const MyActivity = () => {
     };
 
     const fetchData = async (query) => {
-        const advertiserID = Cookies.get("userId").replaceAll('"', "").substring(2);
-        console.log("advertiserID", advertiserID);
+        const advertiserID = Cookies.get("userId");
         try {
             const response = await axiosInstance.get(
                 `/activity/getAdvertiserActivities/${advertiserID}`,
@@ -78,11 +77,9 @@ const MyActivity = () => {
             <div
                 style={{
                     position: "fixed",
-                    left: 0,
                     top: 0,
+                    left: "9%",
                     zIndex: 1,
-                    marginLeft: "23vw",
-                    marginTop: "1vh",
                 }}
             >
                 <NavBar />

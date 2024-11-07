@@ -215,11 +215,11 @@ const Activities = () => {
         />,
     ];
     return (
-        <div style={{ width: "100vw" }}>
+        <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
             <div
                 style={{
                     width: "100vw",
-                    height: "35vh",
+                    height: "30vh",
                     backgroundImage: `url(${activitiesBackground})`,
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center",
@@ -243,13 +243,26 @@ const Activities = () => {
                         titles={titles}
                     />
                 </div>
-                <div style={{ width: "75vw" }}>
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "14vh",
+                        left: "8vw",
+                        fontSize: "8vh",
+                        color: "white",
+                        pointerEvents: "none",
+                        fontFamily: "serif", // Try "" or "serif" for other options
+                    }}
+                >
+                    Activities
+                </div>
+                {/* <div style={{ width: "75vw" }}>
                     {activities.map((activity) => {
                         return (
                             <ActivityCard activity={activity} handleDelete={() => {}} />
                         );
                     })}
-                </div>
+                </div> */}
             </div>
             <Footer />
         </div>

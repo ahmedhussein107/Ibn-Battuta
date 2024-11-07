@@ -2,13 +2,17 @@
     --primary-color: black;
     --secondary-color: rgb(242, 220, 220);
     --background-color: #fbf7f5;
+
     --text-color: #333;
     --accent-color: #f86624;
-    --accent-color-dark: #b0460d;
+    --accent-color-dark: #c34704;
+    --accent-color-light: #f0b69b;
 
-    --font-size-small: 12px;
-    --font-size-medium: 16px;
-    --font-size-large: 24px;
+    --spacing-small: 1rem;
+    --spacing-medium: 1.5rem;
+    --font-size-small: 0.875rem; /* ~14px */
+    --font-size-medium: 1rem; /* ~16px */
+    --font-size-large: 1.25rem; /* ~20px */
 
     --spacing-small: 8px;
     --spacing-medium: 16px;
