@@ -74,7 +74,7 @@ function App() {
 				<Route path="/about" element={<AboutPage />} />
 				<Route path="/create-product" element={<CreateProductPage />} />
 				<Route path="/add-new-user" element={<AddNewUser />} />
-				<Route path="/user-management" element={<UserManagement />} />
+				<Route path="admin/users" element={<UserManagement />} />
 				<Route
 					path="/update-product/:productId"
 					element={<UpdateProductPage />}
@@ -108,8 +108,8 @@ function App() {
 				<Route path="/filter-itineraries" element={<FilterItineraries />} />
 				<Route path="/create-landmark" element={<CreateLandmarkPage />} />
 
-				<Route path="/admin/view-tags" element={<ViewTags />} />
-				<Route path="/admin/view-categories" element={<ViewCategories />} />
+				<Route path="/admin/tags" element={<ViewTags />} />
+				<Route path="/admin/category" element={<ViewCategories />} />
 			</Routes>
 		</Router>
 	);

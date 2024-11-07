@@ -18,6 +18,8 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import axiosInstance from "../../api/axiosInstance";
 import SearchBar from "../../components/SearchBar";
+import NavBar from "../../components/NavBar";
+import Footer from "../../components/Footer";
 
 // Define constants for styles
 const styles = {
@@ -143,6 +145,7 @@ const ViewTags = () => {
 
 	return (
 		<div style={styles.container}>
+			<NavBar />
 			{/* Search and New Tag Button Section */}
 			<Box sx={styles.searchBox}>
 				{/* Search Bar */}
@@ -302,6 +305,7 @@ const ViewTags = () => {
 					</Button>
 				</DialogActions>
 			</Dialog>
+			<Footer />
 		</div>
 	);
 };

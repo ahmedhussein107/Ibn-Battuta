@@ -18,13 +18,16 @@ import { styled } from "@mui/system";
 import axiosInstance from "../../api/axiosInstance";
 import ConfirmationDialog from "../../components/ConfirmationDialog"; // Import the ConfirmationDialog component
 import { useLocation } from "react-router-dom";
+import { Nav } from "react-bootstrap";
+import NavBar from "../../components/NavBar";
+import Footer from "../../components/Footer";
 const UserManagement = () => {
 	// const query = useLocation().search();
 	const [users, setUsers] = useState([]);
 	const [message, setMessage] = useState("");
 	const [isDialogOpen, setIsDialogOpen] = useState(false); // Track dialog state
 	const [selectedUser, setSelectedUser] = useState(null); // Track selected user ID
-	const isAll = true;
+	const isAll = false;
 	const models = {
 		advertiser: "Advertiser",
 		seller: "Seller",
@@ -211,6 +214,7 @@ const UserManagement = () => {
 
 	return (
 		<div>
+			<NavBar />
 			<h2>User Management</h2>
 			{/* {userType && <h3>Displaying {userType} Accounts</h3>} */}
 			{message && <p>{message}</p>}
@@ -223,6 +227,7 @@ const UserManagement = () => {
 				isOpen={isDialogOpen}
 			/>
 			<CustomTable />
+			<Footer />
 		</div>
 	);
 };

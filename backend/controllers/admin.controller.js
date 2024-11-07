@@ -143,7 +143,8 @@ export const getUsers = async (req, res) => {
 		// body is either{isAccepted:true} or {isAccepted:false}
 		// tourist and governor don't have is accepted;
 		let result = [];
-		const isAccepted = req.query.isAccepted === "true";
+		const isAccepted =
+			req.query.isAccepted == null || req.query.isAccepted === "true";
 		console.log(req.query);
 		const query = !isAccepted ? { isAccepted } : {};
 		for (const [key, value] of Object.entries(models)) {
