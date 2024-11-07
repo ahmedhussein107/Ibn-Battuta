@@ -5,6 +5,7 @@ import HighlightOffSharpIcon from "@mui/icons-material/HighlightOffSharp";
 import axiosInstance from "../api/axiosInstance";
 import { useState } from "react";
 import PopUp from "./PopUpsGeneric/PopUp";
+import PopUpSuccess from "./PopUpsGeneric/PopUpSuccess";
 //count
 //summary
 const BookingPopUp = ({ isOpen, setIsOpen }) => {
@@ -92,6 +93,12 @@ const BookingPopUp = ({ isOpen, setIsOpen }) => {
                 </div>
             </div>
         </PopUp>
+        // <PopUpSuccess
+        //     isOpen={isOpen}
+        //     setIsOpen={setIsOpen}
+        //     headerText={"Booking completed successfully"}
+        //     bodyText={"You earned 1000 points"}
+        // />
     );
 };
 

@@ -1,73 +1,58 @@
 import React from "react";
 import "./PopUp.css";
 
-import Button from "../Button";
-import { useState } from "react";
-import { IconButton } from "@mui/material";
-import HighlightOffSharpIcon from "@mui/icons-material/HighlightOffSharp";
+import PopUpHeader from "./PopUpHeader";
+import PopUpFooter from "./PopUpFooter";
+import { useRef, useEffect } from "react";
 
-const PopUp = ({ isOpen, setIsOpen, headerText, actionText, handleSubmit, children }) => {
-    if (!isOpen) return null;
-    const [isLoading, setIsLoading] = useState(false);
-    const handleOnAction = () => {
-        try {
-            setIsLoading(true);
-            handleSubmit();
-        } catch (err) {
-        } finally {
-            setIsLoading(false);
+const PopUp = ({
+    isOpen,
+    setIsOpen,
+    headerText,
+    containsFooter = true,
+    containsActionButton = true,
+    cancelText = "Cancel",
+    actionText = "Submit",
+    handleSubmit = () => {},
+    children = null,
+}) => {
+    //     this part is for closing the popup when clicked outside
+    const popupRef = useRef(null);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (popupRef.current && !popupRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
         }
-    };
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen, setIsOpen]);
+
+    if (!isOpen) return null;
 
     return (
         <div className="popup-overlay">
-            <div className="popup">
-                {/* header of the oppup */}
-                <div className="popup-header">
-                    <div className="popup-header-left">
-                        <IconButton
-                            className="close-btn"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            <HighlightOffSharpIcon sx={{ paddingRight: 0 }} />
-                        </IconButton>
-                    </div>
-                    <h2>{headerText}</h2>
-                </div>
-                {/* body of the popup */}
-                {children}
+            <div className="popup" ref={popupRef}>
+                <PopUpHeader headerText={headerText} setIsOpen={setIsOpen} />
 
-                <div className="popup-footer">
-                    {/* <Button
-                        stylingMode="2"
-                        text={"cancel"}
-                        handleClick={() => {
-                            setIsOpen(false);
-                        }}
-                        customStyle={{
-                            marginLeft: "20px",
-                            width: "173px",
-                            height: "55px",
-                            minHieght: "70px",
-                            borderRadius: "60px",
-                        }}
-                    />{" "} */}
-                    {/* footer of the popup */}
-                    <Button
-                        stylingMode="submit"
-                        text={actionText}
-                        handleClick={handleOnAction}
-                        disabled={isLoading}
-                        isLoading={isLoading}
-                        customStyle={{
-                            marginLeft: "20px",
-                            width: "173px",
-                            height: "55px",
-                            minHieght: "70px",
-                            borderRadius: "60px",
-                        }}
+                {children}
+                {containsFooter && (
+                    <PopUpFooter
+                        setIsOpen={setIsOpen}
+                        handleSubmit={handleSubmit}
+                        cancelText={cancelText}
+                        actionText={actionText}
+                        containsActionButton={containsActionButton}
                     />
-                </div>
+                )}
             </div>
         </div>
     );
