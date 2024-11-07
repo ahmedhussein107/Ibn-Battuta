@@ -1,0 +1,96 @@
+/* Card Container */
+.hotel-card {
+    max-width: 350px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    margin: 20px auto;
+    text-align: center;
+}
+
+/* Hotel Name */
+.hotel-name {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 16px 0;
+}
+
+/* Location Section */
+
+.hotel-location {
+    display: flex;
+    flex-direction: column; /* Stacks items vertically */
+    align-items: flex-start; /* Aligns items to the left */
+    padding: 8px 16px;
+}
+
+.room-title {
+    margin: 5px 5px 0 5px;
+}
+
+.hotel-location .icon-text,
+.hotel-location .address,
+.hotel-location .extra-info {
+    margin: 0; /* Removes any default margin */
+    padding: 2px 0; /* Adds minimal padding for a bit of space */
+    font-size: 0.9em;
+    color: #666;
+}
+
+.city {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Image Styling */
+.hotel-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+.room-description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    width: 100%;
+}
+.room-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap; /* Prevents wrapping to the next line */
+    padding: 8px 16px;
+    font-weight: bold;
+    color: #444;
+    gap: 10px;
+}
+
+.icon-text {
+    display: flex;
+    align-items: center;
+}
+
+/* Grid Layout for Details */
+.details-grid {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    font-size: 0.9em;
+}
+
+.details-grid div {
+    width: 48%;
+    text-align: left;
+}
+
+.check-dates,
+.policy-price p {
+    margin: 4px 0;
+}
+
+strong {
+    color: #333;
+}
