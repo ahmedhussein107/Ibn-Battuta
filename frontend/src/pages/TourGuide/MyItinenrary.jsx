@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import i2 from "../../assets/images/i2.png";
 import i1 from "../../assets/images/iti.png";
 import NavBar from "../../components/NavBar";
-import { Avatar, Button, Grid } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Footer from "../../components/Footer";
 import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
@@ -164,7 +163,7 @@ const MyItinenrary = () => {
     };
 
     return (
-        <div>
+        <div style={{ position: "absolute", left: 0, top: 0 }}>
             <div
                 style={{
                     position: "fixed",

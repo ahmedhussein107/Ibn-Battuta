@@ -262,7 +262,7 @@ const Activities = () => {
                             <CardActivity
                                 activity={activity}
                                 width={"60vw"}
-                                height={"37vh"}
+                                height={"34vh"}
                                 firstLineButtons={[
                                     <ShareAndMark
                                         width="1.5vw"

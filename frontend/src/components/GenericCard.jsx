@@ -52,7 +52,7 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                                 flexDirection: "column",
                             }}
                         >
-                            {bottomLeft.map((item) => item)}
+                            {bottomLeft}
                         </div>
                         <div
                             style={{
@@ -63,7 +63,7 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                                 alignItems: "center",
                             }}
                         >
-                            {bottomRight.map((item) => item)}
+                            {bottomRight}
                         </div>
                     </div>
                 </div>

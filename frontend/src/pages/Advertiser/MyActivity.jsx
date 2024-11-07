@@ -213,19 +213,20 @@ const MyActivity = () => {
                 </Button>
                 <div
                     style={{
+                        marginTop: "1%",
+                        minHeight: "50vh",
+                        minWidth: "100vw",
                         display: "flex",
                         flexWrap: "wrap",
-                        gap: "4vh",
-                        padding: "3vh",
-                        marginTop: "-1vh",
+                        justifyContent: "space-evenly",
                     }}
                 >
                     {activities.map((activity, index) => (
-                        <div key={index} style={{ flex: "1 2 calc(50% - 2vh)" }}>
+                        <div style={{ padding: "1.5vh" }}>
                             <CardActivity
                                 activity={activity}
                                 width={"46vw"}
-                                height={"38vh"}
+                                height={"34vh"}
                                 firstLineButtons={[
                                     <DeleteButton
                                         deleteHandler={deleteActivityHandler}

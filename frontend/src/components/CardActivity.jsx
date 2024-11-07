@@ -58,27 +58,25 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
         </div>
     );
     const bookingAvaliable = (
-        <>
-            {activity.isOpenForBooking ? (
-                <p style={{ color: "green", marginTop: "0%", fontSize: "1.6vh" }}>
-                    Booking Available
-                </p>
-            ) : (
-                <p style={{ color: "red", marginTop: "0%", fontSize: "1.6vh" }}>
-                    Booking not Available
-                </p>
-            )}
-        </>
+        <p
+            style={{
+                color: activity.isOpenForBooking ? "green" : "red",
+                marginTop: "0%",
+                fontSize: "1.6vh",
+            }}
+        >
+            {activity.isOpenForBooking ? "Booking availabe" : "Booking not availabe"}
+        </p>
     );
     const availableSeats = (
         <p
             style={{
-                // marginTop: "-10%",
+                marginTop: "-4%",
                 color: "brown",
                 fontSize: "1.6vh",
             }}
         >
-            Available seats: {activity.freeSpots}
+            {activity.freeSpots} Available seats
         </p>
     );
 
@@ -86,7 +84,7 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
     const afterDiscount = activity.price * (1 - activity.specialDiscount / 100);
 
     const originalPrice = (
-        <div
+        <p
             style={{
                 display: "flex",
                 flexDirection: "row",
@@ -97,21 +95,21 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
                 fontSize: "1.6vh",
             }}
         >
-            <p>USD {beforeDiscount}</p>
-        </div>
+            USD {beforeDiscount}
+        </p>
     );
     const currentPrice = (
-        <div
+        <p
             style={{
                 display: "flex",
                 flexDirection: "row",
                 fontWeight: "bold",
-                // marginTop: "-20%",
+                marginTop: "-5%",
                 fontSize: "2vh",
             }}
         >
-            <p>USD {afterDiscount}</p>
-        </div>
+            USD {afterDiscount}
+        </p>
     );
     const editButton = (
         <Button
@@ -121,6 +119,7 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
             // customStyle={{ marginTop: "-8%" }}
         />
     );
+
     const card = (
         <GenericCard
             image={image}
