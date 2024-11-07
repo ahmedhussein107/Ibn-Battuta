@@ -82,7 +82,6 @@ export const getUpcomingActivities = async (req, res) => {
     try {
         const { rating, ...rest } = req.query;
         const filter = buildFilter(rest);
-        console.log(filter);
 
         let activities = await Activity.find({
             isFlagged: false, // activities that are flagged do not appear to the user according to requirement (33)

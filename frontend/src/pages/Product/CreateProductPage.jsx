@@ -4,6 +4,8 @@ import axiosInstance from '../../api/axiosInstance';
 import { uploadFiles } from '../../api/firebase';
 import PhotosUpload from './PhotosUpload';
 import Button from '../../components/Button.jsx';
+import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
+
 
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
@@ -91,11 +93,13 @@ const CreateProductPage = () => {
         setImagePreviews(prev => prev.filter(image => image.id !== idToRemove));
     };
 
+    usePageHeader(
+        "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzB8fHNvdXZlbmlyJTIwc2hvcHxlbnwwfHwwfHx8MA%3D%3D",
+        "Create a New Product"
+        );
+
     return (
         <PageContainer>
-            <Header>
-                <Title>Create a New Product</Title>
-            </Header>
 
             {showPopup && (
                 <Popup
@@ -221,11 +225,11 @@ const fadeIn = keyframes`
 
 const PopupContainer = styled.div`
     position: fixed;
-    top: 1em;
+    top: 8em;
     right: 1em;
     z-index: 1000;
     animation: ${fadeIn} 0.3s ease;
-    background-color: ${({ isError }) => (isError ? '#f8d7da' : '#d4edda')}; // Light red for error
+    background-color: ${({ isError }) => (isError ? '#f8d7da' : '#d4edda')}; 
 `;
 
 const PopupContent = styled.div`

@@ -1,12 +1,34 @@
+import { ProfilingLevel } from "mongodb";
 import Comment from "../models/comment.model.js";
 import Complaint from "../models/complaint.model.js";
-
 export const createComment = async (req, res) => {
-    const comment = new Comment(req.body);
     try {
+        let data = { body: req.body.body, complaintID: req.body.complaintID };
+        const parentComment = req.body.parentComment;
+        // there must be a user but this is just for testing;
+        if (req.user) {
+            data = { ...data, authorType: req.user.UserType, author: req.user.userId };
+        } else {
+            data = { ...data, authorType: req.body.authorType, author: req.body.author };
+        }
+
+        const comment = new Comment(data);
+
+        if (parentComment) {
+            await Comment.findByIdAndUpdate(parentComment, {
+                $push: { replies: comment._id },
+            });
+        } else {
+            await Complaint.findByIdAndUpdate(req.body.complaintID, {
+                $set: { reply: comment._id },
+            });
+        }
+
         await comment.save();
+
         res.status(201).json(comment);
     } catch (error) {
+        console.log(error.message);
         res.status(400).json({ message: error.message });
     }
 };
@@ -109,4 +131,36 @@ export const replyToComment = async (req, res) => {
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
+};
+
+// export const populateReplies = async (comment) => {
+//     // Populate author and direct replies of the comment
+//     const populatedComment = await Comment.populate(comment, [
+//         { path: "author", select: "name picture" },
+//         { path: "replies" },
+//     ]);
+
+//     // Recursively populate replies if they exist
+//     if (populatedComment.replies?.length) {
+//         populatedComment.replies = await Promise.all(
+//             populatedComment.replies.map((reply) => populateReplies(reply))
+//         );
+//     }
+
+//     console.log("Populated Comment:", populatedComment);
+//     return populatedComment;
+// };
+
+export const populateReplies = async (comment, level = 1) => {
+    await comment.populate([
+        { path: "author", select: "name picture" },
+        { path: "replies" },
+    ]);
+
+    // Loop through each reply and recursively populate it
+    for (let i = 0; i < comment.replies.length; i++) {
+        comment.replies[i] = await populateReplies(comment.replies[i], level + 1); // Recursively populate each reply
+    }
+    console.log("Populated Comment at level ", level, comment);
+    return comment;
 };

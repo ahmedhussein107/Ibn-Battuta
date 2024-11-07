@@ -8,7 +8,7 @@ import {
     searchProducts,
     archeiveProduct,
     unarcheiveProduct,
-    getProductBySellerID,
+    getProductsById,
 } from "../controllers/product.controller.js";
 
 import {isAuthenticated} from "../routers.middleware/authentication.js";
@@ -30,6 +30,6 @@ productRouter.patch("/archiveProduct/:id", archeiveProduct);
 
 productRouter.patch("/unarchiveProduct/:id", unarcheiveProduct);
 
-productRouter.get("/getProductBySellerID/:id", getProductBySellerID);
+productRouter.get("/getProductsById/:id", getProductsById);
 
 export default productRouter;

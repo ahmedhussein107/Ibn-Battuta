@@ -1,11 +1,23 @@
 @import "./styles/themes.css";
-
+#root {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 body {
     display: flex;
     min-height: 100vh;
     justify-content: center;
     align-items: center;
 }
+/* button:disabled {
+    background-color: grey;
+}
+button:disabled:hover {
+    background-color: grey;
+} */
 
 .logo {
     height: 6em;

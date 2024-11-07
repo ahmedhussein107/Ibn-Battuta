@@ -17,9 +17,15 @@ const roles = [
     { title: "Seller", icon: sellerIcon },
 ];
 
-const Role = ({ title, icon, setSelectedRole, key }) => {
+const Role = ({ title, icon, selectedRole, setSelectedRole, key }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
+
+    useEffect(() => {
+        console.log("selectedRole", selectedRole);
+        setIsClicked(title === selectedRole);
+    }, [selectedRole]);
+
     return (
         <div
             key={key}
@@ -36,7 +42,6 @@ const Role = ({ title, icon, setSelectedRole, key }) => {
                 cursor: "pointer",
             }}
             onClick={() => {
-                setIsClicked(true);
                 setSelectedRole(title);
             }}
             onMouseEnter={() => setIsHovered(true)}
@@ -91,6 +96,7 @@ const SelectYourRoleComponent = ({ navigate }) => {
                     <Role
                         title={title}
                         icon={icon}
+                        selectedRole={selectedRole}
                         setSelectedRole={setSelectedRole}
                         key={index}
                     />

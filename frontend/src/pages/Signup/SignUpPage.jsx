@@ -219,7 +219,7 @@ const SignUpPage = () => {
                                 stylingMode="2"
                                 text={"Next"}
                                 handleClick={handleNextStep}
-                                disabbled={step == 2}
+                                disabled={step == 2}
                                 isLoading={false}
                                 customStyle={{
                                     marginLeft: "20px",
@@ -237,7 +237,7 @@ const SignUpPage = () => {
                                 stylingMode="submit"
                                 text={"Submit"}
                                 handleClick={handleSubmit}
-                                disabbled={isLoading}
+                                disabled={isLoading}
                                 isLoading={isLoading}
                                 customStyle={{
                                     marginLeft: "20px",

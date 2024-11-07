@@ -14,6 +14,7 @@ import { deleteSeller } from "../controllers/seller.controller.js";
 import { deleteTourGuide } from "../controllers/tourguide.controller.js";
 import { deleteTourist } from "../controllers/tourist.controller.js";
 import bcrypt from "bcrypt";
+import { assignCookies } from "./general.controller.js";
 // Create a model mapping to access user models dynamically
 const models = {
     advertiser: Advertiser,
@@ -90,7 +91,9 @@ export const createAdmin = async (req, res) => {
         req.body.password = hashedPassword;
 
         const newAdmin = await Admin.create(req.body);
-        res.status(201).json(newAdmin);
+        assignCookies(res, "Admin", newAdmin._id)
+            .status(201)
+            .json({ message: "Sign up successful" });
         console.log("Admin created successfully");
     } catch (e) {
         res.status(500).json({ message: e.message });

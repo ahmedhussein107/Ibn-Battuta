@@ -50,7 +50,7 @@ const Welcome = ({ title }) => {
 const styles = {
     content: {
         marginLeft: "10%",
-        marginTop: "9%",
+        marginTop: "17%",
         fontFamily: "Inika",
         color: "#fbf9f8",
     },
