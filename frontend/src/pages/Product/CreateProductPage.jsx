@@ -118,7 +118,7 @@ const CreateProductPage = () => {
                                 <Input
                                     type="text"
                                     name="name"
-                                    placeholder="Insert title here..."
+                                    placeholder="Insert name here..."
                                     value={formData.name}
                                     onChange={handleInputChange}
                                 />
@@ -299,6 +299,7 @@ const FlexGroup = styled.div`
     display: flex;
     align-items: center;
     gap: 1em;
+    min-height: 5em;
     margin-bottom: 1.5em;
 `;
 
@@ -391,6 +392,8 @@ const ArchiveToggle = styled.div`
 const ArchiveButton = styled.button`
     padding: 0.5em 1.5em;
     border-radius: 20px;
+    min-height: 2.5em;
+    margin-right: 1em;
     background-color: ${({ active }) => (active ? '#f28b82' : '#f5f5f5')};
     color: ${({ active }) => (active ? '#fff' : '#757575')};
     border: none;
