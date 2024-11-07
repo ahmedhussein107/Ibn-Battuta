@@ -11,7 +11,7 @@ import {
     getProductsById,
 } from "../controllers/product.controller.js";
 
-import {isAuthenticated} from "../routers.middleware/authentication.js";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 const productRouter = express.Router();
 
 productRouter.post("/createProduct", isAuthenticated, createProduct);
@@ -30,6 +30,6 @@ productRouter.patch("/archiveProduct/:id", archeiveProduct);
 
 productRouter.patch("/unarchiveProduct/:id", unarcheiveProduct);
 
-productRouter.get("/getProductsById/:id", getProductsById);
+productRouter.get("/getProductsById", isAuthenticated, getProductsById);
 
 export default productRouter;

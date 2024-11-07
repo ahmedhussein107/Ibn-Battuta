@@ -68,7 +68,8 @@ export const deleteActivity = async (req, res) => {
 
 export const getAdvertiserActivities = async (req, res) => {
     const query = buildFilter(req.query);
-    const advertiserId = req.params.id;
+    const advertiserId = req.user.userId;
+    console.log("advertiserId", advertiserId);
     try {
         const activities = await Activity.find({ advertiserID: advertiserId, ...query }); // Find all activities for the given advertiser ID
         res.status(200).json(activities);
