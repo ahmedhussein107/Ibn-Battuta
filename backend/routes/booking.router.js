@@ -5,7 +5,12 @@ const bookingRouter = express.Router();
 
 bookingRouter.post("/createBooking", async (req, res) => {
     try {
+        console.log("req.body", req.body);
+        if (req.user) {
+            req.body.touristID = req.user?.userId || req.body.touristID;
+        }
         const booking = await Booking.create(req.body);
+        console.log("booking", booking);
         res.status(201).json(booking);
     } catch (error) {
         res.status(400).json({ error: error.message });
