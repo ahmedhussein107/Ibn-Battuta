@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import LocationIcon from "@mui/icons-material/LocationOn";
 import LanguageIcon from "@mui/icons-material/Language";
 import TagsIcon from "@mui/icons-material/LocalOffer";
@@ -9,36 +8,9 @@ import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 
-const handleDelete = async (id) => {
-    await axiosInstance.delete(`/itinerary/deleteItinerary/${id}`);
-    window.location.reload();
-};
-
-const CardItinerary = ({ itinerary, width, height }) => {
-    const [isDeleteHovered, setIsDeleteHovered] = useState(false);
+const CardItinerary = ({ itinerary, width, height, firstLineButtons }) => {
     const image = itinerary.picture;
-    const line1 = (
-        <TitleAndButtons
-            title={itinerary.name}
-            buttons={[
-                <DeleteOutlineIcon
-                    style={{
-                        padding: "0.8vw 1.6vh",
-                        color: "red",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                        fontSize: "3.5vh",
-                        borderRadius: "2vh",
-                        backgroundColor: isDeleteHovered ? "#ffe6e6" : "transparent",
-                        transition: "background-color 0.25s",
-                    }}
-                    onMouseEnter={() => setIsDeleteHovered(true)}
-                    onMouseLeave={() => setIsDeleteHovered(false)}
-                    onClick={() => handleDelete(itinerary._id)}
-                />,
-            ]}
-        />
-    );
+    const line1 = <TitleAndButtons title={itinerary.name} buttons={firstLineButtons} />;
     const line2 = (
         <div
             style={{
@@ -103,7 +75,7 @@ const CardItinerary = ({ itinerary, width, height }) => {
         </div>
     );
     const bookingAvaliable = (
-        <div style={{ marginBottom: "0%", fontSize: "2.1vh" }}>
+        <div style={{ marginBottom: "0%", fontSize: "2vh" }}>
             {itinerary.isActivated ? (
                 <p style={{ color: "green", marginTop: "0%" }}>Booking Available</p>
             ) : (

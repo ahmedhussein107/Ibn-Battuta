@@ -5,6 +5,7 @@ import NavBar from "../../components/NavBar";
 import { Avatar, Button, Grid } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Footer from "../../components/Footer";
 import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
@@ -14,6 +15,27 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import CardItinerary from "../../components/CardItinerary";
 import travellerBackground from "../../assets/backgrounds/travellerBackground.png";
+
+const DeleteButton = ({ deleteItineraryHandler, itineraryID }) => {
+    const [isDeleteHovered, setIsDeleteHovered] = useState(false);
+    return (
+        <DeleteOutlineIcon
+            style={{
+                padding: "0.8vw 1.6vh",
+                color: "red",
+                fontWeight: "bold",
+                cursor: "pointer",
+                fontSize: "3.5vh",
+                borderRadius: "2vh",
+                backgroundColor: isDeleteHovered ? "#ffe6e6" : "transparent",
+                transition: "background-color 0.25s",
+            }}
+            onMouseEnter={() => setIsDeleteHovered(true)}
+            onMouseLeave={() => setIsDeleteHovered(false)}
+            onClick={() => deleteItineraryHandler(itineraryID)}
+        />
+    );
+};
 
 const MyItinenrary = () => {
     const navigate = useNavigate();
@@ -152,6 +174,19 @@ const MyItinenrary = () => {
     useEffect(() => {
         sortItineraries(itineraries);
     }, [sortBy]);
+
+    const deleteItineraryHandler = async (itineraryID) => {
+        const response = await axiosInstance.delete(
+            `/itinerary/deleteItinerary/${itineraryID}`
+        );
+        if (response.status === 200) {
+            sortItineraries((prevItineraries) =>
+                prevItineraries.filter((itinerary) => itinerary._id !== itineraryID)
+            );
+        } else {
+            alert("Error deleting itinerary");
+        }
+    };
 
     return (
         <div>
@@ -302,7 +337,18 @@ const MyItinenrary = () => {
                                 <CardItinerary
                                     itinerary={itinerary}
                                     width={"45vw"}
-                                    height={"33vh"}
+                                    height={"32vh"}
+                                    setItineraries={setitineraries}
+                                    firstLineButtons={[
+                                        [
+                                            <DeleteButton
+                                                deleteItineraryHandler={
+                                                    deleteItineraryHandler
+                                                }
+                                                itineraryID={itinerary._id}
+                                            />,
+                                        ],
+                                    ]}
                                 />
                             </div>
                         ))}
