@@ -1,55 +1,93 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import axiosInstance from '../../api/axiosInstance';
+import { uploadFiles } from '../../api/firebase';
 import PhotosUpload from './PhotosUpload';
+import Button from '../../components/Button.jsx';
+
+const Popup = ({ message, onClose, isError }) => (
+    <PopupContainer isError={isError}>
+        <PopupContent>
+            {message}
+            <CloseButton onClick={onClose}>×</CloseButton>
+        </PopupContent>
+    </PopupContainer>
+);
+
+const defaultData = {
+    pictures: [],
+    name: '',
+    price: 0,
+    description: '',
+    quantity: 1,
+    isArchived: false,
+}
 
 const CreateProductPage = () => {
-    const [formData, setFormData] = useState({
-        title: '',
-        description: '',
-        price: '',
-        stock: 1,
-        archived: false,
-    });
+    const [formData, setFormData] = useState(defaultData);
     const [imagePreviews, setImagePreviews] = useState([]);
+    const [popupMessage, setPopupMessage] = useState('');
+    const [showPopup, setShowPopup] = useState(false);
+    const [isErrorPopup, setIsErrorPopup] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+
+        if (name === 'price' && isNaN(value)) return;
+
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleStockChange = (change) => {
         setFormData(prev => ({
             ...prev,
-            stock: Math.max(0, prev.stock + change)
+            quantity: Math.max(1, prev.quantity + change)
         }));
+    };
+
+    const showPopupMessage = (message, isError) => {
+        setPopupMessage(message);
+        setIsErrorPopup(isError);
+        setShowPopup(true);
+        setTimeout(() => setShowPopup(false), 3000);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!formData.name || !formData.description || imagePreviews.length === 0) {
+            showPopupMessage('Please fill out all details.', true);
+            return;
+        }
 
         try {
             const files = imagePreviews.map(preview => preview.file);
-
             const uploadedFileUrls = await uploadFiles(files, 'products');
 
             const finalFormData = {
                 ...formData,
-                imageUrls: uploadedFileUrls
+                pictures: uploadedFileUrls,
             };
 
-            console.log('Form submitted:', finalFormData);
+            const response = await axiosInstance.post('/product/createProduct', finalFormData, {
+                withCredentials: true,
+            });
+            console.log('Product created:', response.data);
+
+            showPopupMessage('Product created successfully!', false);
+
+            setFormData(defaultData);
+            setImagePreviews([]);
         } catch (error) {
-            console.error('Error uploading files:', error);
+            console.error('Error creating product:', error);
+            showPopupMessage('Error creating product. Please try again.', true);
         }
     };
 
     const handleImageAdd = (newImages) => {
-        console.log("adding new images");
         setImagePreviews(prev => [...prev, ...newImages]);
     };
 
     const handleImageRemove = (idToRemove) => {
-        console.log("removing image");
         setImagePreviews(prev => prev.filter(image => image.id !== idToRemove));
     };
 
@@ -59,17 +97,25 @@ const CreateProductPage = () => {
                 <Title>Create a New Product</Title>
             </Header>
 
-            <form onSubmit={handleSubmit}>
+            {showPopup && (
+                <Popup
+                    message={popupMessage}
+                    onClose={() => setShowPopup(false)}
+                    isError={isErrorPopup}
+                />
+            )}
+
+            <form>
                 <FormContainer>
                     <div>
                         <FormSection>
                             <InputGroup>
-                                <Label>Title</Label>
+                                <Label>Product Name</Label>
                                 <Input
                                     type="text"
-                                    name="title"
+                                    name="name"
                                     placeholder="Insert title here..."
-                                    value={formData.title}
+                                    value={formData.name}
                                     onChange={handleInputChange}
                                 />
                             </InputGroup>
@@ -100,9 +146,9 @@ const CreateProductPage = () => {
                             <FlexGroup>
                                 <Label>Stock</Label>
                                 <StockControl>
-                                    <StockButton onClick={() => handleStockChange(-1)}>-</StockButton>
-                                    <StockDisplay>{formData.stock}</StockDisplay>
-                                    <StockButton onClick={() => handleStockChange(1)}>+</StockButton>
+                                    <StockButton type="button" onClick={() => handleStockChange(-1)}>-</StockButton>
+                                    <StockDisplay>{formData.quantity}</StockDisplay>
+                                    <StockButton type="button" onClick={() => handleStockChange(1)}>+</StockButton>
                                 </StockControl>
                             </FlexGroup>
                         </FormSection>
@@ -122,15 +168,15 @@ const CreateProductPage = () => {
                                 <ArchiveToggle>
                                     <ArchiveButton
                                         type="button"
-                                        active={formData.archived}
-                                        onClick={() => setFormData(prev => ({ ...prev, archived: true }))}
+                                        active={formData.isArchived}
+                                        onClick={() => setFormData(prev => ({ ...prev, isArchived: true }))}
                                     >
                                         Yes
                                     </ArchiveButton>
                                     <ArchiveButton
                                         type="button"
-                                        active={!formData.archived}
-                                        onClick={() => setFormData(prev => ({ ...prev, archived: false }))}
+                                        active={!formData.isArchived}
+                                        onClick={() => setFormData(prev => ({ ...prev, isArchived: false }))}
                                     >
                                         No
                                     </ArchiveButton>
@@ -141,13 +187,64 @@ const CreateProductPage = () => {
                 </FormContainer>
 
                 <ButtonGroup>
-                    <CancelButton type="button">Cancel</CancelButton>
-                    <CreateButton type="submit">Create Product</CreateButton>
+                    <Button
+                        stylingMode="2"
+                        text="Cancel"
+                        handleClick={() => {
+                            setFormData(defaultData);
+                            setImagePreviews([]);
+                        }}
+                        width="auto"
+                    />
+                    <Button
+                        stylingMode="1"
+                        text="Create Product"
+                        handleClick={handleSubmit}
+                        width="auto"
+                    />
                 </ButtonGroup>
             </form>
         </PageContainer>
     );
 };
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+`;
+
+const PopupContainer = styled.div`
+    position: fixed;
+    top: 1em;
+    right: 1em;
+    z-index: 1000;
+    animation: ${fadeIn} 0.3s ease;
+    background-color: ${({ isError }) => (isError ? '#f8d7da' : '#d4edda')}; // Light red for error
+`;
+
+const PopupContent = styled.div`
+    color: ${({ isError }) => (isError ? '#721c24' : '#155724')}; // Dark red for error
+    padding: 1em 1.5em;
+    border-radius: 0.25em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 1em;
+`;
+
+const CloseButton = styled.button`
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.2em;
+    cursor: pointer;
+`;
 
 const PageContainer = styled.div`
     width: 90vw;
@@ -208,7 +305,7 @@ const Label = styled.label`
     margin-bottom: 0.5em;
 `;
 
-const Input = styled.input`
+const Input = styled.textarea`
     width: 50%;
     padding: 0.75em;
     border: 0.0625em solid #e0e0e0;
@@ -234,26 +331,9 @@ const TextArea = styled.textarea`
 
 const ButtonGroup = styled.div`
     display: flex;
+    justify-content: center; 
     gap: 1em;
     margin-top: 2em;
-
-    @media (max-width: 768px) {
-        flex-direction: column;
-    }
-`;
-
-const Button = styled.button`
-    padding: 0.75em 2em;
-    border-radius: 0.5em;
-    font-size: 1em;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.2s;
-
-    @media (max-width: 768px) {
-        width: 100%;
-    }
 `;
 
 const CancelButton = styled(Button)`
@@ -285,8 +365,13 @@ const StockButton = styled.button`
     padding: 0.5rem;
     font-size: 1.2rem;
     border: none;
-    border-radius: 4px;
+    min-width: 1.5em;
+    border-radius: 0.3em;
     cursor: pointer;
+
+    &:hover {
+        background-color: #d77d7d; 
+    }
 `;
 
 const StockDisplay = styled.span`
@@ -310,7 +395,7 @@ const ArchiveButton = styled.button`
     transition: background-color 0.2s;
 
     &:hover {
-        background-color: ${({ active }) => (active ? '#e64a19' : '#e0e0e0')};
+        background-color: ${({ active }) => (active ? '#d77d7d' : '#e0e0e0')};
     }
 `;
 
