@@ -3,12 +3,15 @@ const secretKey =
     process.env.JWT_SECRET || "any key to cipher the password and decipher ";
 
 export function isAuthenticated(req, res, next) {
+    console.log("req.cookies is: ", req.cookies);
     const token = req.cookies.jwt;
     if (!token) {
         return res.status(401).json({ message: "Not logged in" });
     }
 
     jwt.verify(token, secretKey, (err, decoded) => {
+        // {userId, userType}
+        console.log("decoded is: ", decoded);
         if (err) {
             return res.status(401).json({ message: "Unauthorized" });
         }

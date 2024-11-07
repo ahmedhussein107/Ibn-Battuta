@@ -118,7 +118,7 @@ export const getUpcomingItineraries = async (req, res) => {
 
 export const getTourGuideItinerary = async (req, res) => {
     const query = buildFilter(req.query);
-    const tourguideId = req.params.id;
+    const tourguideId = req.user.userId;
     try {
         const itineraries = await Itinerary.find({ tourguideID: tourguideId, ...query }); // Find all activities for the given advertiser ID
         res.status(200).json(itineraries);

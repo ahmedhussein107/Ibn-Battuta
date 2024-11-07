@@ -57,6 +57,7 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                         <div
                             style={{
                                 width: "35%",
+                                height: "100%",
                                 display: "flex",
                                 flexDirection: "column",
                                 alignItems: "center",

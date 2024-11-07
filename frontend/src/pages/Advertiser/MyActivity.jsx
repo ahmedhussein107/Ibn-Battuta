@@ -12,7 +12,8 @@ import SwapVert from "@mui/icons-material/SwapVert";
 import ActivityCard from "../../components/ActivityCard";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import CardActivity from "../../components/CardActivity";
+import DeleteButton from "../../components/DeleteButton";
 const MyActivity = () => {
     const navigate = useNavigate();
 
@@ -37,13 +38,10 @@ const MyActivity = () => {
     };
 
     const fetchData = async (query) => {
-        const advertiserID = Cookies.get("userId");
         try {
             const response = await axiosInstance.get(
-                `/activity/getAdvertiserActivities/${advertiserID}`,
-                {
-                    params: query,
-                }
+                `/activity/getAdvertiserActivities`,
+                { params: query, withCredentials: true }
             );
             const data = response.data;
             sortActivities(data);
@@ -71,6 +69,19 @@ const MyActivity = () => {
     useEffect(() => {
         sortActivities(activities);
     }, [sortBy]);
+
+    const deleteActivityHandler = async (activityID) => {
+        const response = await axiosInstance.delete(
+            `activity/deleteActivity/${activityID}`
+        );
+        if (response.status === 200) {
+            sortActivities((prevActivities) =>
+                prevActivities.filter((activity) => activity._id !== activityID)
+            );
+        } else {
+            alert("Error deleting activity");
+        }
+    };
 
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>
@@ -211,14 +222,16 @@ const MyActivity = () => {
                 >
                     {activities.map((activity, index) => (
                         <div key={index} style={{ flex: "1 2 calc(50% - 2vh)" }}>
-                            <ActivityCard
+                            <CardActivity
                                 activity={activity}
-                                handleDelete={async () => {
-                                    await axiosInstance.delete(
-                                        `/activity/deleteActivity/${activity._id}`
-                                    );
-                                    window.location.reload();
-                                }}
+                                width={"46vw"}
+                                height={"38vh"}
+                                firstLineButtons={[
+                                    <DeleteButton
+                                        deleteHandler={deleteActivityHandler}
+                                        ID={activity._id}
+                                    />,
+                                ]}
                             />
                         </div>
                     ))}

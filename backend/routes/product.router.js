@@ -10,6 +10,7 @@ import {
     unarcheiveProduct,
     getProductsById,
 } from "../controllers/product.controller.js";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 const productRouter = express.Router();
 
 const _print = function (req, res, next) {
@@ -33,6 +34,6 @@ productRouter.patch("/archiveProduct/:id", archeiveProduct);
 
 productRouter.patch("/unarchiveProduct/:id", unarcheiveProduct);
 
-productRouter.get("/getProductsById/:id", getProductsById);
+productRouter.get("/getProductsById", isAuthenticated, getProductsById);
 
 export default productRouter;

@@ -94,6 +94,7 @@ const NavBar = () => {
     const handleLogout = () => {
         // TODO: log out logic is not implemented
         Cookies.remove("userType");
+        Cookies.remove("jwt");
         setUserType("Guest");
         navigate("/");
     };

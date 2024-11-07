@@ -9,33 +9,11 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Footer from "../../components/Footer";
 import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
-import ItineraryCard from "../../components/ItineraryCard";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import CardItinerary from "../../components/CardItinerary";
 import travellerBackground from "../../assets/backgrounds/travellerBackground.png";
-
-const DeleteButton = ({ deleteItineraryHandler, itineraryID }) => {
-    const [isDeleteHovered, setIsDeleteHovered] = useState(false);
-    return (
-        <DeleteOutlineIcon
-            style={{
-                padding: "0.8vw 1.6vh",
-                color: "red",
-                fontWeight: "bold",
-                cursor: "pointer",
-                fontSize: "3.5vh",
-                borderRadius: "2vh",
-                backgroundColor: isDeleteHovered ? "#ffe6e6" : "transparent",
-                transition: "background-color 0.25s",
-            }}
-            onMouseEnter={() => setIsDeleteHovered(true)}
-            onMouseLeave={() => setIsDeleteHovered(false)}
-            onClick={() => deleteItineraryHandler(itineraryID)}
-        />
-    );
-};
+import DeleteButton from "../../components/DeleteButton";
 
 const MyItinenrary = () => {
     const navigate = useNavigate();
@@ -140,14 +118,11 @@ const MyItinenrary = () => {
     };
 
     const fetchData = async (query) => {
-        const tourGuideID = Cookies.get("userId");
         try {
-            const response = await axiosInstance.get(
-                `/itinerary/getTourGuideItinerary/${tourGuideID}`,
-                {
-                    params: query,
-                }
-            );
+            const response = await axiosInstance.get(`/itinerary/getTourGuideItinerary`, {
+                params: query,
+                withCredentials: true,
+            });
             const data = response.data;
             sortItineraries(data);
             console.log("response sata is", data);
@@ -342,10 +317,8 @@ const MyItinenrary = () => {
                                     firstLineButtons={[
                                         [
                                             <DeleteButton
-                                                deleteItineraryHandler={
-                                                    deleteItineraryHandler
-                                                }
-                                                itineraryID={itinerary._id}
+                                                deleteHandler={deleteItineraryHandler}
+                                                ID={itinerary._id}
                                             />,
                                         ],
                                     ]}

@@ -12,6 +12,8 @@ import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import ActivityCard from "../../components/ActivityCard";
 import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
+import CardActivity from "../../components/CardActivity";
+import ShareAndMark from "../../components/ShareAndMark";
 
 const minPrice = 0;
 const maxPrice = 1000;
@@ -243,12 +245,34 @@ const Activities = () => {
                         titles={titles}
                     />
                 </div>
-                <div style={{ width: "75vw" }}>
-                    {activities.map((activity) => {
-                        return (
-                            <ActivityCard activity={activity} handleDelete={() => {}} />
-                        );
-                    })}
+                <div
+                    style={{
+                        marginTop: "1%",
+                        minHeight: "50vh",
+                        minWidth: "100vw",
+                        display: "flex",
+                        flexDirection: "column",
+                        flexWrap: "wrap",
+                        justifyContent: "space-evenly",
+                        marginLeft: "5%",
+                    }}
+                >
+                    {activities.map((activity) => (
+                        <div style={{ padding: "1.5vh" }}>
+                            <CardActivity
+                                activity={activity}
+                                width={"60vw"}
+                                height={"37vh"}
+                                firstLineButtons={[
+                                    <ShareAndMark
+                                        width="1.5vw"
+                                        height="1.5vw"
+                                        styles={{ padding: "0.5vh" }}
+                                    />,
+                                ]}
+                            />
+                        </div>
+                    ))}
                 </div>
             </div>
             <Footer />

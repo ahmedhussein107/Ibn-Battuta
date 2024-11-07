@@ -9,6 +9,7 @@ import {
     getUpcomingActivities,
     toggleFlaggedActivities,
 } from "../controllers/activity.controller.js";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const activityRouter = express.Router();
 
@@ -20,7 +21,7 @@ activityRouter.get("/getAllActivities", getActivity);
 
 activityRouter.patch("/updateActivity/:id", updateActivity);
 
-activityRouter.get("/getAdvertiserActivities/:id", getAdvertiserActivities);
+activityRouter.get("/getAdvertiserActivities/", isAuthenticated, getAdvertiserActivities);
 
 activityRouter.delete("/deleteActivity/:id", deleteActivity);
 

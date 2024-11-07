@@ -2,7 +2,14 @@ import React from "react";
 
 const TitleAndButtons = ({ title, buttons }) => {
     return (
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div
+            style={{
+                width: "95%",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+            }}
+        >
             <p
                 style={{
                     marginTop: "1%",
