@@ -1,8 +1,7 @@
 import React from "react";
+import "./PopUp.css";
 
-import "./complaint/NewComplaintPopUp.css";
-
-import Button from "./Button";
+import Button from "../Button";
 import { useState } from "react";
 import { IconButton } from "@mui/material";
 import HighlightOffSharpIcon from "@mui/icons-material/HighlightOffSharp";
@@ -39,7 +38,7 @@ const PopUp = ({ isOpen, setIsOpen, headerText, actionText, handleSubmit, childr
                 {children}
 
                 <div className="popup-footer">
-                    <Button
+                    {/* <Button
                         stylingMode="2"
                         text={"cancel"}
                         handleClick={() => {
@@ -52,7 +51,7 @@ const PopUp = ({ isOpen, setIsOpen, headerText, actionText, handleSubmit, childr
                             minHieght: "70px",
                             borderRadius: "60px",
                         }}
-                    />{" "}
+                    />{" "} */}
                     {/* footer of the popup */}
                     <Button
                         stylingMode="submit"

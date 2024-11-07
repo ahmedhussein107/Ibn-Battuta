@@ -4,7 +4,7 @@ import "./BookingPopUp.css";
 import HighlightOffSharpIcon from "@mui/icons-material/HighlightOffSharp";
 import axiosInstance from "../api/axiosInstance";
 import { useState } from "react";
-import PopUp from "./PopUp";
+import PopUp from "./PopUpsGeneric/PopUp";
 //count
 //summary
 const BookingPopUp = ({ isOpen, setIsOpen }) => {

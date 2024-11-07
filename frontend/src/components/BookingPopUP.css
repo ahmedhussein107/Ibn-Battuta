@@ -27,6 +27,10 @@
     height: 2rem;
 }
 
+.counter-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--background-color);
+}
 .counter-btn:hover:disabled {
     background-color: #ccc;
     border-color: grey;
