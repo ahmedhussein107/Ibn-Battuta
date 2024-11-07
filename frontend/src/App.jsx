@@ -47,6 +47,7 @@ import ViewCategories from "./pages/Admin/ViewCategories";
 import { HeaderProvider } from "./components/Header/HeaderContext";
 import Header from "./components/Header/Header";
 import NavBar from "./components/NavBar";
+import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 function App() {
     return (
         <HeaderProvider>
@@ -55,6 +56,7 @@ function App() {
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<HomePage />} />
+                    <Route path="/test" element={<ItineraryDetails />} />
                     <Route path="/complaints" element={<ComplaintList />} />
                     <Route
                         path="/complaint/:complaintId"

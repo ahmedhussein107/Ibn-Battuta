@@ -21,9 +21,20 @@
 }
 
 
-
+.tag-header {
+	display: flex;
+	align-items: center;
+}
 .tag-header > span {
 	font-size: 2em;
+	display: flex inline;
+	flex-direction: row;
+	
+}
+
+.tag-header > img {
+	display: inline-block;
+
 }
 .tag-icon {
 	margin-right: 10px;

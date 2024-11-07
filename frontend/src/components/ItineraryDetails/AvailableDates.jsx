@@ -2,16 +2,7 @@ import "../../styles/AvailableDates.css";
 import { useState } from "react";
 export default function AvailableDates({ dates, width, height, fontSize }) {
 	const [showAll, setShowAll] = useState(false);
-	const dateArray = dates || [
-		new Date("2024-11-05T09:00:00.000Z"),
-		new Date("2024-11-05T14:00:00.000Z"),
-		new Date("2024-11-06T10:30:00.000Z"),
-		new Date("2024-11-05T09:00:00.000Z"),
-		new Date("2024-11-05T14:00:00.000Z"),
-		new Date("2024-11-06T10:30:00.000Z"),
-		new Date("2024-11-05T14:00:00.000Z"),
-		new Date("2024-11-06T10:30:00.000Z"),
-	];
+	const dateArray = dates || [	];
 
 	const dateTimeArray = dateArray.map((dateObj) => {
 		return {
@@ -28,7 +19,7 @@ export default function AvailableDates({ dates, width, height, fontSize }) {
 			}), // e.g., "09:00"
 		};
 	});
-	console.log(dateTimeArray);
+
 
 	const displayArray = showAll ? dateTimeArray : dateTimeArray.slice(0, 6);
 	const remainingCount = dateTimeArray.length - 6;
@@ -37,7 +28,7 @@ export default function AvailableDates({ dates, width, height, fontSize }) {
 			className="available-dates-and-times-container"
 			style={{ width: width, height: height, fontSize: fontSize }}
 		>
-			<span>Available Dates and times</span>
+			<span>{ displayArray.length === 0 ? "No " :""}Available Dates and times</span>
 			<div className="dates-and-times-cards-container">
 				{displayArray.map((item, index) => (
 					<div key={index} className="card">

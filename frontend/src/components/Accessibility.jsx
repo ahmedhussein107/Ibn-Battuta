@@ -2,7 +2,7 @@ import "../styles/Accessibility.css";
 import React from "react";
 
 const Accessibility = ({
-	accessibilities = ["Wheel Chairs available", "test"],
+	accessibilities ,
 	width,
 	height,
 	fontSize,
