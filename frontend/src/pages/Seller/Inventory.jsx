@@ -11,7 +11,6 @@ import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import InventoryCard from "../../components/InventoryCard";
 const Inventory = () => {
     const navigate = useNavigate();
@@ -33,14 +32,11 @@ const Inventory = () => {
     };
 
     const fetchData = async (query) => {
-        const userId = Cookies.get("userId");
         try {
-            const response = await axiosInstance.get(
-                `/product/getProductsById/${userId}`,
-                {
-                    params: query,
-                }
-            );
+            const response = await axiosInstance.get(`/product/getProductsById`, {
+                params: query,
+                withCredentials: true,
+            });
             const data = response.data;
             sortProducts(data);
             console.log("response gata is", data);

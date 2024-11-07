@@ -31,6 +31,7 @@ export const deleteItineraries = async (req, res) => {
 
 export const getItineraryById = async (req, res) => {
     try {
+        console.log("I am here");
         const itinerary = await Itinerary.findById(req.params.id);
         if (itinerary) {
             res.status(200).json(itinerary);
@@ -118,7 +119,7 @@ export const getUpcomingItineraries = async (req, res) => {
 
 export const getTourGuideItinerary = async (req, res) => {
     const query = buildFilter(req.query);
-    const tourguideId = req.params.id;
+    const tourguideId = req.user.userId;
     try {
         const itineraries = await Itinerary.find({ tourguideID: tourguideId, ...query }); // Find all activities for the given advertiser ID
         res.status(200).json(itineraries);

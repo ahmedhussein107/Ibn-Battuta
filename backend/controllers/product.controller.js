@@ -4,6 +4,9 @@ import { buildFilter } from "../utilities/searchUtils.js";
 export const createProduct = async (req, res) => {
     try {
         const productData = req.body;
+        const {userId, userType} = req.user;
+        productData.ownerID = userId;
+        productData.ownerType = userType;
         console.log("productData: ", productData);
         const newProduct = await Product.create(productData);
         res.status(201).json(newProduct);
@@ -55,7 +58,7 @@ export const getProduct = async (req, res) => {
 };
 export const getProductsById = async (req, res) => {
     const query = buildFilter(req.query);
-    const _id = req.params.id;
+    const _id = req.user.userId;
     try {
         const products = await Product.find({ ownerID: _id, ...query });
         res.status(200).json(products);

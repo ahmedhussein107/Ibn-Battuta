@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 export default function ShareAndMark({
 	width = "25%",
 	height = "100%",
+	styles = {},
 	onSecondIconClick = () => {
 		console.log("Balabizak"); // Default function for onSecondIconClick
 	},
@@ -22,37 +23,41 @@ export default function ShareAndMark({
 	};
 
 	const emailFriend = () => {
-		const mailtoLink = `mailto:?body=${encodeURIComponent(
-			window.location.href
-		)}`;
+		const mailtoLink = `mailto:?body=${encodeURIComponent(window.location.href)}`;
 		window.open(mailtoLink, "_blank");
 	};
 
 	return (
 		<div
 			className="icon-dropdown-container"
-			style={{ width: width, height: height }}
+			style={{ width: width, height: height, ...styles }}
 		>
 			{/* Mark Icon */}
 			<div className="icon" onClick={onSecondIconClick}>
-				<img src="/markIcon.png" alt="Second Icon" />
+				<img
+					src="/markIcon.png"
+					alt="Second Icon"
+					style={{ width: width, height: height }}
+				/>
 			</div>
 
 			{/* Share with Dropdown */}
 			<div className="icon">
-				<img src="/shareIcon.png" alt="Dropdown Icon" />
+				<img
+					src="/shareIcon.png"
+					alt="Dropdown Icon"
+					style={{ width: width, height: height }}
+				/>
 
-				<div className="dropdown">
-					<div className="dropdown-option" onClick={copyToClipboard}>
+				<div className="dropdownlist">
+					<div className="dropdownlist-option" onClick={copyToClipboard}>
 						Copy
 						{/* "Copied to clipboard" message */}
 						{showCopiedMessage && (
-							<span className="copied-message">
-								Copied to clipboard
-							</span>
+							<span className="copied-message">Copied to clipboard</span>
 						)}
 					</div>
-					<div className="dropdown-option" onClick={emailFriend}>
+					<div className="dropdownlist-option" onClick={emailFriend}>
 						Email a Friend
 					</div>
 				</div>
@@ -63,5 +68,6 @@ export default function ShareAndMark({
 ShareAndMark.propTypes = {
 	width: PropTypes.string,
 	height: PropTypes.string,
+	styles: PropTypes.object,
 	onSecondIconClick: PropTypes.func.isRequired,
 };

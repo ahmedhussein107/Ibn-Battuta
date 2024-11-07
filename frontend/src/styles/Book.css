@@ -1,0 +1,38 @@
+.book-container {
+	display: flex;
+	flex-direction: column;
+	width: 20vw;
+	padding: 20px;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #dcdfe4;
+	border-radius: 8px;
+}
+
+.book-container > span {
+	font-weight: 500;
+	background-color: #c72a3d;
+	align-self: flex-start;
+	border-radius: 4px;
+	color: aliceblue;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.price-button-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px;
+}
+.price-container {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	color: #1a2b49;
+}
+
+#price {
+	font-size: 20px;
+	font-weight: 600;
+}

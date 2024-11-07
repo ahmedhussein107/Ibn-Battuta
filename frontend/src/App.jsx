@@ -48,23 +48,30 @@ import { HeaderProvider } from "./components/Header/HeaderContext";
 import Header from "./components/Header/Header";
 import NavBar from "./components/NavBar";
 import Test from "./components/Test";
-function App() {
-	return (
-		<Router>
-			<Routes>
-				{/* signin and signup pages */}
-				<Route path="/signup" element={<SignUpPage />} />
-				<Route path="/signin" element={<Signin />} />
-				<Route path="/select-your-role" element={<SelectYourRole />} />
-				{/* home pages for each role */}
-				<Route path="/admin" element={<AdminHome />} />
-				<Route path="/advertiser" element={<AdvertiserHome />} />
-				<Route path="/tourguide" element={<TourGuideHome />} />
-				<Route path="/seller" element={<SellerHome />} />
+import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 
-				<Route path="/governor" element={<GovernorHome />} />
-				{/* Home page for Tourist and Guest */}
-				<Route path="/" element={<HomePage />} />
+function App() {
+    return (
+        <HeaderProvider>
+            <Router>
+                <Header />
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/test" element={<Test />} />
+                    <Route path="/complaints" element={<ComplaintList />} />
+                    <Route
+                        path="/complaint/:complaintId"
+                        element={<ViewSingleComplaint />}
+                    />
+                    {/* signin and signup pages */}
+                    <Route path="/signup" element={<SignUpPage />} />
+                    <Route path="/signin" element={<Signin />} />
+                    <Route path="/select-your-role" element={<SelectYourRole />} />
+                    {/* home pages for each role */}
+                    <Route path="/admin" element={<AdminHome />} />
+                    <Route path="/advertiser" element={<AdvertiserHome />} />
+                    <Route path="/tourguide" element={<TourGuideHome />} />
+                    <Route path="/seller" element={<SellerHome />} />
 
 				{/* other pages */}
 				<Route path="/activities" element={<Activities />} />
