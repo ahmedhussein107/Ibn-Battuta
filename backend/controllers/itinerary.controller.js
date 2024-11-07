@@ -31,6 +31,7 @@ export const deleteItineraries = async (req, res) => {
 
 export const getItineraryById = async (req, res) => {
     try {
+        console.log("I am here");
         const itinerary = await Itinerary.findById(req.params.id);
         if (itinerary) {
             res.status(200).json(itinerary);

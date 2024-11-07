@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import { validateReference, validateReferences } from "./validatingUtils.js";
-import Ratings from "./rating.model.js";
+import Rating from "./rating.model.js";
 const productSchema = new mongoose.Schema(
     {
-        picture: String,
+        pictures: [String],
         name: String,
         price: Number,
         description: String,

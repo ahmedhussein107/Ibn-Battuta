@@ -4,7 +4,9 @@ export default function AvailableDates({ dates, width, height, fontSize }) {
 	const [showAll, setShowAll] = useState(false);
 	const dateArray = dates || [	];
 
+	console.log(dateArray);
 	const dateTimeArray = dateArray.map((dateObj) => {
+
 		return {
 			date: dateObj.toLocaleDateString("en-GB", {
 				weekday: "short", // Adds the day prefix like "Sun"

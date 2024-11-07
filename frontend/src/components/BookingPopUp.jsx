@@ -1,5 +1,5 @@
 import React from "react";
-import "./BookingPopUp.css";
+import "./BookingPopUP.css";
 
 import HighlightOffSharpIcon from "@mui/icons-material/HighlightOffSharp";
 import axiosInstance from "../api/axiosInstance";
