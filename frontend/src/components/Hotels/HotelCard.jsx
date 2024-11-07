@@ -7,10 +7,6 @@ import BathtubIcon from "@mui/icons-material/Bathtub";
 import PersonIcon from "@mui/icons-material/Person";
 import Button from "../Button";
 const HotelCard = () => {
-    usePageHeader(
-        "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
-        "Welcome to the Hotels Page"
-    );
     const handleShowMore = () => {
         console.log("Show more clicked");
     };
@@ -18,6 +14,7 @@ const HotelCard = () => {
         <div className="hotel-card">
             {/* Hotel Name */}
             <h2 className="hotel-name">Grand City Hotel</h2>
+            <h4 style={{ margin: "0" }}>Booking ID: 324224324</h4>
 
             {/* Location and Address */}
             <div className="hotel-location">
@@ -45,8 +42,14 @@ const HotelCard = () => {
                 <h3 className="room-title">Deluxe daf ddd fasdf sda</h3>
                 <div className="room-info">
                     <span className="icon-text">
+                        <PersonIcon
+                            sx={{ verticalAlign: "middle", marginRight: "5px" }}
+                        />
+                        <span>2 adult{2 > 1 ? "s" : ""}</span>
+                    </span>
+                    <span className="icon-text">
                         <BedIcon sx={{ verticalAlign: "middle", marginRight: "5px" }} />
-                        <span>2 Beds,</span>
+                        <span>2 Bed{2 > 1 ? "s" : ""}</span>
                     </span>
                     <span className="icon-text">
                         <BathtubIcon

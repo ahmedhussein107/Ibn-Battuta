@@ -1,0 +1,59 @@
+.hotels-controls-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px; /* Controls spacing between items */
+    padding: 20px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.hotels-controls-search,
+.hotels-controls-date,
+.hotels-controls-adult-counter {
+    flex: 1;
+}
+
+.hotels-controls-search .hotels-controls-search {
+    width: 100%;
+}
+
+.hotels-controls-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Spacing between the two date pickers and "To" text */
+}
+
+.hotels-controls-date p {
+    margin: 0; /* Remove margin for the 'To' text */
+}
+
+.hotels-controls-adult-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Spacing between the label and counter */
+}
+
+.hotels-controls-counter {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hotels-controls-counter button {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+.hotels-controls-counter span {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0 10px;
+}
