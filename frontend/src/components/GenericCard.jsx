@@ -9,6 +9,8 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                 height: height,
                 display: "flex",
                 flexDirection: "row",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+                borderRadius: "2vh",
             }}
         >
             <div style={{ width: "30%" }}>
@@ -16,13 +18,20 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                     src={image}
                     alt={"Image Not Found"}
                     style={{
+                        borderRadius: "2vh 0 0 2vh",
                         objectFit: "cover",
                         width: "100%",
                         height: "100%",
                     }}
                 ></img>
             </div>
-            <div style={{ width: "70%", backgroundColor: "#f0f0f0" }}>
+            <div
+                style={{
+                    width: "70%",
+                    backgroundColor: "#f0f0f0",
+                    borderRadius: "0 2vh 2vh 0",
+                }}
+            >
                 <div style={{ marginLeft: "5%" }}>
                     <div
                         style={{

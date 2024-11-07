@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import CardItinerary from "../../components/CardItinerary";
 import travellerBackground from "../../assets/backgrounds/travellerBackground.png";
-import TwoColumnFlexbox from "../../components/TwoColumnFlexBox";
 
 const MyItinenrary = () => {
     const navigate = useNavigate();
@@ -288,17 +287,26 @@ const MyItinenrary = () => {
                         minHeight: "50vh",
                     }}
                 >
-                    {
-                        <TwoColumnFlexbox
-                            divs={itineraries.map((itinerary) => (
+                    <div
+                        style={{
+                            marginTop: "1%",
+                            minHeight: "50vh",
+                            minWidth: "100vw",
+                            display: "flex",
+                            flexWrap: "wrap",
+                            justifyContent: "space-evenly",
+                        }}
+                    >
+                        {itineraries.map((itinerary) => (
+                            <div style={{ padding: "1.5vh" }}>
                                 <CardItinerary
                                     itinerary={itinerary}
-                                    width={"42vw"}
+                                    width={"45vw"}
                                     height={"33vh"}
                                 />
-                            ))}
-                        />
-                    }
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <Footer />

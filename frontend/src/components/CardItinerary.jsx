@@ -135,9 +135,16 @@ const CardItinerary = ({ itinerary, width, height }) => {
     const deactivateButton = (
         <Button
             stylingMode="2"
-            text="Deactivate"
+            text={itinerary.isActivated ? "Deactivate" : "Activate"}
             width="70%"
-            customStyle={{ marginTop: "2%" }}
+            customStyle={{
+                marginTop: "2%",
+                color: itinerary.isActivated ? "red" : "green",
+                borderColor: itinerary.isActivated ? "red" : "green",
+                ":hover": {
+                    backgroundColor: itinerary.isActivated ? "red" : "green",
+                },
+            }}
         />
     );
     const card = (
