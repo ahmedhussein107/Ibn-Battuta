@@ -27,7 +27,6 @@ import customActivityRouter from "./routes/customActivity.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import login from "./controllers/login.controller.js";
-
 dotenv.config();
 const app = express();
 connect(process.env.MONGO_URI)

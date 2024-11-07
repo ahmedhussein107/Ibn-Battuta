@@ -9,6 +9,7 @@ import {
     deleteItineraries,
     getTourGuideItinerary,
     searchItineraries,
+    getFreeSpots,
 } from "../controllers/itinerary.controller.js";
 
 const itineraryRouter = express.Router();
@@ -30,5 +31,7 @@ itineraryRouter.get("/getTourGuideItinerary/:id", getTourGuideItinerary);
 itineraryRouter.get("/searchItineraries", searchItineraries);
 
 itineraryRouter.delete("/", deleteItineraries);
+
+itineraryRouter.get("/getFreeSpots/:id", getFreeSpots);
 
 export default itineraryRouter;

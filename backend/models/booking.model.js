@@ -19,8 +19,10 @@ const bookingSchema = mongoose.Schema(
             refPath: "bookingType",
         },
         // this will be calculated from the typeId
-        // totalPrice: { type: Number, required: true },
         count: { type: Number, required: true },
+        totalPrice: { type: Number, required: true },
+        pointsAdded: { type: Number, required: true },
+        isInItinerary: { type: Boolean, default: false },
     },
     { timestamps: true }
 );

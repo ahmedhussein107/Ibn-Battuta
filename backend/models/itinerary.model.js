@@ -37,7 +37,6 @@ const itinerarySchema = new mongoose.Schema(
         isFlagged: { type: Boolean, default: false },
         ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
         sumOfRatings: { type: Number, default: 0 },
-        freeSpots: { type: Number, default: 0 },
     },
     { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
