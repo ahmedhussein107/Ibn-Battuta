@@ -1,14 +1,15 @@
 import React from "react";
-import "./complaint/NewComplaintPopUp.css";
+import "./BookingPopUp.css";
 
-import Button from "./Button";
 import HighlightOffSharpIcon from "@mui/icons-material/HighlightOffSharp";
 import axiosInstance from "../api/axiosInstance";
 import { useState } from "react";
+import PopUp from "./PopUp";
 //count
 //summary
 const BookingPopUp = ({ isOpen, setIsOpen }) => {
     const [numberOfTickets, setNumberOfTickets] = useState(1);
+
     const itinerary = {
         _id: "6703f5310ecc1ad25ff95144",
         name: "tour in GUC",
@@ -43,94 +44,54 @@ const BookingPopUp = ({ isOpen, setIsOpen }) => {
         id: "6703f5310ecc1ad25ff95144",
     };
 
-    const [isLoading, setIsLoading] = useState(false);
-
     const handleSubmit = async () => {
-        setIsLoading(true);
         try {
-            setIsOpen(false);
             //buy ticket;
+
+            setIsOpen(false);
             window.location.reload();
-        } catch (err) {
-        } finally {
-            setIsLoading(false);
-        }
+        } catch (err) {}
     };
 
-    if (!isOpen) return null;
     return (
-        <div className="popup-overlay">
-            <div className="popup">
-                <div className="popup-header">
-                    <button className="close-btn" onClick={() => setIsOpen(false)}>
-                        <HighlightOffSharpIcon />
+        <PopUp
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            headerText={"Please fill in the following to complete your booking"}
+            actionText={"Confirm"}
+            handleSubmit={handleSubmit}
+        >
+            <div className="ticket-container">
+                <div className="ticket-counter">
+                    <button
+                        className="counter-btn"
+                        disabled={numberOfTickets === 1}
+                        onClick={() => setNumberOfTickets(numberOfTickets - 1)}
+                    >
+                        -
                     </button>
-                    <h2>Please fill in the following to complete your booking</h2>
+                    <span id="ticket-count">{numberOfTickets}</span>
+                    <button
+                        className="counter-btn"
+                        onClick={() => setNumberOfTickets(numberOfTickets + 1)}
+                    >
+                        +
+                    </button>
                 </div>
-
-                <div className="ticket-container">
-                    <div className="ticket-counter">
-                        <button
-                            className="counter-btn"
-                            disabled={numberOfTickets === 1}
-                            onClick={() => setNumberOfTickets(numberOfTickets - 1)}
-                        >
-                            -
-                        </button>
-                        <span id="ticket-count">{numberOfTickets}</span>
-                        <button
-                            className="counter-btn"
-                            onClick={() => setNumberOfTickets(numberOfTickets + 1)}
-                        >
-                            +
-                        </button>
-                    </div>
-                    <div className="price-info">
-                        <p>
-                            Price per person:{" "}
-                            <span className="price-per-person">$ {itinerary.price}</span>
-                        </p>
-                        <p>
-                            Total price:{" "}
-                            <span id="total-price">
-                                $ {itinerary.price * numberOfTickets}
-                            </span>
-                        </p>
-                    </div>
-                </div>
-
-                <div className="popup-footer">
-                    <Button
-                        stylingMode="2"
-                        text={"cancel"}
-                        handleClick={() => {
-                            setIsOpen(false);
-                        }}
-                        customStyle={{
-                            marginLeft: "20px",
-                            width: "173px",
-                            height: "55px",
-                            minHieght: "70px",
-                            borderRadius: "60px",
-                        }}
-                    />{" "}
-                    <Button
-                        stylingMode="submit"
-                        text={"reply"}
-                        handleClick={handleSubmit}
-                        disabled={isLoading}
-                        isLoading={isLoading}
-                        customStyle={{
-                            marginLeft: "20px",
-                            width: "173px",
-                            height: "55px",
-                            minHieght: "70px",
-                            borderRadius: "60px",
-                        }}
-                    />
+                <div className="price-info">
+                    <p>
+                        Price per person:{" "}
+                        <span className="price-per-person">$ {itinerary.price}</span>
+                    </p>
+                    <p>
+                        Total price:{" "}
+                        <span id="total-price">
+                            $ {itinerary.price * numberOfTickets}
+                        </span>
+                    </p>
                 </div>
             </div>
-        </div>
+        </PopUp>
     );
 };
 
