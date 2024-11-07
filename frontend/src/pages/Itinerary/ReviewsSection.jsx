@@ -49,7 +49,7 @@ const ReviewsSection = ({ reviews, width, height, fontSize }) => {
                     <HeaderContent>
                         <AverageRating>
                             {averageRating}
-                            <Star size="0.8em" filled>
+                            <Star size="0.8em" $filled={"t"}>
                                 ★
                             </Star>
                         </AverageRating>
@@ -101,7 +101,7 @@ const ReviewsSection = ({ reviews, width, height, fontSize }) => {
                                         .map((_, i) => (
                                             <Star
                                                 key={i}
-                                                filled={i < Math.floor(review.rating)}
+                                                $filled={i < Math.floor(review.rating)? "t" : "f"}
                                             >
                                                 ★
                                             </Star>
@@ -157,7 +157,7 @@ const AverageRating = styled.div`
 `;
 
 const Star = styled.span`
-    color: ${({ filled }) => (filled ? "#ffa500" : "#ccc")};
+    color: ${({ $f }) => ($f == "t"? "#ffa500" : "#ccc")};
     font-size: ${({ size }) => size || "1.5em"};
 `;
 

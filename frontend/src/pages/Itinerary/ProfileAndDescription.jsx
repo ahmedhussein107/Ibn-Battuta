@@ -13,7 +13,7 @@ const ProfileAndDescription = ({
 	return (
 		<Container width={width} height={height} fontSize={fontSize}>
 			<ProfileHeader>
-				<ProfilePic picture={picture}></ProfilePic>
+				<ProfilePic $picture1={picture}></ProfilePic>
 				<Name>{name}</Name>
 			</ProfileHeader>
 			<AboutSection>
@@ -43,7 +43,7 @@ const ProfilePic = styled.div`
 	width: 3em;
 	height: 3em;
 	border-radius: 50%;
-	background-image: url(${({ picture }) => picture});
+	background-image: url(${({ $picture1 }) => $picture1});
 	background-size: cover;
 	background-position: center;
 	transition: background-image 1.2s ease;
