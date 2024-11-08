@@ -7,8 +7,7 @@ import CheckboxList from "../../components/CheckBoxList";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import landmarkbackground from "../../assets/backgrounds/landmarksBackground.png";
-const minPrice = 0;
-const maxPrice = 1000;
+import CardLandmark from "../../components/CardLandmark";
 
 const Landmarks = () => {
     const [landmarks, setLandmarks] = useState([]);
@@ -145,7 +144,7 @@ const Landmarks = () => {
     ];
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
-            <div style={{ position: "fixed", top: 0, left: "9%" }}>
+            <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
                 <NavBar />
             </div>
             <div
@@ -170,7 +169,7 @@ const Landmarks = () => {
             >
                 <div
                     style={{
-                        width: "28vw",
+                        width: "30vw",
                         borderRadius: "3vh",
                     }}
                 >
@@ -193,13 +192,19 @@ const Landmarks = () => {
                 >
                     LandMarks
                 </div>
-                {/* <div style={{ width: "75vw" }}>
-                    {activities.map((activity) => {
+                <div style={{ width: "70vw" }}>
+                    {landmarks.map((landmark) => {
                         return (
-                            <ActivityCard activity={activity} handleDelete={() => {}} />
+                            <div>
+                                <CardLandmark
+                                    landmark={landmark}
+                                    width={"60vw"}
+                                    height={"35vh"}
+                                />
+                            </div>
                         );
                     })}
-                </div> */}
+                </div>
             </div>
             <Footer />
         </div>

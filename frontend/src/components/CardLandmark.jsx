@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import LocationIcon from "@mui/icons-material/LocationOn";
-import DateIcon from "@mui/icons-material/Today";
 import TagsIcon from "@mui/icons-material/LocalOffer";
-import Button from "./Button";
 import GenericCard from "./GenericCard";
 import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
-import { Rating } from "@mui/material";
 import LandmarkTimes from "./LandmarkTimes";
 
 const iconSize = "0.85rem";
 
-const CardLandmark = ({ landmark, width, height, firstLineButtons }) => {
+const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
     const image = landmark.pictures[0];
     const line1 = (
         <div style={{ fontSize: "1.3rem" }}>
@@ -47,20 +44,32 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons }) => {
         />
     );
 
-    const openingHours = <LandmarkTimes />;
+    const openingHours = <LandmarkTimes times={landmark.openingHours} />;
+
+    const ticketPrices = (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                fontSize: "1rem",
+                fontWeight: "bold",
+            }}
+        >
+            {Object.keys(landmark.ticketPrices).map((key) => (
+                <div key={key}>
+                    {key.toString().charAt(0).toUpperCase() + key.toString().slice(1)}:{" "}
+                    {landmark.ticketPrices[key]}
+                </div>
+            ))}
+        </div>
+    );
 
     const card = (
         <GenericCard
             image={image}
             aboveLine={[line1, line2]}
-            bottomLeft={[description, ratings]}
-            bottomRight={[
-                bookingAvaliable,
-                availableSeats,
-                originalPrice,
-                currentPrice,
-                editButton,
-            ]}
+            bottomLeft={[description, openingHours]}
+            bottomRight={[ticketPrices]}
             width={width}
             height={height}
         />

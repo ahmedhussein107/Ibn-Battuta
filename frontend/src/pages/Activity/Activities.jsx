@@ -269,6 +269,19 @@ const Activities = () => {
                                         styles={{ padding: "0.5vh" }}
                                     />,
                                 ]}
+                                bottomButtons={[
+                                    {
+                                        text: "Edit",
+                                        onClick: () => navigate("itinerary"), // TODO: change url
+                                        type: "1",
+                                        width: "50%",
+                                        styles: {
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        },
+                                    },
+                                ]}
                             />
                         </div>
                     ))}
