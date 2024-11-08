@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import axiosInstance from '../../api/axiosInstance';
 import { uploadFiles } from '../../api/firebase';
-import PhotosUpload from './PhotosUpload';
+import PhotosUpload from '../../components/PhotosUpload.jsx';
 import Button from '../../components/Button.jsx';
 import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
 import NavBar from "../../components/NavBar.jsx";
