@@ -11,6 +11,7 @@ export const getActivity = async (req, res) => {
 };
 
 export const createActivity = async (req, res) => {
+
     const activity = new Activity(req.body);
 
     try {

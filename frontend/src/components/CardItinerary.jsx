@@ -8,27 +8,38 @@ import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 
-const CardItinerary = ({ itinerary, width, height, firstLineButtons, bottomButtons }) => {
+const CardItinerary = ({
+    itinerary,
+    width,
+    height,
+    firstLineButtons = [],
+    bottomButtons = [],
+}) => {
     const image = itinerary.picture;
-    const line1 = <TitleAndButtons title={itinerary.name} buttons={firstLineButtons} />;
+    const line1 = (
+        <div style={{ fontSize: "1.3rem" }}>
+            <TitleAndButtons title={itinerary.name} buttons={firstLineButtons} />
+        </div>
+    );
     const line2 = (
         <div
             style={{
                 display: "flex",
                 flexDirection: "row",
                 gap: "3vw",
+                fontSize: "0.9rem",
             }}
         >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
-                <LocationIcon style={{ fontSize: "2vh" }} />
+                <LocationIcon style={{ fontSize: "0.8rem" }} />
                 <span>{itinerary.location}</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
-                <LanguageIcon style={{ fontSize: "2vh" }} />
+                <LanguageIcon style={{ fontSize: "0.8rem" }} />
                 <span>{itinerary.language}</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
-                <TagsIcon style={{ fontSize: "2vh" }} />
+                <TagsIcon style={{ fontSize: "0.8rem" }} />
                 <span>{itinerary.tags.join(", ")}</span>
             </div>
         </div>
@@ -38,7 +49,7 @@ const CardItinerary = ({ itinerary, width, height, firstLineButtons, bottomButto
         <TruncatedText
             text={itinerary.description}
             width={"100%"}
-            height={"40%"}
+            height={"60%"}
             fontSize={"2vh"}
         />
     );

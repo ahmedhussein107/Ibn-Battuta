@@ -234,8 +234,10 @@ const Activities = () => {
             <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
                 <div
                     style={{
-                        width: "25vw",
+                        width: "40vw",
                         borderRadius: "3vh",
+                        marginTop: "1%",
+                        marginBottom: "1%",
                     }}
                 >
                     <SideBar
@@ -246,14 +248,12 @@ const Activities = () => {
                 </div>
                 <div
                     style={{
-                        marginTop: "1%",
                         minHeight: "50vh",
                         width: "100vw",
                         display: "flex",
                         flexDirection: "column",
                         flexWrap: "wrap",
                         justifyContent: "space-evenly",
-                        marginLeft: "5%",
                     }}
                 >
                     {activities.map((activity, index) => (
@@ -264,10 +264,23 @@ const Activities = () => {
                                 height={"34vh"}
                                 firstLineButtons={[
                                     <ShareAndMark
-                                        width="1.5vw"
-                                        height="1.5vw"
+                                        width="1.2vw"
+                                        height="1.2vw"
                                         styles={{ padding: "0.5vh" }}
                                     />,
+                                ]}
+                                bottomButtons={[
+                                    {
+                                        text: "Edit",
+                                        onClick: () => navigate("itinerary"), // TODO: change url
+                                        type: "1",
+                                        width: "50%",
+                                        styles: {
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        },
+                                    },
                                 ]}
                             />
                         </div>

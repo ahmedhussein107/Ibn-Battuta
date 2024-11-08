@@ -1,6 +1,12 @@
 {
   "dependencies": {
+    "@date-io/dayjs": "^3.0.0",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
-    "@fortawesome/react-fontawesome": "^0.2.2"
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@mui/material": "^6.1.6",
+    "@mui/x-date-pickers": "^7.22.2",
+    "@mui/x-date-pickers-pro": "^7.22.2"
   }
 }

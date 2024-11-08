@@ -1,47 +1,34 @@
 import React, { useState } from "react";
-import LocationIcon from "@mui/icons-material/LocationOn";
-import LanguageIcon from "@mui/icons-material/Language";
-import TagsIcon from "@mui/icons-material/LocalOffer";
 import Button from "./Button";
 import GenericCard from "./GenericCard";
 import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 
-const CardProduct = ({ product, width, height, firstLineButtons }) => {
+const CardProduct = ({
+	product,
+	width,
+	height,
+	firstLineButtons,
+	controlButtons,
+	lowerHeight = "68%",
+	upperHeight = "30%",
+	line2 = <></>,
+}) => {
 	const image = product.pictures[0];
-	const line1 = <TitleAndButtons title={product.name} buttons={firstLineButtons} />;
-	const line2 = (
-		<div
-			style={{
-				display: "flex",
-				flexDirection: "row",
-				gap: "3vw",
-			}}
-		>
-			<div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
-				<LocationIcon style={{ fontSize: "2vh" }} />
-				<span>{product.location}</span>
-			</div>
-			<div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
-				<LanguageIcon style={{ fontSize: "2vh" }} />
-				<span>{product.language}</span>
-			</div>
+	const line1 = (
+		<div style={{ fontSize: "1.8rem" }}>
+			<TitleAndButtons title={product.name} buttons={firstLineButtons} />
 		</div>
 	);
 
 	const description = (
-		<TruncatedText
-			text={product.description}
-			width={"100%"}
-			height={"80%"}
-			fontSize={"2vh"}
-		/>
+		<TruncatedText text={product.description} width={"100%"} height={"80%"} fontSize={"2vh"} />
 	);
 	const rating = Math.floor(product.rating);
 	console.log("rating", rating);
 	const ratings = (
-		<div style={{ display: "flex", flexDirection: "row", marginTop: "-2%" }}>
+		<div style={{ display: "flex", flexDirection: "row" }}>
 			<Rating name="read-only" value={rating} readOnly />
 			<p style={{ marginLeft: "5%", marginTop: "0%" }}>{product.ratings.length}</p>
 		</div>
@@ -49,7 +36,6 @@ const CardProduct = ({ product, width, height, firstLineButtons }) => {
 	const availableProducts = (
 		<p
 			style={{
-				marginTop: "-4%",
 				color: "brown",
 				fontSize: "1.6vh",
 			}}
@@ -63,7 +49,6 @@ const CardProduct = ({ product, width, height, firstLineButtons }) => {
 				display: "flex",
 				flexDirection: "row",
 				fontWeight: "bold",
-				// marginTop: "-15%",
 			}}
 		>
 			<p>USD</p>
@@ -75,7 +60,12 @@ const CardProduct = ({ product, width, height, firstLineButtons }) => {
 			stylingMode="1"
 			text="Edit"
 			width="70%"
-			// customStyle={{ marginTop: "-5%" }}
+			height="30%"
+			customStyle={{
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+			}}
 		/>
 	);
 	const archeiveButton = (
@@ -83,8 +73,11 @@ const CardProduct = ({ product, width, height, firstLineButtons }) => {
 			stylingMode="2"
 			text={product.isArchived ? "Deactivate" : "Activate"}
 			width="70%"
+			height="30%"
 			customStyle={{
-				marginTop: "2%",
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
 				color: product.isArchived ? "red" : "green",
 				borderColor: product.isArchived ? "red" : "green",
 				":hover": {
@@ -93,14 +86,30 @@ const CardProduct = ({ product, width, height, firstLineButtons }) => {
 			}}
 		/>
 	);
+	const buttons = (
+		<div
+			style={{
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "flex-end",
+				alignItems: "center",
+				gap: "7%",
+			}}
+		>
+			{price}
+			{controlButtons}
+		</div>
+	);
 	const card = (
 		<GenericCard
 			image={image}
-			aboveLine={[line1]}
+			aboveLine={[line1, line2]}
 			bottomLeft={[description, ratings]}
-			bottomRight={[availableProducts, price, editButton, archeiveButton]}
+			bottomRight={[availableProducts, buttons]}
 			width={width}
 			height={height}
+			upperHeight={upperHeight}
+			lowerHeight={lowerHeight}
 		/>
 	);
 	return card;

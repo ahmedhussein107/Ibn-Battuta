@@ -8,17 +8,27 @@ import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 
-const iconSize = "1.5vh";
+const iconSize = "0.85rem";
 
-const CardActivity = ({ activity, width, height, firstLineButtons }) => {
+const CardActivity = ({
+    activity,
+    width,
+    height,
+    firstLineButtons = [],
+    bottomButtons = [],
+}) => {
     const image = activity.picture;
-    const line1 = <TitleAndButtons title={activity.name} buttons={firstLineButtons} />;
+    const line1 = (
+        <div style={{ fontSize: "1.3rem" }}>
+            <TitleAndButtons title={activity.name} buttons={firstLineButtons} />
+        </div>
+    );
     const line2 = (
         <div
             style={{
                 display: "flex",
                 flexDirection: "row",
-                fontSize: "1.7vh",
+                fontSize: "0.9rem",
                 gap: "2vw",
             }}
         >
@@ -45,7 +55,7 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
         <TruncatedText
             text={activity.description || ""}
             width={"100%"}
-            // height={"80%"}
+            height={"80%"}
             fontSize={"2vh"}
         />
     );
@@ -109,18 +119,26 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
             USD {afterDiscount}
         </p>
     );
-    const editButton = (
-        <Button
-            stylingMode="1"
-            text="Edit"
-            width="50%"
-            height="2.5vh"
-            customStyle={{
+
+    const buttons = (
+        <div
+            style={{
                 display: "flex",
-                justifyContent: "center",
+                flexDirection: "column",
                 alignItems: "center",
+                width: "100%",
             }}
-        />
+        >
+            {bottomButtons.map(({ text, type, width, onClick, styles }) => (
+                <Button
+                    text={text}
+                    stylingMode={type}
+                    width={width}
+                    handleClick={onClick}
+                    customStyle={styles}
+                />
+            ))}
+        </div>
     );
 
     const card = (
@@ -133,7 +151,7 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
                 availableSeats,
                 originalPrice,
                 currentPrice,
-                editButton,
+                buttons,
             ]}
             width={width}
             height={height}
