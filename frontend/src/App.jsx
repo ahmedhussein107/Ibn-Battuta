@@ -50,6 +50,8 @@ import NavBar from "./components/NavBar";
 import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 import Test from "./components/Test";
 import PopUp from "./components/PopUpsGeneric/PopUp";
+import TermsAndConditions from "./pages/Privacy/TermsAndConditions";
+import Flights from "./pages/Flights/Flights";
 
 function App() {
     return (
@@ -90,7 +92,19 @@ function App() {
                     />
                     <Route path="/products/:productId" element={<ViewProductPage />} />
                     <Route path="/tourguide" element={<TourGuideProfilePage />} />
+                    <Route path="/category/:id" element={<UpdateCategory />} />
+                    <Route path="/category-create" element={<CreateCategory />} />
+                    <Route path="/category-all" element={<GetAllCategories />} />
+                    <Route path="/tag/:id" element={<UpdateTag />} />
+                    <Route path="/tag-create" element={<CreateTag />} />
+                    <Route path="/tag-all" element={<GetAllTags />} />
                     <Route path="/landmark-governor" element={<GovernorLandmarks />} />
+                    <Route path="/itinerary" element={<TourGuideItineraries />} />
+                    <Route
+                        path="/itinerary-customAvtivity"
+                        element={<TourGuideCustomActivities />}
+                    />
+                    <Route path="/activity" element={<AdvertiserActivities />} />
                     <Route path="/advertiser/assigned" element={<MyActivity />} />
                     <Route path="/tourguide/assigned" element={<MyItinenrary />} />
                     <Route path="/inventory" element={<Inventory />} />
@@ -106,6 +120,9 @@ function App() {
 
                     <Route path="/admin/tags" element={<ViewTags />} />
                     <Route path="/admin/category" element={<ViewCategories />} />
+
+                    <Route path="/privacy" element={<TermsAndConditions />} />
+                    <Route path="/flights" element={<Flights />} />
                 </Routes>
             </Router>
         </HeaderProvider>
