@@ -63,7 +63,7 @@ function App() {
                     <Route path="/advertiser" element={<AdvertiserHome />} />
                     <Route path="/tourguide" element={<TourGuideHome />} />
                     <Route path="/seller" element={<SellerHome />} />
-                    <Route path="/governor" element={<GovernorHome />} />
+
                     {/* other pages */}
                     <Route path="/activities" element={<Activities />} />
                     <Route path="/itineraries" element={<Itineraries />} />
@@ -91,7 +91,6 @@ function App() {
 
                     <Route path="/landmark/landmark/" element={<LandmarkPage />} />
                     <Route path="/create-itinerary" element={<CreateItineraryPage />} />
-                    <Route path="/choose-activity" element={<ChooseActivity />} />
                     <Route path="/create-landmark" element={<CreateLandmarkPage />} />
 
                     <Route path="/admin/tags" element={<ViewTags />} />
