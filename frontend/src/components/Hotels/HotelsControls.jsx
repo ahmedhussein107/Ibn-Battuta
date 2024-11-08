@@ -18,15 +18,14 @@ const HotelsControls = ({
     setEndDate = () => {},
     guests = 1,
     setGuests = () => {},
+    onSearch = async () => {},
 }) => {
     const [isSearching, setIsSearching] = useState(false);
-    const handleSearch = () => {
+    const handleSearch = async () => {
+        console.log("i am here at handle search");
         try {
             setIsSearching(true);
-            for (let i = 0; i < 1000000000; i++) {
-                console.log(i);
-            }
-            onSearch();
+            await onSearch();
         } catch (err) {
         } finally {
             setIsSearching(false);
@@ -36,6 +35,7 @@ const HotelsControls = ({
         setStartDate(dateStrings[0]);
         setEndDate(dateStrings[1]);
     };
+
     return (
         <div className="hotels-controls-container">
             <div className="hotels-controls-search">
@@ -55,7 +55,10 @@ const HotelsControls = ({
                     <span>adult count</span>
                 </span>{" "}
                 <div className="hotels-controls-counter">
-                    <IconButton onClick={() => setGuests(guests - 1)}>
+                    <IconButton
+                        onClick={() => setGuests(guests - 1)}
+                        disabled={guests === 1}
+                    >
                         <RemoveIcon />
                     </IconButton>
                     <span>{guests}</span>
@@ -69,6 +72,7 @@ const HotelsControls = ({
                 text={"Find Hotel"}
                 handleClick={handleSearch}
                 isLoading={isSearching}
+                disabled={isSearching}
                 customStyle={{
                     width: "173px",
                     height: "3rem",

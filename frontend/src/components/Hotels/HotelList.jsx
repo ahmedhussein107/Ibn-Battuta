@@ -5,53 +5,103 @@ import usePageHeader from "../Header/UseHeaderPage";
 import HotelsControls from "./HotelsControls";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import axiosInstance from "../../api/axiosInstance";
+const room = {
+    name: "Grand City Hotel",
+    address: "123 Main Street, New York, USA",
+    addressLandmark: "New Downtown",
+    city: "New York",
+    image: "https://picsum.photos/200/300",
+    rooms: 10,
+    bathrooms: 8,
+    beds: 15,
+    guests: 20,
+    totalPrice: 200,
+    checkIn: "12:00 PM",
+    checkOut: "10:00 PM",
+    cancellationPolicy: "Free cancellation",
+    paymentMethod: "Credit Card",
+    description: "This is a sample description.",
+    _id: 344542321, // when booked
+};
 
 const HotelList = ({ isAllOffers = true }) => {
     if (isAllOffers) {
         usePageHeader(
             "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
-
             "Welcome to the Hotels Page"
         );
     }
     const [rooms, setRooms] = useState([]);
-    const room = {
-        name: "Grand City Hotel",
-        address: "123 Main Street, New York, USA",
-        addressLandmark: "New Downtown",
-        city: "New York",
-        image: "https://picsum.photos/200/300",
-        rating: 4.5,
-        rooms: 10,
-        bathrooms: 8,
-        beds: 15,
-        guests: 20,
-        totalPrice: 200,
-        checkIn: "12:00 PM",
-        checkOut: "10:00 PM",
-        cancellationPolicy: "Free cancellation",
-        paymentMethod: "Credit Card",
-        description: "This is a sample description.",
-        _id: 344542321,
-    };
+
     let _list = [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
 
-    const [searchParams] = useSearchParams();
-    const query = searchParams.get("query");
-    const location = searchParams.get("location");
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [city, setCity] = useState(searchParams.get("city") || "");
+    const [start, setStart] = useState(searchParams.get("start") || "");
+    const [end, setEnd] = useState(searchParams.get("end") || "");
+    const [guests, setGuests] = useState(parseInt(searchParams.get("guests")) || 2);
+    const fetchRooms = async () => {
+        let url = "/hotels";
+        if (!isAllOffers) {
+            url = "/hotels/my";
+        }
+        try {
+            const response = await axiosInstance.get(url, {
+                params: {
+                    city,
+                    start,
+                    end,
+                    guests,
+                },
+                withCredentials: true,
+            });
+            setRooms(response.data);
+        } catch (err) {
+            console.log(err);
+            setRooms([]);
+        }
+    };
+
+    const handleSearchButton = async () => {
+        const newParams = {};
+        if (city.trim()) newParams.city = city;
+        if (guests) newParams.guests = guests;
+        if (start.trim()) newParams.start = start;
+        if (end.trim()) newParams.end = end;
+        console.log("the new params are", newParams);
+        setSearchParams(newParams);
+        await fetchRooms();
+    };
 
     useEffect(() => {
-        if (query) {
-        }
-    }, [query, location]);
+        setCity(searchParams.get("city") || "");
+        setStart(searchParams.get("start") || "");
+        setEnd(searchParams.get("end") || "");
+        setGuests(parseInt(searchParams.get("guests")) || 2);
+        //fetchRooms();
+    }, [searchParams]);
 
     return (
         <div className="hotel-list-with-controls">
-            {isAllOffers && <HotelsControls />}
+            {isAllOffers && (
+                <HotelsControls
+                    searchCity={city}
+                    setsearchCity={setCity}
+                    startDate={start}
+                    setStartDate={setStart}
+                    endDate={end}
+                    setEndDate={setEnd}
+                    guests={guests}
+                    setGuests={setGuests}
+                    onSearch={handleSearchButton}
+                />
+            )}
             <div className="hotel-list-container">
                 <div className="hotel-grid">
-                    {_list.map((item) => (
-                        <HotelCard key={item} offer={room} isAllOffers={isAllOffers} />
+                    {/* change later for rooms.map(offer=(item)) */}
+                    {_list.map((item, index) => (
+                        <HotelCard key={index} offer={room} isAllOffers={isAllOffers} />
                     ))}
                 </div>
             </div>

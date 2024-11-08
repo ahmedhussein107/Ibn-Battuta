@@ -37,10 +37,12 @@ button:hover {
     margin: 0 var(--spacing-small);
     color: white;
     flex-direction: block;
+    display: flex;
     align-self: center;
     align-items: center;
     justify-content: center;
 }
+
 .button-submit:hover {
     color: var(--text-color);
     background-color: var(--accent-color);

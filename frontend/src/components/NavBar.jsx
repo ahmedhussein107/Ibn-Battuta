@@ -170,9 +170,11 @@ const NavBar = () => {
                                 icon={faBell}
                                 className="notification-image"
                             />
-                            <span className="notification-badge">
-                                {notificationCount}
-                            </span>
+                            {notificationCount > 0 && (
+                                <span className="notification-badge">
+                                    {notificationCount}
+                                </span>
+                            )}
                         </div>
                         <div className="profile-dropdown">
                             <img
