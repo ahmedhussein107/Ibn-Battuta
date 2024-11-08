@@ -14,6 +14,8 @@ import "../../styles/ItineraryDetails.css";
 import ItineraryTimeline from "../../components/ItineraryTimline.jsx";
 import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
 import TicketCounter from "../../components/TicketCounter.jsx";
+import SuccessfulBooking from "../../components/SuccessfulBooking.jsx";
+import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
 const ItineraryDetails = () => {
 	const [itinerary, setItinerary] = useState({
 		_id: "6703f5310ecc1ad25ff95144",
@@ -61,13 +63,54 @@ const ItineraryDetails = () => {
 	});
 
 	//For mangaing page logic
-	const [popUpIsOpen, setPopUpIsOpen] = useState(false);
-	
-	const handleBooking = () => {
-		// Open pop up with booking details
-		setPopUpIsOpen(true);
-	};
+	const [BookPopUp, setBookPopUp] = useState(false);
+	const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
 
+	const handleBooking = async () => {
+		try {
+			// TODO: handle if the payment can be made due to tourist money.
+			// TODO: get the touristId from the browser
+			//TODO: handle points calculation after additition of requirement 55
+			const bookingResponse = await axiosInstance.post(
+				"booking/createBooking",
+				{
+					touristID: "670442014aa7c398b29183c9",
+					bookingType: "Itinerary",
+					typeId: itinerary._id,
+					totalPrice,
+					count: ticketCount,
+				}
+			);
+
+			// Check the response status
+			if (bookingResponse.status === 201) {
+				// Add any additional success handling here
+				setBookPopUp(false);
+				setBookingDonePopUp(true);
+			} else {
+				console.log(
+					"Booking response received, but status is not 201:",
+					bookingResponse.status
+				);
+				// Handle other status codes as needed
+			}
+		} catch (error) {
+			console.error("Booking failed:", error);
+			// Handle error here, like displaying a notification to the user
+			if (error.response) {
+				// The request was made and the server responded with a status code outside the 2xx range
+				console.error("Error status:", error.response.status);
+				console.error("Error data:", error.response.data);
+			} else if (error.request) {
+				// The request was made but no response was received
+				console.error("No response received:", error.request);
+			} else {
+				// Something happened in setting up the request
+				console.error("Error setting up request:", error.message);
+			}
+		}
+	};
+	usePageHeader(null, null);
 	//For managing itinerary data
 	const [photoList, setPhotoList] = useState([]);
 	const [tourGuideName, setTourGuideName] = useState(null);
@@ -75,8 +118,10 @@ const ItineraryDetails = () => {
 	const [tags, setTags] = useState(itinerary.tags);
 	const [activities, setActivities] = useState([]);
 	const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
+	const [ticketCount, setTicketCount] = useState(0);
 	const description = itinerary.description;
 	const price = itinerary.price;
+	const totalPrice = ticketCount * price;
 	const language = itinerary.language;
 	const accessibility = itinerary.accessibility;
 	const itineraryTitle = itinerary.name;
@@ -114,9 +159,14 @@ const ItineraryDetails = () => {
 								: `customActivity/getCustomActivity/${activityObj.activity}`
 						);
 						const activity = activityResponse.data;
-						if (!isCustom &&activity && activity.freeSpots !== undefined) {
-							setFreeSpots((prevFreeSpots) => Math.min(prevFreeSpots, activity.freeSpots));
-							console.log(activity)
+						if (
+							!isCustom &&
+							activity &&
+							activity.freeSpots !== undefined
+						) {
+							setFreeSpots((prevFreeSpots) =>
+								Math.min(prevFreeSpots, activity.freeSpots)
+							);
 						}
 						// Extract and format start and end times
 						const formatTime = (date) => {
@@ -184,13 +234,29 @@ const ItineraryDetails = () => {
 			<NavBar />
 
 			<PopUp
-				isOpen={popUpIsOpen}
-				setIsOpen={setPopUpIsOpen}
+				isOpen={BookPopUp}
+				setIsOpen={setBookPopUp}
 				headerText={
 					"Please fill in the following to complete your booking"
 				}
+				handleSubmit={handleBooking}
 			>
-				<TicketCounter  pricePerPerson={90.05} maxCount={freeSpots}/>
+				<TicketCounter
+					pricePerPerson={price}
+					maxCount={freeSpots}
+					currentCount={ticketCount}
+					setCount={setTicketCount}
+				/>
+			</PopUp>
+
+			<PopUp
+				isOpen={bookingDonePopUp}
+				setIsOpen={setBookingDonePopUp}
+				headerText={"Booking Successful"}
+				containsActionButton={false}
+				cancelText={"Ok"}
+			>
+				<SuccessfulBooking />
 			</PopUp>
 
 			<ItineraryAndActivityHeader
@@ -251,7 +317,10 @@ const ItineraryDetails = () => {
 							<Book
 								price={price}
 								text={"Likely to be out "}
-								onClick={handleBooking}
+								onClick={() => {
+									// Open pop up with booking details
+									setBookPopUp(true);
+								}}
 							/>
 							<AvailableDates
 								date={itinerary.availableDateAndTime}

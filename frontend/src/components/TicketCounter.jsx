@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from "react";
 import "../styles/TicketCounter.css";
 
-const TicketCounter = ({ pricePerPerson, maxCount }) => {
-	const [ticketCount, setTicketCount] = useState( maxCount > 0 ? 1 : 0); // initial value
-	const [maxReached, setMaxReached] = useState(ticketCount >=maxCount);
-	const totalPrice = ticketCount * pricePerPerson;
+const TicketCounter = ({
+	pricePerPerson,
+	maxCount,
+	currentCount,
+	setCount,
+}) => {
 
- 
+	const [maxReached, setMaxReached] = useState(currentCount >= maxCount);
+	const totalPrice = currentCount * pricePerPerson;
+
 	const increment = () => {
 		if (maxReached) return;
-		setTicketCount(ticketCount + 1);
-		if (ticketCount +1 == maxCount) {
+		setCount(currentCount + 1);
+		if (currentCount + 1 == maxCount) {
 			setMaxReached(true);
 		}
 	};
 	const decrement = () => {
-		if (ticketCount > 1){
-            setTicketCount(ticketCount - 1);
-            if(maxReached) setMaxReached(false);
-        } 
-
+		if (currentCount > 1) {
+			setCount(currentCount - 1);
+			if (maxReached) setMaxReached(false);
+		}
 	};
 
 	return (
@@ -29,12 +32,12 @@ const TicketCounter = ({ pricePerPerson, maxCount }) => {
 				<button onClick={decrement} className="counter-button">
 					-
 				</button>
-				<span className="ticket-count">{ticketCount}</span>
-				{!maxReached && 
+				<span className="ticket-count">{currentCount}</span>
+				{!maxReached && (
 					<button onClick={increment} className="counter-button">
 						+
 					</button>
-				}
+				)}
 			</div>
 			<div className="price-display">
 				<div className="price-row">
@@ -48,7 +51,8 @@ const TicketCounter = ({ pricePerPerson, maxCount }) => {
 			</div>
 			{maxReached && (
 				<span>
-					Cannot book more Tickets! Maximum free spots {maxCount >1 ? "are": "is"} {maxCount}
+					Cannot book more Tickets! Maximum free spots{" "}
+					{maxCount > 1 ? "are" : "is"} {maxCount}
 				</span>
 			)}
 		</div>
