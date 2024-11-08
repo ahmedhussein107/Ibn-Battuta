@@ -68,16 +68,15 @@ const Inventory = () => {
 	}, [sortBy]);
 
 	const deleteProductHandler = async (productID) => {
-		const response = await axiosInstance.delete(
-			`/product/deleteProduct/${productID}`
-		);
-		if (response.status === 200) {
-			sortProducts((prevProducts) =>
-				prevProducts.filter((product) => product._id !== productID)
-			);
-		} else {
-			alert("Error deleting itinerary");
-		}
+		await axiosInstance
+			.delete(`/product/deleteProduct/${productID}`)
+			.then((res) => {
+				console.log("Tag deleted: ", res.data);
+				setTags(products.filter((product) => product._id !== productID));
+			})
+			.catch((error) => {
+				console.error("Error deleting tag: ", error);
+			});
 	};
 
 	return (
@@ -212,7 +211,6 @@ const Inventory = () => {
 						display: "flex",
 						flexWrap: "wrap",
 						gap: "4vh",
-						padding: "3vh",
 						marginTop: "-1vh",
 					}}
 				>
