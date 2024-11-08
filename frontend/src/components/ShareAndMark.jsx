@@ -37,7 +37,7 @@ export default function ShareAndMark({
 				<img
 					src="/markIcon.png"
 					alt="Second Icon"
-					style={{ width: width, height: height }}
+					
 				/>
 			</div>
 
@@ -46,7 +46,7 @@ export default function ShareAndMark({
 				<img
 					src="/shareIcon.png"
 					alt="Dropdown Icon"
-					style={{ width: width, height: height }}
+					
 				/>
 
 				<div className="dropdownlist">
