@@ -6,15 +6,15 @@ import BedIcon from "@mui/icons-material/Bed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
 import PersonIcon from "@mui/icons-material/Person";
 import Button from "../Button";
-const HotelCard = () => {
+const HotelCard = ({ offer, isAllOffers = true }) => {
     const handleShowMore = () => {
         console.log("Show more clicked");
     };
     return (
         <div className="hotel-card">
             {/* Hotel Name */}
-            <h2 className="hotel-name">Grand City Hotel</h2>
-            <h4 style={{ margin: "0" }}>Booking ID: 324224324</h4>
+            <h2 className="hotel-name">{offer.name} </h2>
+            {!isAllOffers && <h4 style={{ margin: "0" }}>Booking ID: {offer._id}</h4>}
 
             {/* Location and Address */}
             <div className="hotel-location">
@@ -22,34 +22,35 @@ const HotelCard = () => {
                     <LocationOnIcon
                         sx={{ varticalAlign: "middle", marginRight: "5px" }}
                     />
-                    <span className="city">New York City</span>{" "}
+                    <span className="city">{offer.city}</span>{" "}
                 </span>
 
-                <p className="address">123 Main St, New York, NY</p>
-                <p className="extra-info">Near Downtown</p>
+                <p className="address">{offer.address}</p>
+                <p className="extra-info">{offer.addressLandmark}</p>
             </div>
 
             {/* Hotel Image */}
             <div className="hotel-image">
-                <img
-                    src="https://www.cvent.com/sites/default/files/styles/focus_scale_and_crop_800x450/public/image/2021-10/hotel%20room%20with%20beachfront%20view.webp?h=662a4f7c&itok=7Laa3LkQ"
-                    alt="Hotel Room"
-                />
+                <img src={offer.image} alt="Hotel Room" />
             </div>
 
             {/* Room Info */}
             <div className="room-description">
-                <h3 className="room-title">Deluxe daf ddd fasdf sda</h3>
+                <h3 className="room-title">{offer.description}</h3>
                 <div className="room-info">
                     <span className="icon-text">
                         <PersonIcon
                             sx={{ verticalAlign: "middle", marginRight: "5px" }}
                         />
-                        <span>2 adult{2 > 1 ? "s" : ""}</span>
+                        <span>
+                            {offer.guests} adult{offer.guests > 1 ? "s" : ""}
+                        </span>
                     </span>
                     <span className="icon-text">
                         <BedIcon sx={{ verticalAlign: "middle", marginRight: "5px" }} />
-                        <span>2 Bed{2 > 1 ? "s" : ""}</span>
+                        <span>
+                            {offer.beds} Bed{offer.beds > 1 ? "s" : ""}
+                        </span>
                     </span>
                     <span className="icon-text">
                         <BathtubIcon
@@ -59,7 +60,9 @@ const HotelCard = () => {
                                 marginRight: "5px",
                             }}
                         />
-                        <span>1 Bathroom</span>
+                        <span>
+                            {offer.bathrooms} Bathroom{offer.bathrooms > 1 ? "s" : ""}
+                        </span>
                     </span>
                 </div>
             </div>
@@ -68,21 +71,21 @@ const HotelCard = () => {
             <div className="details-grid">
                 <div className="check-dates">
                     <p>
-                        <strong>Check-In:</strong> 12:00 PM
+                        <strong>Check-In:</strong> {offer.checkIn}
                     </p>
                     <p>
-                        <strong>Check-Out:</strong> 11:00 AM
+                        <strong>Check-Out:</strong> {offer.checkOut}
                     </p>
                 </div>
                 <div className="policy-price">
                     <p>
-                        <strong>Cancellation:</strong> Non-refundable
+                        <strong>Cancellation:</strong> {offer.cancellationPolicy}
                     </p>
                     <p>
-                        <strong>Payment:</strong> Credit Card
+                        <strong>Payment:</strong> {offer.paymentMethod}
                     </p>
                     <p>
-                        <strong>Total Price:</strong> $200
+                        <strong>Total Price:</strong> ${offer.totalPrice}
                     </p>
                 </div>
             </div>

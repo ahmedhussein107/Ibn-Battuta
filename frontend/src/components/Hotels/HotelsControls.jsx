@@ -23,6 +23,9 @@ const HotelsControls = ({
     const handleSearch = () => {
         try {
             setIsSearching(true);
+            for (let i = 0; i < 1000000000; i++) {
+                console.log(i);
+            }
             onSearch();
         } catch (err) {
         } finally {
@@ -37,7 +40,7 @@ const HotelsControls = ({
         <div className="hotels-controls-container">
             <div className="hotels-controls-search">
                 <SearchField
-                    lab="Search by Hotel city"
+                    placeholder="Search by city"
                     searchText={searchCity}
                     setSearchText={setSearchCity}
                     className="hotels-controls-search"
@@ -68,7 +71,7 @@ const HotelsControls = ({
                 isLoading={isSearching}
                 customStyle={{
                     width: "173px",
-                    height: "55px",
+                    height: "3rem",
                     minHieght: "70px",
                     borderRadius: "60px",
                 }}

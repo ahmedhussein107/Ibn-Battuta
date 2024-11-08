@@ -4,6 +4,7 @@ import BookingPopUp from "./BookingPopUp";
 import { useState } from "react";
 import HotelCard from "./Hotels/HotelCard";
 import HotelList from "./Hotels/HotelList";
+import MyReservations from "./Hotels/MyReservations";
 const Test = () => {
     const [isOpen, setIsOpen] = useState(true);
     return (
