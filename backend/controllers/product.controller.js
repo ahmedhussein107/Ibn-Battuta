@@ -24,7 +24,6 @@ export const updateProduct = async (req, res) => {
 		const product = await Product.findByIdAndUpdate(id, req.body, {
 			new: true,
 		});
-
 		res.json(product);
 	} catch (e) {
 		res.status(400).json({ e: e.message });
@@ -47,9 +46,7 @@ export const getProduct = async (req, res) => {
 	const { id } = req.params;
 	try {
 		const productID = id;
-		const product = await Product.findById(productID)
-			.populate("ownerID")
-			.populate("ratings");
+		const product = await Product.findById(productID).populate("ownerID").populate("ratings");
 		console.log(product);
 		res.status(200).json(product);
 	} catch (e) {
@@ -78,9 +75,22 @@ export const deleteProduct = async (req, res) => {
 
 export const searchProducts = async (req, res) => {
 	try {
-		console.log(req.query, buildFilter(req.query));
-		const products = await Product.find(buildFilter(req.query));
-		console.log(products);
+		const { rating, ...rest } = req.query;
+		const products = await Product.find(buildFilter(rest));
+		if (rating) {
+			const bounds = rating.split("-");
+			const minRating = bounds[0] != "null" ? parseInt(bounds[0]) : -1;
+			const maxRating = bounds[1] != "null" ? parseInt(bounds[1]) : -1;
+			const result = products.filter((product) => {
+				console.log(
+					"product",
+					rating,
+					product.rating >= minRating && product.rating <= maxRating
+				);
+				return product.rating >= minRating && product.rating <= maxRating;
+			});
+			return res.status(200).json(result);
+		}
 		return res.status(200).json(products);
 	} catch (error) {
 		return res.status(500).json({ error: error.message });

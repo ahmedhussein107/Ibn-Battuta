@@ -40,67 +40,60 @@ import PopUp from "./components/PopUpsGeneric/PopUp";
 import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
 import TestShopLayout from "./components/Shop/Shop";
 
-
 function App() {
-    return (
-        <HeaderProvider>
-            <Router>
-                <Header />
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/test" element={<PopUp />} />
-                    <Route path="/complaints" element={<ComplaintList />} />
-                    <Route path="/test-shop-layout" element={<TestShopLayout />} />
-                    <Route
-                        path="/complaint/:complaintId"
-                        element={<ViewSingleComplaint />}
-                    />
-                    {/* signin and signup pages */}
-                    <Route path="/signup" element={<SignUpPage />} />
-                    <Route path="/signin" element={<Signin />} />
-                    <Route path="/select-your-role" element={<SelectYourRole />} />
-                    {/* home pages for each role */}
-                    <Route path="/admin" element={<AdminHome />} />
-                    <Route path="/advertiser" element={<AdvertiserHome />} />
-                    <Route path="/tourguide" element={<TourGuideHome />} />
-                    <Route path="/seller" element={<SellerHome />} />
-                    <Route path="/governor" element={<GovernorHome />} />
-                    {/* other pages */}
-                    <Route path="/activities" element={<Activities />} />
-                    <Route path="/itineraries" element={<Itineraries />} />
-                    <Route path="/itinerary-details" element={<ItineraryDetails />} />
-                    <Route path="/landmarks" element={<Landmarks />} />
+	return (
+		<HeaderProvider>
+			<Router>
+				<Header />
+				<Routes>
+					<Route path="/" element={<HomePage />} />
+					<Route path="/test" element={<PopUp />} />
+					<Route path="/complaints" element={<ComplaintList />} />
+					<Route path="/shop" element={<TestShopLayout />} />
+					<Route path="/complaint/:complaintId" element={<ViewSingleComplaint />} />
+					{/* signin and signup pages */}
+					<Route path="/signup" element={<SignUpPage />} />
+					<Route path="/signin" element={<Signin />} />
+					<Route path="/select-your-role" element={<SelectYourRole />} />
+					{/* home pages for each role */}
+					<Route path="/admin" element={<AdminHome />} />
+					<Route path="/advertiser" element={<AdvertiserHome />} />
+					<Route path="/tourguide" element={<TourGuideHome />} />
+					<Route path="/seller" element={<SellerHome />} />
 
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/create-product" element={<CreateProductPage />} />
-                    <Route path="/add-new-user" element={<AddNewUser />} />
-                    <Route path="admin/users" element={<UserManagement />} />
-                    <Route
-                        path="/update-product/:productId"
-                        element={<UpdateProductPage />}
-                    />
-                    <Route path="/products/:productId" element={<ViewProductPage />} />
-                    <Route path="/tourguide" element={<TourGuideProfilePage />} />
-                    <Route path="/landmark-governor" element={<GovernorLandmarks />} />
-                    <Route path="/advertiser/assigned" element={<MyActivity />} />
-                    <Route path="/tourguide/assigned" element={<MyItinenrary />} />
-                    <Route path="/inventory" element={<Inventory />} />
+					{/* other pages */}
+					<Route path="/activities" element={<Activities />} />
+					<Route path="/itineraries" element={<Itineraries />} />
+					<Route path="/itinerary-details" element={<ItineraryDetails />} />
+					<Route path="/landmarks" element={<Landmarks />} />
 
-                    <Route path="/create-activity" element={<CreateActivityPage />} />
-                    <Route path="/update-activity" element={<UpdateActivityPage />} />
-                    <Route path="/view-products" element={<ViewProductsPage />} />
+					<Route path="/about" element={<AboutPage />} />
+					<Route path="/create-product" element={<CreateProductPage />} />
+					<Route path="/add-new-user" element={<AddNewUser />} />
+					<Route path="admin/users" element={<UserManagement />} />
+					<Route path="/update-product/:productId" element={<UpdateProductPage />} />
+					<Route path="/products/:productId" element={<ViewProductPage />} />
+					<Route path="/tourguide" element={<TourGuideProfilePage />} />
+					<Route path="/landmark-governor" element={<GovernorLandmarks />} />
+					<Route path="/advertiser/assigned" element={<MyActivity />} />
+					<Route path="/tourguide/assigned" element={<MyItinenrary />} />
+					<Route path="/inventory" element={<Inventory />} />
 
-                    <Route path="/landmark/landmark/" element={<LandmarkPage />} />
-                    <Route path="/create-itinerary" element={<CreateItineraryPage />} />
-                    <Route path="/choose-activity" element={<ChooseActivity />} />
-                    <Route path="/create-landmark" element={<CreateLandmarkPage />} />
+					<Route path="/create-activity" element={<CreateActivityPage />} />
+					<Route path="/update-activity" element={<UpdateActivityPage />} />
+					<Route path="/filter-landmarks" element={<FilterLandmarks />} />
+					<Route path="/view-products" element={<ViewProductsPage />} />
 
-                    <Route path="/admin/tags" element={<ViewTags />} />
-                    <Route path="/admin/category" element={<ViewCategories />} />
-                </Routes>
-            </Router>
-        </HeaderProvider>
-    );
+					<Route path="/landmark/landmark/" element={<LandmarkPage />} />
+					<Route path="/create-itinerary" element={<CreateItineraryPage />} />
+					<Route path="/create-landmark" element={<CreateLandmarkPage />} />
+
+					<Route path="/admin/tags" element={<ViewTags />} />
+					<Route path="/admin/category" element={<ViewCategories />} />
+				</Routes>
+			</Router>
+		</HeaderProvider>
+	);
 }
 
 export default App;

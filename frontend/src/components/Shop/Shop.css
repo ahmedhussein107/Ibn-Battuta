@@ -2,21 +2,19 @@
 .shop {
     display: flex;
     justify-content: center;
-    padding: 20px;
+    padding-top: 1%;
 }
 
 /* Product container to hold sidebar and main content */
 .product-container {
     display: flex;
-    width: 100%;
-    max-width: 1200px;
+    width: 100%;    
     gap: 20px; /* Space between sidebar and main content */
 }
 
 /* Sidebar styles (left aligned) */
 .product-sidebar {
     flex: 1;
-    padding: 20px;
     border-radius: 8px;
 }
 
@@ -55,7 +53,6 @@ button:hover {
     min-width: 300px;
 }
 .product-order-wishlist {
-    margin-left: 3%;
     display: flex;
     flex-direction: row;
 }
