@@ -10,6 +10,7 @@ import {
     getTourGuideItinerary,
     searchItineraries,
     toggleFlaggedItineraries,
+    toggleActivatedItineraries,
 } from "../controllers/itinerary.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 
@@ -34,5 +35,7 @@ itineraryRouter.get("/searchItineraries", searchItineraries);
 itineraryRouter.delete("/", deleteItineraries);
 
 itineraryRouter.patch("/toggleFlag/:id", toggleFlaggedItineraries);
+
+itineraryRouter.patch("/toggleActive/:id", toggleActivatedItineraries);
 
 export default itineraryRouter;

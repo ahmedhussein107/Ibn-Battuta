@@ -1,4 +1,4 @@
-import ReviewsSection from "./ReviewsSection";
+import ReviewsSection from "./ReviewsSection.jsx";
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import ProfileAndDescription from "./ProfileAndDescription.jsx";
@@ -37,13 +37,12 @@ const ItineraryDetails = () => {
 				_id: "672cb13500b4345568fbfae6",
 				id: "672cb13500b4345568fbfae6",
 			},
-			
 		],
 		pickupTime: "2024-11-07T12:45:00.000Z",
 		language: "Arabic",
 		accessibility: ["weelchair", "ambulance cars"],
 		price: 1000,
-		availableDatesAndTimes: ["2024-12-20T00:00:00.000Z"],
+		availableDateAndTime: "2024-12-20T00:00:00.000Z",
 		pickup: "GUC",
 		dropOff: "GUC",
 		tags: ["sky diving", "sea"],
@@ -59,8 +58,6 @@ const ItineraryDetails = () => {
 		rating: 125,
 		id: "6703f5310ecc1ad25ff95144",
 	});
-
-	const [reviews, setReviews] = useState([]);
 	const [photoList, setPhotoList] = useState([]);
 	const [tourGuideName, setTourGuideName] = useState(null);
 	const [tourGuidePicture, setTourGuidePicture] = useState(null);
@@ -75,43 +72,7 @@ const ItineraryDetails = () => {
 	const dropoff = itinerary.dropOff;
 	const pickuptime = itinerary.pickupTime;
 
-	//For Ratings/reviews
-	useEffect(() => {
-		const fetchReviews = async () => {
-			try {
-				const reviewsData = await Promise.all(
-					itinerary.ratings.map(async (ratingID) => {
-						// First API call to get the rating details
-						const ratingResponse = await axiosInstance.get(
-							`rating/getRating/${ratingID}`
-						);
-						const rating = ratingResponse.data;
-
-						// Second API call to get the tourist details
-						const touristResponse = await axiosInstance.get(
-							`tourist/tourist/${rating.touristID}`
-						);
-						const tourist = touristResponse.data;
-
-						// Construct the review object
-						return {
-							reviewer: tourist.name,
-							rating: rating.rating,
-							comment: rating.comment,
-							createdAt: rating.createdAt,
-						};
-					})
-				);
-				// Update the state with the reviews data
-				setReviews(reviewsData);
-			} catch (error) {
-				console.error("Error fetching reviews: ", error);
-			}
-		};
-		fetchReviews();
-	}, [itinerary.ratings]);
 	//For Tour guide name and photo
-
 	useEffect(() => {
 		const fetchTourGuide = async () => {
 			try {
@@ -183,7 +144,11 @@ const ItineraryDetails = () => {
 				);
 
 				const photosData = activitiesData
-					.filter((activity) => activity.activityType === "Activity" && activity.activityData.picture)
+					.filter(
+						(activity) =>
+							activity.activityType === "Activity" &&
+							activity.activityData.picture
+					)
 					.map((activity) => {
 						return activity.activityData.picture;
 					});
@@ -251,7 +216,7 @@ const ItineraryDetails = () => {
 							/>
 							<Tags tags={tags} fontSize={"0.85em"} />
 							<ReviewsSection
-								reviews={reviews}
+								ratingIds={itinerary.ratings}
 								width={"100%"}
 								fontSize={"12px"}
 							/>
@@ -260,7 +225,7 @@ const ItineraryDetails = () => {
 						{/* Done */}
 						<div className="book-availabledates">
 							<Book price={price} text={"Likely to be out "} />
-							<AvailableDates width="18vw" fontSize={"0.8em"} />
+							<AvailableDates date={itinerary.availableDateAndTime} width="18vw" fontSize={"0.8em"} />
 						</div>
 					</div>
 				</div>

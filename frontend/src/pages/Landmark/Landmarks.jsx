@@ -16,7 +16,6 @@ const Landmarks = () => {
     const [categories, setCategories] = useState([""]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
     const [name, setName] = useState("");
     const [searchedTag, setSearchedTag] = useState("");
     const [searchedCategory, setSearchedCategory] = useState("");
@@ -160,11 +159,18 @@ const Landmarks = () => {
                 }}
             ></div>
 
-            <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: "2%",
+                    marginTop: "1%",
+                    marginBottom: "1%",
+                }}
+            >
                 <div
                     style={{
-                        width: "25vw",
-                        boxShadow: "0 5vh 5vh rgba(0, 0, 0, 0.1)",
+                        width: "28vw",
                         borderRadius: "3vh",
                     }}
                 >

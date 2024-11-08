@@ -9,7 +9,6 @@ import Footer from "../../components/Footer";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
-import ActivityCard from "../../components/ActivityCard";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import CardActivity from "../../components/CardActivity";
@@ -45,7 +44,7 @@ const MyActivity = () => {
             );
             const data = response.data;
             sortActivities(data);
-            console.log("response sata is", data);
+            console.log("response data is", data);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
