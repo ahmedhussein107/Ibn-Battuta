@@ -3,6 +3,9 @@ import NavBar from "../../components/NavBar";
 import i1 from "../../assets/images/iti.png";
 import i2 from "../../assets/images/i2.png";
 import Map from "../map";
+import Button from "../../components/Button.jsx";
+import {Link, useNavigate} from "react-router-dom";
+
 const CreateItineraryPage = () => {
     const [name, setName] = useState("");
     const [language, setLanguage] = useState("");
@@ -18,6 +21,8 @@ const CreateItineraryPage = () => {
     const [accessibilityTypes, setAccessibilityTypes] = useState([]);
     const [selectedAccessibility, setSelectedAccessibility] = useState("");
     const [price, setPrice] = useState("");
+
+    const navigate = useNavigate();
 
     const predefinedTags = [
         "Adventure",
@@ -473,7 +478,28 @@ const CreateItineraryPage = () => {
                     >
                         Cancel
                     </button>
-                    <button
+                    <Button
+                        stylingMode="1"
+                        text="Next"
+                        width={"10vw"}
+                        handleClick={() =>{
+                            navigate("/choose-activity", {
+                                state: {
+                                    name: name,
+                                    language: language,
+                                    description: description,
+                                    date: date,
+                                    time: time,
+                                    pickupLocationlatitude: pickupLocationlatitude,
+                                    pickupLocationlongitude: pickupLocationlongitude,
+                                    dropOffLocationlatitude: dropOffLocationlatitude,
+                                    dropOffLocationlongitude: dropOffLocationlongitude,
+                                    tags: tags,
+                                    accessibilityTypes: accessibilityTypes,
+                                    price: price
+                                }
+                            });
+                        }}
                         style={{
                             padding: "1vh 3vw",
                             backgroundColor: "#ff6600",
@@ -485,7 +511,7 @@ const CreateItineraryPage = () => {
                         }}
                     >
                         Next
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>

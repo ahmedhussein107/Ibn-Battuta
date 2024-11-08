@@ -50,6 +50,7 @@ import NavBar from "./components/NavBar";
 import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 import Test from "./components/Test";
 import PopUp from "./components/PopUpsGeneric/PopUp";
+import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
 
 function App() {
     return (
@@ -102,6 +103,7 @@ function App() {
 
                     <Route path="/landmark/landmark/" element={<LandmarkPage />} />
                     <Route path="/create-itinerary" element={<CreateItineraryPage />} />
+                    <Route path="/choose-activity" element={<ChooseActivity />} />
                     <Route path="/create-landmark" element={<CreateLandmarkPage />} />
 
                     <Route path="/admin/tags" element={<ViewTags />} />
