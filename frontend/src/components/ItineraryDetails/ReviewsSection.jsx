@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axiosInstance from "../../api/axiosInstance";
+import axiosInstance from "../../api/axiosInstance.js";
 
 const ReviewsSection = ({ ratingIds, width, height, fontSize }) => {
     const [reviews, setReviews] = useState([]);
