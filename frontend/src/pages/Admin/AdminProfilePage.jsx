@@ -4,18 +4,18 @@ import { useParams } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import Navbar from "../../components/NavBar";
 
-const SellerProfilePage = () => {
+const AdminProfilePage = () => {
     const [response, setResponse] = useState(null);
 
     useEffect(() => {
         axiosInstance
-            .get("/seller/getSellerById", { withCredentials: true })
+            .get("/admin/getAdminById", { withCredentials: true })
             .then((response) => {
                 setResponse(response.data);
-                console.log("Seller:", response.data);
+                console.log("Admin:", response.data);
             })
             .catch((error) => {
-                console.error("Error fetching Seller:", error);
+                console.error("Error fetching Admin:", error);
             });
     }, []);
 
@@ -23,10 +23,10 @@ const SellerProfilePage = () => {
         <>
             <div>
                 <Navbar />
-                <h1>Seller Profile Page</h1>
+                <h1>Admin Profile Page</h1>
                 <h2>Welcome {response && response.username}!</h2>
             </div>
         </>
     );
 };
-export default SellerProfilePage;
+export default AdminProfilePage;

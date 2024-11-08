@@ -7,6 +7,7 @@ import {
     deleteAdvertiser,
     getAdvertisersDocuments,
 } from "../controllers/advertiser.controller.js";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const advertiserRouter = express.Router();
 
@@ -14,7 +15,7 @@ advertiserRouter.post("/createAdvertiser", createAdvertiser);
 
 advertiserRouter.get("/getAdvertisers", getAdvertisers);
 
-advertiserRouter.get("/advertiser/:id", getAdvertiserById);
+advertiserRouter.get("/getAdvertiserById", isAuthenticated, getAdvertiserById);
 
 advertiserRouter.patch("/updateAdvertiser/:id", updateAdvertiser);
 

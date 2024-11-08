@@ -7,6 +7,7 @@ import {
     deleteTourGuide,
     getTourGuidesDocuments,
 } from "../controllers/tourguide.controller.js";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const tourGuideRouter = express.Router();
 
@@ -14,7 +15,7 @@ tourGuideRouter.post("/createTourGuide", createTourGuide);
 
 tourGuideRouter.get("/getTourGuides", getTourGuides);
 
-tourGuideRouter.get("/tourGuide/:id", getTourGuideById);
+tourGuideRouter.get("/getTourGuideById", isAuthenticated, getTourGuideById);
 
 tourGuideRouter.patch("/updateTourGuide/:id", updateTourGuide);
 

@@ -55,8 +55,9 @@ export const getAdvertisers = async (req, res) => {
 };
 
 export const getAdvertiserById = async (req, res) => {
+	const advertiserId = req.user.userId;
 	try {
-		const advertiser = await Advertiser.findById(req.params.id);
+		const advertiser = await Advertiser.findById(advertiserId);
 		if (advertiser) {
 			const { isAccepted, document, createdAt, updatedAt, __v, ...others } =
 				advertiser._doc;

@@ -55,8 +55,9 @@ export const getTourGuides = async (req, res) => {
 };
 
 export const getTourGuideById = async (req, res) => {
+    const tourguideId = req.user.userId;
     try {
-        const tourGuide = await TourGuide.findById(req.params.id);
+        const tourGuide = await TourGuide.findById(tourguideId);
         if (tourGuide) {
             const {
                 isAccepted,

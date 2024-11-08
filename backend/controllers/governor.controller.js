@@ -72,9 +72,10 @@ export const getGovernors = async (req, res) => {
     }
 };
 
-export const getGovernor = async (req, res) => {
+export const getGovernorById = async (req, res) => {
+    const governorId = req.user.userId;
     try {
-        const governor = await Governor.findById(req.params.id);
+        const governor = await Governor.findById(governorId);
         if (governor) {
             res.json(governor);
         } else {

@@ -55,8 +55,9 @@ export const getSellers = async (req, res) => {
 };
 
 export const getSellerById = async (req, res) => {
+    const sellerId = req.user.userId;
     try {
-        const seller = await Seller.findById(req.params.id);
+        const seller = await Seller.findById(sellerId);
         if (seller) {
             res.status(200).json(seller);
         } else {
