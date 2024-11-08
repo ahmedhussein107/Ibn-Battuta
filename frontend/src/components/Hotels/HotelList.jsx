@@ -11,7 +11,7 @@ const room = {
     address: "123 Main Street, New York, USA",
     addressLandmark: "New Downtown",
     city: "New York",
-    image: "https://picsum.photos/200/300",
+    image: "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
     rooms: 10,
     bathrooms: 8,
     beds: 15,
@@ -21,8 +21,11 @@ const room = {
     checkOut: "10:00 PM",
     cancellationPolicy: "Free cancellation",
     paymentMethod: "Credit Card",
-    description: "This is a sample description.",
-    _id: 344542321, // when booked
+    miniDescription: "This is a sample description.",
+    description:
+        "This is the whole description for the room.it is a lot of text and unnecessary information",
+    bookingId: 344542321, // when booked
+    _id: "git-it-done",
 };
 
 const HotelList = ({ isAllOffers = true }) => {

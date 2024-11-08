@@ -48,6 +48,9 @@ import { HeaderProvider } from "./components/Header/HeaderContext";
 import Header from "./components/Header/Header";
 import NavBar from "./components/NavBar";
 import Test from "./components/Test";
+import MyReservations from "./components/Hotels/MyReservations";
+import HotelList from "./components/Hotels/HotelList";
+import ShowOfferDetails from "./components/Hotels/ShowOfferDetails";
 function App() {
     return (
         <HeaderProvider>
@@ -56,7 +59,13 @@ function App() {
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/test" element={<Test />} />
+                    <Route path="/hotel/offers" element={<HotelList />} />
+                    <Route path="/hotel/booking/my" element={<MyReservations />} />
+                    <Route
+                        path="/hotel/offer-details/:offerId"
+                        element={<ShowOfferDetails />}
+                    />
+
                     <Route path="/complaints" element={<ComplaintList />} />
                     <Route
                         path="/complaint/:complaintId"

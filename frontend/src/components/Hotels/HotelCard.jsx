@@ -6,15 +6,20 @@ import BedIcon from "@mui/icons-material/Bed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
 import PersonIcon from "@mui/icons-material/Person";
 import Button from "../Button";
+import { useNavigate } from "react-router-dom";
 const HotelCard = ({ offer, isAllOffers = true }) => {
+    const navigate = useNavigate();
     const handleShowMore = () => {
+        navigate(`/hotel/offer-details/${offer.bookingId}`, { state: { offer } });
         console.log("Show more clicked");
     };
     return (
         <div className="hotel-card">
             {/* Hotel Name */}
             <h2 className="hotel-name">{offer.name} </h2>
-            {!isAllOffers && <h4 style={{ margin: "0" }}>Booking ID: {offer._id}</h4>}
+            {!isAllOffers && (
+                <h4 style={{ margin: "0" }}>Booking ID: {offer.bookignId}</h4>
+            )}
 
             {/* Location and Address */}
             <div className="hotel-location">
@@ -36,7 +41,7 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
 
             {/* Room Info */}
             <div className="room-description">
-                <h3 className="room-title">{offer.description}</h3>
+                <h3 className="room-title">{offer.miniDescription}</h3>
                 <div className="room-info">
                     <span className="icon-text">
                         <PersonIcon
@@ -89,18 +94,20 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
                     </p>
                 </div>
             </div>
-            <Button
-                stylingMode="submit"
-                text={"Show details"}
-                handleClick={handleShowMore}
-                customStyle={{
-                    width: "60%",
-                    height: "2.5rem",
-                    minHieght: "70px",
-                    borderRadius: "30px",
-                    marginBottom: "20px",
-                }}
-            />
+            <div className="show-more-div">
+                <Button
+                    stylingMode="submit"
+                    text={"Show details"}
+                    handleClick={handleShowMore}
+                    customStyle={{
+                        width: "60%",
+                        height: "2.5rem",
+                        minHieght: "70px",
+                        borderRadius: "30px",
+                        marginBottom: "20px",
+                    }}
+                />
+            </div>
         </div>
     );
 };
