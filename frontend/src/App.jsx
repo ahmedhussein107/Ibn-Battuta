@@ -54,8 +54,7 @@ function App() {
 	return (
 		<HeaderProvider>
 			<Router>
-				<Header />	
-				<NavBar />
+				<Header />
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route
@@ -68,7 +67,6 @@ function App() {
 						path="/complaint/:complaintId"
 						element={<ViewSingleComplaint />}
 					/>
-
 					{/* signin and signup pages */}
 					<Route path="/signup" element={<SignUpPage />} />
 					<Route path="/signin" element={<Signin />} />
@@ -82,10 +80,6 @@ function App() {
 					<Route path="/tourguide" element={<TourGuideHome />} />
 					<Route path="/seller" element={<SellerHome />} />
 
-					<Route path="/governor" element={<GovernorHome />} />
-					{/* Home page for Tourist and Guest */}
-					<Route path="/" element={<HomePage />} />
-
 					{/* other pages */}
 					<Route path="/activities" element={<Activities />} />
 					<Route path="/itineraries" element={<Itineraries />} />
@@ -97,10 +91,7 @@ function App() {
 						element={<CreateProductPage />}
 					/>
 					<Route path="/add-new-user" element={<AddNewUser />} />
-					<Route
-						path="/user-management"
-						element={<UserManagement />}
-					/>
+					<Route path="admin/users" element={<UserManagement />} />
 					<Route
 						path="/update-product/:productId"
 						element={<UpdateProductPage />}
@@ -185,9 +176,9 @@ function App() {
 						element={<CreateLandmarkPage />}
 					/>
 
-					<Route path="/admin/view-tags" element={<ViewTags />} />
+					<Route path="/admin/tags" element={<ViewTags />} />
 					<Route
-						path="/admin/view-categories"
+						path="/admin/category"
 						element={<ViewCategories />}
 					/>
 				</Routes>

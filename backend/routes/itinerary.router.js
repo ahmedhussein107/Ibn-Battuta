@@ -11,6 +11,7 @@ import {
     searchItineraries,
     toggleFlaggedItineraries,
 } from "../controllers/itinerary.controller.js";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const itineraryRouter = express.Router();
 
@@ -26,7 +27,7 @@ itineraryRouter.get("/getItinerary/:id", getItineraryById);
 
 itineraryRouter.get("/getUpcomingItineraries", getUpcomingItineraries);
 
-itineraryRouter.get("/getTourGuideItinerary/:id", getTourGuideItinerary);
+itineraryRouter.get("/getTourGuideItinerary/", isAuthenticated, getTourGuideItinerary);
 
 itineraryRouter.get("/searchItineraries", searchItineraries);
 

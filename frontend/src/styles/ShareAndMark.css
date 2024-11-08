@@ -12,7 +12,7 @@
 	cursor: pointer;
 }
 
-.dropdown {
+.dropdownlist {
 	position: absolute;
 	top: 100%;
 	left: 0;
@@ -34,13 +34,13 @@
 	pointer-events: auto; /* Enable clicking when visible */
 }
 
-.dropdown-option {
+.dropdownlist-option {
 	padding: 10px;
 	cursor: pointer;
 	transition: background-color 0.3s;
 }
 
-.dropdown-option:hover {
+.dropdownlist-option:hover {
 	background-color: #f0f0f0;
 }
 
