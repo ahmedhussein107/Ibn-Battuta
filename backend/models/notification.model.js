@@ -97,7 +97,8 @@ const validateReferencesMiddleware = async function (next) {
 
         const relatedType = updatedRelatedType;
         const relatedId = updatedRelatedId;
-        if (relatedType && relatedId) await validateRelatedTypeAndId(relatedType, relatedId, next);
+        if (relatedType && relatedId)
+            await validateRelatedTypeAndId(relatedType, relatedId, next);
         else next();
     } catch (error) {
         next(error);

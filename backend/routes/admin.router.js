@@ -2,17 +2,20 @@ import express from "express";
 import Admin from "../models/admin.model.js";
 
 import {
-  getAdmins,
-  createAdmin,
-  deleteAdmin,
-  deleteUser,
-  updateAdmin,
+	getAdmins,
+	createAdmin,
+	deleteAdmin,
+	deleteUser,
+	updateAdmin,
+	getUsers,
 } from "../controllers/admin.controller.js";
 const adminRouter = express.Router();
 
 adminRouter.post("/createAdmin", createAdmin);
 
 adminRouter.get("/getAdmins", getAdmins);
+
+adminRouter.get("/getUsers", getUsers);
 
 adminRouter.delete("/deleteAdmin/:id", deleteAdmin);
 

@@ -1,0 +1,35 @@
+/* Tags.css */
+
+.accessibility-container {
+	margin-left: 22px;
+}
+.accessibilities {
+	display: flex; /* Use flexbox to arrange tags horizontally */
+	flex-wrap: wrap; /* Allow tags to wrap onto the next line */
+	gap: 8px; /* Space between tags */
+	padding: 10px; /* Optional padding around the container */
+
+	margin-left: 1.5%;
+}
+
+.accessibility {
+	background-color: #ffd7c4; /* Background color for tags */
+	color: black; /* Text color for tags */
+	padding: 8px 13px; /* Padding inside each tag */
+	border-radius: 60px; /* Rounded corners for tags */
+	font-size: 1.5em; /* Font size for tags */
+}
+
+.accessibility-header {
+	display: flex;
+	align-items: center;
+
+}
+
+.accessibility-header > span {
+	font-size: 2em;
+}
+.accessibility-icon {
+	margin-right: 10px;
+	width: 5%;
+}

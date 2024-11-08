@@ -20,48 +20,48 @@ const adminSchema = new Schema(
 );
 
 adminSchema.pre("save", async function (next) {
-  try {
-    const { username, email, notifications } = this;
+    try {
+        const { username, email, notifications } = this;
 
-    await validateReference(username, "Username", next);
+        await validateReference(username, "Username", next);
 
-    if (email) {
-      await validateReference(email, "Email", next);
+        if (email) {
+            await validateReference(email, "Email", next);
+        }
+
+        if (notifications) {
+            await validateReferences(notifications, "Notification", next);
+        }
+
+        next();
+    } catch (error) {
+        next(error);
     }
-
-    if (notifications) {
-      await validateReferences(notifications, "Notification", next);
-    }
-
-    next();
-  } catch (error) {
-    next(error);
-  }
 });
 
 const validateUpdateReferences = async function (next) {
-  try {
-    const update = this.getUpdate();
-    const username = update.username || update["$set.username"];
-    const email = update.email || update["$set.email"];
-    const notifications = update.notifications || update["$set.notifications"];
+    try {
+        const update = this.getUpdate();
+        const username = update.username || update["$set.username"];
+        const email = update.email || update["$set.email"];
+        const notifications = update.notifications || update["$set.notifications"];
 
-    if (username) {
-      await validateReference(username, "Username", next);
+        if (username) {
+            await validateReference(username, "Username", next);
+        }
+
+        if (email) {
+            await validateReference(email, "Email", next);
+        }
+
+        if (notifications) {
+            await validateReferences(notifications, "Notification", next);
+        }
+
+        next();
+    } catch (error) {
+        next(error);
     }
-
-    if (email) {
-      await validateReference(email, "Email", next);
-    }
-
-    if (notifications) {
-      await validateReferences(notifications, "Notification", next);
-    }
-
-    next();
-  } catch (error) {
-    next(error);
-  }
 };
 
 adminSchema.pre("findOneAndUpdate", validateUpdateReferences);

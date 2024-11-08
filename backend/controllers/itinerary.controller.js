@@ -32,6 +32,7 @@ export const deleteItineraries = async (req, res) => {
 
 export const getItineraryById = async (req, res) => {
     try {
+        console.log("I am here");
         const itinerary = await Itinerary.findById(req.params.id);
         if (itinerary) {
             res.status(200).json(itinerary);
@@ -114,22 +115,6 @@ export const deleteItinerary = async (req, res) => {
 };
 
 export const getUpcomingItineraries = async (req, res) => {
-    try {
-        const itineraries = await Itinerary.find({
-            isActivated: true, // itineraries that are deactivated do not appear to the user according to requirement (25)
-            isFlagged: false, // itineraries that are flagged do not appear to the user according to requirement (33)
-            availableDatesAndTimes: { $gt: Date.now() },
-        })
-            .populate("tourguideID")
-            .populate("activities.activity")
-            .populate("ratings");
-
-        res.json(itineraries);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-};
-export const filterItineraries = async (req, res) => {
     const query = buildFilter(req.query);
 
     try {
@@ -159,9 +144,10 @@ export const filterItineraries = async (req, res) => {
 };
 
 export const getTourGuideItinerary = async (req, res) => {
-    const tourguideId = req.params.id;
+    const query = buildFilter(req.query);
+    const tourguideId = req.user.userId;
     try {
-        const itineraries = await Itinerary.find({ tourguideID: tourguideId }); // Find all activities for the given advertiser ID
+        const itineraries = await Itinerary.find({ tourguideID: tourguideId, ...query }); // Find all activities for the given advertiser ID
         res.status(200).json(itineraries);
     } catch (error) {
         console.error("Error fetching itineraries:", error);
@@ -172,6 +158,44 @@ export const searchItineraries = async (req, res) => {
     try {
         const results = await genericSearch(Itinerary, req.query);
         res.status(200).json({ results });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const toggleFlaggedItineraries = async (req, res) => {
+    try {
+        const itineraryID = req.params.id;
+        const itinerary = await Itinerary.findById(itineraryID);
+        if (!itinerary) {
+            return res.status(404).json({ message: "Itinerary not found" });
+        }
+        itinerary.isFlagged = !itinerary.isFlagged;
+        await itinerary.save();
+        res.status(200).json({
+            message: "Itinerary flagged status changed successfully",
+            itinerary,
+        });
+
+        // to be continued?
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const toggleActivatedItineraries = async (req, res) => {
+    try {
+        const itineraryID = req.params.id;
+        const itinerary = await Itinerary.findById(itineraryID);
+        if (!itinerary) {
+            return res.status(404).json({ message: "Itinerary not found" });
+        }
+        itinerary.isActivated = !itinerary.isActivated;
+        await itinerary.save();
+        res.status(200).json({
+            message: "Itinerary activated status changed successfully",
+            itinerary,
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

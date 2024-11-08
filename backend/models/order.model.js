@@ -23,35 +23,35 @@ const orderSchema = new mongoose.Schema(
 );
 
 orderSchema.pre("save", async function (next) {
-  try {
-    const { buyer, product } = this;
+    try {
+        const { buyer, product } = this;
 
-    await validateReference(buyer, "Tourist", next);
-    await validateReference(product, "Product", next);
+        await validateReference(buyer, "Tourist", next);
+        await validateReference(product, "Product", next);
 
-    next();
-  } catch (error) {
-    next(error);
-  }
+        next();
+    } catch (error) {
+        next(error);
+    }
 });
 
 orderSchema.pre("findOneAndUpdate", async function (next) {
-  try {
-    const update = this.getUpdate();
-    const updatedBuyer = update.buyer || update["$set.buyer"];
-    const updatedProduct = update.product || update["$set.product"];
+    try {
+        const update = this.getUpdate();
+        const updatedBuyer = update.buyer || update["$set.buyer"];
+        const updatedProduct = update.product || update["$set.product"];
 
-    if (updatedBuyer) {
-      await validateReference(updatedBuyer, "Tourist", next);
-    }
-    if (updatedProduct) {
-      await validateReference(updatedProduct, "Product", next);
-    }
+        if (updatedBuyer) {
+            await validateReference(updatedBuyer, "Tourist", next);
+        }
+        if (updatedProduct) {
+            await validateReference(updatedProduct, "Product", next);
+        }
 
-    next();
-  } catch (error) {
-    next(error);
-  }
+        next();
+    } catch (error) {
+        next(error);
+    }
 });
 
 export default mongoose.model("Order", orderSchema);

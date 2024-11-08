@@ -1,37 +1,35 @@
-import express from "express"
-import { upload } from "../routers.middleware/mutler.config.js";
+import express from "express";
 import {
-  uploadImage,
-  uploadImages,
-  uploadDocument,
-  uploadDocuments,
-} from "../routers.middleware/cloudinary.config.js";
-import {
-  createProduct,
-  updateProduct,
-  allProducts,
-  deleteProduct,
-  getProduct,
-  searchProducts,
+    createProduct,
+    updateProduct,
+    getAllProducts,
+    deleteProduct,
+    getProduct,
+    searchProducts,
+    archeiveProduct,
+    unarcheiveProduct,
+    getProductsById,
 } from "../controllers/product.controller.js";
+
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 const productRouter = express.Router();
 
-const _print = function (req, res, next) {
-  console.log("i am here in product router");
-  console.log("body is ", req.body);
-  next();
-};
+productRouter.post("/createProduct", isAuthenticated, createProduct);
 
-productRouter.post("/createProduct", _print, uploadDocuments, createProduct);
-
-productRouter.get("/allProducts", allProducts);
+productRouter.get("/getAllProducts", getAllProducts);
 
 productRouter.get("/getProduct/:id", getProduct);
 
-productRouter.put("/updateProduct/:id", updateProduct);
+productRouter.patch("/updateProduct/:id", updateProduct);
 
 productRouter.delete("/deleteProduct/:id", deleteProduct);
 
 productRouter.get("/search", searchProducts);
+
+productRouter.patch("/archiveProduct/:id", archeiveProduct);
+
+productRouter.patch("/unarchiveProduct/:id", unarcheiveProduct);
+
+productRouter.get("/getProductsById", isAuthenticated, getProductsById);
 
 export default productRouter;

@@ -1,0 +1,87 @@
+.comment {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+    position: relative;
+}
+
+/* Left side: user profile image and name */
+.comment-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 1rem;
+    width: 60px; /* Adjust as needed */
+    position: relative;
+}
+
+.author-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 0.5rem;
+}
+
+.author-name {
+    font-size: 0.9rem;
+    text-align: center;
+    position: relative;
+}
+
+.comment-left.has-replies::after {
+    content: "";
+    left: 50%; /* Center the line horizontally */
+    width: 4px;
+    height: calc(100% - 6rem);
+    transform: translateX(-50%) translateY(3%);
+    bottom: 0;
+    background-color: var(--background-color);
+}
+
+/* Right side: main comment content */
+.comment-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Comment body styling */
+.comment-body {
+    background-color: var(--background-color);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* Main comment text */
+.comment-text {
+    margin: 0 0 1rem 0;
+}
+
+/* Footer: date and reply button */
+.comment-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.comment-date {
+    color: #999;
+    font-size: 0.85rem;
+}
+
+/* Reply button styling */
+.reply-div {
+    color: var(--accent-color);
+}
+
+/* Replies container styling */
+.replies {
+    margin-left: 2rem;
+    margin-top: 1rem;
+    padding-left: 1rem;
+}

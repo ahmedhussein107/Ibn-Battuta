@@ -1,0 +1,19 @@
+.popup-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.popup-body label {
+    font-size: 14px;
+    color: #555;
+}
+
+.popup-body input,
+.popup-body textarea {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+}

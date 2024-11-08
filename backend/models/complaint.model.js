@@ -8,7 +8,7 @@ const complaintSchema = new mongoose.Schema(
             ref: "Tourist",
             required: true,
         },
-        title: String,
+        title: { type: String, default: "your complaint" },
         body: { type: String, required: true },
         status: { type: String, enum: ["resolved", "pending"], default: "pending" },
         reply: { type: mongoose.Schema.Types.ObjectId, ref: "Comment" },
@@ -17,39 +17,39 @@ const complaintSchema = new mongoose.Schema(
 );
 
 complaintSchema.pre("save", async function (next) {
-  try {
-    const { touristID, reply } = this;
+    try {
+        const { touristID, reply } = this;
 
-    await validateReference(touristID, "Tourist", next);
-    if (reply) {
-      await validateReference(reply, "Comment", next);
+        await validateReference(touristID, "Tourist", next);
+        if (reply) {
+            await validateReference(reply, "Comment", next);
+        }
+        next();
+    } catch (error) {
+        next(error);
     }
-    next();
-  } catch (error) {
-    next(error);
-  }
 });
 
 const validateReferencesMiddleware = async function (next) {
-  try {
-    const update = this.getUpdate();
-    const updatedTouristID = update.touristID || update["$set.touristID"];
-    const updatedReply = update.reply || update["$set.reply"];
+    try {
+        const update = this.getUpdate();
+        const updatedTouristID = update.touristID || update["$set.touristID"];
+        const updatedReply = update.reply || update["$set.reply"];
 
-    if (!updatedTouristID && !updatedReply) {
-      return next();
-    }
+        if (!updatedTouristID && !updatedReply) {
+            return next();
+        }
 
-    if (updatedTouristID) {
-      await validateReference(updatedTouristID, "Tourist", next);
+        if (updatedTouristID) {
+            await validateReference(updatedTouristID, "Tourist", next);
+        }
+        if (updatedReply) {
+            await validateReference(updatedReply, "Comment", next);
+        }
+        next();
+    } catch (error) {
+        next(error);
     }
-    if (updatedReply) {
-      await validateReference(updatedReply, "Comment", next);
-    }
-    next();
-  } catch (error) {
-    next(error);
-  }
 };
 
 complaintSchema.pre("findOneAndUpdate", validateReferencesMiddleware);
