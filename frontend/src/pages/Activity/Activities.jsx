@@ -10,7 +10,6 @@ import DatePicker from "../../components/DatePicker";
 import CheckboxList from "../../components/CheckBoxList";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
-import ActivityCard from "../../components/ActivityCard";
 import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
 import CardActivity from "../../components/CardActivity";
 import ShareAndMark from "../../components/ShareAndMark";
@@ -279,6 +278,7 @@ const Activities = () => {
                                             display: "flex",
                                             justifyContent: "center",
                                             alignItems: "center",
+                                            padding: "1vh",
                                         },
                                     },
                                 ]}
