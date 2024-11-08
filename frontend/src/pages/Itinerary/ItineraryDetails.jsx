@@ -42,7 +42,7 @@ const ItineraryDetails = () => {
 		language: "Arabic",
 		accessibility: ["weelchair", "ambulance cars"],
 		price: 1000,
-		availableDatesAndTimes: ["2024-12-20T00:00:00.000Z"],
+		availableDateAndTime: "2024-12-20T00:00:00.000Z",
 		pickup: "GUC",
 		dropOff: "GUC",
 		tags: ["sky diving", "sea"],
@@ -225,7 +225,7 @@ const ItineraryDetails = () => {
 						{/* Done */}
 						<div className="book-availabledates">
 							<Book price={price} text={"Likely to be out "} />
-							<AvailableDates width="18vw" fontSize={"0.8em"} />
+							<AvailableDates date={itinerary.availableDateAndTime} width="18vw" fontSize={"0.8em"} />
 						</div>
 					</div>
 				</div>
