@@ -79,7 +79,7 @@ const HotelList = ({ isAllOffers = true }) => {
         setStart(searchParams.get("start") || "");
         setEnd(searchParams.get("end") || "");
         setGuests(parseInt(searchParams.get("guests")) || 2);
-        //fetchRooms();
+        fetchRooms();
     }, [searchParams]);
 
     return (
@@ -87,7 +87,7 @@ const HotelList = ({ isAllOffers = true }) => {
             {isAllOffers && (
                 <HotelsControls
                     searchCity={city}
-                    setsearchCity={setCity}
+                    setSearchCity={setCity}
                     startDate={start}
                     setStartDate={setStart}
                     endDate={end}

@@ -40,10 +40,9 @@ const HotelsControls = ({
         <div className="hotels-controls-container">
             <div className="hotels-controls-search">
                 <SearchField
-                    placeholder="Search by city"
+                    placeholder="Search by name"
                     searchText={searchCity}
                     setSearchText={setSearchCity}
-                    className="hotels-controls-search"
                 />
             </div>
             <div className="hotels-controls-date">
