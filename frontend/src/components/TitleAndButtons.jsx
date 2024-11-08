@@ -20,7 +20,9 @@ const TitleAndButtons = ({ title, buttons }) => {
             >
                 {title}
             </p>
-            {buttons.map((button) => button)}
+            {buttons.map((button, index) => (
+                <div key={index}>{button}</div>
+            ))}
         </div>
     );
 };

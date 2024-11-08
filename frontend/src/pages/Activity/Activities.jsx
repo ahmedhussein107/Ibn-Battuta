@@ -257,8 +257,8 @@ const Activities = () => {
                         marginLeft: "5%",
                     }}
                 >
-                    {activities.map((activity) => (
-                        <div style={{ padding: "1.5vh" }}>
+                    {activities.map((activity, index) => (
+                        <div key={index} style={{ padding: "1.5vh" }}>
                             <CardActivity
                                 activity={activity}
                                 width={"60vw"}

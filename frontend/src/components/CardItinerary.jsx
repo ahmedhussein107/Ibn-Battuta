@@ -8,7 +8,7 @@ import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 
-const CardItinerary = ({ itinerary, width, height, firstLineButtons }) => {
+const CardItinerary = ({ itinerary, width, height, firstLineButtons, bottomButtons }) => {
     const image = itinerary.picture;
     const line1 = <TitleAndButtons title={itinerary.name} buttons={firstLineButtons} />;
     const line2 = (
@@ -65,7 +65,6 @@ const CardItinerary = ({ itinerary, width, height, firstLineButtons }) => {
         </div>
     );
     const rating = Math.floor(itinerary.rating);
-    console.log("rating", rating);
     const ratings = (
         <div style={{ display: "flex", flexDirection: "row", marginTop: "-2%" }}>
             <Rating name="read-only" value={rating} readOnly />
@@ -96,35 +95,34 @@ const CardItinerary = ({ itinerary, width, height, firstLineButtons }) => {
             <p style={{ marginLeft: "5%" }}>{itinerary.price}</p>
         </div>
     );
-    const editButton = (
-        <Button
-            stylingMode="1"
-            text="Edit"
-            width="70%"
-            customStyle={{ marginTop: "-5%" }}
-        />
-    );
-    const deactivateButton = (
-        <Button
-            stylingMode="2"
-            text={itinerary.isActivated ? "Deactivate" : "Activate"}
-            width="70%"
-            customStyle={{
-                marginTop: "2%",
-                color: itinerary.isActivated ? "red" : "green",
-                borderColor: itinerary.isActivated ? "red" : "green",
-                ":hover": {
-                    backgroundColor: itinerary.isActivated ? "red" : "green",
-                },
+
+    const buttons = (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: "100%",
             }}
-        />
+        >
+            {bottomButtons.map(({ text, type, width, onClick, styles }) => (
+                <Button
+                    text={text}
+                    stylingMode={type}
+                    width={width}
+                    handleClick={onClick}
+                    customStyle={styles}
+                />
+            ))}
+        </div>
     );
+
     const card = (
         <GenericCard
             image={image}
             aboveLine={[line1, line2]}
             bottomLeft={[description, accessibility, ratings]}
-            bottomRight={[bookingAvaliable, price, editButton, deactivateButton]}
+            bottomRight={[bookingAvaliable, price, buttons]}
             width={width}
             height={height}
         />

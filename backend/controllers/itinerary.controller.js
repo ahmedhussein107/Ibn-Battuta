@@ -156,3 +156,21 @@ export const toggleFlaggedItineraries = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const toggleActivatedItineraries = async (req, res) => {
+    try {
+        const itineraryID = req.params.id;
+        const itinerary = await Itinerary.findById(itineraryID);
+        if (!itinerary) {
+            return res.status(404).json({ message: "Itinerary not found" });
+        }
+        itinerary.isActivated = !itinerary.isActivated;
+        await itinerary.save();
+        res.status(200).json({
+            message: "Itinerary activated status changed successfully",
+            itinerary,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

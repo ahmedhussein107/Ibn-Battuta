@@ -43,14 +43,13 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
 
     const description = (
         <TruncatedText
-            text={activity.description}
+            text={activity.description || ""}
             width={"100%"}
             height={"80%"}
             fontSize={"2vh"}
         />
     );
     const rating = Math.floor(activity.rating);
-    console.log("rating", rating);
     const ratings = (
         <div style={{ display: "flex", flexDirection: "row", marginTop: "-2%" }}>
             <Rating name="read-only" value={rating} readOnly />
