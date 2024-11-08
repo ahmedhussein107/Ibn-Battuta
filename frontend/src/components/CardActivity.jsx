@@ -8,17 +8,21 @@ import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 
-const iconSize = "1.5vh";
+const iconSize = "0.85rem";
 
 const CardActivity = ({ activity, width, height, firstLineButtons }) => {
     const image = activity.picture;
-    const line1 = <TitleAndButtons title={activity.name} buttons={firstLineButtons} />;
+    const line1 = (
+        <div style={{ fontSize: "1.3rem" }}>
+            <TitleAndButtons title={activity.name} buttons={firstLineButtons} />
+        </div>
+    );
     const line2 = (
         <div
             style={{
                 display: "flex",
                 flexDirection: "row",
-                fontSize: "1.7vh",
+                fontSize: "0.9rem",
                 gap: "2vw",
             }}
         >
@@ -45,7 +49,7 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
         <TruncatedText
             text={activity.description || ""}
             width={"100%"}
-            // height={"80%"}
+            height={"80%"}
             fontSize={"2vh"}
         />
     );

@@ -15,7 +15,7 @@ const TitleAndButtons = ({ title, buttons }) => {
                     marginTop: "1%",
                     marginBottom: "2%",
                     fontWeight: "bold",
-                    fontSize: "3vh",
+                    fontSize: "1em",
                 }}
             >
                 {title}
