@@ -1,7 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height }) => {
+const GenericCard = ({
+    image,
+    aboveLine,
+    bottomLeft,
+    bottomRight,
+    width,
+    height,
+    upperHeight = "30%",
+    lowerHeight = "68%",
+}) => {
     return (
         <div
             style={{
@@ -32,24 +41,38 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                     borderRadius: "0 2vh 2vh 0",
                 }}
             >
-                <div style={{ marginLeft: "5%" }}>
+                <div style={{ marginLeft: "5%", height: "100%" }}>
                     <div
                         style={{
                             display: "flex",
                             flexDirection: "column",
-                            height: "30%",
-                            justifyContent: "space-between",
+                            height: upperHeight,
+                            justifyContent: "space-around",
                         }}
                     >
-                        {aboveLine.map((item) => item)}
+                        {aboveLine}
                     </div>
-                    <hr style={{ width: "95%", borderTop: "0.1vh solid #ddd" }} />
-                    <div style={{ display: "flex", flexDirection: "row", height: "70%" }}>
+                    <hr
+                        style={{
+                            width: "95%",
+                            borderTop: "0.1vh solid #ddd",
+                            marginTop: "1%",
+                        }}
+                    />
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            height: lowerHeight,
+                        }}
+                    >
                         <div
                             style={{
                                 width: "65%",
+                                height: "95%",
                                 display: "flex",
                                 flexDirection: "column",
+                                justifyContent: "space-around",
                             }}
                         >
                             {bottomLeft}
@@ -57,9 +80,10 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                         <div
                             style={{
                                 width: "35%",
-                                height: "100%",
+                                height: "95%",
                                 display: "flex",
                                 flexDirection: "column",
+                                justifyContent: "space-around",
                                 alignItems: "center",
                             }}
                         >
