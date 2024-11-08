@@ -10,7 +10,13 @@ import { Rating } from "@mui/material";
 
 const iconSize = "0.85rem";
 
-const CardActivity = ({ activity, width, height, firstLineButtons }) => {
+const CardActivity = ({
+    activity,
+    width,
+    height,
+    firstLineButtons = [],
+    bottomButtons = [],
+}) => {
     const image = activity.picture;
     const line1 = (
         <div style={{ fontSize: "1.3rem" }}>
@@ -113,18 +119,26 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
             USD {afterDiscount}
         </p>
     );
-    const editButton = (
-        <Button
-            stylingMode="1"
-            text="Edit"
-            width="50%"
-            height="2.5vh"
-            customStyle={{
+
+    const buttons = (
+        <div
+            style={{
                 display: "flex",
-                justifyContent: "center",
+                flexDirection: "column",
                 alignItems: "center",
+                width: "100%",
             }}
-        />
+        >
+            {bottomButtons.map(({ text, type, width, onClick, styles }) => (
+                <Button
+                    text={text}
+                    stylingMode={type}
+                    width={width}
+                    handleClick={onClick}
+                    customStyle={styles}
+                />
+            ))}
+        </div>
     );
 
     const card = (
@@ -137,7 +151,7 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
                 availableSeats,
                 originalPrice,
                 currentPrice,
-                editButton,
+                buttons,
             ]}
             width={width}
             height={height}

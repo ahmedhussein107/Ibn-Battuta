@@ -8,7 +8,13 @@ import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 
-const CardItinerary = ({ itinerary, width, height, firstLineButtons, bottomButtons }) => {
+const CardItinerary = ({
+    itinerary,
+    width,
+    height,
+    firstLineButtons = [],
+    bottomButtons = [],
+}) => {
     const image = itinerary.picture;
     const line1 = (
         <div style={{ fontSize: "1.3rem" }}>
