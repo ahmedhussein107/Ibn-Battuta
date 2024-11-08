@@ -1,0 +1,80 @@
+/* General Styles */
+.shop {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Product container to hold sidebar and main content */
+.product-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    gap: 20px; /* Space between sidebar and main content */
+}
+
+/* Sidebar styles (left aligned) */
+.product-sidebar {
+    flex: 1;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.product-main-content {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Button container styles */
+.product-buttons-container {
+    display: flex;
+    justify-content: space-between;
+} /* Space out the buttons evenly */
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Product grid container */
+.product-grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+    gap: 20px; /* Space between grid items */
+}
+
+/* Individual product grid item styles */
+.product-grid-item {
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 300px;
+}
+.product-order-wishlist {
+    margin-left: 3%;
+    display: flex;
+    flex-direction: row;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .product-container {
+        flex-direction: column; /* Stack sidebar and main content on small screens */
+    }
+
+    .product-sidebar {
+        max-width: 100%; /* Full width on small screens */
+    }
+
+    .product-main-content {
+        flex-direction: column; /* Stack buttons and grid vertically */
+    }
+
+    .product-grid-container {
+        grid-template-columns: 1fr; /* 1 item per row on small screens */
+    }
+}

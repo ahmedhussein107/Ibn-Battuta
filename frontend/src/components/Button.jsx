@@ -14,6 +14,7 @@ const Button = ({
     height = "auto",
     customStyle = {},
     type,
+    icon = null,
 }) => {
     return (
         <button
@@ -22,7 +23,15 @@ const Button = ({
             style={{ width: width, height: height, ...customStyle }} // Inline style for width
             type={type}
         >
-            {isLoading ? <div className="spinner"></div> : text}
+            {isLoading ? (
+                <div className="spinner"></div>
+            ) : (
+                <>
+                    {icon && <span className="button-icon">{icon}</span>}{" "}
+                    {/* Render icon if provided */}
+                    <span className="button-text">{text}</span>
+                </>
+            )}
         </button>
     );
 };
