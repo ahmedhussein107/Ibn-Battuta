@@ -8,10 +8,9 @@ import PersonIcon from "@mui/icons-material/Person";
 import { IconButton } from "@mui/material";
 import { DatePicker } from "antd";
 import Button from "../Button";
+import SearchWithRecommendation from "./SearchWithRecommendation";
 const { RangePicker } = DatePicker;
 const HotelsControls = ({
-    searchCity = "",
-    setSearchCity = () => {},
     startDate = "",
     setStartDate = () => {},
     endDate = "",
@@ -19,8 +18,12 @@ const HotelsControls = ({
     guests = 1,
     setGuests = () => {},
     onSearch = async () => {},
+    chosenCity,
+    setChosenCity,
 }) => {
     const [isSearching, setIsSearching] = useState(false);
+    const [searchCity, setSearchCity] = useState("");
+
     const handleSearch = async () => {
         console.log("i am here at handle search");
         try {
@@ -39,10 +42,11 @@ const HotelsControls = ({
     return (
         <div className="hotels-controls-container">
             <div className="hotels-controls-search">
-                <SearchField
-                    placeholder="Search by name"
-                    searchText={searchCity}
-                    setSearchText={setSearchCity}
+                <SearchWithRecommendation
+                    query={searchCity}
+                    setQuery={setSearchCity}
+                    chosenCity={chosenCity}
+                    setChosenCity={setChosenCity}
                 />
             </div>
             <div className="hotels-controls-date">

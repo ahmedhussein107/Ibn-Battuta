@@ -12,11 +12,13 @@
 .hotels-controls-adult-counter {
     flex: 3;
 }
-
-.hotels-controls-search .hotels-controls-search {
-    width: 100%;
+.hotels-controls-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #898686;
+    border-radius: 40px;
 }
-
 .hotels-controls-date {
     display: flex;
     align-items: center;

@@ -120,19 +120,32 @@ const ShowOfferDetails = () => {
                     </div>
                 </div>
             </div>
-            <Button
-                stylingMode="submit"
-                text="Book Now"
-                handleClick={handleOnAction}
-                disabled={isLoading}
-                isLoading={isLoading}
-                customStyle={{
-                    width: "173px",
-                    height: "55px",
-                    minHieght: "70px",
-                    borderRadius: "60px",
-                }}
-            />
+            {!offer.bookingId ? (
+                <Button
+                    stylingMode="submit"
+                    text="Book Now"
+                    handleClick={handleOnAction}
+                    disabled={isLoading}
+                    isLoading={isLoading}
+                    customStyle={{
+                        width: "173px",
+                        height: "55px",
+                        minHieght: "70px",
+                        borderRadius: "60px",
+                    }}
+                />
+            ) : (
+                <div
+                    style={{
+                        border: "1px solid green",
+                        paddingRight: "50px",
+                        paddingLeft: "50px",
+                        borderRadius: "40px",
+                    }}
+                >
+                    <h3 style={{ color: "black" }}>Your Booking ID: {offer.bookingId}</h3>
+                </div>
+            )}
         </div>
     );
 };

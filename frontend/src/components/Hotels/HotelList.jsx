@@ -40,10 +40,14 @@ const HotelList = ({ isAllOffers = true }) => {
     let _list = [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const [city, setCity] = useState(searchParams.get("city") || "");
+
+    const [lat, setLat] = useState(searchParams.get("lat") || "");
+    const [lng, setLng] = useState(searchParams.get("lng") || "");
     const [start, setStart] = useState(searchParams.get("start") || "");
     const [end, setEnd] = useState(searchParams.get("end") || "");
     const [guests, setGuests] = useState(parseInt(searchParams.get("guests")) || 2);
+    const [chosenCity, setChosenCity] = useState(null);
+
     const fetchRooms = async () => {
         let url = "/hotels";
         if (!isAllOffers) {
@@ -52,7 +56,8 @@ const HotelList = ({ isAllOffers = true }) => {
         try {
             const response = await axiosInstance.get(url, {
                 params: {
-                    city,
+                    lat,
+                    lng,
                     start,
                     end,
                     guests,
@@ -68,7 +73,8 @@ const HotelList = ({ isAllOffers = true }) => {
 
     const handleSearchButton = async () => {
         const newParams = {};
-        if (city.trim()) newParams.city = city;
+        if (lat.trim()) newParams.lat = lat;
+        if (lng.trim()) newParams.lng = lng;
         if (guests) newParams.guests = guests;
         if (start.trim()) newParams.start = start;
         if (end.trim()) newParams.end = end;
@@ -78,7 +84,8 @@ const HotelList = ({ isAllOffers = true }) => {
     };
 
     useEffect(() => {
-        setCity(searchParams.get("city") || "");
+        setLat(searchParams.get("lat") || "");
+        setLng(searchParams.get("lng") || "");
         setStart(searchParams.get("start") || "");
         setEnd(searchParams.get("end") || "");
         setGuests(parseInt(searchParams.get("guests")) || 2);
@@ -89,8 +96,6 @@ const HotelList = ({ isAllOffers = true }) => {
         <div className="hotel-list-with-controls">
             {isAllOffers && (
                 <HotelsControls
-                    searchCity={city}
-                    setSearchCity={setCity}
                     startDate={start}
                     setStartDate={setStart}
                     endDate={end}
@@ -98,6 +103,8 @@ const HotelList = ({ isAllOffers = true }) => {
                     guests={guests}
                     setGuests={setGuests}
                     onSearch={handleSearchButton}
+                    chosenCity={chosenCity}
+                    setChosenCity={setChosenCity}
                 />
             )}
             <div className="hotel-list-container">
