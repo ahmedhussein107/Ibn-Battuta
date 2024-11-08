@@ -9,6 +9,7 @@ export default function ShareAndMark({
     onSecondIconClick = () => {
         console.log("Balabizak"); // Default function for onSecondIconClick
     },
+    mode="card"
 }) {
     const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
@@ -34,12 +35,12 @@ export default function ShareAndMark({
         >
             {/* Mark Icon */}
             <div className="icon" onClick={onSecondIconClick}>
-                <img src="/markIcon.png" alt="Second Icon" />
+                <img src="/markIcon.png" alt="Second Icon" style={ mode === "card"? {width: width, height: height}: {}} />
             </div>
 
             {/* Share with Dropdown */}
             <div className="icon">
-                <img src="/shareIcon.png" alt="Dropdown Icon" />
+                <img src="/shareIcon.png" alt="Dropdown Icon" style={ mode === "card"? {width: width, height: height}: {}} />
 
                 <div className="dropdownlist">
                     <div className="dropdownlist-option" onClick={copyToClipboard}>
@@ -62,4 +63,6 @@ ShareAndMark.propTypes = {
     height: PropTypes.string,
     styles: PropTypes.object,
     onSecondIconClick: PropTypes.func.isRequired,
+    mode: PropTypes.string,
+
 };
