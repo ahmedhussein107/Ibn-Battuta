@@ -51,6 +51,8 @@ import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 import Test from "./components/Test";
 import PopUp from "./components/PopUpsGeneric/PopUp";
 import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
+import TestShopLayout from "./components/Shop/Shop";
+
 
 function App() {
     return (
@@ -61,6 +63,7 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/test" element={<PopUp />} />
                     <Route path="/complaints" element={<ComplaintList />} />
+                    <Route path="/test-shop-layout" element={<TestShopLayout />} />
                     <Route
                         path="/complaint/:complaintId"
                         element={<ViewSingleComplaint />}
