@@ -49,6 +49,7 @@ import Header from "./components/Header/Header";
 import NavBar from "./components/NavBar";
 import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 import Test from "./components/Test";
+import PopUp from "./components/PopUpsGeneric/PopUp";
 
 function App() {
     return (
@@ -57,7 +58,7 @@ function App() {
                 <Header />
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/test" element={<Test />} />
+                    <Route path="/test" element={<PopUp />} />
                     <Route path="/complaints" element={<ComplaintList />} />
                     <Route
                         path="/complaint/:complaintId"
