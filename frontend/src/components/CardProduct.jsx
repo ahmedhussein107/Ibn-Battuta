@@ -34,7 +34,7 @@ const CardProduct = ({ product, width, height, firstLineButtons }) => {
 		<TruncatedText
 			text={product.description}
 			width={"100%"}
-			height={"40%"}
+			height={"80%"}
 			fontSize={"2vh"}
 		/>
 	);
@@ -46,13 +46,24 @@ const CardProduct = ({ product, width, height, firstLineButtons }) => {
 			<p style={{ marginLeft: "5%", marginTop: "0%" }}>{product.ratings.length}</p>
 		</div>
 	);
+	const availableProducts = (
+		<p
+			style={{
+				marginTop: "-4%",
+				color: "brown",
+				fontSize: "1.6vh",
+			}}
+		>
+			{product.quantity} in stock
+		</p>
+	);
 	const price = (
 		<div
 			style={{
 				display: "flex",
 				flexDirection: "row",
 				fontWeight: "bold",
-				marginTop: "-15%",
+				// marginTop: "-15%",
 			}}
 		>
 			<p>USD</p>
@@ -64,7 +75,7 @@ const CardProduct = ({ product, width, height, firstLineButtons }) => {
 			stylingMode="1"
 			text="Edit"
 			width="70%"
-			customStyle={{ marginTop: "-5%" }}
+			// customStyle={{ marginTop: "-5%" }}
 		/>
 	);
 	const archeiveButton = (
@@ -85,9 +96,9 @@ const CardProduct = ({ product, width, height, firstLineButtons }) => {
 	const card = (
 		<GenericCard
 			image={image}
-			aboveLine={[line1, line2]}
+			aboveLine={[line1]}
 			bottomLeft={[description, ratings]}
-			bottomRight={[price, editButton, archeiveButton]}
+			bottomRight={[availableProducts, price, editButton, archeiveButton]}
 			width={width}
 			height={height}
 		/>

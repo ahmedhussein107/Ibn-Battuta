@@ -28,7 +28,7 @@
     transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none; /* Prevent clicking when hidden */
 }
-.icon:hover .dropdown {
+.icon:hover .dropdownlist {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto; /* Enable clicking when visible */

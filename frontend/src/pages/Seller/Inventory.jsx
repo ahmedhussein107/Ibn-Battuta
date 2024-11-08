@@ -212,7 +212,6 @@ const Inventory = () => {
                         display: "flex",
                         flexWrap: "wrap",
                         gap: "4vh",
-                        padding: "3vh",
                         marginTop: "-1vh",
                     }}
                 >
@@ -228,7 +227,7 @@ const Inventory = () => {
                             style={{
                                 marginTop: "1%",
                                 minHeight: "50vh",
-                                minWidth: "90vw",
+                                minWidth: "100vw",
                                 display: "flex",
                                 flexWrap: "wrap",
                                 justifyContent: "space-evenly",
@@ -238,7 +237,7 @@ const Inventory = () => {
                                 <div style={{ padding: "1.5vh" }}>
                                     <CardProduct
                                         product={product}
-                                        width={"40vw"}
+                                        width={"45vw"}
                                         height={"32vh"}
                                         firstLineButtons={[
                                             [

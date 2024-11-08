@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-const CyclicPhotoDisplay = ({ photos, width, height }) => {
+const   CyclicPhotoDisplay = ({ photos, width, height }) => {
     const [index, setIndex] = useState(0);
 
     useEffect(() => {
@@ -14,10 +14,10 @@ const CyclicPhotoDisplay = ({ photos, width, height }) => {
 
     return (
         <Container width={width} height={height}>
-            <LeftPhoto photoUrl={photos[index]} />
+            <LeftPhoto $photoUrl={photos[index]} />
             <RightColumn>
-                <TopRightPhoto photoUrl={photos[(index + 1) % photos.length]} />
-                <BottomRightPhoto photoUrl={photos[(index + 2) % photos.length]} />
+                <TopRightPhoto $photoUrl={photos[(index + 1) % photos.length]} />
+                <BottomRightPhoto $photoUrl={photos[(index + 2) % photos.length]} />
             </RightColumn>
         </Container>
     );
@@ -32,7 +32,7 @@ const Container = styled.div`
 
 const LeftPhoto = styled.div`
     flex: 1; 
-    background-image: url(${({ photoUrl }) => photoUrl});
+    background-image: url(${({ $photoUrl }) => $photoUrl});
     background-size: cover;
     background-position: center;
     transition: background-image 1.2s ease; 
@@ -48,7 +48,7 @@ const RightColumn = styled.div`
 
 const TopRightPhoto = styled.div`
     flex: 1;
-    background-image: url(${({ photoUrl }) => photoUrl});
+    background-image: url(${({ $photoUrl }) => $photoUrl});
     background-size: cover;
     background-position: center;
     transition: background-image 1.2s ease;
@@ -57,7 +57,7 @@ const TopRightPhoto = styled.div`
 
 const BottomRightPhoto = styled.div`
     flex: 1;
-    background-image: url(${({ photoUrl }) => photoUrl});
+    background-image: url(${({ $photoUrl }) => $photoUrl});
     background-size: cover;
     background-position: center;
     transition: background-image 1.2s ease;

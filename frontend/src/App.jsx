@@ -47,8 +47,8 @@ import ViewCategories from "./pages/Admin/ViewCategories";
 import { HeaderProvider } from "./components/Header/HeaderContext";
 import Header from "./components/Header/Header";
 import NavBar from "./components/NavBar";
-import Test from "./components/Test";
 import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
+import Test from "./components/Test";
 
 function App() {
     return (
@@ -76,6 +76,7 @@ function App() {
                     {/* other pages */}
                     <Route path="/activities" element={<Activities />} />
                     <Route path="/itineraries" element={<Itineraries />} />
+                    <Route path="/itinerary-details" element={<ItineraryDetails />} />
                     <Route path="/landmarks" element={<Landmarks />} />
 
                     <Route path="/about" element={<AboutPage />} />
@@ -88,19 +89,7 @@ function App() {
                     />
                     <Route path="/products/:productId" element={<ViewProductPage />} />
                     <Route path="/tourguide" element={<TourGuideProfilePage />} />
-                    <Route path="/category/:id" element={<UpdateCategory />} />
-                    <Route path="/category-create" element={<CreateCategory />} />
-                    <Route path="/category-all" element={<GetAllCategories />} />
-                    <Route path="/tag/:id" element={<UpdateTag />} />
-                    <Route path="/tag-create" element={<CreateTag />} />
-                    <Route path="/tag-all" element={<GetAllTags />} />
                     <Route path="/landmark-governor" element={<GovernorLandmarks />} />
-                    <Route path="/itinerary" element={<TourGuideItineraries />} />
-                    <Route
-                        path="/itinerary-customAvtivity"
-                        element={<TourGuideCustomActivities />}
-                    />
-                    <Route path="/activity" element={<AdvertiserActivities />} />
                     <Route path="/advertiser/assigned" element={<MyActivity />} />
                     <Route path="/tourguide/assigned" element={<MyItinenrary />} />
                     <Route path="/inventory" element={<Inventory />} />
@@ -112,7 +101,6 @@ function App() {
 
                     <Route path="/landmark/landmark/" element={<LandmarkPage />} />
                     <Route path="/create-itinerary" element={<CreateItineraryPage />} />
-                    <Route path="/filter-itineraries" element={<FilterItineraries />} />
                     <Route path="/create-landmark" element={<CreateLandmarkPage />} />
 
                     <Route path="/admin/tags" element={<ViewTags />} />

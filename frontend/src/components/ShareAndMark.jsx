@@ -34,20 +34,12 @@ export default function ShareAndMark({
         >
             {/* Mark Icon */}
             <div className="icon" onClick={onSecondIconClick}>
-                <img
-                    src="/markIcon.png"
-                    alt="Second Icon"
-                    style={{ width: width, height: height }}
-                />
+                <img src="/markIcon.png" alt="Second Icon" />
             </div>
 
             {/* Share with Dropdown */}
             <div className="icon">
-                <img
-                    src="/shareIcon.png"
-                    alt="Dropdown Icon"
-                    style={{ width: width, height: height }}
-                />
+                <img src="/shareIcon.png" alt="Dropdown Icon" />
 
                 <div className="dropdownlist">
                     <div className="dropdownlist-option" onClick={copyToClipboard}>
