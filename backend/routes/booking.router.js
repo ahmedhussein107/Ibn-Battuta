@@ -1,55 +1,20 @@
 import express from "express";
-import Booking from "../models/booking.model.js";
 
 const bookingRouter = express.Router();
 
-bookingRouter.post("/createBooking", async (req, res) => {
-    try {
-        console.log("req.body", req.body);
-        if (req.user) {
-            req.body.touristID = req.user?.userId || req.body.touristID;
-        }
-        const booking = await Booking.create(req.body);
-        console.log("booking", booking);
-        res.status(201).json(booking);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-});
+import {
+    getBookings,
+    createBooking,
+    redeemPoints,
+    deleteBooking,
+} from "../controllers/booking.controller.js";
 
-bookingRouter.get("/getBookings", async (req, res) => {
-    try {
-        const bookings = await Booking.find();
-        res.status(200).json(bookings);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-});
+bookingRouter.get("/getBookings", getBookings);
 
-bookingRouter.delete("/deleteBooking/:id", async (req, res) => {
-    try {
-        const booking = await Booking.findByIdAndDelete(req.params.id);
-        if (!booking) {
-            return res.status(404).json({ message: "Booking not found" });
-        }
-        res.status(200).json({ message: "Booking deleted successfully" });
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-});
+bookingRouter.post("/createBooking", createBooking);
 
-bookingRouter.put("/updateBooking/:id", async (req, res) => {
-    try {
-        const admin = await Booking.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        });
-        if (!admin) {
-            return res.status(404).json({ message: "Booking not found" });
-        }
-        res.status(200).json(admin);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-});
+bookingRouter.patch("/redeemPoints/:id", redeemPoints);
+
+bookingRouter.delete("/deleteBooking/:id", deleteBooking);
 
 export default bookingRouter;

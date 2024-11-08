@@ -9,6 +9,7 @@ import {
     deleteItineraries,
     getTourGuideItinerary,
     searchItineraries,
+    getFreeSpots,
     toggleFlaggedItineraries,
     toggleActivatedItineraries,
 } from "../controllers/itinerary.controller.js";
@@ -33,6 +34,8 @@ itineraryRouter.get("/getTourGuideItinerary/", isAuthenticated, getTourGuideItin
 itineraryRouter.get("/searchItineraries", searchItineraries);
 
 itineraryRouter.delete("/", deleteItineraries);
+
+itineraryRouter.get("/getFreeSpots/:id", getFreeSpots);
 
 itineraryRouter.patch("/toggleFlag/:id", toggleFlaggedItineraries);
 
