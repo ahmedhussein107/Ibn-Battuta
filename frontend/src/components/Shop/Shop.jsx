@@ -5,17 +5,19 @@ import FilterSidebar from "./FilterBar";
 import CardActivity from "../CardActivity";
 import ShareAndMark from "../ShareAndMark";
 import shopBackground from "../../assets/backgrounds/shopBackground.png";
+import usePageHeader from "../Header/UseHeaderPage";
+import "./Shop.css";
+import Button from "../Button";
+import ActionButtons from "./ActionButtons";
 const minPrice = 0;
 const maxPrice = 1000;
-
 const TestShopLayout = () => {
+    usePageHeader(shopBackground, "Shop");
     const [products, setProducts] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
     const [ratingRange, setRatingRange] = useState([1, 5]);
     const [sortBy, setSortBy] = useState("priceAsc");
     const [name, setName] = useState("");
-
-    //////////////////////////
 
     const sortproducts = (products) => {
         let sortedproducts = [...products]; // Create a shallow copy
@@ -44,6 +46,8 @@ const TestShopLayout = () => {
             );
             console.log("response", response.data);
             sortproducts(response.data);
+            // to be deleted;
+            setProducts([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
         } catch (error) {
             console.error("Error fetching products:", error);
         }
@@ -86,27 +90,9 @@ const TestShopLayout = () => {
     };
 
     return (
-        <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
-            <div
-                style={{
-                    width: "100vw",
-                    height: "30vh",
-                    backgroundImage: `url(${shopBackground})`,
-                    backgroundSize: "100% 100%",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                }}
-            ></div>
-
-            <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
-                <div
-                    style={{
-                        width: "40vw",
-                        borderRadius: "3vh",
-                        marginTop: "1%",
-                        marginBottom: "1%",
-                    }}
-                >
+        <div className="shop">
+            <div className="product-container">
+                <div className="product-sidebar">
                     <FilterSidebar
                         name={name}
                         setName={setName}
@@ -120,32 +106,16 @@ const TestShopLayout = () => {
                         maxPrice={maxPrice}
                     />
                 </div>
-                <div
-                    style={{
-                        minHeight: "50vh",
-                        width: "100vw",
-                        display: "flex",
-                        flexDirection: "column",
-                        flexWrap: "wrap",
-                        justifyContent: "space-evenly",
-                    }}
-                >
-                    {products.map((activity, index) => (
-                        <div key={index} style={{ padding: "1.5vh" }}>
-                            <CardActivity
-                                activity={activity}
-                                width={"60vw"}
-                                height={"34vh"}
-                                firstLineButtons={[
-                                    <ShareAndMark
-                                        width="1.2vw"
-                                        height="1.2vw"
-                                        styles={{ padding: "0.5vh" }}
-                                    />,
-                                ]}
-                            />
-                        </div>
-                    ))}
+                <div className="product-main-content">
+                    <ActionButtons />
+                    <div className="product-grid-container">
+                        {/* put your cards here ya 7os */}
+                        {products.map((product, index) => (
+                            <div key={index} className="product-grid-item">
+                                <p>hi there</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
