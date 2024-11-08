@@ -82,11 +82,6 @@ export const searchProducts = async (req, res) => {
 			const minRating = bounds[0] != "null" ? parseInt(bounds[0]) : -1;
 			const maxRating = bounds[1] != "null" ? parseInt(bounds[1]) : -1;
 			const result = products.filter((product) => {
-				console.log(
-					"product",
-					rating,
-					product.rating >= minRating && product.rating <= maxRating
-				);
 				return product.rating >= minRating && product.rating <= maxRating;
 			});
 			return res.status(200).json(result);

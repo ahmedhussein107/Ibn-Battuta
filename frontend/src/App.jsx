@@ -81,7 +81,6 @@ function App() {
 
 					<Route path="/create-activity" element={<CreateActivityPage />} />
 					<Route path="/update-activity" element={<UpdateActivityPage />} />
-					<Route path="/filter-landmarks" element={<FilterLandmarks />} />
 					<Route path="/view-products" element={<ViewProductsPage />} />
 
 					<Route path="/landmark/landmark/" element={<LandmarkPage />} />
