@@ -66,7 +66,7 @@ const CardItinerary = ({ itinerary, width, height, firstLineButtons, bottomButto
     );
     const rating = Math.floor(itinerary.rating);
     const ratings = (
-        <div style={{ display: "flex", flexDirection: "row", marginTop: "-2%" }}>
+        <div style={{ display: "flex", flexDirection: "row" }}>
             <Rating name="read-only" value={rating} readOnly />
             <p style={{ marginLeft: "5%", marginTop: "0%" }}>
                 {itinerary.ratings.length}
@@ -88,7 +88,6 @@ const CardItinerary = ({ itinerary, width, height, firstLineButtons, bottomButto
                 display: "flex",
                 flexDirection: "row",
                 fontWeight: "bold",
-                marginTop: "-15%",
             }}
         >
             <p>USD</p>

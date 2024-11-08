@@ -45,13 +45,13 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
         <TruncatedText
             text={activity.description || ""}
             width={"100%"}
-            height={"80%"}
+            // height={"80%"}
             fontSize={"2vh"}
         />
     );
     const rating = Math.floor(activity.rating);
     const ratings = (
-        <div style={{ display: "flex", flexDirection: "row", marginTop: "-2%" }}>
+        <div style={{ display: "flex", flexDirection: "row" }}>
             <Rating name="read-only" value={rating} readOnly />
             <p style={{ marginLeft: "5%", marginTop: "0%" }}>{activity.ratings.length}</p>
         </div>
@@ -60,8 +60,7 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
         <p
             style={{
                 color: activity.isOpenForBooking ? "green" : "red",
-                marginTop: "0%",
-                fontSize: "1.6vh",
+                fontSize: "0.8rem",
             }}
         >
             {activity.isOpenForBooking ? "Booking availabe" : "Booking not availabe"}
@@ -70,9 +69,9 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
     const availableSeats = (
         <p
             style={{
-                marginTop: "-4%",
+                // marginTop: "-4%",
                 color: "brown",
-                fontSize: "1.6vh",
+                fontSize: "0.8rem",
             }}
         >
             {activity.freeSpots} Available seats
@@ -91,7 +90,7 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
                 color: "red",
                 textDecoration: "line-through",
                 // marginTop: "-10%",
-                fontSize: "1.6vh",
+                fontSize: "0.8rem",
             }}
         >
             USD {beforeDiscount}
@@ -103,8 +102,8 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
                 display: "flex",
                 flexDirection: "row",
                 fontWeight: "bold",
-                marginTop: "-5%",
-                fontSize: "2vh",
+                // marginTop: "-5%",
+                fontSize: "1rem",
             }}
         >
             USD {afterDiscount}
@@ -114,8 +113,13 @@ const CardActivity = ({ activity, width, height, firstLineButtons }) => {
         <Button
             stylingMode="1"
             text="Edit"
-            width="70%"
-            // customStyle={{ marginTop: "-8%" }}
+            width="50%"
+            height="2.5vh"
+            customStyle={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
         />
     );
 

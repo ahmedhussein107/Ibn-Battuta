@@ -51,76 +51,76 @@ import Test from "./components/Test";
 import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 
 function App() {
-	return (
-		<HeaderProvider>
-			<Router>
-				<Header />
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="/test" element={<Test />} />
-					<Route path="/complaints" element={<ComplaintList />} />
-					<Route
-						path="/complaint/:complaintId"
-						element={<ViewSingleComplaint />}
-					/>
-					{/* signin and signup pages */}
-					<Route path="/signup" element={<SignUpPage />} />
-					<Route path="/signin" element={<Signin />} />
-					<Route path="/select-your-role" element={<SelectYourRole />} />
-					{/* home pages for each role */}
-					<Route path="/admin" element={<AdminHome />} />
-					<Route path="/advertiser" element={<AdvertiserHome />} />
-					<Route path="/tourguide" element={<TourGuideHome />} />
-					<Route path="/seller" element={<SellerHome />} />
+    return (
+        <HeaderProvider>
+            <Router>
+                <Header />
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/test" element={<Test />} />
+                    <Route path="/complaints" element={<ComplaintList />} />
+                    <Route
+                        path="/complaint/:complaintId"
+                        element={<ViewSingleComplaint />}
+                    />
+                    {/* signin and signup pages */}
+                    <Route path="/signup" element={<SignUpPage />} />
+                    <Route path="/signin" element={<Signin />} />
+                    <Route path="/select-your-role" element={<SelectYourRole />} />
+                    {/* home pages for each role */}
+                    <Route path="/admin" element={<AdminHome />} />
+                    <Route path="/advertiser" element={<AdvertiserHome />} />
+                    <Route path="/tourguide" element={<TourGuideHome />} />
+                    <Route path="/seller" element={<SellerHome />} />
 
-					{/* other pages */}
-					<Route path="/activities" element={<Activities />} />
-					<Route path="/itineraries" element={<Itineraries />} />
-					<Route path="/landmarks" element={<Landmarks />} />
+                    {/* other pages */}
+                    <Route path="/activities" element={<Activities />} />
+                    <Route path="/itineraries" element={<Itineraries />} />
+                    <Route path="/landmarks" element={<Landmarks />} />
 
-					<Route path="/about" element={<AboutPage />} />
-					<Route path="/create-product" element={<CreateProductPage />} />
-					<Route path="/add-new-user" element={<AddNewUser />} />
-					<Route path="admin/users" element={<UserManagement />} />
-					<Route
-						path="/update-product/:productId"
-						element={<UpdateProductPage />}
-					/>
-					<Route path="/products/:productId" element={<ViewProductPage />} />
-					<Route path="/tourguide" element={<TourGuideProfilePage />} />
-					<Route path="/category/:id" element={<UpdateCategory />} />
-					<Route path="/category-create" element={<CreateCategory />} />
-					<Route path="/category-all" element={<GetAllCategories />} />
-					<Route path="/tag/:id" element={<UpdateTag />} />
-					<Route path="/tag-create" element={<CreateTag />} />
-					<Route path="/tag-all" element={<GetAllTags />} />
-					<Route path="/landmark-governor" element={<GovernorLandmarks />} />
-					<Route path="/itinerary" element={<TourGuideItineraries />} />
-					<Route
-						path="/itinerary-customAvtivity"
-						element={<TourGuideCustomActivities />}
-					/>
-					<Route path="/activity" element={<AdvertiserActivities />} />
-					<Route path="/advertiser/assigned" element={<MyActivity />} />
-					<Route path="/tourguide/assigned" element={<MyItinenrary />} />
-					<Route path="/seller/inventory" element={<Inventory />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/create-product" element={<CreateProductPage />} />
+                    <Route path="/add-new-user" element={<AddNewUser />} />
+                    <Route path="admin/users" element={<UserManagement />} />
+                    <Route
+                        path="/update-product/:productId"
+                        element={<UpdateProductPage />}
+                    />
+                    <Route path="/products/:productId" element={<ViewProductPage />} />
+                    <Route path="/tourguide" element={<TourGuideProfilePage />} />
+                    <Route path="/category/:id" element={<UpdateCategory />} />
+                    <Route path="/category-create" element={<CreateCategory />} />
+                    <Route path="/category-all" element={<GetAllCategories />} />
+                    <Route path="/tag/:id" element={<UpdateTag />} />
+                    <Route path="/tag-create" element={<CreateTag />} />
+                    <Route path="/tag-all" element={<GetAllTags />} />
+                    <Route path="/landmark-governor" element={<GovernorLandmarks />} />
+                    <Route path="/itinerary" element={<TourGuideItineraries />} />
+                    <Route
+                        path="/itinerary-customAvtivity"
+                        element={<TourGuideCustomActivities />}
+                    />
+                    <Route path="/activity" element={<AdvertiserActivities />} />
+                    <Route path="/advertiser/assigned" element={<MyActivity />} />
+                    <Route path="/tourguide/assigned" element={<MyItinenrary />} />
+                    <Route path="/inventory" element={<Inventory />} />
 
-					<Route path="/create-activity" element={<CreateActivityPage />} />
-					<Route path="/update-activity" element={<UpdateActivityPage />} />
-					<Route path="/filter-landmarks" element={<FilterLandmarks />} />
-					<Route path="/view-products" element={<ViewProductsPage />} />
+                    <Route path="/create-activity" element={<CreateActivityPage />} />
+                    <Route path="/update-activity" element={<UpdateActivityPage />} />
+                    <Route path="/filter-landmarks" element={<FilterLandmarks />} />
+                    <Route path="/view-products" element={<ViewProductsPage />} />
 
-					<Route path="/landmark/landmark/" element={<LandmarkPage />} />
-					<Route path="/create-itinerary" element={<CreateItineraryPage />} />
-					<Route path="/filter-itineraries" element={<FilterItineraries />} />
-					<Route path="/create-landmark" element={<CreateLandmarkPage />} />
+                    <Route path="/landmark/landmark/" element={<LandmarkPage />} />
+                    <Route path="/create-itinerary" element={<CreateItineraryPage />} />
+                    <Route path="/filter-itineraries" element={<FilterItineraries />} />
+                    <Route path="/create-landmark" element={<CreateLandmarkPage />} />
 
-					<Route path="/admin/tags" element={<ViewTags />} />
-					<Route path="/admin/category" element={<ViewCategories />} />
-				</Routes>
-			</Router>
-		</HeaderProvider>
-	);
+                    <Route path="/admin/tags" element={<ViewTags />} />
+                    <Route path="/admin/category" element={<ViewCategories />} />
+                </Routes>
+            </Router>
+        </HeaderProvider>
+    );
 }
 
 export default App;

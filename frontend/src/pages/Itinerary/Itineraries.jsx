@@ -209,9 +209,6 @@ const Itineraries = () => {
                                         onClick: () => navigate("itinerary"), // TODO: change url
                                         type: "1",
                                         width: "70%",
-                                        styles: {
-                                            marginTop: "5%",
-                                        },
                                     },
                                 ]}
                             />
