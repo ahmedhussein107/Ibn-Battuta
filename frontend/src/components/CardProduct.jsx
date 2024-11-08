@@ -55,37 +55,6 @@ const CardProduct = ({
 			<p style={{ marginLeft: "5%" }}>{product.price}</p>
 		</div>
 	);
-	const editButton = (
-		<Button
-			stylingMode="1"
-			text="Edit"
-			width="70%"
-			height="30%"
-			customStyle={{
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-			}}
-		/>
-	);
-	const archeiveButton = (
-		<Button
-			stylingMode="2"
-			text={product.isArchived ? "Deactivate" : "Activate"}
-			width="70%"
-			height="30%"
-			customStyle={{
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-				color: product.isArchived ? "red" : "green",
-				borderColor: product.isArchived ? "red" : "green",
-				":hover": {
-					backgroundColor: product.isArchived ? "red" : "green",
-				},
-			}}
-		/>
-	);
 	const buttons = (
 		<div
 			style={{

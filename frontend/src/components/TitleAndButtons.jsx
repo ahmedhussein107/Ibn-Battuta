@@ -20,9 +20,11 @@ const TitleAndButtons = ({ title, buttons }) => {
             >
                 {title}
             </p>
-            {buttons.map((button, index) => (
-                <div key={index}>{button}</div>
-            ))}
+            <div style={{ display: "flex", gap: "1em" }}>
+                {buttons.map((button, index) => (
+                    <div key={index}>{button}</div>
+                ))}
+            </div>
         </div>
     );
 };
