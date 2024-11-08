@@ -10,6 +10,7 @@ import BathtubIcon from "@mui/icons-material/Bathtub";
 import Button from "../Button";
 import { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
+
 const ShowOfferDetails = () => {
     const { state } = useLocation();
     const { offer } = state || {};
@@ -17,6 +18,15 @@ const ShowOfferDetails = () => {
     const handleOnAction = async () => {
         setIsLoading(true);
         try {
+            await axiosInstance.post(
+                "amadeus/hotels/book-hotel",
+                {
+                    offer,
+                },
+                {
+                    withCredentials: true,
+                }
+            );
         } catch (err) {
         } finally {
             setIsLoading(false);
