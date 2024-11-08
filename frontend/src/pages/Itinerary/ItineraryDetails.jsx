@@ -12,7 +12,8 @@ import Footer from "../../components/Footer.jsx";
 import AvailableDates from "../../components/ItineraryDetails/AvailableDates.jsx";
 import "../../styles/ItineraryDetails.css";
 import ItineraryTimeline from "../../components/ItineraryTimline.jsx";
-
+import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
+import TicketCounter from "../../components/TicketCounter.jsx";
 const ItineraryDetails = () => {
 	const [itinerary, setItinerary] = useState({
 		_id: "6703f5310ecc1ad25ff95144",
@@ -58,11 +59,22 @@ const ItineraryDetails = () => {
 		rating: 125,
 		id: "6703f5310ecc1ad25ff95144",
 	});
+
+	//For mangaing page logic
+	const [popUpIsOpen, setPopUpIsOpen] = useState(false);
+	
+	const handleBooking = () => {
+		// Open pop up with booking details
+		setPopUpIsOpen(true);
+	};
+
+	//For managing itinerary data
 	const [photoList, setPhotoList] = useState([]);
 	const [tourGuideName, setTourGuideName] = useState(null);
 	const [tourGuidePicture, setTourGuidePicture] = useState(null);
 	const [tags, setTags] = useState(itinerary.tags);
 	const [activities, setActivities] = useState([]);
+	const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
 	const description = itinerary.description;
 	const price = itinerary.price;
 	const language = itinerary.language;
@@ -71,7 +83,6 @@ const ItineraryDetails = () => {
 	const pickup = itinerary.pickup;
 	const dropoff = itinerary.dropOff;
 	const pickuptime = itinerary.pickupTime;
-
 	//For Tour guide name and photo
 	useEffect(() => {
 		const fetchTourGuide = async () => {
@@ -103,7 +114,10 @@ const ItineraryDetails = () => {
 								: `customActivity/getCustomActivity/${activityObj.activity}`
 						);
 						const activity = activityResponse.data;
-
+						if (!isCustom &&activity && activity.freeSpots !== undefined) {
+							setFreeSpots((prevFreeSpots) => Math.min(prevFreeSpots, activity.freeSpots));
+							console.log(activity)
+						}
 						// Extract and format start and end times
 						const formatTime = (date) => {
 							const options = {
@@ -169,6 +183,16 @@ const ItineraryDetails = () => {
 		<div className="itinerary-details-container">
 			<NavBar />
 
+			<PopUp
+				isOpen={popUpIsOpen}
+				setIsOpen={setPopUpIsOpen}
+				headerText={
+					"Please fill in the following to complete your booking"
+				}
+			>
+				<TicketCounter  pricePerPerson={90.05} maxCount={freeSpots}/>
+			</PopUp>
+
 			<ItineraryAndActivityHeader
 				mode="itinerary"
 				title={itineraryTitle}
@@ -224,8 +248,16 @@ const ItineraryDetails = () => {
 
 						{/* Done */}
 						<div className="book-availabledates">
-							<Book price={price} text={"Likely to be out "} />
-							<AvailableDates date={itinerary.availableDateAndTime} width="18vw" fontSize={"0.8em"} />
+							<Book
+								price={price}
+								text={"Likely to be out "}
+								onClick={handleBooking}
+							/>
+							<AvailableDates
+								date={itinerary.availableDateAndTime}
+								width="18vw"
+								fontSize={"0.8em"}
+							/>
 						</div>
 					</div>
 				</div>
