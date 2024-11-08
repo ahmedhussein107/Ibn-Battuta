@@ -1,7 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height }) => {
+const GenericCard = ({
+    image,
+    aboveLine,
+    bottomLeft,
+    bottomRight,
+    width,
+    height,
+    upperHeight = "30%",
+    lowerHeight = "68%",
+}) => {
     return (
         <div
             style={{
@@ -37,7 +46,7 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                         style={{
                             display: "flex",
                             flexDirection: "column",
-                            height: "30%",
+                            height: upperHeight,
                             justifyContent: "space-around",
                         }}
                     >
@@ -50,7 +59,13 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                             marginTop: "1%",
                         }}
                     />
-                    <div style={{ display: "flex", flexDirection: "row", height: "68%" }}>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            height: lowerHeight,
+                        }}
+                    >
                         <div
                             style={{
                                 width: "65%",
