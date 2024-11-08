@@ -10,6 +10,8 @@ import axiosInstance from "../../api/axiosInstance.js";
 const SignUpPage = () => {
     const location = useLocation();
     const { userType } = location.state || { userType: "TourGuide" };
+
+    const [error, setError] = useState(null);
     const [step, setSetp] = useState(1);
     const [imageFile, setImageFile] = useState(null);
     const [image, setImage] = useState(null);
@@ -93,6 +95,7 @@ const SignUpPage = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setError(null);
         setIsLoading(true);
         try {
             if (userType !== "Tourist" && !file1) {
@@ -124,7 +127,7 @@ const SignUpPage = () => {
                 setUserData({ ...userData, documents: certificatesPath });
             }
 
-            await axiosInstance.post(
+            const response = await axiosInstance.post(
                 `/${userType.toLowerCase()}/create${userType}`,
                 userData,
                 {
@@ -136,6 +139,7 @@ const SignUpPage = () => {
             console.log("File 1:", file1);
             console.log("Files 2:", file2);
         } catch (error) {
+            setError(error.response.data.e);
             console.log(error);
         } finally {
             setIsLoading(false);
@@ -197,6 +201,8 @@ const SignUpPage = () => {
                             </div>
                         </div>
                     )}
+                    <p className="signup-error">{error}</p>
+
                     <div className="button-group">
                         <Button
                             stylingMode="2"
