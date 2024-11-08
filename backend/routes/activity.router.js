@@ -13,7 +13,7 @@ import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const activityRouter = express.Router();
 
-activityRouter.post("/createActivity", createActivity);
+activityRouter.post("/createActivity", isAuthenticated, createActivity);
 
 activityRouter.get("/getActivity/:id", getActivityById);
 
