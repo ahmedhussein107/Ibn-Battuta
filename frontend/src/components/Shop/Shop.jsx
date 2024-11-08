@@ -8,6 +8,7 @@ import usePageHeader from "../Header/UseHeaderPage";
 import CardProduct from "../CardProduct";
 import CustomButton from "../Button";
 import ActionButtons from "./ActionButtons";
+import NavBar from "../NavBar";
 const minPrice = 0;
 const maxPrice = 1000;
 const TestShopLayout = () => {
@@ -84,6 +85,7 @@ const TestShopLayout = () => {
 
 	return (
 		<div className="shop">
+			<NavBar />
 			<div className="product-sidebar">
 				<FilterSidebar
 					name={name}
