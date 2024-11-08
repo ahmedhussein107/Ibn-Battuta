@@ -12,7 +12,6 @@ const map = ({ setMarkerPosition }) => {
 
     return (
         <div>
-            <h1>Select Location</h1>
             <MapComponent
                 apiKey="AIzaSyC_zN08IM5_NV1yi_gVMJfmLigewujCn8w"
                 markerPosition={marker}
