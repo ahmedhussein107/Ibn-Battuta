@@ -1,4 +1,4 @@
-import ReviewsSection from "../../components/ItineraryDetails/ReviewsSection.jsx";
+import ReviewsSection from "./ReviewsSection.jsx";
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import ProfileAndDescription from "./ProfileAndDescription.jsx";

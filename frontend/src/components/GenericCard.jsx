@@ -38,10 +38,9 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                             display: "flex",
                             flexDirection: "column",
                             height: "30%",
-                            justifyContent: "space-between",
                         }}
                     >
-                        {aboveLine.map((item) => item)}
+                        {aboveLine}
                     </div>
                     <hr style={{ width: "95%", borderTop: "0.1vh solid #ddd" }} />
                     <div style={{ display: "flex", flexDirection: "row", height: "70%" }}>
