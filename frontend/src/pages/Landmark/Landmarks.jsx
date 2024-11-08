@@ -164,7 +164,6 @@ const Landmarks = () => {
                 <div
                     style={{
                         width: "25vw",
-                        boxShadow: "0 5vh 5vh rgba(0, 0, 0, 0.1)",
                         borderRadius: "3vh",
                     }}
                 >
