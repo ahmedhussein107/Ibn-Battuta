@@ -157,7 +157,7 @@ const AverageRating = styled.div`
 `;
 
 const Star = styled.span`
-    color: ${({ $f }) => ($f == "t"? "#ffa500" : "#ccc")};
+    color: ${({ $filled }) => ($filled == "t"? "#ffa500" : "#ccc")};
     font-size: ${({ size }) => size || "1.5em"};
 `;
 

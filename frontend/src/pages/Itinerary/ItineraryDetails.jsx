@@ -76,7 +76,6 @@ const ItineraryDetails = () => {
 	const pickuptime = itinerary.pickupTime;
 
 	//For Ratings/reviews
-
 	useEffect(() => {
 		const fetchReviews = async () => {
 			try {
@@ -129,7 +128,7 @@ const ItineraryDetails = () => {
 		fetchTourGuide();
 	}, [itinerary.tourguideID]);
 
-	//For activities
+	//For activities and photos
 	useEffect(() => {
 		const fetchActivites = async () => {
 			try {
@@ -182,13 +181,14 @@ const ItineraryDetails = () => {
 						};
 					})
 				);
+
 				const photosData = activitiesData
-					.filter((activity) => activity.activityType === "Activity" && activity.activityData.length >0)
+					.filter((activity) => activity.activityType === "Activity" && activity.activityData.picture)
 					.map((activity) => {
 						return activity.activityData.picture;
 					});
 				photosData.push(itinerary.picture);
-					
+
 				setPhotoList(photosData);
 				// Update the state with the reviews data
 				setActivities(activitiesData);

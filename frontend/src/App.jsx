@@ -54,7 +54,7 @@ function App() {
 	return (
 		<HeaderProvider>
 			<Router>
-				<Header />
+				<Header />	
 				<NavBar />
 				<Routes>
 					<Route path="/" element={<HomePage />} />
