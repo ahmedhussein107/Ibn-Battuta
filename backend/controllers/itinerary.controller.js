@@ -13,8 +13,9 @@ export const createItinerary = async (req, res) => {
 };
 
 export const getItineraries = async (req, res) => {
+    const query = buildFilter(req.query);
     try {
-        const itineraries = await Itinerary.find();
+        const itineraries = await Itinerary.find(query);
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ message: error.message });

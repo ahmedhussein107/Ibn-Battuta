@@ -6,15 +6,15 @@ import { Avatar, Button } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
 import Footer from "../../components/Footer";
-import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
 import axiosInstance from "../../api/axiosInstance";
+import FlagIcon from "@mui/icons-material/Flag";
+import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
 import { useNavigate } from "react-router-dom";
 import CardItinerary from "../../components/CardItinerary";
 import travellerBackground from "../../assets/backgrounds/travellerBackground.png";
-import DeleteButton from "../../components/DeleteButton";
 
-const MyItinenrary = () => {
+const AllItineraries = () => {
     const navigate = useNavigate();
 
     const [itineraries, setitineraries] = useState([
@@ -35,45 +35,6 @@ const MyItinenrary = () => {
             language: "Arabic",
             location: "Cairo, Egypt",
             accessibility: ["Wheelchair", "Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
             name: "Tour in GUC",
             price: 1000,
             availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
@@ -118,9 +79,8 @@ const MyItinenrary = () => {
 
     const fetchData = async (query) => {
         try {
-            const response = await axiosInstance.get(`/itinerary/getTourGuideItinerary`, {
+            const response = await axiosInstance.get(`/itinerary/getAllItineraries`, {
                 params: query,
-                withCredentials: true,
             });
             const data = response.data;
             sortItineraries(data);
@@ -149,33 +109,21 @@ const MyItinenrary = () => {
         sortItineraries(itineraries);
     }, [sortBy]);
 
-    const deleteItineraryHandler = async (itineraryID) => {
-        try {
-            const response = await axiosInstance.delete(
-                `/itinerary/deleteItinerary/${itineraryID}`
-            );
-            sortItineraries((prevItineraries) =>
-                prevItineraries.filter((itinerary) => itinerary._id !== itineraryID)
-            );
-        } catch (error) {
-            alert("Error deleting itinerary");
-        }
-    };
-
-    const activateItineraryHandler = async (itineraryID) => {
+    const flagItineraryHandler = async (itinerary, index) => {
+        console.log("flagItineraryHandler", itinerary._id);
         try {
             const response = await axiosInstance.patch(
-                `/itinerary/toggleActive/${itineraryID}`
+                `/itinerary/toggleFlag/${itinerary._id}`
             );
-            sortItineraries((prevItineraries) =>
-                prevItineraries.map((itinerary) =>
-                    itinerary._id === itineraryID
-                        ? { ...itinerary, isActivated: !itinerary.isActivated }
-                        : itinerary
-                )
-            );
+            console.log(response.data);
+            setitineraries((itineraries) => {
+                const newItineraries = [...itineraries];
+                newItineraries[index].isFlagged = !newItineraries[index].isFlagged;
+                return newItineraries;
+            });
         } catch (error) {
-            alert("Error activating itinerary");
+            console.log(error);
+            alert("Error flagging itinerary");
         }
     };
 
@@ -227,7 +175,7 @@ const MyItinenrary = () => {
                         // this is to prevent the text from being highlighted when clicked
                     }}
                 >
-                    My Itinenraries
+                    All Itinenraries
                 </div>
 
                 <div
@@ -288,23 +236,6 @@ const MyItinenrary = () => {
                     <SwapVert sx={{ fontSize: "3vh" }} />
                     <p style={{ marginLeft: ".3vw" }}>Sort by Date</p>
                 </Button>
-                <Button
-                    style={{
-                        marginLeft: "2vw",
-                        borderRadius: "4vh",
-                        minWidth: "1vw",
-                        color: "black",
-                        borderColor: "black",
-                        maxHeight: "4.2vh",
-                    }}
-                    variant="outlined"
-                    onClick={() => {
-                        navigate("/create-itinerary");
-                    }}
-                >
-                    <AddIcon sx={{ fontSize: "3vh" }} />
-                    <p style={{ marginLeft: ".3vw" }}>Create Itinenrary</p>
-                </Button>
                 <div
                     style={{
                         marginTop: "1%",
@@ -324,42 +255,39 @@ const MyItinenrary = () => {
                                 setItineraries={sortItineraries}
                                 firstLineButtons={[
                                     [
-                                        <DeleteButton
-                                            deleteHandler={deleteItineraryHandler}
-                                            ID={itinerary._id}
-                                        />,
+                                        itinerary.isFlagged ? (
+                                            <FlagIcon
+                                                style={{
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                }}
+                                                onClick={() =>
+                                                    flagItineraryHandler(itinerary._id)
+                                                }
+                                            />
+                                        ) : (
+                                            <OutlinedFlagIcon
+                                                style={{
+                                                    color: "gray",
+                                                    cursor: "pointer",
+                                                }}
+                                                onClick={() =>
+                                                    flagItineraryHandler(itinerary._id)
+                                                }
+                                            />
+                                        ),
                                     ],
                                 ]}
                                 bottomButtons={[
                                     {
-                                        text: "Edit",
+                                        text: "View Details",
                                         onClick: () =>
-                                            navigate(`/edit-itinerary/${itinerary._id}`),
+                                            navigate(`/itinerary-details`, {
+                                                state: { itinerary },
+                                            }),
                                         type: "1",
                                         width: "70%",
                                         styles: {
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            padding: "0.5em",
-                                        },
-                                    },
-                                    {
-                                        text: itinerary.isActivated
-                                            ? "Deactivate"
-                                            : "Activate",
-                                        onClick: () =>
-                                            activateItineraryHandler(itinerary._id),
-                                        type: "2",
-                                        width: "70%",
-                                        styles: {
-                                            marginTop: "2%",
-                                            color: itinerary.isActivated
-                                                ? "red"
-                                                : "green",
-                                            borderColor: itinerary.isActivated
-                                                ? "red"
-                                                : "green",
                                             display: "flex",
                                             justifyContent: "center",
                                             alignItems: "center",
@@ -378,4 +306,4 @@ const MyItinenrary = () => {
     );
 };
 
-export default MyItinenrary;
+export default AllItineraries;

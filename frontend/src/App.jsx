@@ -39,6 +39,8 @@ import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 import PopUp from "./components/PopUpsGeneric/PopUp";
 import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
 import TestShopLayout from "./components/Shop/Shop";
+import AllActivities from "./pages/Admin/AllActivities";
+import AllItineraries from "./pages/Admin/AllItineraries";
 
 function App() {
     return (
@@ -95,6 +97,8 @@ function App() {
 
                     <Route path="/admin/tags" element={<ViewTags />} />
                     <Route path="/admin/category" element={<ViewCategories />} />
+                    <Route path="/admin/activities" element={<AllActivities />} />
+                    <Route path="/admin/itineraries" element={<AllItineraries />} />
                 </Routes>
             </Router>
         </HeaderProvider>
