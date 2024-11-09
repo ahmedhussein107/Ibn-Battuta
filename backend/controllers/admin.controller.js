@@ -50,8 +50,6 @@ const deleteControllers = {
  */
 export const deleteUser = async (req, res) => {
     const { userType } = req.params;
-    const { userType } = req.params;
-
     try {
         // Validate user type and controller
         const deleteController = deleteControllers[userType.toLowerCase()];
@@ -81,13 +79,10 @@ export const deleteUser = async (req, res) => {
 export const createAdmin = async (req, res) => {
     const inputUsername = req.body.username;
     const inputEmail = req.body.email;
-    const inputUsername = req.body.username;
-    const inputEmail = req.body.email;
 
     const username = await Username.findById(inputUsername);
     const email = await Email.findById(inputEmail);
-    const username = await Username.findById(inputUsername);
-    const email = await Email.findById(inputEmail);
+   
 
     if (username) {
         console.log("duplicate username");
@@ -136,9 +131,6 @@ export const createAdmin = async (req, res) => {
             });
         }
 
-        // hashing password 10 times
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        req.body.password = hashedPassword;
         // hashing password 10 times
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         req.body.password = hashedPassword;

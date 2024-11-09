@@ -5,11 +5,11 @@ import {
     getGovernors,
     createGovernor,
     deleteGovernor,
-    getGovernorById,
+    getGovernor,
     updateGovernor,
 } from "../controllers/governor.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
-import { isAuthenticated } from "../routers.middleware/authentication.js";
+
 const governorRouter = express.Router();
 
 governorRouter.post("/createGovernor", createGovernor);
