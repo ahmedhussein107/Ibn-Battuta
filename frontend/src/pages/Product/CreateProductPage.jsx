@@ -110,7 +110,7 @@ const CreateProductPage = () => {
                 />
             )}
 
-            <form>
+            <form style={{marginTop: "35vh"}}>
                 <FormContainer>
                     <div>
                         <FormSection>
@@ -168,25 +168,51 @@ const CreateProductPage = () => {
                         />
 
                         <FormSection>
-                            <FlexGroup>
+                            <FlexGroup >
                                 <Label>Archive</Label>
-                                <ArchiveToggle>
-                                    <ArchiveButton
-                                        type="button"
-                                        active={formData.isArchived}
-                                        onClick={() => setFormData(prev => ({ ...prev, isArchived: true }))}
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        borderRadius: '1em',
+                                        overflow: 'hidden',
+                                        backgroundColor: '#eaeaea',
+                                        padding: '0.2em',
+                                        marginLeft: "5vw"
+                                    }}
+                                >
+                                    <div
+                                        onClick={() => setFormData((prev) => ({ ...prev, isArchived: true }))}
+                                        style={{
+                                            padding: '0.5em 1em',
+                                            cursor: 'pointer',
+                                            fontSize: '1em',
+                                            fontWeight: '500',
+                                            color: formData.isArchived ? '#a83232' : '#333',
+                                            backgroundColor: formData.isArchived ? '#fcd8d8' : 'transparent',
+                                            borderRadius: '1em',
+                                            transition: 'all 0.3s ease',
+                                        }}
                                     >
                                         Yes
-                                    </ArchiveButton>
-                                    <ArchiveButton
-                                        type="button"
-                                        active={!formData.isArchived}
-                                        onClick={() => setFormData(prev => ({ ...prev, isArchived: false }))}
+                                    </div>
+                                    <div
+                                        onClick={() => setFormData((prev) => ({ ...prev, isArchived: false }))}
+                                        style={{
+                                            padding: '0.5em 1em',
+                                            cursor: 'pointer',
+                                            fontSize: '1em',
+                                            fontWeight: '500',
+                                            color: !formData.isArchived ? '#a83232' : '#333',
+                                            backgroundColor: !formData.isArchived ? '#fcd8d8' : 'transparent',
+                                            borderRadius: '1em',
+                                            transition: 'all 0.3s ease',
+                                        }}
                                     >
                                         No
-                                    </ArchiveButton>
-                                </ArchiveToggle>
+                                    </div>
+                                </div>
                             </FlexGroup>
+
                         </FormSection>
                     </div>
                 </FormContainer>
