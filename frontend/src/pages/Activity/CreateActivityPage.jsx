@@ -164,8 +164,6 @@ const CreateActivityPage = () => {
             return;
         }
 
-
-
         try {
             const convertTo24System = (timeObj) => {
                 const [time, period] = timeObj.split(' ');
@@ -174,8 +172,6 @@ const CreateActivityPage = () => {
                 if (period == 'AM' && hours === 12) hours = 0;
                 return {hours, minutes};
             };
-
-
 
             const combinedStartDate = new Date(startDate);
             const combinedEndDate = new Date(endDate);

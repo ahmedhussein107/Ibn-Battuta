@@ -2,30 +2,6 @@ import mongoose from "mongoose";
 import { validateReference } from "./validatingUtils.js";
 
 const orderSchema = new mongoose.Schema(
-<<<<<<< HEAD
-    {
-        buyer: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Tourist",
-            required: true,
-        },
-        product: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Product",
-            required: true,
-        },
-        price: { type: Number, required: true },
-        count: { type: Number, required: true },
-        address: String,
-        method: { type: String, enum: ["card", "wallet", "cash on delivery"] },
-        status: {
-            type: String,
-            enum: ["delivered", "canceled", "pending"],
-            default: "pending",
-        },
-    },
-    { timestamps: true }
-=======
 	{
 		buyer: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -45,7 +21,7 @@ const orderSchema = new mongoose.Schema(
 		ratingID: { type: mongoose.Schema.Types.ObjectId, ref: "Rating" },
 	},
 	{ timestamps: true }
->>>>>>> 87b620a (working on bookings)
+
 );
 
 orderSchema.pre("save", async function (next) {
