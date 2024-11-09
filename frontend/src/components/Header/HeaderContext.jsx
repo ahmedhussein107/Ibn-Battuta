@@ -6,6 +6,8 @@ export const HeaderProvider = ({ children }) => {
     const [headerData, setHeaderData] = useState({
         imageSrc: "",
         text: "",
+        SearchBarComponent: null,
+        ProfilePictureComponent: null,
     });
 
     return (
