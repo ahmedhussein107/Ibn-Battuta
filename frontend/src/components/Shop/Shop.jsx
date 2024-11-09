@@ -9,6 +9,8 @@ import CardProduct from "../CardProduct";
 import CustomButton from "../Button";
 import ActionButtons from "./ActionButtons";
 import NavBar from "../NavBar";
+import Pagination from "../Pagination";
+import { Circle } from "@react-google-maps/api";
 const minPrice = 0;
 const maxPrice = 1000;
 const TestShopLayout = () => {
@@ -18,7 +20,8 @@ const TestShopLayout = () => {
     const [ratingRange, setRatingRange] = useState([1, 5]);
     const [sortBy, setSortBy] = useState("priceAsc");
     const [name, setName] = useState("");
-
+    const maxPerPage = 1;
+    const [currentPage, setCurrentPage] = useState(1);
     const sortproducts = (products) => {
         let sortedproducts = [...products]; // Create a shallow copy
         if (sortBy === "priceAsc") {
@@ -85,21 +88,22 @@ const TestShopLayout = () => {
 
     return (
         <div className="shop">
-            <NavBar />
-            <div className="product-sidebar">
-                <FilterSidebar
-                    name={name}
-                    setName={setName}
-                    sortBy={sortBy}
-                    setSortBy={setSortBy}
-                    priceRange={priceRange}
-                    setPriceRange={setPriceRange}
-                    ratingRange={ratingRange}
-                    setRatingRange={setRatingRange}
-                    minPrice={minPrice}
-                    maxPrice={maxPrice}
-                />
-            </div>
+            {/* <div className="product-sidebar"> */}
+            <FilterSidebar
+                name={name}
+                setName={setName}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                priceRange={priceRange}
+                setPriceRange={setPriceRange}
+                ratingRange={ratingRange}
+                setRatingRange={setRatingRange}
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+            />
+
+            {/* </div> */}
+
             <div className="product-container">
                 <div className="product-main-content">
                     <ActionButtons />

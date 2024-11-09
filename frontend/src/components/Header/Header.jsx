@@ -10,6 +10,10 @@ const Header = () => {
             style={{ backgroundImage: `url(${headerData.imageSrc})` }}
         >
             <div className="overlay-text">{headerData.text}</div>
+            <div className="header-search-bar">{headerData.SearchBarComponent}</div>
+            <div className="header-profile-picture">
+                {headerData.ProfilePictureComponent}
+            </div>
         </div>
     );
 };

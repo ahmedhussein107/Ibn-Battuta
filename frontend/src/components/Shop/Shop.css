@@ -2,20 +2,24 @@
 .shop {
     display: flex;
     justify-content: center;
-    padding-top: 1%;
+    padding-top: 40vh;
 }
 
 /* Product container to hold sidebar and main content */
 .product-container {
     display: flex;
-    width: 100%;    
+    width: 100%;
     gap: 20px; /* Space between sidebar and main content */
 }
 
 /* Sidebar styles (left aligned) */
 .product-sidebar {
+    position: sticky;
+
     flex: 1;
     border-radius: 8px;
+    top: 0; /* Adjust the offset from the top if needed */
+    height: fit-content;
 }
 
 .product-main-content {
