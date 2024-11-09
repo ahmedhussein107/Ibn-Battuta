@@ -12,14 +12,7 @@ const usePageHeader = (
 
     useEffect(() => {
         setHeaderData({ imageSrc, text, SearchBarComponent, ProfilePictureComponent });
-    }, [
-        setHeaderData,
-        imageSrc,
-        text,
-        SearchBarComponent,
-        ProfilePictureComponent,
-        clearHeader,
-    ]);
+    }, [setHeaderData, imageSrc, text, clearHeader]);
 };
 
 export default usePageHeader;
