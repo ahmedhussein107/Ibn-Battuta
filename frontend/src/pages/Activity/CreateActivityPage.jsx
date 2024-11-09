@@ -10,6 +10,8 @@ import Map from "../map";
 import DatePicker from "react-datepicker";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import "react-datepicker/dist/react-datepicker.css";
+import TimePicker from 'react-time-picker';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
@@ -19,6 +21,274 @@ const Popup = ({ message, onClose, isError }) => (
         </PopupContent>
     </PopupContainer>
 );
+
+const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
+    const [startHour, setStartHour] = useState(startTime ? parseInt(startTime.split(":")[0]) : "1");
+    const [startMinute, setStartMinute] = useState(startTime ? parseInt(startTime.split(":")[1]) : "0");
+    const [startPeriod, setStartPeriod] = useState("AM");
+    const [endHour, setEndHour] = useState(endTime ? parseInt(endTime.split(":")[0]) : "1");
+    const [endMinute, setEndMinute] = useState(endTime ? parseInt(endTime.split(":")[1]) : "0");
+    const [endPeriod, setEndPeriod] = useState("AM");
+
+    // Validation functions
+    const validateHour = (value) => {
+        const numericValue = value.replace(/[^0-9]/g, '');
+        const hour = parseInt(numericValue);
+        if (value === '') return '';
+        if (hour < 1) return '1';
+        if (hour > 12) return '12';
+        return numericValue;
+    };
+
+    const validateMinute = (value) => {
+        const numericValue = value.replace(/[^0-9]/g, '');
+        const minute = parseInt(numericValue);
+        if (value === '') return '';
+        if (minute < 0) return '0';
+        if (minute > 59) return '59';
+        return numericValue;
+    };
+
+    const formatMinute = (value) => {
+        if (value === '') return '';
+        if (parseInt(value) < 10 && value.length === 1) return `0${value}`;
+        return value;
+    };
+
+    const handleTimeChange = () => {
+        const formattedStartMinute = formatMinute(startMinute);
+        const formattedEndMinute = formatMinute(endMinute);
+        const newStartTime = `${startHour}:${startMinute} ${startPeriod}`;
+        const newEndTime = `${endHour}:${endMinute} ${endPeriod}`;
+        onTimesChange(newStartTime, newEndTime);
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000
+        }}>
+            <div style={{
+                backgroundColor: "white",
+                borderRadius: "1.5rem",
+                padding: "2rem",
+                width: "90%",
+                maxWidth: "40rem",
+                boxShadow: "0 0.5rem 2rem rgba(0, 0, 0, 0.1)",
+                position: "relative"
+            }}>
+                <button onClick={onClose} style={{
+                    position: "absolute",
+                    top: "1.5rem",
+                    right: "1.5rem",
+                    background: "none",
+                    border: "none",
+                    fontSize: "1.5rem",
+                    cursor: "pointer",
+                    color: "#333"
+                }}>×</button>
+
+                {/* Start Time Section */}
+                <div style={{ marginBottom: "2rem" }}>
+                    <h3 style={{
+                        color: "#666",
+                        fontSize: "1rem",
+                        fontWeight: "400",
+                        marginBottom: "1.5rem"
+                    }}>ENTER START TIME</h3>
+
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                            <input
+                                type="text"
+                                value={startHour}
+                                onChange={(e) => setStartHour(validateHour(e.target.value))}
+                                maxLength={2}
+                                style={{
+                                    width: "3rem",
+                                    height: "3rem",
+                                    border: "1px solid #ff4500",
+                                    borderRadius: "0.5rem",
+                                    fontSize: "1.5rem",
+                                    textAlign: "center",
+                                    outline: "none"
+                                }}
+                            />
+                            <span style={{ fontSize: "1.5rem", color: "#333" }}>:</span>
+                            <input
+                                type="text"
+                                value={startMinute}
+                                onChange={(e) => setStartMinute(validateMinute(e.target.value))}
+                                maxLength={2}
+                                style={{
+                                    width: "3rem",
+                                    height: "3rem",
+                                    border: "none",
+                                    borderRadius: "0.5rem",
+                                    fontSize: "1.5rem",
+                                    textAlign: "center",
+                                    backgroundColor: "#f0f0f0",
+                                    outline: "none"
+                                }}
+                            />
+                            <div style={{ marginLeft: "1rem" }}>
+                                <div style={{ display: "flex", gap: "0.5rem" }}>
+                                    <button
+                                        type="button"
+                                        onClick={() => setStartPeriod("AM")}
+                                        style={{
+                                            padding: "0.5rem 1rem",
+                                            border: "none",
+                                            borderRadius: "0.5rem",
+                                            backgroundColor: startPeriod === "AM" ? "#ffd7cc" : "white",
+                                            color: startPeriod === "AM" ? "#ff4500" : "#666",
+                                            cursor: "pointer"
+                                        }}
+                                    >AM</button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setStartPeriod("PM")}
+                                        style={{
+                                            padding: "0.5rem 1rem",
+                                            border: "none",
+                                            borderRadius: "0.5rem",
+                                            backgroundColor: startPeriod === "PM" ? "#ffd7cc" : "white",
+                                            color: startPeriod === "PM" ? "#ff4500" : "#666",
+                                            cursor: "pointer"
+                                        }}
+                                    >PM</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* End Time Section */}
+                <div>
+                    <h3 style={{
+                        color: "#666",
+                        fontSize: "1rem",
+                        fontWeight: "400",
+                        marginBottom: "1.5rem"
+                    }}>ENTER END TIME</h3>
+
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                            <input
+                                type="text"
+                                value={endHour}
+                                onChange={(e) => setEndHour(validateHour(e.target.value))}
+                                maxLength={2}
+                                style={{
+                                    width: "3rem",
+                                    height: "3rem",
+                                    border: "1px solid #ff4500",
+                                    borderRadius: "0.5rem",
+                                    fontSize: "1.5rem",
+                                    textAlign: "center",
+                                    outline: "none"
+                                }}
+                            />
+                            <span style={{ fontSize: "1.5rem", color: "#333" }}>:</span>
+                            <input
+                                type="text"
+                                value={endMinute}
+                                onChange={(e) => setEndMinute(validateMinute(e.target.value))}
+                                maxLength={2}
+                                style={{
+                                    width: "3rem",
+                                    height: "3rem",
+                                    border: "none",
+                                    borderRadius: "0.5rem",
+                                    fontSize: "1.5rem",
+                                    textAlign: "center",
+                                    backgroundColor: "#f0f0f0",
+                                    outline: "none"
+                                }}
+                            />
+                            <div style={{ marginLeft: "1rem" }}>
+                                <div style={{ display: "flex", gap: "0.5rem" }}>
+                                    <button
+                                        type="button"
+                                        onClick={() => setEndPeriod("AM")}
+                                        style={{
+                                            padding: "0.5rem 1rem",
+                                            border: "none",
+                                            borderRadius: "0.5rem",
+                                            backgroundColor: endPeriod === "AM" ? "#ffd7cc" : "white",
+                                            color: endPeriod === "AM" ? "#ff4500" : "#666",
+                                            cursor: "pointer"
+                                        }}
+                                    >AM</button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setEndPeriod("PM")}
+                                        style={{
+                                            padding: "0.5rem 1rem",
+                                            border: "none",
+                                            borderRadius: "0.5rem",
+                                            backgroundColor: endPeriod === "PM" ? "#ffd7cc" : "white",
+                                            color: endPeriod === "PM" ? "#ff4500" : "#666",
+                                            cursor: "pointer"
+                                        }}
+                                    >PM</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: "1rem",
+                    marginTop: "2rem"
+                }}>
+                    <button
+                        onClick={onClose}
+                        style={{
+                            padding: "0.5rem 1rem",
+                            border: "none",
+                            backgroundColor: "transparent",
+                            color: "#ff4500",
+                            cursor: "pointer",
+                            fontSize: "1rem"
+                        }}
+                    >
+                        CANCEL
+                    </button>
+                    <button
+                        onClick={() => {
+                            handleTimeChange();
+                            onClose();
+                        }}
+                        style={{
+                            padding: "0.5rem 1rem",
+                            border: "none",
+                            backgroundColor: "transparent",
+                            color: "#ff4500",
+                            cursor: "pointer",
+                            fontSize: "1rem"
+                        }}
+                    >
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const DateModal = ({ isOpen, onClose, startDate, endDate, onDatesChange }) => {
     return (
@@ -229,7 +499,6 @@ const defaultData = {
     name: "",
     startDate: "",
     endDate: "",
-    time: "",
     latitude: 0,
     longitude: 0,
     category: "",
@@ -253,6 +522,18 @@ const CreateActivityPage = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [formattedDate, setFormattedDate] = useState("");
+    const [showTimeModal, setShowTimeModal] = useState(false);
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
+    const [formattedTime, setFormattedTime] = useState("");
+
+    const handleTimesChange = (start, end) => {
+        setStartTime(start);
+        setEndTime(end);
+        const startString = start || "";
+        const endString = end || "";
+        setFormattedTime(`${startString} to ${endString}`);
+    };
 
     const addTag = () => {
         if (selectedTag && !selectedTags.includes(selectedTag)) {
@@ -338,28 +619,56 @@ const CreateActivityPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(formData);
         if (
             !formData.name ||
-            !formData.startDate ||
-            !formData.endDate ||
-            !formData.time ||
+            !formData.description ||
+            !startDate ||
+            !endDate ||
             !formData.price ||
             !formData.category ||
-            imagePreviews.length === 0
+            imagePreviews.length === 0,
+            !formData.freeSpots
         ) {
             showPopupMessage("Please fill out all required details.", true);
             return;
         }
 
+        if (tags.length === 0 || selectedTags.length === 0) {
+            showPopupMessage("Please select at least one tag.", true);
+            return;
+        }
+
+
         try {
+            const combinedStartDate = new Date(startDate);
+            const [startHours, startMinutes] = startTime.split(':').map(Number);
+            combinedStartDate.setHours(startHours, startMinutes, 0);
+
+            const combinedEndDate = new Date(endDate);
+            const [endHours, endMinutes] = endTime.split(':').map(Number);
+            combinedEndDate.setHours(endHours, endMinutes, 0);
+
+
             const files = imagePreviews.map((preview) => preview.file);
             const uploadedFileUrls = await uploadFiles(files, "activities");
 
             const finalFormData = {
                 ...formData,
+                startDate: combinedStartDate,
+                endDate: combinedEndDate,
                 pictures: uploadedFileUrls,
                 tags: selectedTags,
+                freeSpots: parseInt(formData.freeSpots) || 0,
+                specialDiscount: parseFloat(formData.specialDiscount) || 0,
+                price: parseFloat(formData.price) || 0,
+                Latitude: formData.Latitude ? parseFloat(formData.Latitude) : undefined,
+                Longitude: formData.Longitude ? parseFloat(formData.Longitude) : undefined
             };
+
+            Object.keys(finalFormData).forEach(key =>
+                finalFormData[key] === undefined && delete finalFormData[key]
+            );
 
             const response = await axiosInstance.post(
                 "activity/createActivity",
@@ -372,12 +681,22 @@ const CreateActivityPage = () => {
 
             showPopupMessage("Activity created successfully!", false);
 
+            // Reset form
             setFormData(defaultData);
             setImagePreviews([]);
             setSelectedTags([]);
+            setStartDate(null);
+            setEndDate(null);
+            setStartTime(null);
+            setEndTime(null);
+            setFormattedDate("");
+            setFormattedTime("");
         } catch (error) {
             console.error("Error creating activity:", error);
-            showPopupMessage("Error creating activity. Please try again.", true);
+            showPopupMessage(
+                error.response?.data?.message || "Error creating activity. Please try again.",
+                true
+            );
         }
     };
 
@@ -405,7 +724,7 @@ const CreateActivityPage = () => {
                 />
             )}
 
-            <form style={{marginTop: "35vh"}}>
+                <form style={{marginTop: "35vh"}}>
                 <FormContainer>
                     <div>
                         <FormSection>
@@ -413,9 +732,9 @@ const CreateActivityPage = () => {
                                 <Label>Title</Label>
                                 <Input
                                     type="text"
-                                    name="title"
+                                    name="name"
                                     placeholder="Insert title here..."
-                                    value={formData.title}
+                                    value={formData.name}
                                     onChange={handleInputChange}
                                 />
                             </InputGroup>
@@ -459,46 +778,86 @@ const CreateActivityPage = () => {
 
                         <FormSection>
                             <Label>Date & Time</Label>
-                            <div
-                                style={{
-                                    position: "relative",
-                                    display: "inline-block",
-                                    width: "10vw",
-                                }}
-                            >
-                                <DateInput
-                                    type="text"
-                                    value={formattedDate}
-                                    readOnly
-                                    onClick={toggleDateModal}
-                                    placeholder="Select Date"
-                                    style={{
-                                        fontSize: "0.9em",
-                                        width: "100%",
-                                        paddingRight: "2em",
-                                    }}
-                                />
-                                <CalendarTodayIcon
-                                    style={{
-                                        position: "absolute",
-                                        right: "-1.7em",
-                                        top: "50%",
-                                        transform: "translateY(-50%)",
-                                        cursor: "pointer",
-                                        fontSize: "1.2em",
-                                        color: "#888",
-                                    }}
-                                    onClick={toggleDateModal}
-                                />
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginTop: '1rem' }}>
+                                <div style={{ position: 'relative', display: 'inline-block', width: '16rem' }}>
+                                    <input
+                                        type="text"
+                                        value={formattedDate}
+                                        readOnly
+                                        onClick={() => setShowDateModal(true)}
+                                        placeholder="Select Date"
+                                        style={{
+                                            fontSize: '1.125rem',
+                                            width: '14vw',
+                                            height: '3rem',
+                                            paddingLeft: '1rem',
+                                            paddingRight: '2.5rem',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '0.375rem',
+                                            cursor: 'pointer',
+                                        }}
+                                    />
+                                    <CalendarTodayIcon
+                                        style={{
+                                            position: 'absolute',
+                                            right: '-1rem',
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            cursor: 'pointer',
+                                            fontSize: '1.2em',
+                                            color: '#888',
+                                        }}
+                                        onClick={() => setShowDateModal(true)}
+                                    />
+                                </div>
+
+                                <div style={{ marginLeft: '2vw', position: 'relative', display: 'inline-block', width: '16rem' }}>
+                                    <input
+                                        type="text"
+                                        value={formattedTime}
+                                        readOnly
+                                        onClick={() => setShowTimeModal(true)}
+                                        placeholder="Select Time"
+                                        style={{
+                                            fontSize: '1.125rem',
+                                            width: '14vw',
+                                            height: '3rem',
+                                            paddingLeft: '1rem',
+                                            paddingRight: '2.5rem',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '0.375rem',
+                                            cursor: 'pointer',
+                                        }}
+                                    />
+                                    <AccessTimeIcon
+                                        style={{
+                                            position: 'absolute',
+                                            right: '-1rem',
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            cursor: 'pointer',
+                                            fontSize: '1.2em',
+                                            color: '#888',
+                                        }}
+                                        onClick={() => setShowTimeModal(true)}
+                                    />
+                                </div>
                             </div>
+                            <DateModal
+                                isOpen={showDateModal}
+                                onClose={() => setShowDateModal(false)}
+                                startDate={startDate}
+                                endDate={endDate}
+                                onDatesChange={handleDatesChange}
+                            />
+                            <TimeModal
+                                isOpen={showTimeModal}
+                                onClose={() => setShowTimeModal(false)}
+                                startTime={startTime}
+                                endTime={endTime}
+                                onTimesChange={handleTimesChange}
+                            />
                         </FormSection>
-                        <DateModal
-                            isOpen={showDateModal}
-                            onClose={toggleDateModal}
-                            startDate={startDate}
-                            endDate={endDate}
-                            onDatesChange={handleDatesChange}
-                        />
 
                         <FormSection>
                             <FlexGroup>
@@ -605,7 +964,7 @@ const CreateActivityPage = () => {
                         />
 
 
-                        <FormSection>
+                        <FormSection style={{height: "41vh"}}>
                             <Label style={{marginLeft: "2em"}}>
                                 Pin Activity Location on Map
                             </Label>
@@ -620,32 +979,15 @@ const CreateActivityPage = () => {
                             />
                         </FormSection>
 
-                        <FormSection>
-                            <FlexGroup>
-                                <Label>Free Spots</Label>
-                                <StockControl>
-                                    <StockButton
-                                        type="button"
-                                        onClick={() => handleStockChange(-1)}
-                                    >
-                                        -
-                                    </StockButton>
-                                    <StockDisplay>{formData.freeSpots}</StockDisplay>
-                                    <StockButton
-                                        type="button"
-                                        onClick={() => handleStockChange(1)}
-                                    >
-                                        +
-                                    </StockButton>
-                                </StockControl>
-                            </FlexGroup>
 
+
+                        <FormSection>
                             <FlexGroup>
                                 <Label>Booking</Label>
                                 <div
                                     style={{
                                         display: 'flex',
-                                        borderRadius: '1em',
+                                        borderRadius: '3em',
                                         overflow: 'hidden',
                                         backgroundColor: '#eaeaea',
                                         padding: '0.2em',
@@ -665,7 +1007,7 @@ const CreateActivityPage = () => {
                                             fontWeight: '500',
                                             color: formData.isOpenForBooking ? '#a83232' : '#333',
                                             backgroundColor: formData.isOpenForBooking ? '#fcd8d8' : 'transparent',
-                                            borderRadius: '1em',
+                                            borderRadius: '3em',
                                             transition: 'all 0.3s ease',
                                         }}
                                     >
@@ -693,6 +1035,39 @@ const CreateActivityPage = () => {
                                     </div>
                                 </div>
                             </FlexGroup>
+                            <FlexGroup>
+                                <Label>Capacity</Label>
+                                <StockControl>
+                                    <StockButton
+                                        type="button"
+                                        onClick={() => handleStockChange(-1)}
+                                    >
+                                        -
+                                    </StockButton>
+                                    <input
+                                        type="number"
+                                        value={formData.freeSpots}
+                                        onChange={(e) => setFormData({ ...formData, freeSpots: parseInt(e.target.value, 10) || 0 })}
+                                        style={{
+                                            width: '3em',
+                                            textAlign: 'center',
+                                            fontSize: '1.2em',
+                                            fontWeight: 'bold',
+                                            border: 'none',
+                                            outline: 'none',
+                                            backgroundColor: 'transparent'
+                                        }}
+                                    />
+                                    <StockButton
+                                        type="button"
+                                        onClick={() => handleStockChange(1)}
+                                    >
+                                        +
+                                    </StockButton>
+                                </StockControl>
+                            </FlexGroup>
+
+
                         </FormSection>
                     </div>
                 </FormContainer>
@@ -987,7 +1362,6 @@ const BookingStatus = styled.div`
 const StockControl = styled.div`
     display: flex;
     align-items: center;
-    gap: 1em;
 `;
 
 const StockButton = styled.button`
