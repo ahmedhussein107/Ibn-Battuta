@@ -15,11 +15,11 @@ advertiserRouter.post("/createAdvertiser", createAdvertiser);
 
 advertiserRouter.get("/getAdvertisers", getAdvertisers);
 
-advertiserRouter.get("/getAdvertiserById", isAuthenticated, getAdvertiserById);
+advertiserRouter.get("/advertiser", isAuthenticated, getAdvertiserById);
 
-advertiserRouter.patch("/updateAdvertiser/:id", updateAdvertiser);
+advertiserRouter.put("/updateAdvertiser", isAuthenticated, updateAdvertiser);
 
-advertiserRouter.delete("/deleteAdvertiser/:id", deleteAdvertiser);
+advertiserRouter.delete("/deleteAdvertiser", isAuthenticated, deleteAdvertiser);
 
 advertiserRouter.get("/documents", getAdvertisersDocuments);
 
