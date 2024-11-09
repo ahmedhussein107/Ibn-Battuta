@@ -51,7 +51,7 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/test" element={<PopUp />} />
                     <Route path="/complaints" element={<ComplaintList />} />
-                    <Route path="/shop" element={<TestShopLayout />} />
+                    <Route path="/shop" element={<Shop />} />
                     <Route
                         path="/complaint/:complaintId"
                         element={<ViewSingleComplaint />}
