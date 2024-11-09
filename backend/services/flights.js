@@ -16,6 +16,7 @@ amadeusFlightsRouter.get("/airport-search", async (req, res) => {
         const response = await amadeus.referenceData.locations.cities.get({
             keyword,
         });
+
         res.status(200).send(response.data.filter((city) => city.iataCode != undefined));
     } catch (error) {
         res.status(400).send({ error: error.message });

@@ -48,8 +48,10 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                         <div
                             style={{
                                 width: "65%",
+                                height: "100%",
                                 display: "flex",
                                 flexDirection: "column",
+                                justifyContent: "space-between",
                             }}
                         >
                             {bottomLeft}
@@ -60,6 +62,7 @@ const GenericCard = ({ image, aboveLine, bottomLeft, bottomRight, width, height 
                                 height: "100%",
                                 display: "flex",
                                 flexDirection: "column",
+                                justifyContent: "space-between",
                                 alignItems: "center",
                             }}
                         >

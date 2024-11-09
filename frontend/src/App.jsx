@@ -47,8 +47,9 @@ import ViewCategories from "./pages/Admin/ViewCategories";
 import { HeaderProvider } from "./components/Header/HeaderContext";
 import Header from "./components/Header/Header";
 import NavBar from "./components/NavBar";
-import Test from "./components/Test";
 import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
+import Test from "./components/Test";
+import PopUp from "./components/PopUpsGeneric/PopUp";
 import TermsAndConditions from "./pages/Privacy/TermsAndConditions";
 import Flights from "./pages/Flights/Flights";
 
@@ -59,7 +60,7 @@ function App() {
                 <Header />
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/test" element={<Test />} />
+                    <Route path="/test" element={<PopUp />} />
                     <Route path="/complaints" element={<ComplaintList />} />
                     <Route
                         path="/complaint/:complaintId"
@@ -78,6 +79,7 @@ function App() {
                     {/* other pages */}
                     <Route path="/activities" element={<Activities />} />
                     <Route path="/itineraries" element={<Itineraries />} />
+                    <Route path="/itinerary-details" element={<ItineraryDetails />} />
                     <Route path="/landmarks" element={<Landmarks />} />
 
                     <Route path="/about" element={<AboutPage />} />
@@ -114,7 +116,6 @@ function App() {
 
                     <Route path="/landmark/landmark/" element={<LandmarkPage />} />
                     <Route path="/create-itinerary" element={<CreateItineraryPage />} />
-                    <Route path="/filter-itineraries" element={<FilterItineraries />} />
                     <Route path="/create-landmark" element={<CreateLandmarkPage />} />
 
                     <Route path="/admin/tags" element={<ViewTags />} />

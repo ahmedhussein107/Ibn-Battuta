@@ -1,10 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axiosInstance from "../../api/axiosInstance";
 
-const ReviewsSection = ({ reviews, width, height, fontSize }) => {
+const ReviewsSection = ({ ratingIds, width, height, fontSize }) => {
+    const [reviews, setReviews] = useState([]);
     const [showReviews, setShowReviews] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
-    const reviewsPerPage = 3; // Number of reviews per page
+    const reviewsPerPage = 3;
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const reviewsData = await Promise.all(
+                    ratingIds.map(async (ratingID) => {
+                        // Fetch rating details
+                        const ratingResponse = await axiosInstance.get(
+                            `rating/getRating/${ratingID}`
+                        );
+                        const rating = ratingResponse.data;
+
+                        // Fetch tourist details
+                        const touristResponse = await axiosInstance.get(
+                            `tourist/tourist/${rating.touristID}`
+                        );
+                        const tourist = touristResponse.data;
+
+                        // Construct review object
+                        return {
+                            reviewer: tourist.name || "Anonymous User",
+                            profilePic: tourist.profilePic || null,
+                            rating: rating.rating,
+                            comment: rating.comment,
+                            createdAt: rating.createdAt,
+                        };
+                    })
+                );
+                setReviews(reviewsData);
+            } catch (error) {
+                console.error("Error fetching reviews: ", error);
+            }
+        };
+
+        fetchReviews();
+    }, [ratingIds]);
 
     const totalPages = Math.ceil(reviews.length / reviewsPerPage);
 
@@ -49,7 +87,7 @@ const ReviewsSection = ({ reviews, width, height, fontSize }) => {
                     <HeaderContent>
                         <AverageRating>
                             {averageRating}
-                            <Star size="0.8em" filled>
+                            <Star size="0.8em" $filled={"t"}>
                                 ★
                             </Star>
                         </AverageRating>
@@ -78,7 +116,7 @@ const ReviewsSection = ({ reviews, width, height, fontSize }) => {
                                         {review.profilePic ? (
                                             <img
                                                 src={review.profilePic}
-                                                alt={review.reviewer || "Anonymous"}
+                                                alt={review.reviewer}
                                             />
                                         ) : (
                                             <DefaultProfilePic>
@@ -87,9 +125,7 @@ const ReviewsSection = ({ reviews, width, height, fontSize }) => {
                                         )}
                                     </ProfilePic>
                                     <ReviewerInfo>
-                                        <ReviewerName>
-                                            {review.reviewer || "Anonymous User"}
-                                        </ReviewerName>
+                                        <ReviewerName>{review.reviewer}</ReviewerName>
                                         <ReviewTimestamp>
                                             {new Date(review.createdAt).toLocaleString()}
                                         </ReviewTimestamp>
@@ -101,7 +137,7 @@ const ReviewsSection = ({ reviews, width, height, fontSize }) => {
                                         .map((_, i) => (
                                             <Star
                                                 key={i}
-                                                filled={i < Math.floor(review.rating)}
+                                                $filled={i < Math.floor(review.rating) ? "t" : "f"}
                                             >
                                                 ★
                                             </Star>
@@ -131,7 +167,6 @@ const ReviewsSection = ({ reviews, width, height, fontSize }) => {
         </div>
     );
 };
-
 const ReviewsWrapper = styled.div`
     padding: 2em;
     // background-color: #f5f5f5;
@@ -157,7 +192,7 @@ const AverageRating = styled.div`
 `;
 
 const Star = styled.span`
-    color: ${({ filled }) => (filled ? "#ffa500" : "#ccc")};
+    color: ${({ $filled }) => ($filled == "t"? "#ffa500" : "#ccc")};
     font-size: ${({ size }) => size || "1.5em"};
 `;
 

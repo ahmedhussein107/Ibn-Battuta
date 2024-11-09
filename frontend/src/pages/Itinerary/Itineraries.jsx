@@ -9,6 +9,8 @@ import CheckboxList from "../../components/CheckBoxList";
 import itineraryBackground from "../../assets/images/Itinerariesbackground.png";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
+import CardItinerary from "../../components/CardItinerary";
+import ShareAndMark from "../../components/ShareAndMark";
 
 const minPrice = 0;
 const maxPrice = 1000;
@@ -164,7 +166,7 @@ const Itineraries = () => {
                 <div
                     style={{
                         width: "25vw",
-                        boxShadow: "0 5vh 5vh rgba(0, 0, 0, 0.1)",
+                        // boxShadow: "0 5vh 5vh rgba(0, 0, 0, 0.1)",
                         borderRadius: "3vh",
                     }}
                 >
@@ -187,13 +189,32 @@ const Itineraries = () => {
                 >
                     Itineraries
                 </div>
-                {/* <div style={{ width: "75vw" }}>
-                    {activities.map((activity) => {
-                        return (
-                            <ActivityCard activity={activity} handleDelete={() => {}} />
-                        );
-                    })}
-                </div> */}
+                <div style={{ width: "75vw", marginTop: "1%" }}>
+                    {itineraries.map((itinerary, index) => (
+                        <div key={index} style={{ padding: "1.5vh" }}>
+                            <CardItinerary
+                                itinerary={itinerary}
+                                width="60vw"
+                                height="30vh"
+                                firstLineButtons={[
+                                    <ShareAndMark
+                                        width="1.5vw"
+                                        height="1.5vw"
+                                        styles={{ padding: "0.5vh" }}
+                                    />,
+                                ]}
+                                bottomButtons={[
+                                    {
+                                        text: "Book Now",
+                                        onClick: () => navigate("itinerary"), // TODO: change url
+                                        type: "1",
+                                        width: "70%",
+                                    },
+                                ]}
+                            />
+                        </div>
+                    ))}
+                </div>
             </div>
             <Footer />
         </div>

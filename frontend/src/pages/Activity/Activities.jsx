@@ -228,14 +228,13 @@ const Activities = () => {
                     backgroundRepeat: "no-repeat",
                 }}
             ></div>
-            <div style={{ position: "fixed", top: 0, left: "9%" }}>
+            <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
                 <NavBar />
             </div>
             <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
                 <div
                     style={{
                         width: "25vw",
-                        boxShadow: "0 5vh 5vh rgba(0, 0, 0, 0.1)",
                         borderRadius: "3vh",
                     }}
                 >
@@ -249,7 +248,7 @@ const Activities = () => {
                     style={{
                         marginTop: "1%",
                         minHeight: "50vh",
-                        minWidth: "100vw",
+                        width: "100vw",
                         display: "flex",
                         flexDirection: "column",
                         flexWrap: "wrap",
@@ -257,8 +256,8 @@ const Activities = () => {
                         marginLeft: "5%",
                     }}
                 >
-                    {activities.map((activity) => (
-                        <div style={{ padding: "1.5vh" }}>
+                    {activities.map((activity, index) => (
+                        <div key={index} style={{ padding: "1.5vh" }}>
                             <CardActivity
                                 activity={activity}
                                 width={"60vw"}
