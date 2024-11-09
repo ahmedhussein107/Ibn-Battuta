@@ -270,15 +270,18 @@ const Activities = () => {
                                 ]}
                                 bottomButtons={[
                                     {
-                                        text: "Edit",
-                                        onClick: () => navigate("itinerary"), // TODO: change url
+                                        text: "Book Now",
+                                        onClick: () =>
+                                            navigate("/activity-details", {
+                                                state: activity,
+                                            }),
                                         type: "1",
                                         width: "50%",
                                         styles: {
                                             display: "flex",
                                             justifyContent: "center",
                                             alignItems: "center",
-                                            padding: "1vh",
+                                            padding: "0.5em",
                                         },
                                     },
                                 ]}

@@ -1,7 +1,7 @@
 import express from "express";
 import {
     createActivity,
-    getActivity,
+    getAllActivities,
     updateActivity,
     deleteActivity,
     getActivityById,
@@ -17,7 +17,7 @@ activityRouter.post("/createActivity", isAuthenticated, createActivity);
 
 activityRouter.get("/getActivity/:id", getActivityById);
 
-activityRouter.get("/getAllActivities", getActivity);
+activityRouter.get("/getAllActivities", getAllActivities);
 
 activityRouter.patch("/updateActivity/:id", updateActivity);
 
