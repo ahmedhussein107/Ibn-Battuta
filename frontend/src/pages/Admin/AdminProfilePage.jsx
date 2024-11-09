@@ -5,21 +5,78 @@ import Navbar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import bg from "../../assets/images/bg.jpg";
 import ProfileButton from "../../components/ProfileButtons";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const AdminProfilePage = () => {
     const [response, setResponse] = useState(null);
+    const [userType, setUserType] = useState("Admin");
+    const [isEditing, setIsEditing] = useState(false);
+    const [formData, setFormData] = useState({ name: "", username: "", email: "" });
+    const navigate = useNavigate();
 
     useEffect(() => {
         axiosInstance
             .get("/admin/getAdminById", { withCredentials: true })
             .then((response) => {
                 setResponse(response.data);
-                console.log("Admin:", response.data);
+                setFormData({
+                    name: response.data.name,
+                    username: response.data.username,
+                    email: response.data.email,
+                });
             })
             .catch((error) => {
                 console.error("Error fetching Admin:", error);
             });
     }, []);
+
+    const handleEditProfileSubmit = () => {
+        setIsEditing(true);
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSaveChanges = () => {
+        // Check if formData has been changed compared to the original response
+        if (
+            formData.name !== response.name ||
+            formData.username !== response.username ||
+            formData.email !== response.email
+        ) {
+            axiosInstance
+                .put("/admin/updateAdmin", formData, { withCredentials: true })
+                .then((response) => {
+                    setResponse(response.data);
+                    setIsEditing(false);
+                    alert("Profile updated successfully");
+                })
+                .catch((error) => {
+                    console.error("Error updating profile:", error);
+                });
+        } else {
+            // No changes made; you could also log a message or do nothing
+            setIsEditing(false);
+            console.log("No changes to save");
+        }
+    };
+
+    const handleDeleteAccountSubmit = () => {
+        axiosInstance
+            .delete("/admin/deleteAdmin", { withCredentials: true })
+            .then(() => {
+                alert("Admin account deleted successfully");
+                Cookies.remove("userType");
+                setUserType("Guest");
+                navigate("/");
+            })
+            .catch((error) => {
+                console.error("Error deleting Admin account:", error);
+            });
+    };
 
     return (
         <>
@@ -50,12 +107,37 @@ const AdminProfilePage = () => {
                     }}
                 ></div>
                 <div>
-                    {/* Name and Username */}
-                    <h2 style={{ marginTop: "0vw", marginLeft: "45%" }}>
-                        {response?.name || "Admin Name"}
-                    </h2>
+                    {isEditing ? (
+                        <h2
+                            style={{
+                                marginTop: "-1vw",
+                                marginLeft: "42%",
+                                padding: "1vw",
+                            }}
+                        >
+                            <div>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </h2>
+                    ) : (
+                        <h2
+                            style={{
+                                marginTop: "-1vw",
+                                marginLeft: "43%",
+                                padding: "1vw",
+                            }}
+                        >
+                            {response?.name || "name not provided"}
+                        </h2>
+                    )}
                     <p style={{ color: "gray", marginTop: "-3vw", marginLeft: "47%" }}>
-                        @{response?.username || "username"}
+                        @{response?.username || "username not provided"}
                     </p>
                     <hr
                         style={{
@@ -75,12 +157,39 @@ const AdminProfilePage = () => {
                         <h3>Profile Details</h3>
                         <p>
                             <strong>Email:</strong>{" "}
-                            {response?.email || "No email provided"}
+                            {isEditing ? (
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
+                            ) : (
+                                response?.email || "No email provided"
+                            )}
                         </p>
                     </div>
                 </div>
                 <div>
-                    <ProfileButton />
+                    <ProfileButton
+                        buttonType="changePassword"
+                        onClick={() => console.log("Change Password submitted")}
+                    />
+                    <ProfileButton
+                        buttonType="deleteAccount"
+                        onClick={handleDeleteAccountSubmit}
+                    />
+                    {isEditing ? (
+                        <ProfileButton
+                            buttonType="saveProfile"
+                            onClick={handleSaveChanges}
+                        />
+                    ) : (
+                        <ProfileButton
+                            buttonType="editProfile"
+                            onClick={handleEditProfileSubmit}
+                        />
+                    )}
                 </div>
             </div>
             <div style={{ position: "fixed", top: 0, left: "9%" }}>
@@ -92,4 +201,5 @@ const AdminProfilePage = () => {
         </>
     );
 };
+
 export default AdminProfilePage;

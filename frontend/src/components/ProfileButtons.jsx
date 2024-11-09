@@ -38,6 +38,18 @@ const DeleteAccount = styled(Button)({
 const EditProfile = styled(Button)({
     position: "absolute",
     height: 50,
+    top: "43vw",
+    right: "10vw",
+    background: "white",
+    borderRadius: 100,
+    border: "1px black solid",
+    color: "black",
+});
+
+const SaveProfile = styled(Button)({
+    position: "absolute",
+    height: 50,
+    top: "43vw",
     right: "10vw",
     background: "white",
     borderRadius: 100,
@@ -46,12 +58,21 @@ const EditProfile = styled(Button)({
 });
 
 // Main Button Component that conditionally renders based on buttonType prop
-const ProfileButton = (props) => {
+const ProfileButton = ({ buttonType, onClick }) => {
     return (
         <>
-            <ChangePassword>Change Password</ChangePassword>
-            <DeleteAccount>Delete Account</DeleteAccount>
-            <EditProfile>Edit Profile</EditProfile>
+            {buttonType === "changePassword" && (
+                <ChangePassword onClick={onClick}>Change Password</ChangePassword>
+            )}
+            {buttonType === "deleteAccount" && (
+                <DeleteAccount onClick={onClick}>Delete Account</DeleteAccount>
+            )}
+            {buttonType === "editProfile" && (
+                <EditProfile onClick={onClick}>Edit Profile</EditProfile>
+            )}
+            {buttonType === "saveProfile" && (
+                <SaveProfile onClick={onClick}>Save Profile</SaveProfile>
+            )}
         </>
     );
 };

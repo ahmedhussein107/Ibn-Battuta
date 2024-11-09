@@ -3,8 +3,9 @@ import Email from "../models/email.model.js";
 import Username from "../models/username.model.js";
 
 export const deleteGovernor = async (req, res) => {
+    const governorId = req.user.userId;
     try {
-        const governor = await Governor.findByIdAndDelete(req.params.id);
+        const governor = await Governor.findByIdAndDelete(governorId);
 
         if (governor) {
             // Delete email associated with the governor
@@ -72,7 +73,7 @@ export const getGovernors = async (req, res) => {
     }
 };
 
-export const getGovernorById = async (req, res) => {
+export const getGovernor = async (req, res) => {
     const governorId = req.user.userId;
     try {
         const governor = await Governor.findById(governorId);
@@ -87,16 +88,29 @@ export const getGovernorById = async (req, res) => {
 };
 
 export const updateGovernor = async (req, res) => {
+    const governorId = req.user.userId;
     try {
-        const governor = await Governor.findByIdAndUpdate(req.params.id, req.body, {
+        const governor = await Governor.findById(governorId);
+        if (!governor) {
+            return res.status(404).json({ message: "governor not found" });
+        }
+        if (req.body.password) {
+            req.body.password = await bcrypt.hash(req.body.password, 10);
+        }
+        if (req.body.email) {
+            await Email.findByIdAndDelete(governor.email);
+            await Email.create({
+                _id: req.body.email,
+            });
+        }
+
+        // Update governor details
+        const updatedgovernor = await Governor.findByIdAndUpdate(governorId, req.body, {
             new: true,
         });
-        if (governor) {
-            res.json(governor);
-        } else {
-            res.status(404).json({ message: "Governor not found" });
-        }
-    } catch (err) {
-        res.status(404).json({ message: "Governor not found" });
+
+        res.status(200).json(updatedgovernor);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 };

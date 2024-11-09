@@ -19,9 +19,9 @@ adminRouter.get("/getAdmins", getAdmins);
 
 adminRouter.get("/getUsers", getUsers);
 
-adminRouter.delete("/deleteAdmin/:id", deleteAdmin);
+adminRouter.delete("/deleteAdmin", isAuthenticated, deleteAdmin);
 
-adminRouter.put("/updateAdmin/:id", updateAdmin);
+adminRouter.put("/updateAdmin", isAuthenticated, updateAdmin);
 
 adminRouter.get("/getAdminById", isAuthenticated, getAdminById);
 

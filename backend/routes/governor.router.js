@@ -5,7 +5,7 @@ import {
     getGovernors,
     createGovernor,
     deleteGovernor,
-    getGovernorById,
+    getGovernor,
     updateGovernor,
 } from "../controllers/governor.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
@@ -15,10 +15,10 @@ governorRouter.post("/createGovernor", createGovernor);
 
 governorRouter.get("/getGovernors", getGovernors);
 
-governorRouter.get("/getGovernorById", isAuthenticated, getGovernorById);
+governorRouter.get("/getGovernor", isAuthenticated, getGovernor);
 
-governorRouter.delete("/deleteGovernor/:id", deleteGovernor);
+governorRouter.delete("/deleteGovernor", isAuthenticated, deleteGovernor);
 
-governorRouter.patch("/updateGovernor/:id", updateGovernor);
+governorRouter.put("/updateGovernor", isAuthenticated, updateGovernor);
 
 export default governorRouter;

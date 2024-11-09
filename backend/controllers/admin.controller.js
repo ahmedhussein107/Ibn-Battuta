@@ -122,17 +122,29 @@ export const getAdminById = async (req, res) => {
     }
 };
 
-// Updating an admin
 export const updateAdmin = async (req, res) => {
+    const adminId = req.user.userId;
     try {
+        const admin = await Admin.findById(adminId);
+        if (!admin) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
         if (req.body.password) {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
-        const admin = await Admin.findByIdAndUpdate(req.params.id, req.body, {
+        if (req.body.email) {
+            await Email.findByIdAndDelete(admin.email);
+            await Email.create({
+                _id: req.body.email,
+            });
+        }
+
+        // Update admin details
+        const updatedAdmin = await Admin.findByIdAndUpdate(adminId, req.body, {
             new: true,
         });
-        if (!admin) return res.status(404).json({ message: "Admin not found" });
-        res.status(200).json(admin);
+
+        res.status(200).json(updatedAdmin);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -140,8 +152,9 @@ export const updateAdmin = async (req, res) => {
 
 // Deleting an admin
 export const deleteAdmin = async (req, res) => {
+    const adminId = req.user.userId;
     try {
-        const admin = await Admin.findByIdAndDelete(req.params.id);
+        const admin = await Admin.findByIdAndDelete(adminId);
         if (!admin) return res.status(404).json("Admin not found");
         res.status(200).json("Admin deleted successfully!");
     } catch (err) {
