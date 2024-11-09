@@ -24,7 +24,13 @@ const Shop = () => {
     const [sortBy, setSortBy] = useState("priceAsc");
     const [name, setName] = useState("");
     const [buyingPopUpOpen, setBuyingPopUpOpen] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [selectedProduct, setSelectedProduct] = useState({
+        _id: "",
+        name: "",
+        description: "",
+        price: 0,
+        rating: 0,
+    });
     const [selectedQuantity, setSelectedQuantity] = useState(1);
 
     const sortProducts = (products) => {
@@ -170,7 +176,17 @@ const Shop = () => {
                 }}
                 actionText="Buy"
             >
-                <p>{selectedProduct.name}</p>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    <p>{selectedProduct.name}</p>
+                    <p>Price: {selectedProduct.price}</p>
+                    <p>Total Price: {selectedProduct.price * selectedQuantity}</p>
+                </div>
             </PopUp>
             <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
                 <div
@@ -190,7 +206,7 @@ const Shop = () => {
                 <div
                     style={{
                         minHeight: "50vh",
-                        width: "65vw",
+                        width: "68vw",
                         display: "flex",
                         flexWrap: "wrap",
                         justifyContent: "space-around",
@@ -200,7 +216,7 @@ const Shop = () => {
                         <div key={index} style={{ padding: "1.5vh" }}>
                             <CardProduct
                                 product={product}
-                                width={"30vw"}
+                                width={"32vw"}
                                 height={"25vh"}
                                 fontSize="1.2rem"
                                 firstLineButtons={[
