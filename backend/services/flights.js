@@ -29,19 +29,9 @@ amadeusFlightsRouter.get("/search", async (req, res) => {
         req.query;
     try {
         const { result } = await amadeus.shopping.flightOffersSearch.get({
-            originLocationCode,
-            destinationLocationCode,
-            departureDate,
-            adults,
+            ...req.query,
         });
-        const pricingResponse = await amadeus.shopping.flightOffers.pricing.post({
-            data: {
-                type: "flight-offers-pricing",
-                flightOffers: [result.data[0]],
-            },
-        });
-
-        res.status(200).send({ pricingResponse });
+        res.status(200).send(result);
     } catch (error) {
         res.status(400).send({ error: error.message });
     }
