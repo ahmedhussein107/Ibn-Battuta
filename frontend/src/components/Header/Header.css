@@ -4,11 +4,11 @@
     left: 0;
     width: 100%;
     height: 35vh;
-
     background-size: cover;
     background-position: top center;
     background-repeat: no-repeat;
-    background-attachment: fixed; /* Optional: for parallax scrolling effect */
+    background-attachment: fixed;
+    /* Optional: for parallax scrolling effect */
 }
 
 /* Text overlay positioned in the center */

@@ -1,9 +1,13 @@
 import React from "react";
+import { useEffect } from "react";
 import { useHeader } from "./HeaderContext";
 import "./Header.css";
 
 const Header = () => {
-    const { headerData } = useHeader();
+    const { headerData, clearHeader } = useHeader();
+    useEffect(() => {
+        return () => clearHeader();
+    }, [clearHeader]);
     return (
         <div
             className="image-container"

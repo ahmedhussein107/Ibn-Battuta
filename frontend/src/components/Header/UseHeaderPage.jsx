@@ -8,11 +8,18 @@ const usePageHeader = (
     ProfilePictureComponent = null
 ) => {
     console.log("useHeader is", useHeader());
-    const { setHeaderData } = useHeader();
+    const { setHeaderData, clearHeader } = useHeader();
 
     useEffect(() => {
         setHeaderData({ imageSrc, text, SearchBarComponent, ProfilePictureComponent });
-    }, [setHeaderData, imageSrc, text, SearchBarComponent, ProfilePictureComponent]);
+    }, [
+        setHeaderData,
+        imageSrc,
+        text,
+        SearchBarComponent,
+        ProfilePictureComponent,
+        clearHeader,
+    ]);
 };
 
 export default usePageHeader;

@@ -9,9 +9,17 @@ export const HeaderProvider = ({ children }) => {
         SearchBarComponent: null,
         ProfilePictureComponent: null,
     });
+    const clearHeader = () => {
+        setHeaderData({
+            imageSrc: "",
+            text: "",
+            SearchBarComponent: null,
+            ProfilePictureComponent: null,
+        });
+    };
 
     return (
-        <HeaderContext.Provider value={{ headerData, setHeaderData }}>
+        <HeaderContext.Provider value={{ headerData, setHeaderData, clearHeader }}>
             {children}
         </HeaderContext.Provider>
     );
