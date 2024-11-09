@@ -30,34 +30,36 @@ const DateModal = ({ isOpen, onClose, startDate, endDate, onDatesChange }) => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
-                    zIndex: 1000, // Ensure modal is on top
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    zIndex: 1000,
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    backdropFilter: "blur(5px)", // Apply blur to the background
+                    backdropFilter: "blur(0.3vh)",
                 }}
             >
                 <ModalContent
                     style={{
                         position: "relative",
-                        zIndex: 1001, // Modal content should be above overlay
-                        backgroundColor: "white", // White background for modal content
-                        padding: "20px",
-                        borderRadius: "8px",
-                        maxWidth: "500px", // Adjust size as needed
+                        zIndex: 1001,
+                        backgroundColor: "white",
+                        padding: "3vh",
+                        borderRadius: "2vh",
+                        maxWidth: "45vw",
                         width: "100%",
+                        boxShadow: "0 0.2vh 1vh rgba(0, 0, 0, 0.1)",
                     }}
                 >
-                    {/* Close button in the top-right corner */}
+                    {/* Close button */}
                     <div
                         style={{
                             position: "absolute",
-                            top: "10px",
-                            right: "10px",
+                            top: "2vh",
+                            right: "2vh",
                             cursor: "pointer",
-                            fontSize: "20px",
+                            fontSize: "2.5vh",
                             fontWeight: "bold",
+                            color: "#333",
                             zIndex: 1,
                         }}
                         onClick={onClose}
@@ -65,26 +67,158 @@ const DateModal = ({ isOpen, onClose, startDate, endDate, onDatesChange }) => {
                         ✕
                     </div>
 
-                    <h2>Select Dates</h2>
-                    <DatePicker
-                        selected={startDate}
-                        onChange={(date) => onDatesChange(date, endDate)}
-                        selectsStart
-                        startDate={startDate}
-                        endDate={endDate}
-                        placeholderText="Start Date"
-                        dateFormat="MMM dd, yyyy"
-                    />
-                    <DatePicker
-                        selected={endDate}
-                        onChange={(date) => onDatesChange(startDate, date)}
-                        selectsEnd
-                        startDate={startDate}
-                        endDate={endDate}
-                        minDate={startDate}
-                        placeholderText="End Date"
-                        dateFormat="MMM dd, yyyy"
-                    />
+                    {/* Date Selection Area */}
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between", // Ensure space between items
+                        marginBottom: "3vh",
+                    }}>
+                        <div style={{flex: 1}}>
+                            <label style={{
+                                display: "block",
+                                fontSize: "1.4vh",
+                                color: "#ff6b6b",
+                                marginBottom: "0.5vh"
+                            }}>
+                                Start Date
+                            </label>
+                            <DatePicker
+                                selected={startDate}
+                                onChange={(date) => onDatesChange(date, endDate)}
+                                selectsStart
+                                startDate={startDate}
+                                endDate={endDate}
+                                placeholderText="Start Date"
+                                dateFormat="MMM dd, yyyy"
+                                customInput={
+                                    <input
+                                        style={{
+                                            width: "100%",
+                                            padding: "1vh",
+                                            fontSize: "1.8vh",
+                                            border: "none",
+                                            borderBottom: "0.1vh solid #ddd",
+                                            outline: "none",
+                                            backgroundColor: "#f5f5f5",
+                                        }}
+                                    />
+                                }
+                            />
+                        </div>
+
+                        <div style={{
+                            marginTop: "2em",
+                            marginRight: "6em",
+                            color: "#ff6b6b",
+                            fontSize: "1.6vh",
+                            textAlign: "center",
+                            width: "auto"
+                        }}>
+                            to
+                        </div>
+
+                        <div style={{ flex: 1 }}>
+                            <label style={{
+                                display: "block",
+                                fontSize: "1.4vh",
+                                color: "#ff6b6b",
+                                marginBottom: "0.5vh"
+                            }}>
+                                End Date
+                            </label>
+                            <DatePicker
+                                selected={endDate}
+                                onChange={(date) => onDatesChange(startDate, date)}
+                                selectsEnd
+                                startDate={startDate}
+                                endDate={endDate}
+                                minDate={startDate}
+                                placeholderText="End Date"
+                                dateFormat="MMM dd, yyyy"
+                                customInput={
+                                    <input
+                                        style={{
+                                            width: "100%",
+                                            padding: "1vh",
+                                            fontSize: "1.8vh",
+                                            border: "none",
+                                            borderBottom: "0.1vh solid #ddd",
+                                            outline: "none",
+                                            backgroundColor: "#f5f5f5",
+                                        }}
+                                    />
+                                }
+                            />
+                        </div>
+                    </div>
+
+                    <style>
+                        {`
+                        .react-datepicker {
+                            font-family: inherit;
+                            border: none;
+                            box-shadow: 0 0.2vh 1vh rgba(0, 0, 0, 0.1);
+                            display: inline-flex !important;
+                        }
+
+                        .react-datepicker__month-container {
+                            padding: 1vh;
+                        }
+
+                        .react-datepicker__header {
+                            background-color: white;
+                            border-bottom: none;
+                            padding-top: 1vh;
+                        }
+
+                        .react-datepicker__day {
+                            width: 3vh;
+                            height: 3vh;
+                            line-height: 3vh;
+                            margin: 0.2vh;
+                            border-radius: 50%;
+                        }
+
+                        .react-datepicker__day--in-range {
+                            background-color: #ffe8e8; /* Light orange for in-range */
+                            color: #333;
+                        }
+
+                        .react-datepicker__day--in-selecting-range {
+                            background-color: #ffe8e8; /* Light orange for selecting range */
+                        }
+
+                        .react-datepicker__day--selected,
+                        .react-datepicker__day--range-start,
+                        .react-datepicker__day--range-end {
+                            background-color: #ff6b6b; /* Match selected color */
+                            color: white;
+                        }
+
+                        .react-datepicker__day--keyboard-selected {
+                            background-color: #ff6b6b; /* Match keyboard selected color */
+                            color: white;
+                        }
+
+                        .react-datepicker__day:hover {
+                            background-color: #ffe8e8; /* Light orange on hover */
+                            color: #333;
+                        }
+
+                        .react-datepicker__navigation {
+                            top: 1vh;
+                        }
+
+                        .react-datepicker__day-names {
+                            margin-top: 0.5vh;
+                        }
+
+                        .react-datepicker__month {
+                            margin: 0;
+                        }
+                        `}
+                    </style>
                 </ModalContent>
             </ModalOverlay>
         )
@@ -113,11 +247,24 @@ const CreateActivityPage = () => {
     const [isErrorPopup, setIsErrorPopup] = useState(false);
     const [categories, setCategories] = useState([]);
     const [tags, setTags] = useState([]);
+    const [selectedTag, setSelectedTag] = useState("");
     const [selectedTags, setSelectedTags] = useState([]);
     const [showDateModal, setShowDateModal] = useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [formattedDate, setFormattedDate] = useState("");
+
+    const addTag = () => {
+        if (selectedTag && !selectedTags.includes(selectedTag)) {
+            setSelectedTags([...selectedTags, selectedTag]);
+            setSelectedTag("");
+        }
+    };
+
+    const removeTag = (tagToRemove, e) => {
+        e.preventDefault();
+        setSelectedTags(selectedTags.filter(tag => tag !== tagToRemove));
+    };
 
     const toggleDateModal = () => {
         setShowDateModal(!showDateModal);
@@ -258,7 +405,7 @@ const CreateActivityPage = () => {
                 />
             )}
 
-            <form>
+            <form style={{marginTop: "35vh"}}>
                 <FormContainer>
                     <div>
                         <FormSection>
@@ -293,7 +440,7 @@ const CreateActivityPage = () => {
                                     placeholder="Insert Price here..."
                                     value={formData.price}
                                     onChange={handleInputChange}
-                                    style={{ marginLeft: "11em" }}
+                                    style={{marginLeft: "11em"}}
                                 />
                             </FlexGroup>
 
@@ -305,7 +452,7 @@ const CreateActivityPage = () => {
                                     placeholder="Insert discount here..."
                                     value={formData.specialDiscount}
                                     onChange={handleInputChange}
-                                    style={{ marginLeft: "0.8em" }}
+                                    style={{marginLeft: "0.8em"}}
                                 />
                             </FlexGroup>
                         </FormSection>
@@ -360,6 +507,7 @@ const CreateActivityPage = () => {
                                     name="category"
                                     value={formData.category}
                                     onChange={handleInputChange}
+                                    style={{minWidth: "27vw"}}
                                 >
                                     <option value="">Select a category</option>
                                     {categories.map((category) => (
@@ -370,20 +518,81 @@ const CreateActivityPage = () => {
                                 </Select>
                             </FlexGroup>
 
-                            <FlexGroup>
-                                <Label>Tags</Label>
-                                <TagContainer>
-                                    {tags.map((tag) => (
-                                        <TagItem
-                                            key={tag._id}
-                                            value={tag._id}
-                                            checked={selectedTags.includes(tag._id)}
-                                            onChange={handleInputChange}
+                            <FlexGroup style={{
+                                display: "flex",
+                                alignItems: "flex-start",
+                                gap: "2vh",
+                                minHeight: "9vh"
+                            }}>
+                                <Label style={{
+                                    paddingTop: "1vh"
+                                }}>Tags</Label>
+                                <div style={{flex: 1}}>
+                                    <div style={{display: "flex", gap: "1vh"}}>
+                                        <Select
+                                            value={selectedTag}
+                                            onChange={(e) => setSelectedTag(e.target.value)}
+                                            style={{
+                                                minWidth: "27vw",
+                                                marginLeft: "1.7vw",
+                                                padding: "1vh 1.5vh",
+                                                borderRadius: "0.5vh",
+                                                border: "0.1vh solid #ccc"
+                                            }}
                                         >
-                                            {tag._id}
-                                        </TagItem>
-                                    ))}
-                                </TagContainer>
+                                            <option value="">Select tag</option>
+                                            {tags.map((tag) => (
+                                                <option key={tag._id} value={tag._id}>
+                                                    {tag._id}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                        <button
+                                            type="button"
+                                            onClick={addTag}
+                                            disabled={!selectedTag}
+                                            style={{
+                                                padding: "1vh 2vh",
+                                                backgroundColor: "#f4cfbf",
+                                                border: "none",
+                                                borderRadius: "0.5vh",
+                                                cursor: selectedTag ? "pointer" : "not-allowed",
+                                                opacity: selectedTag ? 1 : 0.6,
+                                                transition: "background-color 0.2s ease"
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.target.style.backgroundColor = "#edbdaa";
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.target.style.backgroundColor = "#f4cfbf";
+                                            }}
+                                        >
+                                            Add
+                                        </button>
+                                    </div>
+                                    <TagContainer style={{
+                                        display: "flex",
+                                        flexWrap: "wrap",
+                                        gap: "1vh",
+                                        marginTop: "1.5vh",
+                                        marginLeft: "1.7vw",
+                                    }}>
+                                        {selectedTags.map((tag, index) => (
+                                            <Tag
+                                                key={index}
+                                                onClick={(e) => removeTag(tag, e)}
+                                                style={{
+                                                    padding: "0.5vh 1vh",
+                                                    backgroundColor: "#f4cfbf",
+                                                    borderRadius: "0.5vh",
+                                                    cursor: "pointer"
+                                                }}
+                                            >
+                                                {tag} ✕
+                                            </Tag>
+                                        ))}
+                                    </TagContainer>
+                                </div>
                             </FlexGroup>
                         </FormSection>
                     </div>
@@ -394,6 +603,22 @@ const CreateActivityPage = () => {
                             onImageAdd={handleImageAdd}
                             onImageRemove={handleImageRemove}
                         />
+
+
+                        <FormSection>
+                            <Label style={{marginLeft: "2em"}}>
+                                Pin Activity Location on Map
+                            </Label>
+                            <Map
+                                setMarkerPosition={(position) => {
+                                    setFormData({
+                                        ...formData,
+                                        latitude: position.lat,
+                                        longitude: position.lng,
+                                    });
+                                }}
+                            />
+                        </FormSection>
 
                         <FormSection>
                             <FlexGroup>
@@ -416,54 +641,88 @@ const CreateActivityPage = () => {
                             </FlexGroup>
 
                             <FlexGroup>
-                                <Label>Open for Booking</Label>
-                                <ToggleSwitch>
-                                    <ToggleInput
-                                        type="checkbox"
-                                        name="isOpenForBooking"
-                                        checked={formData.isOpenForBooking}
-                                        onChange={handleInputChange}
-                                    />
-                                    <ToggleLabel />
-                                </ToggleSwitch>
+                                <Label>Booking</Label>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        borderRadius: '1em',
+                                        overflow: 'hidden',
+                                        backgroundColor: '#eaeaea',
+                                        padding: '0.2em',
+                                    }}
+                                >
+                                    <div
+                                        onClick={() => handleInputChange({
+                                            target: {
+                                                name: 'isOpenForBooking',
+                                                value: true
+                                            }
+                                        })}
+                                        style={{
+                                            padding: '0.5em 1em',
+                                            cursor: 'pointer',
+                                            fontSize: '1em',
+                                            fontWeight: '500',
+                                            color: formData.isOpenForBooking ? '#a83232' : '#333',
+                                            backgroundColor: formData.isOpenForBooking ? '#fcd8d8' : 'transparent',
+                                            borderRadius: '1em',
+                                            transition: 'all 0.3s ease',
+                                        }}
+                                    >
+                                        Open
+                                    </div>
+                                    <div
+                                        onClick={() => handleInputChange({
+                                            target: {
+                                                name: 'isOpenForBooking',
+                                                value: false
+                                            }
+                                        })}
+                                        style={{
+                                            padding: '0.5em 1em',
+                                            cursor: 'pointer',
+                                            fontSize: '1em',
+                                            fontWeight: '500',
+                                            color: !formData.isOpenForBooking ? '#a83232' : '#333',
+                                            backgroundColor: !formData.isOpenForBooking ? '#fcd8d8' : 'transparent', // Matching background color
+                                            borderRadius: '1em',
+                                            transition: 'all 0.3s ease',
+                                        }}
+                                    >
+                                        Closed
+                                    </div>
+                                </div>
                             </FlexGroup>
-                        </FormSection>
-
-                        <FormSection>
-                            <Label style={{ marginLeft: "2em" }}>
-                                Pin Activity Location on Map
-                            </Label>
-                            <Map
-                                setMarkerPosition={(position) => {
-                                    setFormData({
-                                        ...formData,
-                                        latitude: position.lat,
-                                        longitude: position.lng,
-                                    });
-                                }}
-                            />
                         </FormSection>
                     </div>
                 </FormContainer>
 
-                <ButtonGroup>
-                    <Button
-                        stylingMode="2"
-                        text="Cancel"
-                        handleClick={() => {
-                            setFormData(defaultData);
-                            setImagePreviews([]);
-                            setSelectedTags([]);
-                        }}
-                        width="auto"
-                    />
-                    <Button
-                        stylingMode="1"
-                        text="Create Activity"
-                        handleClick={handleSubmit}
-                        width="auto"
-                    />
-                </ButtonGroup>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <ButtonGroup>
+                        <Button
+                            stylingMode="2"
+                            text="Cancel"
+                            handleClick={() => {
+                                setFormData(defaultData);
+                                setImagePreviews([]);
+                                setSelectedTags([]);
+                            }}
+                            width="auto"
+                        />
+                        <Button
+                            stylingMode="1"
+                            text="Create Activity"
+                            handleClick={handleSubmit}
+                            width="auto"
+                        />
+                    </ButtonGroup>
+                </div>
             </form>
         </PageContainer>
     );
@@ -602,17 +861,17 @@ const Input = styled.input`
 `;
 
 const Select = styled.select`
-    width: 100%;
-    padding: 0.75em;
-    border: 0.0625em solid #e0e0e0;
-    border-radius: 0.5em;
-    font-size: 1em;
+    padding: 1vh;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 0.9em;
 `;
 
 const TagContainer = styled.div`
+    margin-top: 1vh;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5em;
+    gap: 1vh;
 `;
 
 const TagItem = styled.label`
@@ -830,11 +1089,13 @@ const TagDisplay = styled.div`
 `;
 
 const Tag = styled.span`
-    background-color: #f28b82; /* Tag background color */
-    color: white;
-    padding: 0.5em 1em;
-    border-radius: 20px;
-    font-size: 0.9em;
+    padding: 0.5vh 1vh;
+    background-color: #f4cfbf;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5vh;
 `;
 
 const CapacityDisplay = styled.div`

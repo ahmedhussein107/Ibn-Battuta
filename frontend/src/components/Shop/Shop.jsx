@@ -14,7 +14,7 @@ import Header from "../Header/Header";
 const minPrice = 0;
 const maxPrice = 1000;
 const Shop = () => {
-    usePageHeader(shopBackground, "Shop", <input />, null);
+    usePageHeader(shopBackground, "Shop");
     const [products, setProducts] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
     const [ratingRange, setRatingRange] = useState([1, 5]);
