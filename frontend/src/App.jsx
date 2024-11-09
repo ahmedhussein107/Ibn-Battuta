@@ -65,6 +65,7 @@ function App() {
                     <Route path="/advertiser" element={<AdvertiserHome />} />
                     <Route path="/tourguide" element={<TourGuideHome />} />
                     <Route path="/seller" element={<SellerHome />} />
+                    <Route path="/governor" element={<GovernorHome />} />
 
                     {/* other pages */}
                     <Route path="/activities" element={<Activities />} />
