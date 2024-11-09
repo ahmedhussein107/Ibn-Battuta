@@ -99,7 +99,7 @@ const Flights = () => {
             <div
                 style={{
                     width: "91.5vw",
-                    height: "10vh",
+                    height: "15vh",
                     backgroundColor: "#FDDDCE",
                     margin: "2vh auto",
                     padding: "2vh",
@@ -113,7 +113,7 @@ const Flights = () => {
                 {/* First Small Rectangle with "From" Label and Search Field */}
                 <div
                     style={{
-                        width: "11vw",
+                        width: "12vw",
                         height: "11vh",
                         backgroundColor: "white",
                         marginRight: "1.5vw",
@@ -136,6 +136,18 @@ const Flights = () => {
                     >
                         From
                     </span>
+                    <span
+                        style={{
+                            position: "absolute",
+                            top: "1.9vh",
+                            left: "3.7vw", // Adjust to position it next to "From"
+                            fontWeight: "bold",
+                            color: "red",
+                        }}
+                    >
+                        *
+                    </span>
+
                     {/* Search Input Field */}
                     <input
                         type="text"
@@ -194,7 +206,7 @@ const Flights = () => {
                 {/* Second Small Rectangle with "To" Label */}
                 <div
                     style={{
-                        width: "11vw",
+                        width: "12vw",
                         height: "11vh",
                         backgroundColor: "white",
                         marginRight: "1.5vw",
@@ -216,6 +228,17 @@ const Flights = () => {
                         }}
                     >
                         To
+                    </span>
+                    <span
+                        style={{
+                            position: "absolute",
+                            top: "1.9vh",
+                            left: "2.4vw", // Adjust to position it next to "From"
+                            fontWeight: "bold",
+                            color: "red",
+                        }}
+                    >
+                        *
                     </span>
                     {/* Second Search Input Field */}
                     <input
@@ -275,7 +298,7 @@ const Flights = () => {
                 {/* third Small Rectangle */}
                 <div
                     style={{
-                        width: "11vw",
+                        width: "12vw",
                         height: "11vh",
                         backgroundColor: "white",
                         marginRight: "1.5vw",
@@ -297,6 +320,17 @@ const Flights = () => {
                     >
                         Departure
                     </span>
+                    <span
+                        style={{
+                            position: "absolute",
+                            top: "1.9vh",
+                            left: "5.8vw", // Adjust to position it next to "From"
+                            fontWeight: "bold",
+                            color: "red",
+                        }}
+                    >
+                        *
+                    </span>
                     <DatePicker
                         selected={startDate}
                         onChange={(date) => setStartDate(date)}
@@ -315,7 +349,7 @@ const Flights = () => {
                 {/* fourth Small Rectangle */}
                 <div
                     style={{
-                        width: "11vw",
+                        width: "12vw",
                         height: "11vh",
                         backgroundColor: "white",
                         marginRight: "1.5vw",
@@ -355,7 +389,7 @@ const Flights = () => {
                 {/* fifth Small Rectangle */}
                 <div
                     style={{
-                        width: "11vw",
+                        width: "12vw",
                         height: "11vh",
                         backgroundColor: "white",
                         marginRight: "1.5vw",
@@ -378,6 +412,17 @@ const Flights = () => {
                     >
                         Adults
                     </span>
+                    <span
+                        style={{
+                            position: "absolute",
+                            top: "1.9vh",
+                            left: "4.4vw", // Adjust to position it next to "From"
+                            fontWeight: "bold",
+                            color: "red",
+                        }}
+                    >
+                        *
+                    </span>
                     <input
                         type="number"
                         placeholder="Enter number"
@@ -395,10 +440,10 @@ const Flights = () => {
                 {/* sisth Small Rectangle beside the button */}
                 <div
                     style={{
-                        width: "11vw",
+                        width: "12vw",
                         height: "11vh",
                         backgroundColor: "white",
-                        marginRight: "2.5vw",
+                        marginRight: "1.5vw",
                         borderRadius: "1vw", // Increased border radius for rounded edges
                         boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
                         position: "relative",
@@ -437,7 +482,7 @@ const Flights = () => {
                     stylingMode="2" // Orange button style
                     text="Search"
                     handleClick={() => console.log("Searching flights...")}
-                    customStyle={{ marginRight: "1.vw" }}
+                    customStyle={{ marginRight: "1vw" }}
                 />
             </div>
 
