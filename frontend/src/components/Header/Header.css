@@ -1,17 +1,20 @@
 .image-container {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 35vh;
     background-size: cover;
     background-position: top center;
     background-repeat: no-repeat;
-    background-attachment: fixed; /* Optional: for parallax scrolling effect */
+    background-attachment: fixed;
+    /* Optional: for parallax scrolling effect */
 }
 
 /* Text overlay positioned in the center */
 .overlay-text {
     position: absolute;
-    top: 70%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
@@ -22,4 +25,18 @@
     padding: 0 20px; /* Add some padding to avoid text touching the edges */
     width: 100%; /* Ensure the text container spans the full width */
     box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+.header-search-bar {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.header-profile-picture {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
