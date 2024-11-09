@@ -152,7 +152,23 @@ const CreateProductPage = () => {
                                 <Label>Stock</Label>
                                 <StockControl>
                                     <StockButton type="button" onClick={() => handleStockChange(-1)}>-</StockButton>
-                                    <StockDisplay>{formData.quantity}</StockDisplay>
+                                    <input
+                                        type="number"
+                                        value={formData.quantity}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            quantity: parseInt(e.target.value, 10) || 0
+                                        })}
+                                        style={{
+                                            width: '3em',
+                                            textAlign: 'center',
+                                            fontSize: '1.2em',
+                                            fontWeight: 'bold',
+                                            border: 'none',
+                                            outline: 'none',
+                                            backgroundColor: 'transparent'
+                                        }}
+                                    />
                                     <StockButton type="button" onClick={() => handleStockChange(1)}>+</StockButton>
                                 </StockControl>
                             </FlexGroup>
@@ -167,8 +183,8 @@ const CreateProductPage = () => {
                             onImageRemove={handleImageRemove}
                         />
 
-                        <FormSection>
-                            <FlexGroup >
+                        <FormSection style={{marginTop: "4.5vh"}}>
+                            <FlexGroup>
                                 <Label>Archive</Label>
                                 <div
                                     style={{
