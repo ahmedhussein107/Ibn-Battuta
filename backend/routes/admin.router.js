@@ -25,6 +25,8 @@ adminRouter.put("/updateAdmin", isAuthenticated, updateAdmin);
 
 adminRouter.get("/getAdminById", isAuthenticated, getAdminById);
 
+adminRouter.get("/getAdminById", isAuthenticated, getAdminById);
+
 // New route for deleting a user based on userType and ID
 adminRouter.delete("/deleteUser/:userType/:id", deleteUser);
 export default adminRouter;

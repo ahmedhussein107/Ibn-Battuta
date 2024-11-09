@@ -23,10 +23,21 @@ const models = {
     tourist: Tourist,
     governor: Governor,
     admin: Admin,
+    advertiser: Advertiser,
+    seller: Seller,
+    tourguide: TourGuide,
+    tourist: Tourist,
+    governor: Governor,
+    admin: Admin,
 };
 
 // Create a controller mapping to access delete functions dynamically
 const deleteControllers = {
+    advertiser: deleteAdvertiser,
+    governor: deleteGovernor,
+    seller: deleteSeller,
+    tourguide: deleteTourGuide,
+    tourist: deleteTourist,
     advertiser: deleteAdvertiser,
     governor: deleteGovernor,
     seller: deleteSeller,
@@ -39,7 +50,14 @@ const deleteControllers = {
  */
 export const deleteUser = async (req, res) => {
     const { userType } = req.params;
+    const { userType } = req.params;
 
+    try {
+        // Validate user type and controller
+        const deleteController = deleteControllers[userType.toLowerCase()];
+        if (!deleteController) {
+            return res.status(400).json({ message: "Invalid user type" });
+        }
     try {
         // Validate user type and controller
         const deleteController = deleteControllers[userType.toLowerCase()];
@@ -52,13 +70,22 @@ export const deleteUser = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Error deleting user", error });
     }
+        // Call the appropriate controller function, passing `req` and `res`
+        await deleteController(req, res);
+    } catch (error) {
+        res.status(500).json({ message: "Error deleting user", error });
+    }
 };
 // Additional Admin Operations
 // Example for creating an admin
 export const createAdmin = async (req, res) => {
     const inputUsername = req.body.username;
     const inputEmail = req.body.email;
+    const inputUsername = req.body.username;
+    const inputEmail = req.body.email;
 
+    const username = await Username.findById(inputUsername);
+    const email = await Email.findById(inputEmail);
     const username = await Username.findById(inputUsername);
     const email = await Email.findById(inputEmail);
 
@@ -68,7 +95,19 @@ export const createAdmin = async (req, res) => {
             .status(400)
             .json({ error: "Username already exists. Please choose another one!." });
     }
+    if (username) {
+        console.log("duplicate username");
+        return res
+            .status(400)
+            .json({ error: "Username already exists. Please choose another one!." });
+    }
 
+    if (email) {
+        console.log("duplicate email");
+        return res
+            .status(400)
+            .json({ error: "Email already exists!. Please choose another one!" });
+    }
     if (email) {
         console.log("duplicate email");
         return res
@@ -86,7 +125,20 @@ export const createAdmin = async (req, res) => {
                 _id: inputEmail,
             });
         }
+    try {
+        const newUsername = await Username.create({
+            _id: inputUsername,
+            userType: "Admin",
+        });
+        if (inputEmail) {
+            const newEmail = await Email.create({
+                _id: inputEmail,
+            });
+        }
 
+        // hashing password 10 times
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        req.body.password = hashedPassword;
         // hashing password 10 times
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         req.body.password = hashedPassword;
@@ -99,10 +151,24 @@ export const createAdmin = async (req, res) => {
     } catch (e) {
         res.status(500).json({ message: e.message });
     }
+        const newAdmin = await Admin.create(req.body);
+        assignCookies(res, "Admin", newAdmin._id)
+            .status(201)
+            .json({ message: "Sign up successful" });
+        console.log("Admin created successfully");
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
 };
 
 // Getting all admins
 export const getAdmins = async (req, res) => {
+    try {
+        const admins = await Admin.find().populate("username");
+        res.status(200).json(admins);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
     try {
         const admins = await Admin.find().populate("username");
         res.status(200).json(admins);
@@ -163,6 +229,31 @@ export const deleteAdmin = async (req, res) => {
 };
 
 export const getUsers = async (req, res) => {
+    try {
+        // body is either{isAccepted:true} or {isAccepted:false}
+        // tourist and governor don't have is accepted;
+        let result = [];
+        const isAccepted =
+            req.query.isAccepted == null || req.query.isAccepted === "true";
+        console.log(req.query);
+        const query = !isAccepted ? { isAccepted } : {};
+        for (const [key, value] of Object.entries(models)) {
+            if (
+                !isAccepted &&
+                (key === "tourist" || key === "admin" || key === "governor")
+            )
+                continue;
+            console.log("key is ", key, "query is ", query);
+            let modelUsers = await value.find(query);
+            modelUsers.map((user) => {
+                result.push({ ...user._doc, role: key });
+            });
+        }
+        res.status(200).json(result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Error fetching users" });
+    }
     try {
         // body is either{isAccepted:true} or {isAccepted:false}
         // tourist and governor don't have is accepted;

@@ -30,7 +30,7 @@ const navbarUserItems = {
 };
 
 const touristProfileDropdonw = [
-    { "My Profile": "link" },
+    { "My Profile": "/tourist-profile" },
     { "My Bookings": "link" },
     { "My Bookmarks": "link" },
     { "My Complaints": "link" },
@@ -182,7 +182,7 @@ const NavBar = () => {
                                 className="profile-image"
                             />
                             <div className="dropdown-content">
-                                {userType !== "Tourist" ? (
+                                {
                                     userType === "Admin" ? (
                                         <Link
                                             to={"/admin-profile"}
@@ -218,7 +218,7 @@ const NavBar = () => {
                                         >
                                             {"My Profile"}
                                         </Link>
-                                    ) : (
+                                    ) : userType === "Tourist" ? (
                                         touristProfileDropdonw.map((item, index) => {
                                             const [label, link] = Object.entries(item)[0];
                                             return (
@@ -232,7 +232,7 @@ const NavBar = () => {
                                             );
                                         })
                                     )
-                                ) : null}
+                                : null}
                                 <div className="dropdown-separator"></div>
                                 <div className="log-out" onClick={handleLogout}>
                                     Logout

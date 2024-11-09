@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import Navbar from "../../components/NavBar";
 import Footer from "../../components/Footer";
@@ -13,11 +14,15 @@ const TourguideProfilePage = () => {
     useEffect(() => {
         axiosInstance
             .get("/tourguide/getTourguideById", { withCredentials: true })
+            .get("/tourguide/getTourguideById", { withCredentials: true })
             .then((response) => {
+                setResponse(response.data);
+                console.log("Tourguide:", response.data);
                 setResponse(response.data);
                 console.log("Tourguide:", response.data);
             })
             .catch((error) => {
+                console.error("Error fetching Tourguide:", error);
                 console.error("Error fetching Tourguide:", error);
             });
     }, []);
@@ -101,5 +106,7 @@ const TourguideProfilePage = () => {
             </div>
         </>
     );
+};
+export default TourguideProfilePage;
 };
 export default TourguideProfilePage;

@@ -8,6 +8,7 @@ import {
     getAdvertisersDocuments,
 } from "../controllers/advertiser.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const advertiserRouter = express.Router();
 

@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import Navbar from "../../components/NavBar";
 import Footer from "../../components/Footer";

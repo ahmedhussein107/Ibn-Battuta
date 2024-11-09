@@ -53,6 +53,7 @@ import AdminProfilePage from "./pages/Admin/AdminProfilePage";
 import AdvertiserProfilePage from "./pages/Advertiser/AdvertiserProfilePage";
 import GovernorProfilePage from "./pages/Governor/GovernorProfilePage";
 import SellerProfilePage from "./pages/Seller/SellerProfilePage";
+import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
 function App() {
     return (
         <HeaderProvider>
@@ -130,6 +131,7 @@ function App() {
                     <Route path="/governor-profile" element={<GovernorProfilePage />} />
                     <Route path="/seller-profile" element={<SellerProfilePage />} />
                     <Route path="/tourguide-profile" element={<TourGuideProfilePage />} />
+                    <Route path="/tourist-profile" element={<TouristProfilePage />} />
                 </Routes>
             </Router>
         </HeaderProvider>

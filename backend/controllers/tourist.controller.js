@@ -17,27 +17,34 @@ export const getTourists = async (req, res) => {
 
 export const getTouristById = async (req, res) => {
     try {
-        const tourist = await Tourist.findById(req.params.id);
-        if (tourist) {
-            const age = tourist.age;
-            const {
-                cart,
-                preferences,
-                wishlist,
-                deliveryAddresses,
-                createdAt,
-                updatedAt,
-                __v,
-                DOB,
-                ...other
-            } = tourist._doc;
-            console.log(other);
-            res.status(200).json({ ...other, age });
-        } else {
-            res.status(404).json({ e: "Tourist not found" });
+        const { userId } = req.user;
+        if (!userId) {
+            return res.status(404).json({ e: "ID not found" });
         }
+
+        const tourist = await Tourist.findById(userId);
+
+        if (!tourist) {
+            return res.status(404).json({ e: "Tourist not found" });
+        }
+
+        const age = tourist.age;
+        const {
+            cart, 
+            preferences,
+            wishlist,
+            deliveryAddresses,
+            createdAt,
+            updatedAt,
+            __v,
+            DOB,
+            ...other
+        } = tourist._doc;
+
+        console.log(other);
+        res.status(200).json({ ...other, age });
     } catch (e) {
-        //console.log(e.message);
+        console.error(e.message); // Log the error for debugging
         res.status(400).json({ e: e.message });
     }
 };
@@ -93,6 +100,8 @@ export const updateTourist = async (req, res) => {
         res.status(400).json({ e: e.message });
     }
 };
+
+
 
 export const deleteTourist = async (req, res) => {
     try {
