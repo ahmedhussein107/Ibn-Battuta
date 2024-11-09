@@ -14,10 +14,11 @@ const CardProduct = ({
     lowerHeight = "68%",
     upperHeight = "30%",
     line2 = <></>,
+    fontSize = "1.5rem",
 }) => {
     const image = product.pictures[0];
     const line1 = (
-        <div style={{ fontSize: "1.5rem" }}>
+        <div style={{ fontSize: fontSize }}>
             <TitleAndButtons title={product.name} buttons={firstLineButtons} />
         </div>
     );

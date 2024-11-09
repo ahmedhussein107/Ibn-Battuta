@@ -3,6 +3,10 @@ button:hover {
     border: none;
 }
 
+.button-text {
+    font-size: 1em;
+}
+
 .button-1 {
     border-radius: var(--spacing-medium);
     padding: var(--spacing-small) var(--spacing-medium);

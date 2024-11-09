@@ -1,11 +1,12 @@
 import express from "express";
 import Order from "../models/order.model.js";
-import e from "express";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 const orderRouter = express.Router();
 
-orderRouter.post("/createOrder", async (req, res) => {
+orderRouter.post("/createOrder", isAuthenticated, async (req, res) => {
+    const buyer = req.user.uesrId;
     try {
-        const newOrder = await Order.create(req.body);
+        const newOrder = await Order.create({ ...req.body, buyer });
         res.json(newOrder);
         console.log({ message: "order created successfully" });
     } catch (err) {
