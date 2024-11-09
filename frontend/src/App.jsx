@@ -40,7 +40,7 @@ import PopUp from "./components/PopUpsGeneric/PopUp";
 import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
 import AllActivities from "./pages/Admin/AllActivities";
 import AllItineraries from "./pages/Admin/AllItineraries";
-import Shop from "./pages/Product/Shop";
+import Shop from "./components/Shop.jsx";
 import Bookings from "./pages/Tourist/Bookings.jsx";
 
 function App() {

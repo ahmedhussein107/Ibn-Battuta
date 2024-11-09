@@ -74,7 +74,7 @@ const MyActivity = () => {
             const response = await axiosInstance.delete(
                 `activity/deleteActivity/${activityID}`
             );
-            sortActivities((prevActivities) =>
+            setActivities((prevActivities) =>
                 prevActivities.filter((activity) => activity._id !== activityID)
             );
         } catch (error) {
@@ -238,7 +238,7 @@ const MyActivity = () => {
                                         onClick: () =>
                                             navigate("/edit-activity", {
                                                 state: activity,
-                                            }), // TODO: change url
+                                            }),
                                         type: "1",
                                         width: "50%",
                                         styles: {
