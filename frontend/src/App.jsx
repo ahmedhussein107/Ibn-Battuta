@@ -5,25 +5,14 @@ import AboutPage from "./pages/AboutPage";
 import CreateProductPage from "./pages/Product/CreateProductPage";
 import UpdateProductPage from "./pages/Product/UpdateProductPage";
 import TourGuideProfilePage from "./pages/TourGuide/TourGuideProfilePage";
-import UpdateCategory from "./pages/Category/UpdateCategory";
-import CreateCategory from "./pages/Category/CreateCategory";
-import GetAllCategories from "./pages/Category/GetAllCategories";
-import UpdateTag from "./pages/Tag/UpdateTag";
-import CreateTag from "./pages/Tag/CreateTag";
-import GetAllTags from "./pages/Tag/GetAllTags";
 import GovernorLandmarks from "./pages/Governor/GovernorLandmarks";
-import TourGuideItineraries from "./pages/TourGuide/TourGuideItineraries";
-import TourGuideCustomActivities from "./pages/TourGuide/TourGuideCustomActivities";
-import AdvertiserActivities from "./pages/Advertiser/AdvertiserActivities";
 import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import CreateActivityPage from "./pages/Activity/CreateActivityPage";
 import UpdateActivityPage from "./pages/Activity/UpdateActivityPage";
-import FilterLandmarks from "./pages/Landmarks/FilterLandmarks";
 import AddNewUser from "./pages/Admin/AddNewUser";
 import UserManagement from "./pages/Admin/UserManagement";
 import ViewProductsPage from "./pages/Product/ViewProductsPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
-import FilterItineraries from "./pages/Itinerary/FilterItineraries";
 import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
 import MyActivity from "./pages/Advertiser/MyActivity";
@@ -46,13 +35,10 @@ import ViewTags from "./pages/Admin/ViewTags";
 import ViewCategories from "./pages/Admin/ViewCategories";
 import { HeaderProvider } from "./components/Header/HeaderContext";
 import Header from "./components/Header/Header";
-import NavBar from "./components/NavBar";
 import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
-import Test from "./components/Test";
 import PopUp from "./components/PopUpsGeneric/PopUp";
 import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
 import TestShopLayout from "./components/Shop/Shop";
-
 
 function App() {
     return (
@@ -63,7 +49,7 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/test" element={<PopUp />} />
                     <Route path="/complaints" element={<ComplaintList />} />
-                    <Route path="/test-shop-layout" element={<TestShopLayout />} />
+                    <Route path="/shop" element={<TestShopLayout />} />
                     <Route
                         path="/complaint/:complaintId"
                         element={<ViewSingleComplaint />}
@@ -101,12 +87,10 @@ function App() {
 
                     <Route path="/create-activity" element={<CreateActivityPage />} />
                     <Route path="/update-activity" element={<UpdateActivityPage />} />
-                    <Route path="/filter-landmarks" element={<FilterLandmarks />} />
                     <Route path="/view-products" element={<ViewProductsPage />} />
 
                     <Route path="/landmark/landmark/" element={<LandmarkPage />} />
                     <Route path="/create-itinerary" element={<CreateItineraryPage />} />
-                    <Route path="/choose-activity" element={<ChooseActivity />} />
                     <Route path="/create-landmark" element={<CreateLandmarkPage />} />
 
                     <Route path="/admin/tags" element={<ViewTags />} />

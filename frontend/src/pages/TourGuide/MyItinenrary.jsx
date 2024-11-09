@@ -338,7 +338,10 @@ const MyItinenrary = () => {
                                         type: "1",
                                         width: "70%",
                                         styles: {
-                                            marginTop: "-5%",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
                                         },
                                     },
 
@@ -358,6 +361,10 @@ const MyItinenrary = () => {
                                             borderColor: itinerary.isActivated
                                                 ? "red"
                                                 : "green",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
                                         },
                                     },
                                 ]}

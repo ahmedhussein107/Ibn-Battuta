@@ -3,12 +3,8 @@ import Username from "../models/username.model.js";
 import Email from "../models/email.model.js";
 import Notification from "../models/notification.model.js";
 import TouristActivityNotification from "../models/touristActivityNotification.model.js";
-<<<<<<< HEAD
-
-=======
 import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
->>>>>>> main
 export const getTourists = async (req, res) => {
     try {
         const tourguides = await Tourist.find();

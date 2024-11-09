@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const ChooseActivity = () => {
@@ -15,10 +15,11 @@ const ChooseActivity = () => {
         dropOffLocationlongitude,
         tags,
         accessibilityTypes,
-        price
+        price,
     } = location.state;
 
-    console.log(name,
+    console.log(
+        name,
         language,
         description,
         date,
@@ -29,7 +30,8 @@ const ChooseActivity = () => {
         dropOffLocationlongitude,
         tags,
         accessibilityTypes,
-        price);
-}
+        price
+    );
+};
 
 export default ChooseActivity;

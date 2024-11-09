@@ -4,7 +4,7 @@ import i1 from "../../assets/images/iti.png";
 import i2 from "../../assets/images/i2.png";
 import Map from "../map";
 import Button from "../../components/Button.jsx";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CreateItineraryPage = () => {
     const [name, setName] = useState("");
@@ -65,7 +65,7 @@ const CreateItineraryPage = () => {
                 left: 0,
                 top: 0,
                 backgroundColor: "#fff5e6",
-                minHeight: "105vh",
+                minHeight: "115vh",
                 width: "100vw",
             }}
         >
@@ -482,7 +482,7 @@ const CreateItineraryPage = () => {
                         stylingMode="1"
                         text="Next"
                         width={"10vw"}
-                        handleClick={() =>{
+                        handleClick={() => {
                             navigate("/choose-activity", {
                                 state: {
                                     name: name,
@@ -496,8 +496,8 @@ const CreateItineraryPage = () => {
                                     dropOffLocationlongitude: dropOffLocationlongitude,
                                     tags: tags,
                                     accessibilityTypes: accessibilityTypes,
-                                    price: price
-                                }
+                                    price: price,
+                                },
                             });
                         }}
                         style={{

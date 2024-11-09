@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import "react-datetime/css/react-datetime.css";
 import FilterSidebar from "./FilterBar";
-import CardActivity from "../CardActivity";
 import ShareAndMark from "../ShareAndMark";
 import shopBackground from "../../assets/backgrounds/shopBackground.png";
 import usePageHeader from "../Header/UseHeaderPage";
-import "./Shop.css";
-import Button from "../Button";
+import CardProduct from "../CardProduct";
+import CustomButton from "../Button";
 import ActionButtons from "./ActionButtons";
+import NavBar from "../NavBar";
 const minPrice = 0;
 const maxPrice = 1000;
 const TestShopLayout = () => {
@@ -44,10 +44,8 @@ const TestShopLayout = () => {
                 },
                 { withCredentials: true }
             );
-            console.log("response", response.data);
-            sortproducts(response.data);
-            // to be deleted;
-            setProducts([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+            console.log("response", response);
+            setProducts(response.data);
         } catch (error) {
             console.error("Error fetching products:", error);
         }
@@ -71,11 +69,7 @@ const TestShopLayout = () => {
         }
 
         if (ratingRange[0] || ratingRange[1]) {
-            if (ratingRange[0] === 1) {
-                query.rating = "-" + ratingRange[1];
-            } else {
-                query.rating = ratingRange[0] + "-" + ratingRange[1];
-            }
+            query.rating = ratingRange[0] + "-" + ratingRange[1];
         } else {
             delete query.rating;
         }
@@ -91,28 +85,57 @@ const TestShopLayout = () => {
 
     return (
         <div className="shop">
+            <NavBar />
+            <div className="product-sidebar">
+                <FilterSidebar
+                    name={name}
+                    setName={setName}
+                    sortBy={sortBy}
+                    setSortBy={setSortBy}
+                    priceRange={priceRange}
+                    setPriceRange={setPriceRange}
+                    ratingRange={ratingRange}
+                    setRatingRange={setRatingRange}
+                    minPrice={minPrice}
+                    maxPrice={maxPrice}
+                />
+            </div>
             <div className="product-container">
-                <div className="product-sidebar">
-                    <FilterSidebar
-                        name={name}
-                        setName={setName}
-                        sortBy={sortBy}
-                        setSortBy={setSortBy}
-                        priceRange={priceRange}
-                        setPriceRange={setPriceRange}
-                        ratingRange={ratingRange}
-                        setRatingRange={setRatingRange}
-                        minPrice={minPrice}
-                        maxPrice={maxPrice}
-                    />
-                </div>
                 <div className="product-main-content">
                     <ActionButtons />
                     <div className="product-grid-container">
-                        {/* put your cards here ya 7os */}
                         {products.map((product, index) => (
-                            <div key={index} className="product-grid-item">
-                                <p>hi there</p>
+                            <div style={{ padding: "1.5vh" }}>
+                                <CardProduct
+                                    product={product}
+                                    width={"32vw"}
+                                    height={"23vh"}
+                                    firstLineButtons={[
+                                        [
+                                            <ShareAndMark
+                                                width="1vw"
+                                                height="1vw"
+                                                styles={{ padding: "0.5vh" }}
+                                            />,
+                                        ],
+                                    ]}
+                                    upperHeight="20%"
+                                    lowerHeight="78%"
+                                    controlButtons={
+                                        <CustomButton
+                                            stylingMode="1"
+                                            text="Add to cart"
+                                            width="85%"
+                                            customStyle={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                padding: "0.8em",
+                                                fontSize: "0.74rem",
+                                            }}
+                                        />
+                                    }
+                                />
                             </div>
                         ))}
                     </div>
