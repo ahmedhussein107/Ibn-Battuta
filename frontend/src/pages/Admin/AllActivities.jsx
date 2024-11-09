@@ -7,13 +7,13 @@ import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
 import Footer from "../../components/Footer";
 import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
+import FlagIcon from "@mui/icons-material/Flag";
+import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import CardActivity from "../../components/CardActivity";
-import DeleteButton from "../../components/DeleteButton";
-const MyActivity = () => {
+const AllActivities = () => {
     const navigate = useNavigate();
 
     const [activities, setActivities] = useState([]);
@@ -38,10 +38,9 @@ const MyActivity = () => {
 
     const fetchData = async (query) => {
         try {
-            const response = await axiosInstance.get(
-                `/activity/getAdvertiserActivities`,
-                { params: query, withCredentials: true }
-            );
+            const response = await axiosInstance.get(`/activity/getAllActivities`, {
+                params: query,
+            });
             const data = response.data;
             sortActivities(data);
             console.log("response data is", data);
@@ -69,16 +68,20 @@ const MyActivity = () => {
         sortActivities(activities);
     }, [sortBy]);
 
-    const deleteActivityHandler = async (activityID) => {
+    const flagActivityHandler = async (activity, index) => {
+        console.log("flagActivityHandler", activity._id);
         try {
-            const response = await axiosInstance.delete(
-                `activity/deleteActivity/${activityID}`
-            );
-            sortActivities((prevActivities) =>
-                prevActivities.filter((activity) => activity._id !== activityID)
-            );
+            await axiosInstance.patch(`activity/toggleFlag/${activity._id}`);
+            setActivities((activities) => {
+                const updatedActivities = [...activities];
+                updatedActivities[index] = {
+                    ...activity,
+                    isFlagged: !activity.isFlagged,
+                };
+                return updatedActivities;
+            });
         } catch (error) {
-            alert("Error deleting activity");
+            alert("Error flagging activity");
         }
     };
 
@@ -132,7 +135,7 @@ const MyActivity = () => {
                         // this is to prevent the text from being highlighted when clicked
                     }}
                 >
-                    My Activities
+                    All Activities
                 </div>
 
                 <div
@@ -193,23 +196,6 @@ const MyActivity = () => {
                     <SwapVert sx={{ fontSize: "3vh" }} />
                     <p style={{ marginLeft: ".3vw" }}>Sort by Date</p>
                 </Button>
-                <Button
-                    style={{
-                        marginLeft: "2vw",
-                        borderRadius: "4vh",
-                        minWidth: "1vw",
-                        color: "black",
-                        borderColor: "black",
-                        maxHeight: "4.2vh",
-                    }}
-                    variant="outlined"
-                    onClick={() => {
-                        navigate("/create-activity");
-                    }}
-                >
-                    <AddIcon sx={{ fontSize: "3vh" }} />
-                    <p style={{ marginLeft: ".3vw" }}>Create Activity</p>
-                </Button>
                 <div
                     style={{
                         marginTop: "1%",
@@ -227,20 +213,39 @@ const MyActivity = () => {
                                 width={"46vw"}
                                 height={"34vh"}
                                 firstLineButtons={[
-                                    <DeleteButton
-                                        deleteHandler={deleteActivityHandler}
-                                        ID={activity._id}
-                                    />,
+                                    [
+                                        activity.isFlagged ? (
+                                            <FlagIcon
+                                                style={{
+                                                    color: "red",
+                                                    cursor: "pointer",
+                                                }}
+                                                onClick={() =>
+                                                    flagActivityHandler(activity, index)
+                                                }
+                                            />
+                                        ) : (
+                                            <OutlinedFlagIcon
+                                                style={{
+                                                    color: "gray",
+                                                    cursor: "pointer",
+                                                }}
+                                                onClick={() =>
+                                                    flagActivityHandler(activity, index)
+                                                }
+                                            />
+                                        ),
+                                    ],
                                 ]}
                                 bottomButtons={[
                                     {
-                                        text: "Edit",
+                                        text: "View Details",
                                         onClick: () =>
-                                            navigate("/edit-activity", {
+                                            navigate(`/activity-details`, {
                                                 state: activity,
-                                            }), // TODO: change url
+                                            }),
                                         type: "1",
-                                        width: "50%",
+                                        width: "70%",
                                         styles: {
                                             display: "flex",
                                             justifyContent: "center",
@@ -259,4 +264,4 @@ const MyActivity = () => {
     );
 };
 
-export default MyActivity;
+export default AllActivities;

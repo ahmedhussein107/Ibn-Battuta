@@ -17,7 +17,7 @@ const CardItinerary = ({
 }) => {
     const image = itinerary.picture;
     const line1 = (
-        <div style={{ fontSize: "1.3rem" }}>
+        <div style={{ fontSize: "1.2rem" }}>
             <TitleAndButtons title={itinerary.name} buttons={firstLineButtons} />
         </div>
     );

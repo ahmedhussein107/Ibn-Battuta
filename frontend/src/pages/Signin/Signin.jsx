@@ -155,7 +155,11 @@ const Signin = () => {
     useEffect(() => {
         const userType = Cookies.get("userType") || "Guest";
         if (userType != "Guest") {
-            navigate(`/${userType.toLowerCase()}`);
+            if (userType === "Tourist") {
+                navigate("/"); // special handling for the Tourist case
+                return;
+            }
+            navigate(`/${userType.replace(/\s+/g, "").toLowerCase()}`);
         }
     }, []);
 

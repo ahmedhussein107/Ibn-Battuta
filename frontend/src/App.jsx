@@ -38,7 +38,9 @@ import Header from "./components/Header/Header";
 import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 import PopUp from "./components/PopUpsGeneric/PopUp";
 import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
-import TestShopLayout from "./components/Shop/Shop";
+import AllActivities from "./pages/Admin/AllActivities";
+import AllItineraries from "./pages/Admin/AllItineraries";
+import Shop from "./pages/Product/Shop";
 
 function App() {
     return (
@@ -70,6 +72,20 @@ function App() {
                     <Route path="/itinerary-details" element={<ItineraryDetails />} />
                     <Route path="/landmarks" element={<Landmarks />} />
 
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/create-product" element={<CreateProductPage />} />
+                    <Route path="/add-new-user" element={<AddNewUser />} />
+                    <Route path="admin/users" element={<UserManagement />} />
+                    <Route
+                        path="/update-product/:productId"
+                        element={<UpdateProductPage />}
+                    />
+                    <Route path="/products/:productId" element={<ViewProductPage />} />
+                    <Route path="/tourguide" element={<TourGuideProfilePage />} />
+                    <Route path="/landmark-governor" element={<GovernorLandmarks />} />
+                    <Route path="/advertiser/assigned" element={<MyActivity />} />
+                    <Route path="/tourguide/assigned" element={<MyItinenrary />} />
+                    <Route path="/inventory" element={<Inventory />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/create-product" element={<CreateProductPage />} />
                     <Route path="/add-new-user" element={<AddNewUser />} />

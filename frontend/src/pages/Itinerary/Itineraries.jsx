@@ -213,7 +213,10 @@ const Itineraries = () => {
                                 bottomButtons={[
                                     {
                                         text: "Book Now",
-                                        onClick: () => navigate("itinerary"), // TODO: change url
+                                        onClick: () =>
+                                            navigate("/itinerary-details", {
+                                                state: { itinerary },
+                                            }),
                                         type: "1",
                                         width: "70%",
                                     },

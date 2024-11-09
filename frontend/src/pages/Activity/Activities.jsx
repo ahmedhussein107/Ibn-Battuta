@@ -10,7 +10,6 @@ import DatePicker from "../../components/DatePicker";
 import CheckboxList from "../../components/CheckBoxList";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
-import ActivityCard from "../../components/ActivityCard";
 import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
 import CardActivity from "../../components/CardActivity";
 import ShareAndMark from "../../components/ShareAndMark";
@@ -25,7 +24,7 @@ const Activities = () => {
     const [selectedTags, setSelectedTags] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-    const [ratingRange, setRatingRange] = useState([1, 5]);
+    const [ratingRange, setRatingRange] = useState([null, 5]);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [sortBy, setSortBy] = useState("priceAsc");
@@ -131,7 +130,7 @@ const Activities = () => {
         }
 
         if (ratingRange[0] || ratingRange[1]) {
-            if (ratingRange[0] === 1) {
+            if (!ratingRange[0]) {
                 query.rating = "-" + ratingRange[1];
             } else {
                 query.rating = ratingRange[0] + "-" + ratingRange[1];
@@ -271,14 +270,18 @@ const Activities = () => {
                                 ]}
                                 bottomButtons={[
                                     {
-                                        text: "Edit",
-                                        onClick: () => navigate("itinerary"), // TODO: change url
+                                        text: "Book Now",
+                                        onClick: () =>
+                                            navigate("/activity-details", {
+                                                state: activity,
+                                            }),
                                         type: "1",
                                         width: "50%",
                                         styles: {
                                             display: "flex",
                                             justifyContent: "center",
                                             alignItems: "center",
+                                            padding: "0.5em",
                                         },
                                     },
                                 ]}
