@@ -10,7 +10,6 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
 
 	const Picture = booking.typeId.picture || "";
 
-	// Elements for above the line (title, date)
 	const aboveLine = (
 		<div>
 			<div
@@ -79,7 +78,6 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
 		</div>
 	);
 
-	// Elements for the bottom left section (location, language, tags, price, etc.)
 	const bottomLeft = (
 		<div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
 			<div style={{ fontWeight: "bold" }}>Total Price: {booking.price} EGP</div>
@@ -92,7 +90,6 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
 		</div>
 	);
 
-	// Elements for the bottom right section (cancel/view buttons)
 	const bottomRight = (
 		<div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
 			<Button stylingMode="1" text="view" customStyle={{ padding: "1rem" }} />
