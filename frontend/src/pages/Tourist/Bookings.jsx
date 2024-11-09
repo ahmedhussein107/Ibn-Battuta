@@ -25,15 +25,16 @@ const Bookings = () => {
 	};
 
 	const URI = {
-		Itineraries: "booking/getItineraries",
-		Activities: "activity/getActivities",
-		Flights: "flight/getFlights",
-		Hotels: "hotel/getHotels",
+		Itineraries: "booking/getItineraryBookings",
+		Activities: "booking/getActivityBookings",
+		Flights: "booking/getActivityBookings",
+		Hotels: "booking/getActivityBookings",
 	};
 
 	const fetchBookings = async () => {
 		try {
-			const response = await axiosInstance.get(URI[selected], { withCredientials: true });
+			const response = await axiosInstance.get(URI[selected], { withCredentials: true });
+			console.log("response", response.data);
 			setBookings(response.data);
 		} catch (error) {
 			console.error("Failed to fetch bookings", error);
@@ -41,7 +42,7 @@ const Bookings = () => {
 	};
 
 	useEffect(() => {
-		// fetchBookings();
+		fetchBookings();
 	}, [selected]);
 
 	return (
@@ -64,14 +65,13 @@ const Bookings = () => {
 				</div>
 				<div style={itemsContainerStyle}>
 					{/* <GenericCard width="40vw" height="20vw" /> */}
-					{selected == "Itineraries" && (
+					{(selected == "Itineraries" || selected == "Activities") && (
 						<>
-							<CardBooking />
-							<CardBooking />
-							<CardBooking />
+							{bookings.map((booking) => (
+								<CardBooking booking={booking} width="46vw" height="34vh" />
+							))}
 						</>
 					)}
-					{selected == "Activities" && <> </>}
 					{selected == "Flights" && <> </>}
 					{selected == "Hotels" && <> </>}
 				</div>
