@@ -40,7 +40,7 @@ import PopUp from "./components/PopUpsGeneric/PopUp";
 import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
 import AllActivities from "./pages/Admin/AllActivities";
 import AllItineraries from "./pages/Admin/AllItineraries";
-import Shop from "./components/Shop/Shop";
+import Shop from "./pages/Product/Shop";
 
 function App() {
     return (
@@ -51,7 +51,6 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/test" element={<PopUp />} />
                     <Route path="/complaints" element={<ComplaintList />} />
-                    <Route path="/shop" element={<Shop />} />
                     <Route
                         path="/complaint/:complaintId"
                         element={<ViewSingleComplaint />}
@@ -72,6 +71,7 @@ function App() {
                     <Route path="/itineraries" element={<Itineraries />} />
                     <Route path="/itinerary-details" element={<ItineraryDetails />} />
                     <Route path="/landmarks" element={<Landmarks />} />
+                    <Route path="/shop" element={<Shop />} />
 
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/create-product" element={<CreateProductPage />} />

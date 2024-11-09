@@ -24,7 +24,7 @@ const Activities = () => {
     const [selectedTags, setSelectedTags] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-    const [ratingRange, setRatingRange] = useState([1, 5]);
+    const [ratingRange, setRatingRange] = useState([null, 5]);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [sortBy, setSortBy] = useState("priceAsc");
@@ -130,7 +130,7 @@ const Activities = () => {
         }
 
         if (ratingRange[0] || ratingRange[1]) {
-            if (ratingRange[0] === 1) {
+            if (!ratingRange[0]) {
                 query.rating = "-" + ratingRange[1];
             } else {
                 query.rating = ratingRange[0] + "-" + ratingRange[1];

@@ -17,7 +17,11 @@ const orderSchema = new mongoose.Schema(
         count: { type: Number, required: true },
         address: String,
         method: { type: String, enum: ["card", "wallet", "cash on delivery"] },
-        status: { type: String, enum: ["delivered", "canceled", "pending"] },
+        status: {
+            type: String,
+            enum: ["delivered", "canceled", "pending"],
+            default: "pending",
+        },
     },
     { timestamps: true }
 );
