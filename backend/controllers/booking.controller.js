@@ -187,7 +187,7 @@ export const getitineraryBookings = async (req, res) => {
         const bookings = await Booking.find({
             touristID: id,
             bookingType: "Itinerary",
-        });
+        }).populate("typeId");
         res.status(200).json(bookings);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -200,7 +200,7 @@ export const getActivityBookings = async (req, res) => {
         const bookings = await Booking.find({
             touristID: id,
             bookingType: "Activity",
-        });
+        }).populate("typeId");
         res.status(200).json(bookings);
     } catch (error) {
         res.status(400).json({ error: error.message });

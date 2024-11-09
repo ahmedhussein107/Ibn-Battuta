@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../../components/Pagination";
 import bookingsBackground from "../../assets/backgrounds/bookingsBackground.png";
-import CustomButton from "../../components/Button";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import GenericCard from "../../components/GenericCard";
+import CardBooking from "../../components/CardBooking";
 
 const Bookings = () => {
 	const [currentPage, setCurrentPage] = useState(1);
@@ -25,7 +25,7 @@ const Bookings = () => {
 	};
 
 	const URI = {
-		Itineraries: "itinerary/getItineraries",
+		Itineraries: "booking/getItineraries",
 		Activities: "activity/getActivities",
 		Flights: "flight/getFlights",
 		Hotels: "hotel/getHotels",
@@ -50,7 +50,7 @@ const Bookings = () => {
 			<div style={backgroundStyle}>
 				<h1 style={headerStyle}>My Bookings</h1>
 			</div>
-			<div style={{ padding: "1%" }}>
+			<div style={{ padding: "1% 0" }}>
 				<div style={buttonGroupStyle}>
 					{buttons.map((button) => (
 						<button
@@ -62,15 +62,18 @@ const Bookings = () => {
 						</button>
 					))}
 				</div>
-				<div style={{}}>
+				<div style={itemsContainerStyle}>
+					{/* <GenericCard width="40vw" height="20vw" /> */}
 					{selected == "Itineraries" && (
-						<div>
-							<GenericCard width={"40%"} />
-						</div>
+						<>
+							<CardBooking />
+							<CardBooking />
+							<CardBooking />
+						</>
 					)}
-					{selected == "Activities" && <div> </div>}
-					{selected == "Flights" && <div> </div>}
-					{selected == "Hotels" && <div> </div>}
+					{selected == "Activities" && <> </>}
+					{selected == "Flights" && <> </>}
+					{selected == "Hotels" && <> </>}
 				</div>
 				<PaginationComponent
 					totalPages={totalPages}
@@ -107,6 +110,7 @@ const headerStyle = {
 const buttonGroupStyle = {
 	display: "flex",
 	gap: "10px",
+	marginLeft: "2%",
 };
 
 const buttonStyle = {
@@ -123,6 +127,14 @@ const selectedButtonStyle = {
 	...buttonStyle,
 	backgroundColor: "#FF5722",
 	color: "#fff",
+};
+
+const itemsContainerStyle = {
+	paddingTop: "2vh",
+	display: "flex",
+	flexDirection: "row",
+	flexWrap: "wrap",
+	justifyContent: "space-around",
 };
 
 export default Bookings;
