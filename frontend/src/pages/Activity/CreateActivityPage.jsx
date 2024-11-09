@@ -405,7 +405,7 @@ const CreateActivityPage = () => {
                 />
             )}
 
-            <form>
+            <form style={{marginTop: "35v   h"}}>
                 <FormContainer>
                     <div>
                         <FormSection>
