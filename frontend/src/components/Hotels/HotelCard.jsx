@@ -18,7 +18,7 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
             {/* Hotel Name */}
             <h2 className="hotel-name">{offer.name} </h2>
             {!isAllOffers && (
-                <h4 style={{ margin: "0" }}>Booking ID: {offer.bookignId}</h4>
+                <h4 style={{ margin: "0" }}>Booking ID: {offer.bookingId}</h4>
             )}
 
             {/* Location and Address */}

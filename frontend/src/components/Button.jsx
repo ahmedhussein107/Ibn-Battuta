@@ -9,30 +9,17 @@ const Button = ({
     handleClick = () => {
         console.log("buttonclick handle needs to be fixed");
     },
-<<<<<<< HEAD
-    isLoading,
-    width = "auto",
-    customStyle = {},
-    type,
-=======
     isLoading = false,
     width = "auto",
     height = "auto",
     customStyle = {},
     type,
     icon = null,
->>>>>>> f3392822da9d06fd319386be44c09cf62408ffaf
 }) => {
     return (
         <button
             className={`button-${stylingMode}`} // Apply dynamic styling class based on `stylingMode` prop
             onClick={handleClick}
-<<<<<<< HEAD
-            style={{ width: width, ...customStyle }} // Inline style for width
-            type={type}
-        >
-            {isLoading ? <div className="spinner"></div> : text}
-=======
             style={{ width: width, height: height, ...customStyle }} // Inline style for width
             type={type}
         >
@@ -45,7 +32,6 @@ const Button = ({
                     <span className="button-text">{text}</span>
                 </>
             )}
->>>>>>> f3392822da9d06fd319386be44c09cf62408ffaf
         </button>
     );
 };
