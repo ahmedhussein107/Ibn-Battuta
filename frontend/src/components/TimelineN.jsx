@@ -158,10 +158,17 @@ const TimelineN = ({ date, time }) => {
                 alert("select the time interval!!!!!");
                 return;
             }
+            console.log("100");
             let startDate = new Date(convertedDate);
+            console.log("100");
+            console.log(startTime);
+            console.log(startTime);
             startDate.setHours(startTime.getHours(), startTime.getMinutes());
+            console.log("100");
             let endDate = new Date(convertedDate);
+            console.log("100");
             endDate.setHours(endTime.getHours(), endTime.getMinutes());
+            console.log("100");
             console.log({
                 activityType: activeTab,
                 activity: selectedActivity,
