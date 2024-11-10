@@ -44,6 +44,7 @@ import Shop from "./pages/Product/Shop.jsx";
 import Bookings from "./pages/Tourist/Bookings.jsx";
 import NavBar from "./components/NavBar.jsx";
 import ShowOfferDetails from "./components/Hotels/ShowOfferDetails.jsx";
+import HotelList from "./components/Hotels/HotelList.jsx";
 
 const LayoutWithNav = () => (
     <>
@@ -127,6 +128,7 @@ function App() {
                         <Route path="/admin/itineraries" element={<AllItineraries />} />
 
                         <Route path="/bookings" element={<Bookings />} />
+                        <Route path="/hotel/offers" element={<HotelList />} />
                         <Route
                             path="/hotel/offer-details/:id"
                             element={<ShowOfferDetails />}

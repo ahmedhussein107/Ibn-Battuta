@@ -28,13 +28,12 @@ const room = {
     _id: "git-it-done",
 };
 
-const HotelList = ({ isAllOffers = true }) => {
-    if (isAllOffers) {
-        usePageHeader(
-            "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
-            "Welcome to the Hotels Page"
-        );
-    }
+const HotelList = () => {
+    usePageHeader(
+        "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
+        "Welcome to the Hotels Page"
+    );
+
     const [rooms, setRooms] = useState([]);
     const [citySearch, setCitySearch] = useState(null);
     let _list = [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
@@ -51,9 +50,7 @@ const HotelList = ({ isAllOffers = true }) => {
     const fetchRooms = async () => {
         let url = "amadeus/hotels/search/hotel-offers";
         console.log("i am here at my hotel bookings");
-        if (!isAllOffers) {
-            url = "/hotels/my";
-        }
+
         try {
             const { data } = await axiosInstance.get(url, {
                 params: {
@@ -129,27 +126,26 @@ const HotelList = ({ isAllOffers = true }) => {
     }, [citySearch]);
     return (
         <div className="hotel-list-with-controls">
-            {isAllOffers && (
-                <HotelsControls
-                    startDate={start}
-                    setStartDate={setStart}
-                    endDate={end}
-                    setEndDate={setEnd}
-                    guests={guests}
-                    setGuests={setGuests}
-                    onSearch={handleSearchButton}
-                    chosenCity={chosenCity}
-                    setChosenCity={setChosenCity}
-                />
-            )}
+            <HotelsControls
+                startDate={start}
+                setStartDate={setStart}
+                endDate={end}
+                setEndDate={setEnd}
+                guests={guests}
+                setGuests={setGuests}
+                onSearch={handleSearchButton}
+                chosenCity={chosenCity}
+                setChosenCity={setChosenCity}
+            />
+
             <div className="hotel-list-container">
                 <div className="hotel-grid">
                     {/* change later for rooms.map(offer=(item)) */}
                     {_list.map((item, index) => (
                         <HotelCard
                             key={index}
-                            offer={isAllOffers ? getRoomDetails(room) : room}
-                            isAllOffers={isAllOffers}
+                            offer={false ? getRoomDetails(room) : room}
+                            isAllOffers={true}
                         />
                     ))}
                 </div>

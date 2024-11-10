@@ -27,7 +27,7 @@ const TouristHotelBookings = ({ rooms }) => {
     let _list = [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
 
     return (
-        <div className="hotel-list-with-controls">
+        <div className="my-revservations-container">
             <div className="hotel-list-container">
                 <div className="hotel-grid">
                     {_list.map((item, index) => (
