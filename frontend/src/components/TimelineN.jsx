@@ -6,6 +6,8 @@ import axiosInstance from "../api/axiosInstance";
 import CardActivity from "./CardActivity";
 import CardCustomActivity from "./CardCustomActivity";
 import CreateCustomActivityPopup from "./CreateCustomActivityPopup";
+import {useNavigate} from "react-router-dom";
+import PopUp from "./PopUpsGeneric/PopUp.jsx";
 
 const TimelineN = ({ date, time }) => {
     const classes = useStyles();
@@ -18,6 +20,11 @@ const TimelineN = ({ date, time }) => {
 
     const [createCustomActivityPopupOpen, setCreateCustomActivityPopupOpen] =
         useState(false);
+
+    const [showMorePopupOpen, setShowMorePopupOpen] = useState(false);
+    const [showMoreCustomActivty, setShowMoreCustomActivity] = useState(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!date || !time) return;
@@ -98,6 +105,47 @@ const TimelineN = ({ date, time }) => {
         setCustomActivities(customActivities.filter((act) => act._id !== activity._id));
     };
 
+    const handleShowMore = (index) => {
+        const curActivity = timelineActivities[index];
+        if (curActivity.activityType == 'Activity') {
+            navigate('activity-datails', { state: { activity: curActivity.activity }});
+        } else if (curActivity.activityType == 'CustomActivity') {
+            setShowMoreCustomActivity(curActivity.activity);
+            setShowMorePopupOpen(true);
+        } else {
+            console.log("What is this ??!!");
+        }
+    };
+
+    const CustomActivityPopup = () => {
+        if (!showMoreCustomActivty) return null;
+
+        return (
+            <PopUp
+                isOpen={showMorePopupOpen}
+                setIsOpen={setShowMorePopupOpen}
+                headerText={showMoreCustomActivty.name}
+                containsFooter={false}
+            >
+                <div style={{
+                    padding: "2em",
+                    maxWidth: "90vw",
+                    width: "90vw",
+                    maxHeight: "80vh",
+                    overflowY: "auto"
+                }}>
+                    <CardCustomActivity
+                        activity={showMoreCustomActivty}
+                        width="100%"
+                        height="50vh"
+                        firstLineButtons={[]}
+                        bottomButtons={[]}
+                    />
+                </div>
+            </PopUp>
+        );
+    };
+
     function formatToAMPM(date) {
         let hours = date.getHours();
         const minutes = date.getMinutes();
@@ -117,10 +165,6 @@ const TimelineN = ({ date, time }) => {
 
     return (
         <div className={classes.pageContainer}>
-            <CreateCustomActivityPopup
-                popUpOpen={createCustomActivityPopupOpen}
-                setPopUpOpen={setCreateCustomActivityPopupOpen}
-            />
             <div className={classes.leftPanel}>
                 <div className={classes.container}>
                     <div className={classes.timelineItem}>
