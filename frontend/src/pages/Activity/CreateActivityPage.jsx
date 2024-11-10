@@ -108,7 +108,6 @@ const CreateActivityPage = () => {
 
     const handleInputChange = (e) => {
         let { name, value, type, checked } = e.target;
-
         if (type === "number" && isNaN(value)) return;
         if (type == "number") value = Math.max(value, 0);
         if (name == "specialDiscount") value = Math.min(value, 100);

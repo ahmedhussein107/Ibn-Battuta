@@ -1,5 +1,6 @@
 import React from "react";
-import { GoogleMap, Marker } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+const map_api_key = import.meta.env.VITE_MAP_API_KEY;
 
 const containerStyle = {
     width: "100%",
