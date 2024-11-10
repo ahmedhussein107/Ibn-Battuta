@@ -6,6 +6,7 @@ import {
     updateTourGuide,
     deleteTourGuide,
     getTourGuidesDocuments,
+    changeTourguidePassword,
 } from "../controllers/tourguide.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 
@@ -20,6 +21,8 @@ tourGuideRouter.get("/tourGuide", isAuthenticated, getTourGuideById);
 tourGuideRouter.put("/updateTourGuide", isAuthenticated, updateTourGuide);
 
 tourGuideRouter.delete("/deleteTourGuide", isAuthenticated, deleteTourGuide);
+
+tourGuideRouter.put("/changeTourguidePassword", isAuthenticated, changeTourguidePassword);
 
 tourGuideRouter.get("/documents", getTourGuidesDocuments);
 

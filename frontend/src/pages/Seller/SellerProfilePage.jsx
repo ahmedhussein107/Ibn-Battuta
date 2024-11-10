@@ -131,8 +131,12 @@ const SellerProfilePage = () => {
                 setConfirmNewPassword("");
             })
             .catch((error) => {
+                const errorMessage =
+                    error.response && error.response.data && error.response.data.message
+                        ? error.response.data.message
+                        : "An error occurred. Please try again.";
                 console.error("Error changing password:", error);
-                alert("Old password is incorrect. Please try again.");
+                alert(errorMessage);
             });
     };
 

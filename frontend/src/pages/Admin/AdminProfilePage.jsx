@@ -92,7 +92,13 @@ const AdminProfilePage = () => {
                 window.location.reload();
             })
             .catch((error) => {
+                const errorMessage =
+                    error.response && error.response.data && error.response.data.message
+                        ? error.response.data.message
+                        : "An error occurred while deleting the account. Please try again.";
+
                 console.error("Error deleting Admin account:", error);
+                alert(errorMessage); // Display the error message in an alert
             });
     };
 
@@ -124,8 +130,12 @@ const AdminProfilePage = () => {
                 setConfirmNewPassword("");
             })
             .catch((error) => {
+                const errorMessage =
+                    error.response && error.response.data && error.response.data.message
+                        ? error.response.data.message
+                        : "An error occurred. Please try again.";
                 console.error("Error changing password:", error);
-                alert("Old password is incorrect. Please try again.");
+                alert(errorMessage);
             });
     };
 
