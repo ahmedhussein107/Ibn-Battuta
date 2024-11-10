@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import GenericCard from "./GenericCard";
 import { Avatar, Rating } from "@mui/material";
@@ -14,6 +14,14 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
 	const [comment, setComment] = useState(booking.ratingID ? booking.ratingID.comment : ""); // Assuming comment is part of booking
 	const [isReadOnly, setIsReadOnly] = useState(!!booking.ratingID);
 	const [open, setOpen] = useState(false);
+
+	useEffect(() => {
+		if (!open) {
+			setRating(booking.ratingID ? booking.ratingID.rating : 0);
+			setComment(booking.ratingID ? booking.ratingID.comment : "");
+			setIsReadOnly(!!booking.ratingID);
+		}
+	}, [open]);
 
 	const Picture = booking.typeId.picture || "";
 	const profilePicture =
@@ -206,7 +214,55 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
 				setIsOpen={setOpen}
 				headerText={`Rate ${booking.bookingType}`}
 				handleSubmit={handleSubmit}
-			/>
+			>
+				<div
+					style={{
+						display: "flex",
+						justifyContent: "center",
+						flexDirection: "column",
+						alignItems: "center",
+					}}
+				>
+					<div
+						style={{
+							width: "90%",
+							display: "flex",
+							justifyContent: "center",
+							paddingBottom: "4%",
+						}}
+					>
+						<Rating
+							name="rating"
+							value={rating}
+							readOnly={isReadOnly}
+							onChange={(event, newValue) => setRating(newValue)}
+							style={{ fontSize: "4rem" }}
+						/>
+					</div>
+					<div style={{ width: "90%" }}>
+						<label
+							style={{
+								display: "block",
+								marginBottom: "0.5vh",
+								fontWeight: "bold",
+							}}
+						>
+							Add your comment
+						</label>
+						<textarea
+							value={comment}
+							onChange={(e) => setComment(e.target.value)}
+							placeholder="Insert comment here..."
+							style={{
+								width: "100%",
+								padding: "1vh",
+								borderRadius: "1vh",
+								resize: "vertical",
+							}}
+						/>
+					</div>
+				</div>
+			</PopUp>
 			<GenericCard
 				image={Picture}
 				aboveLine={aboveLine}
