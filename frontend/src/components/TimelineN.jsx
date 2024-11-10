@@ -21,21 +21,8 @@ const TimelineN = ({ date, time }) => {
     const [createCustomActivityPopupOpen, setCreateCustomActivityPopupOpen] =
         useState(false);
 
-    const [showMorePopupOpen, setShowMorePopupOpen] = useState(true);
-    const [showMoreCustomActivty, setShowMoreCustomActivity] = useState({
-        "_id": "6730dbdc2f4b4496df5b5950",
-        "tourguideID": "6700044e887e126c909d6f21",
-        "name": "welcome again",
-        "description": "again from the UI",
-        "Longitude": 31.29984916371987,
-        "Latitude": 30.07596453078685,
-        "pictures": [
-            "https://firebasestorage.googleapis.com/v0/b/ibn-battuta-50b5b.appspot.com/o/customActivities%2Fwelcome%20again%2Fskeleton-meme-underwater.png?alt=media&token=d4fad5a6-11d5-47c6-846b-f0328880d87c"
-        ],
-        "createdAt": "2024-11-10T16:14:20.216Z",
-        "updatedAt": "2024-11-10T16:14:20.216Z",
-        "__v": 0
-    });
+    const [showMorePopupOpen, setShowMorePopupOpen] = useState(false);
+    const [showMoreCustomActivty, setShowMoreCustomActivity] = useState(null);
 
     const navigate = useNavigate();
 
