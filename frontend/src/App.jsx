@@ -79,6 +79,10 @@ function App() {
                     <Route path="/add-new-user" element={<AddNewUser />} />
                     <Route path="admin/users" element={<UserManagement />} />
                     <Route
+                        path="admin/pending-users"
+                        element={<UserManagement isAll={false} />}
+                    />
+                    <Route
                         path="/update-product/:productId"
                         element={<UpdateProductPage />}
                     />
