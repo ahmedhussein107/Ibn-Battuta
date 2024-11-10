@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import GenericCard from "./GenericCard";
-import { Avatar, Rating } from "@mui/material";
-import LocationIcon from "@mui/icons-material/LocationOn";
-import LanguageIcon from "@mui/icons-material/Language";
-import TagsIcon from "@mui/icons-material/LocalOffer";
+import { Rating, Chip } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import PopUp from "./PopUpsGeneric/PopUp";
+import { styled } from "@mui/system";
 import axiosInstance from "../api/axiosInstance";
 
-const CardOrder = ({ order, width, height, fontSize = "1.5rem" }) => {
-	const [rating, setRating] = useState(order.ratingID ? booking.ratingID.rating : 0);
-	const [comment, setComment] = useState(order.ratingID ? booking.ratingID.comment : "");
+const StatusLabel = styled(Chip)(({ theme, status }) => ({
+	backgroundColor:
+		status === "canceled" ? "#f8d7da" : status === "pending" ? "#fff3cd" : "#d4edda",
+	color: status === "canceled" ? "#d9534f" : status === "pending" ? "#856404" : "#155724",
+	fontWeight: "bold",
+	fontSize: "1rem",
+	padding: "1%",
+}));
+
+const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem" }) => {
+	const [rating, setRating] = useState(order.ratingID ? order.ratingID.rating : 0);
+	const [orderStatus, setOrderStatus] = useState(order.status || "pending");
+	const [comment, setComment] = useState(order.ratingID ? order.ratingID.comment : "");
 	const [isReadOnly, setIsReadOnly] = useState(!!order.ratingID);
 	const [open, setOpen] = useState(false);
 
@@ -22,15 +30,7 @@ const CardOrder = ({ order, width, height, fontSize = "1.5rem" }) => {
 		}
 	}, [open]);
 
-	const Picture = booking.typeId.picture || "";
-	const profilePicture =
-		booking.bookingType == "Itinerary"
-			? booking.typeId.tourguideID.picture
-			: booking.typeId.advertiserID.picture || "";
-	const name =
-		booking.bookingType == "Itinerary"
-			? booking.typeId.tourguideID.name
-			: booking.typeId.advertiserID.name || "";
+	const Picture = order.product.pictures[0] || "";
 	const aboveLine = (
 		<div>
 			<div
@@ -41,7 +41,7 @@ const CardOrder = ({ order, width, height, fontSize = "1.5rem" }) => {
 					gap: "0.2rem",
 				}}
 			>
-				<h2 style={{ fontSize: fontSize, margin: 0 }}>{booking.typeId.name}</h2>
+				<h2 style={{ fontSize: fontSize, margin: 0 }}>{order.product.name}</h2>
 				<div
 					style={{
 						display: "flex",
@@ -52,7 +52,7 @@ const CardOrder = ({ order, width, height, fontSize = "1.5rem" }) => {
 					}}
 				>
 					<CalendarTodayIcon sx={{ marginRight: "0.3rem", fontSize: "1em" }} />
-					{new Date(booking.createdAt).toLocaleString("en-US", {
+					{new Date(order.createdAt).toLocaleString("en-US", {
 						day: "numeric",
 						month: "short",
 						year: "numeric",
@@ -66,40 +66,31 @@ const CardOrder = ({ order, width, height, fontSize = "1.5rem" }) => {
 				style={{
 					display: "flex",
 					flexDirection: "row",
-					alignItems: "center",
-					padding: "1%",
+					justifyContent: "space-between",
+					gap: "0.2rem",
+					paddingRight: "2%",
 				}}
 			>
-				<Avatar src={profilePicture} />
-				{name}
+				<p style={{ margin: 0 }}>Order ID: {order._id}</p>
+				<StatusLabel label={orderStatus} status={orderStatus} />
 			</div>
 		</div>
 	);
 
-	const currentDate = new Date(Date.now());
-	const date =
-		booking.bookingType == "Itinerary"
-			? booking.typeId.availableDatesAndTimes[0]
-			: booking.typeId.startDate;
-	const givenDate = new Date(date);
-	const differenceInMilliseconds = givenDate - currentDate;
-	const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24.0);
-
 	const handleSubmit = async (event, newValue) => {
 		try {
 			const response = await axiosInstance.post(
-				`/rating/rate${booking.bookingType}/${booking.typeId._id}`,
+				`/rating/rateProduct/${order.product._id}`,
 				{ rating, comment },
 				{ withCredentials: true }
 			);
 			if (response.status === 201) {
 				setIsReadOnly(true);
 				console.log("Rating added successfully");
-				const newBooking = await axiosInstance.patch(
-					`/booking/updateBooking/${booking._id}`,
-					{ ratingID: response.data.newRating._id }
-				);
-				if (newBooking.status === 200) {
+				const newOrder = await axiosInstance.patch(`/order/updateOrder/${order._id}`, {
+					ratingID: response.data._id,
+				});
+				if (newOrder.status === 200) {
 					console.log("Rating ID added to booking successfully");
 				} else {
 					console.error("Failed to add rating ID to booking");
@@ -115,10 +106,21 @@ const CardOrder = ({ order, width, height, fontSize = "1.5rem" }) => {
 	};
 
 	const bottomLeft = (
-		<div style={{ display: "flex", flexDirection: "column", gap: "0.1em" }}>
-			<div>Booking ID: {booking._id}</div>
-			<div>Total Price: {booking.totalPrice} EGP</div>
-			<div>Tickets: {booking.count}</div>
+		<div
+			style={{
+				display: "flex",
+				flexDirection: "column",
+				gap: "0.1em",
+				justifyContent: "space-between",
+			}}
+		>
+			<div>
+				<div>Items: {order.count}</div>
+				<div>Payment Method: {order.method || "cash on delivery"}</div>
+				<div>Delivery Address: {order.address || "Maadi, Cairo, Egypt"}</div>
+				<div>Total Price: {order.price} EGP</div>
+			</div>
+
 			<div
 				style={{
 					display: "flex",
@@ -128,7 +130,7 @@ const CardOrder = ({ order, width, height, fontSize = "1.5rem" }) => {
 				}}
 			>
 				<div style={{ width: "60%" }}>
-					{differenceInDays < 0 ? (
+					{orderStatus == "delivered" ? (
 						<Rating
 							name="rating"
 							value={rating}
@@ -150,16 +152,13 @@ const CardOrder = ({ order, width, height, fontSize = "1.5rem" }) => {
 						width: "40%",
 					}}
 				>
-					{differenceInDays >= 2 ? (
+					{orderStatus == "pending" ? (
 						<Button
 							stylingMode="2"
 							width="50%"
 							text="cancel"
 							customStyle={{ padding: "0.8rem" }}
-							onClick={() => {
-								axiosInstance.get(`/booking/deleteBooking/${booking._id}`);
-								window.location.reload();
-							}}
+							onClick={() => {}}
 						/>
 					) : (
 						<div></div>
@@ -181,7 +180,7 @@ const CardOrder = ({ order, width, height, fontSize = "1.5rem" }) => {
 			<PopUp
 				isOpen={open}
 				setIsOpen={setOpen}
-				headerText={`Rate ${booking.bookingType}`}
+				headerText={`Rate Product`}
 				handleSubmit={handleSubmit}
 			>
 				<div
@@ -237,10 +236,10 @@ const CardOrder = ({ order, width, height, fontSize = "1.5rem" }) => {
 				aboveLine={aboveLine}
 				bottomLeft={bottomLeft}
 				bottomRight={<></>}
-				width="46vw"
-				height="26vh"
-				upperHeight="44%"
-				lowerHeight="54%"
+				width={width}
+				height={height}
+				upperHeight="30%"
+				lowerHeight="68%"
 				bottomLeftWidth="100%"
 				bottomRightWidth="0%"
 			/>
