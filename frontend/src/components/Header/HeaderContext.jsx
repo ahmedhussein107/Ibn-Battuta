@@ -4,8 +4,8 @@ const HeaderContext = createContext();
 
 export const HeaderProvider = ({ children }) => {
     const [headerData, setHeaderDataState] = useState({
-        imageSrc: "",
-        text: "",
+        imageSrc: null,
+        text: null,
         SearchBarComponent: null,
         ProfilePictureComponent: null,
     });
@@ -18,7 +18,7 @@ export const HeaderProvider = ({ children }) => {
     // Wrap `clearHeader` in `useCallback`
     const clearHeader = useCallback(() => {
         setHeaderDataState({
-            imageSrc: "",
+            imageSrc: null,
             text: "",
             SearchBarComponent: null,
             ProfilePictureComponent: null,

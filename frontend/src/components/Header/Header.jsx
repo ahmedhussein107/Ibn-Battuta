@@ -8,6 +8,7 @@ const Header = () => {
     useEffect(() => {
         return () => clearHeader();
     }, [clearHeader]);
+    if (!headerData.imageSrc) return null;
     return (
         <div
             className="image-container"
