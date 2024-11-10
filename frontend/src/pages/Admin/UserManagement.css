@@ -1,0 +1,44 @@
+.user-management-container {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    padding-top: 40vh;
+    margin: auto;
+    margin-bottom: 50px;
+}
+
+.admin-search-buttons {
+    z-index: 100;
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+}
+.admin-create-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.admin-search-container {
+    width: 30vw;
+}
+.create-user-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* space between inputs */
+    width: 100%;
+    max-width: 400px; /* optional max width */
+    margin: 0 auto; /* center on the page */
+}
+
+.create-user-input-container input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px; /* rounded corners */
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.create-user-input-container input:focus {
+    border-color: #007bff; /* change color on focus */
+}
