@@ -9,8 +9,9 @@ const FlightCard = ({ trip, airlines }) => {
             margin: "2vh 2vw 2vh 2vw",
             display: "flex",
             flexDirection: "row",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+            boxShadow: "0 2px 12px rgba(0,0,0,0.16)",
             borderRadius: "2vh",
+            backgroundColor: "#fafafa", // Set the background color
         },
         cardLeft: {
             width: "80%",
@@ -39,7 +40,7 @@ const FlightCard = ({ trip, airlines }) => {
         <div style={styles.card}>
             <div style={styles.cardLeft}>
                 {trip.itineraries.map((flight, index) => (
-                    <TripDetails flight={flight} airlines={airlines} />
+                    <TripDetails flight={flight} airlines={airlines} key={index} />
                 ))}
             </div>
 

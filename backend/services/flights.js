@@ -24,12 +24,12 @@ amadeusFlightsRouter.get("/airport-search", async (req, res) => {
 });
 
 amadeusFlightsRouter.get("/search", async (req, res) => {
-    // TODO: handle additional info
-    const { originLocationCode, destinationLocationCode, departureDate, adults } =
-        req.query;
+    // TODO: change currency to match the user currency
     try {
         const { result } = await amadeus.shopping.flightOffersSearch.get({
             ...req.query,
+            max: 100,
+            currencyCode: "EGP",
         });
         res.status(200).send(result);
     } catch (error) {
