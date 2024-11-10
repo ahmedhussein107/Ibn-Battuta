@@ -44,7 +44,15 @@ const HotelList = () => {
     const [lng, setLng] = useState(searchParams.get("lng") || "");
     const [start, setStart] = useState(searchParams.get("start") || "");
     const [end, setEnd] = useState(searchParams.get("end") || "");
-    const [guests, setGuests] = useState(parseInt(searchParams.get("guests")) || 2);
+    const getGuestCount = () => {
+        const guestCount = Number(searchParams.get("guests"));
+        console.log("guest count is", guestCount);
+        if (isNaN(guestCount)) {
+            return 2;
+        }
+        return guestCount && guestCount > 0 ? guestCount : 2;
+    };
+    const [guests, setGuests] = useState(getGuestCount());
     const [chosenCity, setChosenCity] = useState(null);
 
     const fetchRooms = async () => {
@@ -115,7 +123,7 @@ const HotelList = () => {
         setLng(searchParams.get("lng"));
         setStart(searchParams.get("start"));
         setEnd(searchParams.get("end"));
-        setGuests(parseInt(searchParams.get("guests")));
+        setGuests(getGuestCount());
     }, [searchParams]);
 
     useEffect(() => {
