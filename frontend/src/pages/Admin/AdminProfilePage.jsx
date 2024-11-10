@@ -89,6 +89,7 @@ const AdminProfilePage = () => {
                 Cookies.remove("userType");
                 setUserType("Guest");
                 navigate("/");
+                window.location.reload();
             })
             .catch((error) => {
                 console.error("Error deleting Admin account:", error);
