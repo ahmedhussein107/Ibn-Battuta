@@ -8,140 +8,136 @@ import GenericCard from "../../components/GenericCard";
 import CardBooking from "../../components/CardBooking";
 
 const Bookings = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const itemsPerPage = 4;
-    const [selected, setSelected] = useState("Itineraries");
-    const [bookings, setBookings] = useState([]);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
+	const itemsPerPage = 4;
+	const [selected, setSelected] = useState("Itineraries");
+	const [bookings, setBookings] = useState([]);
 
-    const buttons = ["Itineraries", "Activities", "Flights", "Hotels"];
+	const buttons = ["Itineraries", "Activities", "Flights", "Hotels"];
 
-    const handlePageChange = (event, newPage) => {
-        setCurrentPage(newPage);
-    };
+	const handlePageChange = (event, newPage) => {
+		setCurrentPage(newPage);
+	};
 
-    const handleChooseType = (page) => {
-        setSelected(page);
-    };
+	const handleChooseType = (page) => {
+		setSelected(page);
+	};
 
-    const URI = {
-        Itineraries: "booking/getItineraryBookings",
-        Activities: "booking/getActivityBookings",
-        Flights: "booking/getActivityBookings",
-        Hotels: "booking/getActivityBookings",
-    };
+	const URI = {
+		Itineraries: "booking/getItineraryBookings",
+		Activities: "booking/getActivityBookings",
+		Flights: "booking/getActivityBookings",
+		Hotels: "booking/getActivityBookings",
+	};
 
-    const fetchBookings = async () => {
-        try {
-            const response = await axiosInstance.get(URI[selected], {
-                withCredentials: true,
-            });
-            console.log("response", response.data);
-            setBookings(response.data);
-        } catch (error) {
-            console.error("Failed to fetch bookings", error);
-        }
-    };
+	const fetchBookings = async () => {
+		try {
+			const response = await axiosInstance.get(URI[selected], {
+				withCredentials: true,
+			});
+			console.log("response", response.data);
+			setBookings(response.data);
+		} catch (error) {
+			console.error("Failed to fetch bookings", error);
+		}
+	};
 
-    useEffect(() => {
-        fetchBookings();
-    }, [selected]);
+	useEffect(() => {
+		fetchBookings();
+	}, [selected]);
 
-    return (
-        <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
-            <div style={backgroundStyle}>
-                <h1 style={headerStyle}>My Bookings</h1>
-            </div>
-            <div style={{ padding: "1% 0" }}>
-                <div style={buttonGroupStyle}>
-                    {buttons.map((button) => (
-                        <button
-                            key={button}
-                            onClick={() => handleChooseType(button)}
-                            style={
-                                selected === button ? selectedButtonStyle : buttonStyle
-                            }
-                        >
-                            {button}
-                        </button>
-                    ))}
-                </div>
-                <div style={itemsContainerStyle}>
-                    {/* <GenericCard width="40vw" height="20vw" /> */}
-                    {(selected == "Itineraries" || selected == "Activities") && (
-                        <>
-                            {bookings.map((booking) => (
-                                <CardBooking
-                                    booking={booking}
-                                    width="46vw"
-                                    height="34vh"
-                                />
-                            ))}
-                        </>
-                    )}
-                    {selected == "Flights" && <> </>}
-                    {selected == "Hotels" && <> </>}
-                </div>
-                <PaginationComponent
-                    totalPages={totalPages}
-                    currentPage={currentPage}
-                    onChange={handlePageChange}
-                />
-            </div>
-            <Footer />
-        </div>
-    );
+	return (
+		<div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+			<div style={backgroundStyle}>
+				<h1 style={headerStyle}>My Bookings</h1>
+			</div>
+			<div style={{ padding: "1% 0" }}>
+				<div style={buttonGroupStyle}>
+					{buttons.map((button) => (
+						<button
+							key={button}
+							onClick={() => handleChooseType(button)}
+							style={selected === button ? selectedButtonStyle : buttonStyle}
+						>
+							{button}
+						</button>
+					))}
+				</div>
+				<div style={itemsContainerStyle}>
+					{/* <GenericCard width="40vw" height="20vw" /> */}
+					{(selected == "Itineraries" || selected == "Activities") && (
+						<>
+							{bookings.map((booking) => (
+								<div style={{ padding: "1%" }}>
+									<CardBooking booking={booking} width="46vw" height="34vh" />
+								</div>
+							))}
+						</>
+					)}
+					{selected == "Flights" && <> </>}
+					{selected == "Hotels" && <> </>}
+				</div>
+				<PaginationComponent
+					totalPages={totalPages}
+					currentPage={currentPage}
+					onChange={handlePageChange}
+				/>
+			</div>
+			<Footer />
+		</div>
+	);
 };
 
 const backgroundStyle = {
-    width: "100vw",
-    height: "30vh",
-    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bookingsBackground})`,
-    backgroundSize: "100% 100%",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    shadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+	width: "100vw",
+	height: "30vh",
+	backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bookingsBackground})`,
+	backgroundSize: "100% 100%",
+	backgroundPosition: "center",
+	backgroundRepeat: "no-repeat",
+	shadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+	display: "flex",
+	justifyContent: "center",
+	alignItems: "center",
 };
 
 const headerStyle = {
-    position: "relative",
-    fontSize: "2rem",
-    fontWeight: "bold",
-    marginTop: "5%",
-    color: "White",
+	position: "relative",
+	fontSize: "2rem",
+	fontWeight: "bold",
+	marginTop: "5%",
+	color: "White",
 };
 
 const buttonGroupStyle = {
-    display: "flex",
-    gap: "10px",
-    marginLeft: "2%",
+	display: "flex",
+	gap: "10px",
+	marginLeft: "2%",
 };
 
 const buttonStyle = {
-    padding: "10px 20px",
-    border: "2px solid #000",
-    borderRadius: "20px",
-    backgroundColor: "transparent",
-    color: "#000",
-    cursor: "pointer",
-    transition: "background-color 0.3s ease, color 0.3s ease",
+	padding: "10px 20px",
+	border: "2px solid #000",
+	borderRadius: "20px",
+	backgroundColor: "transparent",
+	color: "#000",
+	cursor: "pointer",
+	transition: "background-color 0.3s ease, color 0.3s ease",
 };
 
 const selectedButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: "#FF5722",
-    color: "#fff",
+	...buttonStyle,
+	backgroundColor: "#FF5722",
+	color: "#fff",
 };
 
 const itemsContainerStyle = {
-    paddingTop: "2vh",
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
+	paddingTop: "2vh",
+	display: "flex",
+	flexDirection: "row",
+	flexWrap: "wrap",
+	justifyContent: "space-around",
 };
 
 export default Bookings;
