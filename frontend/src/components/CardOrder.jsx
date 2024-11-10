@@ -9,10 +9,10 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import PopUp from "./PopUpsGeneric/PopUp";
 import axiosInstance from "../api/axiosInstance";
 
-const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
-	const [rating, setRating] = useState(booking.ratingID ? booking.ratingID.rating : 0);
-	const [comment, setComment] = useState(booking.ratingID ? booking.ratingID.comment : "");
-	const [isReadOnly, setIsReadOnly] = useState(!!booking.ratingID);
+const CardOrder = ({ order, width, height, fontSize = "1.5rem" }) => {
+	const [rating, setRating] = useState(order.ratingID ? booking.ratingID.rating : 0);
+	const [comment, setComment] = useState(order.ratingID ? booking.ratingID.comment : "");
+	const [isReadOnly, setIsReadOnly] = useState(!!order.ratingID);
 	const [open, setOpen] = useState(false);
 
 	useEffect(() => {
@@ -60,39 +60,6 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
 						minute: "numeric",
 						hour12: true,
 					})}
-				</div>
-			</div>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "row",
-					justifyContent: "space-between",
-					gap: "0.2rem",
-					marginRight: "1rem",
-				}}
-			>
-				<div style={{ display: "flex", alignItems: "center" }}>
-					<LocationIcon sx={{ marginRight: "0.5rem", fontSize: "1.1em" }} />
-					{booking.typeId.location}
-				</div>
-				<div style={{ display: "flex", alignItems: "center" }}>
-					{booking.bookingType == "Itinerary" ? (
-						<LanguageIcon style={{ marginRight: "0.5rem", fontSize: "1.1em" }} />
-					) : (
-						<TagsIcon style={{ marginRight: "0.5rem", fontSize: "1.1em" }} />
-					)}
-					{booking.bookingType == "Itinerary"
-						? booking.typeId.language
-						: booking.typeId.category}
-				</div>
-				<div
-					style={{
-						display: "flex",
-						alignItems: "center",
-					}}
-				>
-					<TagsIcon sx={{ marginRight: "0.5rem", fontSize: "1.1em" }} />
-					{booking.typeId.tags.join(", ")}
 				</div>
 			</div>
 			<div
@@ -281,4 +248,4 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
 	);
 };
 
-export default CardBooking;
+export default CardOrder;
