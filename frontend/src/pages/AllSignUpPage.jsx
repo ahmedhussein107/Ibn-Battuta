@@ -32,7 +32,10 @@ const AllSignUpPage = () => {
         const documents = await uploadFiles(files, "documents");
         console.log("Data to be sent: ", { ...data, documents });
         try {
-            const response = await axiosInstance.post(route, { ...data, documents });
+            const response = await axiosInstance.post(route, {
+                ...data,
+                documents,
+            });
             console.log(response);
             setResponse("Created Successfully");
         } catch (error) {
@@ -52,7 +55,11 @@ const AllSignUpPage = () => {
                     marginBottom: "5vh",
                 }}
             >
-                <TextField value={type} select onChange={(e) => setType(e.target.value)}>
+                <TextField
+                    value={type}
+                    select
+                    onChange={(e) => setType(e.target.value)}
+                >
                     <MenuItem value={"TourGuide"}>Tour Guide</MenuItem>
                     <MenuItem value={"Advertiser"}>Advertiser</MenuItem>
                     <MenuItem value={"Seller"}>Seller</MenuItem>

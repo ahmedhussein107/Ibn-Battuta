@@ -12,7 +12,11 @@ const AdminProfilePage = () => {
     const [response, setResponse] = useState(null);
     const [userType, setUserType] = useState("Admin");
     const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({ name: "", username: "", email: "" });
+    const [formData, setFormData] = useState({
+        name: "",
+        username: "",
+        email: "",
+    });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -80,11 +84,18 @@ const AdminProfilePage = () => {
 
     return (
         <>
-            <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+            <div
+                style={{
+                    width: "100vw",
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                }}
+            >
                 <div
                     style={{
                         width: "100vw",
-                        height: "30vh",
+                        height: "0vh",
                         backgroundImage: `url(${bg})`,
                         backgroundSize: "100% 100%",
                         backgroundPosition: "center",
@@ -136,7 +147,13 @@ const AdminProfilePage = () => {
                             {response?.name || "name not provided"}
                         </h2>
                     )}
-                    <p style={{ color: "gray", marginTop: "-3vw", marginLeft: "47%" }}>
+                    <p
+                        style={{
+                            color: "gray",
+                            marginTop: "-3vw",
+                            marginLeft: "47%",
+                        }}
+                    >
                         @{response?.username || "username not provided"}
                     </p>
                     <hr
