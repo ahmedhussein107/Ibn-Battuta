@@ -49,6 +49,7 @@ function App() {
 		<HeaderProvider>
 			<Router>
 				<Header />
+                <NavBar/>
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route path="/test" element={<PopUp />} />
