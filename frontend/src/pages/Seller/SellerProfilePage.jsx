@@ -90,6 +90,7 @@ const SellerProfilePage = () => {
                 Cookies.remove("userType");
                 setUserType("Guest");
                 navigate("/");
+                window.location.reload();
             })
             .catch((error) => {
                 if (error.response && error.response.status === 400) {
