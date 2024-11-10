@@ -1,29 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import PopUp from "./PopUpsGeneric/PopUp";
-import { useState } from "react";
 import Map from "../pages/map";
 import PhotosUpload from "./PhotosUpload";
 import axiosInstance from "../api/axiosInstance";
-const CreateCustomActivityPopup = () => {
-    const [PopUpOpen, setPopUpOpen] = useState(true);
+import { uploadFiles } from "../api/firebase";
+const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
+
+    const [locationlongitude, setLocationlongitude] = useState(0);
+    const [locationlatitude, setLocationlatitude] = useState(0);
     const [imagePreviews, setImagePreviews] = useState([]);
-    const [locationlongitude, setLocationlongitude] = useState(null);
-    const [locationlatitude, setLocationlatitude] = useState(null);
 
     const handleSubmit = async () => {
         try {
             const formData = new FormData();
-            formData.append("title", name);
+            formData.append("name", name);
             formData.append("description", description);
             console.log(locationlatitude, locationlongitude);
-            formData.append("locationlongitude", locationlongitude);
-            formData.append("locationlatitude", locationlatitude);
-            imagePreviews.forEach((image) => {
-                formData.append("pictures", image);
-            });
+            formData.append("Longitude", locationlongitude);
+            formData.append("Latitude", locationlatitude);
 
+            const pictures = await uploadFiles(
+                imagePreviews.map((preview) => preview.file),
+                `customActivities/${name}`
+            );
+
+            formData.append("pictures", JSON.stringify(pictures));
             await axiosInstance.post("/customActivity/createCustomActivity", formData, {
                 withCredentials: true,
             });
@@ -43,7 +46,7 @@ const CreateCustomActivityPopup = () => {
     return (
         <div style={{ width: "80vw" }}>
             <PopUp
-                isOpen={PopUpOpen}
+                isOpen={popUpOpen}
                 setIsOpen={setPopUpOpen}
                 headerText={"Create new Custom Activity"}
                 actionText="Create Activity"

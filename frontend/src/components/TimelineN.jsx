@@ -5,21 +5,30 @@ import { createUseStyles } from "react-jss";
 import axiosInstance from "../api/axiosInstance";
 import CardActivity from "./CardActivity";
 import CardCustomActivity from "./CardCustomActivity";
+import CreateCustomActivityPopup from "./CreateCustomActivityPopup";
 
 const TimelineN = ({ date, time }) => {
     const classes = useStyles();
-    const [activeTab, setActiveTab] = useState("activities");
+    const [activeTab, setActiveTab] = useState("Activity");
     const [activities, setActivities] = useState([]);
     const [customActivities, setCustomActivities] = useState([]);
     const [timelineActivities, setTimelineActivities] = useState([]);
-    const [selectedActivity, setSelectedActivity] = useState("");
-    const [selectedCustomActivity, setSelectedCustomActivity] = useState("");
+    const [convertedDate, setConvertedDate] = useState(null);
+    const [selectedActivity, setSelectedActivity] = useState(null);
+
+    const [createCustomActivityPopupOpen, setCreateCustomActivityPopupOpen] =
+        useState(false);
 
     useEffect(() => {
         if (!date || !time) return;
-        const [year, month, day] = date.split('-').map(Number);
-        const [hours, minutes] = time.split(':').map(Number);
+        const [year, month, day] = date.split("-").map(Number);
+        const [hours, minutes] = time.split(":").map(Number);
         const convertedDate = new Date(year, month - 1, day, hours, minutes);
+        setConvertedDate(convertedDate);
+    }, [date, time]);
+
+    useEffect(() => {
+        if (!convertedDate) return;
 
         const startDate = new Date(convertedDate);
         const endDate = new Date(convertedDate);
@@ -63,7 +72,7 @@ const TimelineN = ({ date, time }) => {
 
         fetchActivities();
         fetchCustomActivities();
-    }, [date, time]);
+    }, [convertedDate]);
 
     const handleDeleteActivity = (activity) => {
         setTimelineActivities(
@@ -108,6 +117,10 @@ const TimelineN = ({ date, time }) => {
 
     return (
         <div className={classes.pageContainer}>
+            <CreateCustomActivityPopup
+                popUpOpen={createCustomActivityPopupOpen}
+                setPopUpOpen={setCreateCustomActivityPopupOpen}
+            />
             <div className={classes.leftPanel}>
                 <div className={classes.container}>
                     <div className={classes.timelineItem}>
@@ -147,8 +160,11 @@ const TimelineN = ({ date, time }) => {
                                                 new Date(activity.currentEndDate)
                                             )}
                                         </p>
-                                        <p className={classes.details}>
-                                            {activity.description}
+                                        <p
+                                            className={classes.details}
+                                            onClick={() => handleShowMore(index)}
+                                        >
+                                            Show more
                                         </p>
                                     </div>
                                     <button
@@ -179,39 +195,42 @@ const TimelineN = ({ date, time }) => {
                 <div className={classes.tabsContainer}>
                     <button
                         className={`${classes.tab} ${
-                            activeTab === "activities"
+                            activeTab === "Activity"
                                 ? classes.activeTab
                                 : classes.inactiveTab
                         }`}
-                        onClick={() => setActiveTab("activities")}
+                        onClick={() => setActiveTab("Activity")}
                     >
                         Activities
                     </button>
                     <button
                         className={`${classes.tab} ${
-                            activeTab === "customActivities"
+                            activeTab === "CustomActivity"
                                 ? classes.activeTab
                                 : classes.inactiveTab
                         }`}
-                        onClick={() => setActiveTab("customActivities")}
+                        onClick={() => setActiveTab("CustomActivity")}
                     >
                         Custom Activities
                     </button>
                 </div>
 
                 <div className={classes.cardsContainer}>
-                    {activeTab === "activities" &&
+                    {activeTab === "Activity" &&
                         activities.map((activity) => (
                             <CardActivity
                                 activity={activity}
-                                width={"40vw"}
-                                height={"28vh"}
+                                width={"55vw"}
+                                height={"30vh"}
                                 fontSize="0.8rem"
                                 iconSize="0.7rem"
                                 bottomButtons={[
                                     {
                                         text: "Add",
-                                        onClick: () => handleAddActivity(activity),
+                                        onClick: () => {
+                                            setSelectedActivity(activity);
+                                            setIsTimeModalOpen(true);
+                                        },
                                         type: "1",
                                         width: "50%",
                                         styles: {
@@ -225,31 +244,38 @@ const TimelineN = ({ date, time }) => {
                             />
                         ))}
 
-                    {activeTab === "customActivities" &&
-                        customActivities.map((activity) => (
-                            <CardCustomActivity
-                                key={activity.id}
-                                activity={activity}
-                                width={"40vw"}
-                                height={"28vh"}
-                                fontSize="0.8rem"
-                                iconSize="0.7rem"
-                                bottomButtons={[
-                                    {
-                                        text: "Add",
-                                        onClick: () => handleAddActivity(activity),
-                                        type: "1",
-                                        width: "50%",
-                                        styles: {
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            padding: "0.5em",
+                    {activeTab === "CustomActivity" && (
+                        <>
+                            {customActivities.map((activity) => (
+                                <CardCustomActivity
+                                    key={activity.id}
+                                    activity={activity}
+                                    width={"55vw"}
+                                    height={"30vh"}
+                                    fontSize="0.8rem"
+                                    iconSize="0.7rem"
+                                    bottomButtons={[
+                                        {
+                                            text: "Add",
+                                            onClick: () => {
+                                                setSelectedActivity(activity);
+                                                setIsTimeModalOpen(true);
+                                            },
+                                            type: "1",
+                                            width: "50%",
+                                            styles: {
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                padding: "0.5em",
+                                            },
                                         },
-                                    },
-                                ]}
-                            />
-                        ))}
+                                    ]}
+                                />
+                            ))}
+                            <p>Don't see what you want?</p>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
@@ -395,7 +421,7 @@ const useStyles = createUseStyles({
     cardsContainer: {
         display: "flex",
         flexDirection: "column",
-        gap: "1vh",
+        gap: "2vh",
     },
     activityCard: {
         backgroundColor: "white",
@@ -472,6 +498,5 @@ const useStyles = createUseStyles({
         },
     },
 });
-
 
 export default TimelineN;
