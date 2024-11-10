@@ -3,7 +3,7 @@ import Email from "../models/email.model.js";
 import Advertiser from "../models/advertiser.model.js";
 import Notification from "../models/notification.model.js";
 import Activity from "../models/activity.model.js";
-import Bookings from "../models/bokkings.model.js";
+import Bookings from "../models/booking.model.js";
 import Rating from "../models/rating.model.js";
 import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
@@ -113,7 +113,7 @@ export const deleteAdvertiser = async (req, res) => {
         }).distinct("_id");
 
         // Then check if any of these activities have bookings
-        const hasUpcoming = await Booking.exists({
+        const hasUpcoming = await Bookings.exists({
             bookingType: "Activity",
             typeId: { $in: upcomingActivities },
         });
