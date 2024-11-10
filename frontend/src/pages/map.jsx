@@ -1,7 +1,7 @@
 // App.js
 import React, { useState } from "react";
 import MapComponent from "../components/MapComponent";
-
+import { MapWrapper } from "../components/MapWrapper";
 const map = ({ setMarkerPosition }) => {
     const [marker, setMarker] = useState(null);
 
@@ -12,18 +12,9 @@ const map = ({ setMarkerPosition }) => {
 
     return (
         <div>
-            <MapComponent
-                apiKey="AIzaSyC_zN08IM5_NV1yi_gVMJfmLigewujCn8w"
-                markerPosition={marker}
-                onMapClick={handleMapClick}
-            />
-            {/* {markerPosition && (
-                // <div>
-                //     <h2>Selected Location</h2>
-                //     <p>Latitude: {markerPosition.lat}</p>
-                //     <p>Longitude: {markerPosition.lng}</p>
-                // </div>
-            )} */}
+            <MapWrapper>
+                <MapComponent markerPosition={marker} onMapClick={handleMapClick} />
+            </MapWrapper>
         </div>
     );
 };
