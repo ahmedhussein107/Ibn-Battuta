@@ -14,7 +14,7 @@
 .popup {
     background: white;
     padding: 20px;
-    width: 400px;
+    width: 40%;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -59,9 +59,11 @@
 
 .popup-footer {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     gap: 10px;
     margin-top: 20px;
+    /* align-items: center; */
+    /* width: 80%; */
 }
 
 .popup-header-left {

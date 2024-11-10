@@ -42,6 +42,7 @@ import AllActivities from "./pages/Admin/AllActivities";
 import AllItineraries from "./pages/Admin/AllItineraries";
 import Shop from "./pages/Product/Shop";
 import Bookings from "./pages/Tourist/Bookings.jsx";
+import CreateCustomActivityPopup from "./components/CreateCustomActivityPopup.jsx";
 
 function App() {
     return (
@@ -88,7 +89,10 @@ function App() {
                     <Route path="/advertiser/assigned" element={<MyActivity />} />
                     <Route path="/tourguide/assigned" element={<MyItinenrary />} />
                     <Route path="/inventory" element={<Inventory />} />
-
+                    <Route
+                        path="/create-custom-activity"
+                        element={<CreateCustomActivityPopup />}
+                    />
                     <Route path="/create-activity" element={<CreateActivityPage />} />
                     <Route path="/update-activity" element={<UpdateActivityPage />} />
                     <Route path="/view-products" element={<ViewProductsPage />} />

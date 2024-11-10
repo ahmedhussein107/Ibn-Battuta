@@ -27,8 +27,8 @@ const PopUpFooter = ({
                 handleClick={() => {
                     setIsOpen(false);
                 }}
+                width="43%"
                 customStyle={{
-                    width: "173px",
                     height: "55px",
                     minHieght: "70px",
                     borderRadius: "60px",
@@ -43,7 +43,6 @@ const PopUpFooter = ({
                     disabled={isLoading}
                     isLoading={isLoading}
                     customStyle={{
-                        width: "173px",
                         height: "55px",
                         minHieght: "70px",
                         borderRadius: "60px",
