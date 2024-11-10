@@ -52,9 +52,9 @@ const validateUpdateReferences = async function (next) {
 		if (touristID) {
 			await validateReference(touristID, "Tourist", next);
 		}
-		if (bookingSchema && !["Itinerary", "Activity"].includes(bookingType))
+		if (bookingType && !["Itinerary", "Activity"].includes(bookingType)) {
 			return next(new Error("You must enter a valid Model when saving a booking"));
-
+		}
 		if (typeId && bookingType) {
 			await validateReference(typeId, bookingType);
 		} else if (typeId || bookingType) {

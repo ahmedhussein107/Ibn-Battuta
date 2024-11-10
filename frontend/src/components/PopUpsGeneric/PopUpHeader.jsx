@@ -6,8 +6,16 @@ const PopUpHeader = ({ setIsOpen, headerText }) => {
     return (
         <div className="popup-header">
             <div className="popup-header-left">
-                <IconButton className="close-btn" onClick={() => setIsOpen(false)}>
-                    <HighlightOffSharpIcon sx={{ paddingRight: 0 }} />
+                <IconButton
+                    className="close-btn"
+                    onClick={() => setIsOpen(false)}
+                    sx={{
+                        width: "1vmin",
+                        height: "2vmin",
+                        margin: "1vmin",
+                    }}
+                >
+                    <HighlightOffSharpIcon />
                 </IconButton>
             </div>
             <h2>{headerText}</h2>

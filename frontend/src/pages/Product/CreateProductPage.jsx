@@ -6,7 +6,7 @@ import PhotosUpload from "../../components/PhotosUpload.jsx";
 import Button from "../../components/Button.jsx";
 import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
 import NavBar from "../../components/NavBar.jsx";
-
+import { useNavigate } from "react-router-dom";
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
         <PopupContent>
@@ -31,7 +31,7 @@ const CreateProductPage = () => {
     const [popupMessage, setPopupMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [isErrorPopup, setIsErrorPopup] = useState(false);
-
+    const navigate = useNavigate();
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
@@ -80,9 +80,7 @@ const CreateProductPage = () => {
             console.log("Product created:", response.data);
 
             showPopupMessage("Product created successfully!", false);
-
-            setFormData(defaultData);
-            setImagePreviews([]);
+            setTimeout(() => navigate("/inventory"), 1000);
         } catch (error) {
             console.error("Error creating product:", error);
             showPopupMessage("Error creating product. Please try again.", true);
