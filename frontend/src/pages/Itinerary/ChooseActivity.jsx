@@ -46,10 +46,6 @@ const ChooseActivity = () => {
                 width: "100vw",
             }}
         >
-            <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
-                {/* <NavBar /> */}
-            </div>
-
             <div>
                 <img
                     src={i1}
