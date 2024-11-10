@@ -80,26 +80,41 @@ export const getTourGuideById = async (req, res) => {
 };
 
 export const updateTourGuide = async (req, res) => {
+    const tourGuideId = req.user.userId;
     try {
+        const tourGuide = await TourGuide.findById(tourGuideId);
+        if (!tourGuide) {
+            return res.status(404).json({ message: "tourGuide not found" });
+        }
         if (req.body.password) {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
-        const tourGuide = await TourGuide.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        });
-        if (tourGuide) {
-            res.status(200).json(tourGuide);
-        } else {
-            res.status(404).json({ e: "TourGuide not found" });
+        if (req.body.email) {
+            await Email.findByIdAndDelete(tourGuide.email);
+            await Email.create({
+                _id: req.body.email,
+            });
         }
-    } catch (e) {
-        res.status(400).json({ e: e.message });
+
+        // Update tourGuide details
+        const updatedtourGuide = await TourGuide.findByIdAndUpdate(
+            tourGuideId,
+            req.body,
+            {
+                new: true,
+            }
+        );
+
+        res.status(200).json(updatedtourGuide);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 };
 
 export const deleteTourGuide = async (req, res) => {
+    const tourguideId = req.user.userId;
     try {
-        const tourGuide = await TourGuide.findByIdAndDelete(req.params.id);
+        const tourGuide = await TourGuide.findByIdAndDelete(tourguideId);
         if (tourGuide) {
             await Username.findByIdAndDelete(tourGuide.username);
             await Email.findByIdAndDelete(tourGuide.email);

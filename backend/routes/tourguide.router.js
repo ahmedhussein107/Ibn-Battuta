@@ -15,11 +15,11 @@ tourGuideRouter.post("/createTourGuide", createTourGuide);
 
 tourGuideRouter.get("/getTourGuides", getTourGuides);
 
-tourGuideRouter.get("/getTourGuideById", isAuthenticated, getTourGuideById);
+tourGuideRouter.get("/tourGuide", isAuthenticated, getTourGuideById);
 
-tourGuideRouter.patch("/updateTourGuide/:id", updateTourGuide);
+tourGuideRouter.put("/updateTourGuide", isAuthenticated, updateTourGuide);
 
-tourGuideRouter.delete("/deleteTourGuide/:id", deleteTourGuide);
+tourGuideRouter.delete("/deleteTourGuide", isAuthenticated, deleteTourGuide);
 
 tourGuideRouter.get("/documents", getTourGuidesDocuments);
 

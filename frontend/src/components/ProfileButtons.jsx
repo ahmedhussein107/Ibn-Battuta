@@ -16,7 +16,7 @@ const Button = styled("button")({
 const ChangePassword = styled(Button)({
     position: "absolute",
     top: "23vw",
-    right: "14vw",
+    right: "12vw",
     height: 50,
     background: "white",
     borderRadius: 100,

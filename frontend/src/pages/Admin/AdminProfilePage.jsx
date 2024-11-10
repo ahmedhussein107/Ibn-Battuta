@@ -7,11 +7,13 @@ import bg from "../../assets/images/bg.jpg";
 import ProfileButton from "../../components/ProfileButtons";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import PopUp from "../../components/PopUpsGeneric/PopUp";
 
 const AdminProfilePage = () => {
     const [response, setResponse] = useState(null);
     const [userType, setUserType] = useState("Admin");
     const [isEditing, setIsEditing] = useState(false);
+    const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [formData, setFormData] = useState({ name: "", username: "", email: "" });
     const navigate = useNavigate();
 
@@ -76,6 +78,14 @@ const AdminProfilePage = () => {
             .catch((error) => {
                 console.error("Error deleting Admin account:", error);
             });
+    };
+
+    const handleChangePassword = () => {
+        setIsPopUpOpen(true);
+    };
+
+    const PopUpAction = () => {
+        setIsPopUpOpen(false);
     };
 
     return (
@@ -173,8 +183,60 @@ const AdminProfilePage = () => {
                 <div>
                     <ProfileButton
                         buttonType="changePassword"
-                        onClick={() => console.log("Change Password submitted")}
+                        onClick={() => handleChangePassword()}
                     />
+                    <PopUp
+                        isOpen={isPopUpOpen}
+                        setIsOpen={setIsPopUpOpen}
+                        headerText={"Change Password"}
+                        actionText={"Confirm"}
+                        handleSubmit={PopUpAction}
+                    >
+                        <label>Current Password:</label>
+                        <input
+                            type="password"
+                            name="Current Password"
+                            placeholder="Current Password"
+                            onChange={handleChange}
+                            style={{
+                                width: "80%", // Full width
+                                padding: "1vw", // Padding for better spacing
+                                marginBottom: "1vw", // Space between inputs
+                                border: "1px solid #ccc", // Border style
+                                borderRadius: "4px", // Rounded corners
+                                alignItems: "center", // Align text to center
+                            }}
+                        />
+                        <label>New Password:</label>
+                        <input
+                            type="password"
+                            name="New Password"
+                            placeholder="Current Password"
+                            onChange={handleChange}
+                            style={{
+                                width: "80%", // Full width
+                                padding: "1vw", // Padding for better spacing
+                                marginBottom: "1vw", // Space between inputs
+                                border: "1px solid #ccc", // Border style
+                                borderRadius: "4px", // Rounded corners
+                            }}
+                        />
+                        <label>Confirm New Password:</label>
+                        <input
+                            type="password"
+                            name="Confirm New Password"
+                            placeholder="Current Password"
+                            onChange={handleChange}
+                            style={{
+                                width: "80%", // Full width
+                                padding: "1vw", // Padding for better spacing
+                                marginBottom: "1vw", // Space between inputs
+                                border: "1px solid #ccc", // Border style
+                                borderRadius: "4px", // Rounded corners
+                            }}
+                        />
+                    </PopUp>
+
                     <ProfileButton
                         buttonType="deleteAccount"
                         onClick={handleDeleteAccountSubmit}
