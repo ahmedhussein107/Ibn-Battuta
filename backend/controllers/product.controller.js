@@ -4,7 +4,7 @@ import { buildFilter } from "../utilities/searchUtils.js";
 export const createProduct = async (req, res) => {
     try {
         const productData = req.body;
-        const {userId, userType} = req.user;
+        const { userId, userType } = req.user;
         productData.ownerID = userId;
         productData.ownerType = userType;
         console.log("productData: ", productData);
@@ -24,7 +24,6 @@ export const updateProduct = async (req, res) => {
         const product = await Product.findByIdAndUpdate(id, req.body, {
             new: true,
         });
-
         res.json(product);
     } catch (e) {
         res.status(400).json({ e: e.message });
@@ -78,9 +77,17 @@ export const deleteProduct = async (req, res) => {
 
 export const searchProducts = async (req, res) => {
     try {
-        console.log(req.query, buildFilter(req.query));
-        const products = await Product.find(buildFilter(req.query));
-        console.log(products);
+        const { rating, ...rest } = req.query;
+        const products = await Product.find(buildFilter(rest));
+        if (rating) {
+            const bounds = rating.split("-");
+            const minRating = bounds[0] ? parseInt(bounds[0]) : -1;
+            const maxRating = bounds[1] ? parseInt(bounds[1]) : 5;
+            const result = products.filter((product) => {
+                return product.rating >= minRating && product.rating <= maxRating;
+            });
+            return res.status(200).json(result);
+        }
         return res.status(200).json(products);
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -90,9 +97,13 @@ export const searchProducts = async (req, res) => {
 export const archeiveProduct = async (req, res) => {
     const { id } = req.params;
     try {
-        const product = await Product.findByIdAndUpdate(id, {
-            isArchived: true,
-        });
+        const product = await Product.findByIdAndUpdate(
+            id,
+            {
+                isArchived: true,
+            },
+            { new: true }
+        );
         res.json(product);
     } catch (e) {
         res.status(400).json({ e: e.message });
@@ -102,9 +113,13 @@ export const archeiveProduct = async (req, res) => {
 export const unarcheiveProduct = async (req, res) => {
     const { id } = req.params;
     try {
-        const product = await Product.findByIdAndUpdate(id, {
-            isArchived: false,
-        });
+        const product = await Product.findByIdAndUpdate(
+            id,
+            {
+                isArchived: false,
+            },
+            { new: true }
+        );
         res.json(product);
     } catch (e) {
         res.status(400).json({ e: e.message });

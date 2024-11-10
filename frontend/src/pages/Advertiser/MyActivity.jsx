@@ -9,7 +9,6 @@ import Footer from "../../components/Footer";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
-import ActivityCard from "../../components/ActivityCard";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import CardActivity from "../../components/CardActivity";
@@ -45,7 +44,7 @@ const MyActivity = () => {
             );
             const data = response.data;
             sortActivities(data);
-            console.log("response sata is", data);
+            console.log("response data is", data);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -71,31 +70,20 @@ const MyActivity = () => {
     }, [sortBy]);
 
     const deleteActivityHandler = async (activityID) => {
-        const response = await axiosInstance.delete(
-            `activity/deleteActivity/${activityID}`
-        );
-        if (response.status === 200) {
-            sortActivities((prevActivities) =>
+        try {
+            const response = await axiosInstance.delete(
+                `activity/deleteActivity/${activityID}`
+            );
+            setActivities((prevActivities) =>
                 prevActivities.filter((activity) => activity._id !== activityID)
             );
-        } else {
+        } catch (error) {
             alert("Error deleting activity");
         }
     };
 
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>
-            <div
-                style={{
-                    position: "fixed",
-                    top: 0,
-                    left: "9%",
-                    zIndex: 1,
-                }}
-            >
-                <NavBar />
-            </div>
-
             <div>
                 <div style={{ position: "relative" }}>
                     <img
@@ -232,6 +220,23 @@ const MyActivity = () => {
                                         deleteHandler={deleteActivityHandler}
                                         ID={activity._id}
                                     />,
+                                ]}
+                                bottomButtons={[
+                                    {
+                                        text: "Edit",
+                                        onClick: () =>
+                                            navigate("/edit-activity", {
+                                                state: activity,
+                                            }),
+                                        type: "1",
+                                        width: "50%",
+                                        styles: {
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
+                                        },
+                                    },
                                 ]}
                             />
                         </div>

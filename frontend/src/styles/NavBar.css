@@ -25,16 +25,16 @@
     background-color: var(
         --background-color
     ); /* Background color for the logo container */
-    padding: 5px; /* Padding around the logo */
+    /* padding: 0px; Padding around the logo */
 }
 
 /* Logo image styling */
 .logo-image {
-    height: 40px; /* Adjust logo height */
+    height: 10vh; /* Adjust logo height */
     width: auto; /* Maintain aspect ratio */
     display: block; /* Ensure proper layout */
     border-radius: 50%; /* Make the logo image circular, adjust to your preference */
-    object-fit: cover; /* Ensures the image covers the area without distortion */
+    /* object-fit: cover;  */
 }
 
 .navbar-links {

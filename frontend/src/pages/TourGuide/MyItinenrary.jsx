@@ -150,31 +150,37 @@ const MyItinenrary = () => {
     }, [sortBy]);
 
     const deleteItineraryHandler = async (itineraryID) => {
-        const response = await axiosInstance.delete(
-            `/itinerary/deleteItinerary/${itineraryID}`
-        );
-        if (response.status === 200) {
+        try {
+            const response = await axiosInstance.delete(
+                `/itinerary/deleteItinerary/${itineraryID}`
+            );
             sortItineraries((prevItineraries) =>
                 prevItineraries.filter((itinerary) => itinerary._id !== itineraryID)
             );
-        } else {
+        } catch (error) {
             alert("Error deleting itinerary");
+        }
+    };
+
+    const activateItineraryHandler = async (itineraryID) => {
+        try {
+            const response = await axiosInstance.patch(
+                `/itinerary/toggleActive/${itineraryID}`
+            );
+            sortItineraries((prevItineraries) =>
+                prevItineraries.map((itinerary) =>
+                    itinerary._id === itineraryID
+                        ? { ...itinerary, isActivated: !itinerary.isActivated }
+                        : itinerary
+                )
+            );
+        } catch (error) {
+            alert("Error activating itinerary");
         }
     };
 
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>
-            <div
-                style={{
-                    position: "fixed",
-                    top: 0,
-                    left: "9%",
-                    zIndex: 1,
-                }}
-            >
-                <NavBar />
-            </div>
-
             <div>
                 <img
                     src={i1}
@@ -210,7 +216,7 @@ const MyItinenrary = () => {
                         // this is to prevent the text from being highlighted when clicked
                     }}
                 >
-                    My Itinenrary
+                    My Itinenraries
                 </div>
 
                 <div
@@ -290,41 +296,69 @@ const MyItinenrary = () => {
                 </Button>
                 <div
                     style={{
+                        marginTop: "1%",
+                        minHeight: "50vh",
+                        minWidth: "100vw",
                         display: "flex",
                         flexWrap: "wrap",
-                        marginTop: "-1vh",
-                        minHeight: "50vh",
+                        justifyContent: "space-evenly",
                     }}
                 >
-                    <div
-                        style={{
-                            marginTop: "1%",
-                            minHeight: "50vh",
-                            minWidth: "100vw",
-                            display: "flex",
-                            flexWrap: "wrap",
-                            justifyContent: "space-evenly",
-                        }}
-                    >
-                        {itineraries.map((itinerary) => (
-                            <div style={{ padding: "1.5vh" }}>
-                                <CardItinerary
-                                    itinerary={itinerary}
-                                    width={"45vw"}
-                                    height={"32vh"}
-                                    setItineraries={setitineraries}
-                                    firstLineButtons={[
-                                        [
-                                            <DeleteButton
-                                                deleteHandler={deleteItineraryHandler}
-                                                ID={itinerary._id}
-                                            />,
-                                        ],
-                                    ]}
-                                />
-                            </div>
-                        ))}
-                    </div>
+                    {itineraries.map((itinerary) => (
+                        <div style={{ padding: "1.5vh" }}>
+                            <CardItinerary
+                                itinerary={itinerary}
+                                width={"45vw"}
+                                height={"32vh"}
+                                setItineraries={sortItineraries}
+                                firstLineButtons={[
+                                    [
+                                        <DeleteButton
+                                            deleteHandler={deleteItineraryHandler}
+                                            ID={itinerary._id}
+                                        />,
+                                    ],
+                                ]}
+                                bottomButtons={[
+                                    {
+                                        text: "Edit",
+                                        onClick: () =>
+                                            navigate(`/edit-itinerary/${itinerary._id}`),
+                                        type: "1",
+                                        width: "70%",
+                                        styles: {
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
+                                        },
+                                    },
+                                    {
+                                        text: itinerary.isActivated
+                                            ? "Deactivate"
+                                            : "Activate",
+                                        onClick: () =>
+                                            activateItineraryHandler(itinerary._id),
+                                        type: "2",
+                                        width: "70%",
+                                        styles: {
+                                            marginTop: "2%",
+                                            color: itinerary.isActivated
+                                                ? "red"
+                                                : "green",
+                                            borderColor: itinerary.isActivated
+                                                ? "red"
+                                                : "green",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
+                                        },
+                                    },
+                                ]}
+                            />
+                        </div>
+                    ))}
                 </div>
 
                 <Footer />

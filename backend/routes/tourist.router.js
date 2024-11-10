@@ -5,6 +5,7 @@ import {
     createTourist,
     updateTourist,
     deleteTourist,
+    redeemPoints,
 } from "../controllers/tourist.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 
@@ -19,5 +20,7 @@ touristRouter.get("/tourist",isAuthenticated, getTouristById);
 touristRouter.patch("/updateTourist/:id", updateTourist);
 
 touristRouter.delete("/deleteTourist/:id", deleteTourist);
+
+touristRouter.patch("/redeemPoints/:id", redeemPoints);
 
 export default touristRouter;

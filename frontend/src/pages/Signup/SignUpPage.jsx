@@ -129,15 +129,13 @@ const SignUpPage = () => {
 
             const response = await axiosInstance.post(
                 `/${userType.toLowerCase()}/create${userType}`,
-                userData,
-                {
-                    withCredentials: true,
-                }
+                userData
             );
             // Handle the file upload logic here
             alert("Files submitted successfully!");
             console.log("File 1:", file1);
             console.log("Files 2:", file2);
+            navigate("/signin");
         } catch (error) {
             setError(error.response.data.e);
             console.log(error);
@@ -194,9 +192,15 @@ const SignUpPage = () => {
                                 />
                                 <label htmlFor="terms">
                                     I accept the
-                                    <a href="https://google.com"> terms </a>
+                                    <a href="https://google.com" target="_blank">
+                                        {" "}
+                                        terms{" "}
+                                    </a>
                                     and
-                                    <a href="https://google.com"> conditions </a>
+                                    <a href="https://google.com" target="_blank">
+                                        {" "}
+                                        conditions{" "}
+                                    </a>
                                 </label>
                             </div>
                         </div>

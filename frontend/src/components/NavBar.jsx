@@ -31,9 +31,9 @@ const navbarUserItems = {
 
 const touristProfileDropdonw = [
     { "My Profile": "/tourist-profile" },
-    { "My Bookings": "link" },
+    { "My Bookings": "/bookings" },
     { "My Bookmarks": "link" },
-    { "My Complaints": "link" },
+    { "My Complaints": "/complaints" },
 ];
 
 const NavBar = () => {
@@ -131,9 +131,17 @@ const NavBar = () => {
 
     return (
         <nav className="navbar">
-            <Link to="/" className="navbar-logo">
-                <img src="/logo.png" alt="Website Logo" className="logo-image" />
-            </Link>
+            <img
+                style={{
+                    padding: "0px",
+                    borderRadius: "20px",
+                    height: "5.2vh",
+                    objectFit: "contain",
+                    marginLeft: "-.8vw",
+                }}
+                src="/logo.png"
+            />
+
             {/* Center: Navbar items */}
             <div className="navbar-links">
                 {navbarItems.map((item, index) => renderItem(item, index))}
