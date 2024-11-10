@@ -4,7 +4,7 @@ import { isAuthenticated } from "../routers.middleware/authentication.js";
 const orderRouter = express.Router();
 
 orderRouter.post("/createOrder", isAuthenticated, async (req, res) => {
-    const buyer = req.user.uesrId;
+    const buyer = req.user.userId;
     try {
         const newOrder = await Order.create({ ...req.body, buyer });
         res.json(newOrder);

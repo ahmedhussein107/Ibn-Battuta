@@ -77,7 +77,7 @@ const Shop = () => {
                 "/order/createOrder",
                 {
                     product: selectedProduct._id,
-                    quantity: selectedQuantity,
+                    count: selectedQuantity,
                     price: selectedProduct.price * selectedQuantity,
                 },
                 { withCredentials: true }
