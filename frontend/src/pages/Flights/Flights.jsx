@@ -1,15 +1,15 @@
-//import React from "react";
 import usePageHeader from "../../components/Header/UseHeaderPage";
 import backgroundImage from "../../assets/images/flightsBackgroundImage.png";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import React, { useState } from "react";
-import FlightSearchFields from "../../components/Flights/FlightSearchFields";
-import FlightCard from "../../components/Flights/FlightCard";
 import axiosInstance from "../../api/axiosInstance";
+import FlightSearchPage from "../../components/Flights/FlightSearchPage";
+import FlightDetailsPage from "../../components/Flights/FlightDetailsPage";
 
 const Flights = () => {
     usePageHeader(null, null);
+    const [step, setStep] = useState(1);
     const [startDate, setStartDate] = useState(null);
     const [returnDate, setReturnDate] = useState(null); // Return Date
     const [departureAirport, setDepartureAirport] = useState(""); // Departure Airport
@@ -20,6 +20,7 @@ const Flights = () => {
     const [airlines, setAirlines] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const [selectedFlightOffer, setSelectedFlightOffer] = useState(null);
 
     const buildQuery = () => {
         const query = {};
@@ -87,6 +88,27 @@ const Flights = () => {
         }
     };
 
+    const handleView = (index) => {
+        setSelectedFlightOffer(flightOffers[index]);
+        setStep(2);
+    };
+
+    const handleBack = () => {
+        setSelectedFlightOffer(null);
+        setStep(1);
+    };
+
+    const handleBook = async () => {
+        console.log(selectedFlightOffer);
+        await axiosInstance.post(
+            "/amadeus/flights/book",
+            {
+                flightOffer: selectedFlightOffer,
+            },
+            { withCredentials: true }
+        );
+    };
+
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
             {/* Background Image */}
@@ -119,36 +141,28 @@ const Flights = () => {
                 <NavBar />
             </div>
 
-            <FlightSearchFields
-                startDate={startDate}
-                setStartDate={setStartDate}
-                returnDate={returnDate}
-                setReturnDate={setReturnDate}
-                setDepartureAirport={setDepartureAirport}
-                setArrivalAirport={setArrivalAirport}
-                setAdults={setAdults}
-                setChildren={setChildren}
-                handleSearch={handleSearch}
-                isLoading={isLoading}
-                error={error}
-            />
+            {step == 1 && (
+                <FlightSearchPage
+                    startDate={startDate}
+                    setStartDate={setStartDate}
+                    returnDate={returnDate}
+                    setReturnDate={setReturnDate}
+                    setDepartureAirport={setDepartureAirport}
+                    setArrivalAirport={setArrivalAirport}
+                    setAdults={setAdults}
+                    setChildren={setChildren}
+                    handleSearch={handleSearch}
+                    isLoading={isLoading}
+                    error={error}
+                    flightOffers={flightOffers}
+                    airlines={airlines}
+                    handleView={handleView}
+                />
+            )}
 
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    justifyContent: "flex-start",
-                }}
-            >
-                {flightOffers.map((flightOffer, index) => (
-                    <FlightCard
-                        key={flightOffer.id}
-                        trip={flightOffer}
-                        airlines={airlines}
-                    />
-                ))}
-            </div>
+            {step == 2 && (
+                <FlightDetailsPage handleBack={handleBack} handleBook={handleBook} />
+            )}
 
             {/* Footer */}
             <Footer />
