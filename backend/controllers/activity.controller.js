@@ -3,6 +3,7 @@ import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 
 export const getAllActivities = async (req, res) => {
     const query = buildFilter(req.query);
+    console.log("in getAllActivities, query is: ", query);
     try {
         const activity = await Activity.find(query);
         res.status(200).json(activity);

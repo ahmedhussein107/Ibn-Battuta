@@ -51,7 +51,7 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/test" element={<PopUp />} />
                     <Route path="/complaints" element={<ComplaintList />} />
-                    <Route path="/shop" element={<TestShopLayout />} />
+                    <Route path="/shop" element={<Shop />} />
                     <Route
                         path="/complaint/:complaintId"
                         element={<ViewSingleComplaint />}
@@ -65,6 +65,7 @@ function App() {
                     <Route path="/advertiser" element={<AdvertiserHome />} />
                     <Route path="/tourguide" element={<TourGuideHome />} />
                     <Route path="/seller" element={<SellerHome />} />
+                    <Route path="/governor" element={<GovernorHome />} />
 
                     {/* other pages */}
                     <Route path="/activities" element={<Activities />} />
@@ -111,6 +112,8 @@ function App() {
 
                     <Route path="/admin/tags" element={<ViewTags />} />
                     <Route path="/admin/category" element={<ViewCategories />} />
+                    <Route path="/admin/activities" element={<AllActivities />} />
+                    <Route path="/admin/itineraries" element={<AllItineraries />} />
                 </Routes>
             </Router>
         </HeaderProvider>

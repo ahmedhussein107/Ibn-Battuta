@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import i1 from "../../assets/images/iti.png";
 import i2 from "../../assets/images/i2.png";
 import Footer from "../../components/Footer";
 import TimeLine from "../../components/TimelineN";
 import { useLocation } from "react-router-dom";
+import NavBar from "../../components/NavBar";
 const ChooseActivity = () => {
     const location = useLocation();
+    console.log("state: ", location.state);
     const {
         name,
         language,
@@ -35,6 +37,18 @@ const ChooseActivity = () => {
         accessibilityTypes,
         price
     );
+
+    const [convertedDate, setConvertedDate] = useState(new Date(date));
+
+    useEffect(() => {
+        console.log("date before changes", date);
+        const newConvertedDate = new Date(date);
+        const [hours, minutes] = time.split(":").map(Number);
+        newConvertedDate.setHours(hours, minutes);
+        console.log("convertedDate", newConvertedDate);
+        setConvertedDate(newConvertedDate);
+    }, []);
+
     return (
         <div
             style={{
@@ -47,7 +61,7 @@ const ChooseActivity = () => {
             }}
         >
             <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
-                {/* <NavBar /> */}
+                <NavBar />
             </div>
 
             <div>
@@ -86,9 +100,7 @@ const ChooseActivity = () => {
                     Create A New Itinerary
                 </div>
             </div>
-            <div style={{ marginLeft: "10vw" }}>
-                <TimeLine />
-            </div>
+            <TimeLine date={convertedDate} />
             <Footer />
         </div>
     );

@@ -2,27 +2,22 @@ import React, { useState, useEffect } from "react";
 import { FaMapMarkerAlt, FaTrash, FaMapMarkerAlt as LocationIcon } from "react-icons/fa";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { createUseStyles } from "react-jss";
+import axiosInstance from "../api/axiosInstance";
+import CardActivity from "./CardActivity";
+import CardCustomActivity from "./CardCustomActivity";
 
 const useStyles = createUseStyles({
     pageContainer: {
         display: "flex",
         gap: "2vw",
         padding: "2vh",
-        maxWidth: "90vw",
-        margin: "auto",
-        position: "relative",
+        width: "95vw",
+        justifyContent: "space-between",
     },
     leftPanel: {
-        position: "sticky",
-        top: "2vh",
-        // left: "0vh",
-        height: "fit-content",
-        flex: "0 0 40vw",
-        marginLeft: "-5vw",
-        // minwidth: "-10vw",
+        width: "23vw",
     },
     container: {
-        position: "relative",
         padding: "2vh",
         width: "100%",
         backgroundColor: "#f8f8f8",
@@ -30,7 +25,6 @@ const useStyles = createUseStyles({
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
     },
     timelineLine: {
-        position: "absolute",
         top: "8vh",
         left: "3vw",
         width: "0.8vw",
@@ -114,11 +108,16 @@ const useStyles = createUseStyles({
         marginLeft: "1vw",
     },
     activitiesList: {
-        flex: 1,
-        maxWidth: "35vw",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#f8f8f8",
+        borderRadius: "10px",
+        padding: "2vh 1vw",
+        alignItems: "center",
+        width: "60vw",
         maxHeight: "100vh",
         overflow: "auto",
-        marginLeft: "5vw",
+        marginLeft: "1vw",
     },
     tabsContainer: {
         display: "flex",
@@ -142,6 +141,11 @@ const useStyles = createUseStyles({
         backgroundColor: "white",
         color: "#333",
         border: "1px solid #ddd",
+    },
+    cardsContainer: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "1vh",
     },
     activityCard: {
         backgroundColor: "white",
@@ -219,131 +223,112 @@ const useStyles = createUseStyles({
     },
 });
 
-const TimelineN = () => {
+const TimelineN = ({ date }) => {
     const classes = useStyles();
     const [activeTab, setActiveTab] = useState("activities");
-    const [timelineActivities, setTimelineActivities] = useState([
-        { name: "Activity 1", time: "7:30 am - 9:00 am", details: "See more" },
-        {
-            name: "Hoover Dam",
-            time: "11:00 am - 12:00 pm",
-            details: "Exploring the dam and its history",
-        },
-        {
-            name: "Grand Canyon West Rim",
-            time: "1:00 pm - 3:00 pm",
-            details: "Sightseeing and guided activities",
-        },
-        {
-            name: "Eagle Point",
-            time: "3:30 pm - 4:00 pm",
-            details: "Scenic view and photo stop",
-        },
-        {
-            name: "Guano Point",
-            time: "Visit, Lunch, Sightseeing (1 hour)",
-            details: "Lunch and sightseeing stop",
-        },
-        {
-            name: "Arizona's Joshua Tree Forest",
-            time: "Visit (15 minutes)",
-            details: "Short stop at the Joshua Tree forest",
-        },
-    ]);
-
-    const [availableActivities, setAvailableActivities] = useState([
-        {
-            id: 1,
-            name: "Desert Safari Adventure",
-            location: "Cairo, EG",
-            category: "Adventure",
-            date: "02/11/2024",
-            description:
-                "This itinerary offers a mix of cultural exploration, outdoor adventures, and relaxation, allowing you to experience the destination's highlights.",
-            price: 79.4,
-            rating: 5,
-            reviews: 1340,
-            seats: 5,
-            image: "/api/placeholder/400/320",
-        },
-        {
-            id: 2,
-            name: "Nile River Cruise",
-            location: "Cairo, EG",
-            category: "Cruise",
-            date: "02/11/2024",
-            description:
-                "Experience the majestic Nile River with our luxury cruise package, featuring dinner and entertainment.",
-            price: 89.9,
-            rating: 4,
-            reviews: 890,
-            seats: 8,
-            image: "/api/placeholder/400/320",
-        },
-        {
-            id: 3,
-            name: "Pyramid Tour",
-            location: "Cairo, EG",
-            category: "Cultural",
-            date: "02/12/2024",
-            description:
-                "Explore the ancient pyramids with our expert guides and learn about Egyptian history.",
-            price: 65.0,
-            rating: 5,
-            reviews: 2100,
-            seats: 12,
-            image: "/api/placeholder/400/320",
-        },
-    ]);
-
-    const [timelineHeight, setTimelineHeight] = useState(0);
+    const [activities, setActivities] = useState([]);
+    const [customActivities, setCustomActivities] = useState([]);
+    const [timelineActivities, setTimelineActivities] = useState([]);
+    const [selectedActivity, setSelectedActivity] = useState("");
+    const [selectedCustomActivity, setSelectedCustomActivity] = useState("");
 
     useEffect(() => {
-        setTimelineHeight((timelineActivities.length + 2) * 9 + 3.5);
-    }, [timelineActivities]);
+        if (!date) {
+            return;
+        }
+        const startDate = date;
+        console.log("startDate", startDate);
+        console.log("startDate", startDate.toISOString());
+        const endDate = startDate;
+        endDate.setHours(endDate.getHours() + 23);
+        endDate.setMinutes(endDate.getMinutes() + 59);
+        endDate.setSeconds(endDate.getSeconds() + 59);
+        console.log("endDate", endDate);
+        console.log("endDate", endDate.toISOString());
+        const dateRange = startDate.toISOString() + "€" + endDate.toISOString();
+        // console.log("dateRange", dateRange);
+        const fetchActivities = async () => {
+            try {
+                const response = await axiosInstance.get(
+                    "/activity/getAllActivities",
+                    { params: { startDate: dateRange } },
+                    {
+                        withCredentials: true,
+                    }
+                );
+                const data = response.data;
+                console.log("activities", data);
+                setActivities(data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
 
-    const handleDelete = (index) => {
-        const removedActivity = timelineActivities[index];
-        setTimelineActivities(timelineActivities.filter((_, i) => i !== index));
-        setAvailableActivities([
-            ...availableActivities,
-            {
-                id: Date.now(),
-                name: removedActivity.name,
-                location: "Cairo, EG",
-                category: "Activity",
-                date: removedActivity.time,
-                description: removedActivity.details,
-                price: 79.4,
-                rating: 5,
-                reviews: 1340,
-                seats: 5,
-                image: "/api/placeholder/400/320",
-            },
-        ]);
+        const fetchCustomActivities = async () => {
+            try {
+                const response = await axiosInstance.get(
+                    "/customActivity/getCustomActivityByTourGuideId",
+                    {
+                        withCredentials: true,
+                    }
+                );
+                const data = response.data;
+                console.log("customActivities", data);
+                setCustomActivities(data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchActivities();
+        fetchCustomActivities();
+    }, [date]);
+
+    const handleDeleteActivity = (activity) => {
+        setTimelineActivities(
+            timelineActivities.filter((act) => act._id !== activity._id)
+        );
+        setActivities([...activities, activity]);
     };
 
-    const handleAdd = (activity) => {
-        setTimelineActivities([
-            ...timelineActivities,
-            {
-                name: activity.name,
-                time: activity.date,
-                details: activity.description,
-            },
-        ]);
-        setAvailableActivities(availableActivities.filter((a) => a.id !== activity.id));
+    const handleDeleteCustom = (activity) => {
+        setTimelineActivities(
+            timelineActivities.filter((act) => act._id !== activity._id)
+        );
+        setCustomActivities([...customActivities, activity]);
     };
+
+    const handleAddActivity = (activity) => {
+        setTimelineActivities([...timelineActivities, activity]);
+        setActivities(activities.filter((act) => act._id !== activity._id));
+    };
+
+    const handleAddCustom = (activity) => {
+        setTimelineActivities([...timelineActivities, activity]);
+        setCustomActivities(customActivities.filter((act) => act._id !== activity._id));
+    };
+
+    function formatToAMPM(date) {
+        let hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        const ampm = hours >= 12 ? "PM" : "AM";
+
+        // Convert hours from 24-hour to 12-hour format
+        hours = hours % 12;
+        hours = hours ? hours : 12; // If hour is 0, set it to 12
+
+        // Format minutes and seconds to be two digits
+        const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+        const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
+        return `${hours}:${formattedMinutes}:${formattedSeconds} ${ampm}`;
+    }
 
     return (
         <div className={classes.pageContainer}>
             <div className={classes.leftPanel}>
                 <div className={classes.container}>
-                    <div
-                        className={classes.timelineLine}
-                        style={{ height: `${timelineHeight}vh` }}
-                    ></div>
-
                     <div className={classes.timelineItem}>
                         <div className={classes.pickupMarker}>
                             <FaMapMarkerAlt className={classes.markerIcon} />
@@ -371,9 +356,18 @@ const TimelineN = () => {
                                     </div>
                                     <div className={classes.timelineContent}>
                                         <h3 className={classes.title}>{activity.name}</h3>
-                                        <p className={classes.details}>{activity.time}</p>
                                         <p className={classes.details}>
-                                            {activity.details}
+                                            {formatToAMPM(
+                                                new Date(activity.currentStartDate)
+                                            )}
+                                        </p>
+                                        <p className={classes.details}>
+                                            {formatToAMPM(
+                                                new Date(activity.currentEndDate)
+                                            )}
+                                        </p>
+                                        <p className={classes.details}>
+                                            {activity.description}
                                         </p>
                                     </div>
                                     <button
@@ -414,64 +408,68 @@ const TimelineN = () => {
                     </button>
                     <button
                         className={`${classes.tab} ${
-                            activeTab === "custom"
+                            activeTab === "customActivities"
                                 ? classes.activeTab
                                 : classes.inactiveTab
                         }`}
-                        onClick={() => setActiveTab("custom")}
+                        onClick={() => setActiveTab("customActivities")}
                     >
                         Custom Activities
                     </button>
                 </div>
 
-                {availableActivities.map((activity) => (
-                    <div key={activity.id} className={classes.activityCard}>
-                        <img
-                            src={activity.image}
-                            alt={activity.name}
-                            className={classes.activityImage}
-                        />
-                        <div className={classes.activityInfo}>
-                            <div className={classes.activityHeader}>
-                                <h3 className={classes.title}>{activity.name}</h3>
-                                <button
-                                    onClick={() => handleAdd(activity)}
-                                    className={classes.addButton}
-                                >
-                                    Add
-                                </button>
-                            </div>
-                            <div className={classes.activityMetadata}>
-                                <LocationIcon size={14} /> {activity.location}
-                                <span>Category</span>
-                                <span>Tags</span>
-                                <span>{activity.date}</span>
-                            </div>
-                            <p className={classes.details}>{activity.description}</p>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    marginTop: "1vh",
-                                }}
-                            >
-                                <div className={classes.rating}>
-                                    {"★".repeat(activity.rating)}
-                                    <span style={{ color: "#666" }}>
-                                        ({activity.reviews})
-                                    </span>
-                                </div>
-                                <div className={classes.seats}>
-                                    {activity.seats} Available Seats
-                                </div>
-                                <div style={{ fontWeight: "bold" }}>
-                                    USD {activity.price}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ))}
+                <div className={classes.cardsContainer}>
+                    {activeTab === "activities" &&
+                        activities.map((activity) => (
+                            <CardActivity
+                                activity={activity}
+                                width={"40vw"}
+                                height={"28vh"}
+                                fontSize="0.8rem"
+                                iconSize="0.7rem"
+                                bottomButtons={[
+                                    {
+                                        text: "Add",
+                                        onClick: () => handleAddActivity(activity),
+                                        type: "1",
+                                        width: "50%",
+                                        styles: {
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
+                                        },
+                                    },
+                                ]}
+                            />
+                        ))}
+
+                    {activeTab === "customActivities" &&
+                        customActivities.map((activity) => (
+                            <CardCustomActivity
+                                key={activity.id}
+                                activity={activity}
+                                width={"40vw"}
+                                height={"28vh"}
+                                fontSize="0.8rem"
+                                iconSize="0.7rem"
+                                bottomButtons={[
+                                    {
+                                        text: "Add",
+                                        onClick: () => handleAddActivity(activity),
+                                        type: "1",
+                                        width: "50%",
+                                        styles: {
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
+                                        },
+                                    },
+                                ]}
+                            />
+                        ))}
+                </div>
             </div>
         </div>
     );
