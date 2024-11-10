@@ -26,8 +26,8 @@ const touristSchema = new mongoose.Schema(
         loyalityPoints: { type: Number, default: 0 },
         cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
         notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
-        hotelBookings: [{ type: Object }],
-        flightBookings: [{ type: Object }],
+        hotelBookings: [{ type: Object, default: [] }],
+        flightBookings: [{ type: Object, default: [] }],
         preferences: [{ type: String, ref: "Tag" }],
         wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
         address: [{ name: String, location: String }],
@@ -51,7 +51,7 @@ touristSchema.pre("save", async function (next) {
             await validateReferences(cart, "Product", next);
         }
         if (preferences) {
-            await validateReferences(preferences, "Tags", next);
+            await validateReferences(preferences, "Tag", next);
         }
 
         if (wishlist) {
