@@ -40,7 +40,8 @@ import PopUp from "./components/PopUpsGeneric/PopUp";
 import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
 import AllActivities from "./pages/Admin/AllActivities";
 import AllItineraries from "./pages/Admin/AllItineraries";
-import Shop from "./pages/Product/Shop";
+import Shop from "./components/Shop.jsx";
+import Bookings from "./pages/Tourist/Bookings.jsx";
 
 function App() {
     return (
@@ -65,6 +66,7 @@ function App() {
                     <Route path="/advertiser" element={<AdvertiserHome />} />
                     <Route path="/tourguide" element={<TourGuideHome />} />
                     <Route path="/seller" element={<SellerHome />} />
+                    <Route path="/governor" element={<GovernorHome />} />
 
                     {/* other pages */}
                     <Route path="/activities" element={<Activities />} />
@@ -90,31 +92,22 @@ function App() {
                     <Route path="/advertiser/assigned" element={<MyActivity />} />
                     <Route path="/tourguide/assigned" element={<MyItinenrary />} />
                     <Route path="/inventory" element={<Inventory />} />
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/create-product" element={<CreateProductPage />} />
-                    <Route path="/add-new-user" element={<AddNewUser />} />
-                    <Route path="admin/users" element={<UserManagement />} />
-                    <Route
-                        path="/update-product/:productId"
-                        element={<UpdateProductPage />}
-                    />
-                    <Route path="/products/:productId" element={<ViewProductPage />} />
-                    <Route path="/tourguide" element={<TourGuideProfilePage />} />
-                    <Route path="/landmark-governor" element={<GovernorLandmarks />} />
-                    <Route path="/advertiser/assigned" element={<MyActivity />} />
-                    <Route path="/tourguide/assigned" element={<MyItinenrary />} />
-                    <Route path="/inventory" element={<Inventory />} />
 
                     <Route path="/create-activity" element={<CreateActivityPage />} />
                     <Route path="/update-activity" element={<UpdateActivityPage />} />
                     <Route path="/view-products" element={<ViewProductsPage />} />
                     <Route path="/choose-activity" element={<ChooseActivity />} />
+
                     <Route path="/landmark/landmark/" element={<LandmarkPage />} />
                     <Route path="/create-itinerary" element={<CreateItineraryPage />} />
                     <Route path="/create-landmark" element={<CreateLandmarkPage />} />
 
                     <Route path="/admin/tags" element={<ViewTags />} />
                     <Route path="/admin/category" element={<ViewCategories />} />
+                    <Route path="/admin/activities" element={<AllActivities />} />
+                    <Route path="/admin/itineraries" element={<AllItineraries />} />
+
+                    <Route path="/bookings" element={<Bookings />} />
                 </Routes>
             </Router>
         </HeaderProvider>

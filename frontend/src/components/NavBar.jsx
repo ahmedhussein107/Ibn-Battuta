@@ -30,9 +30,9 @@ const navbarUserItems = {
 
 const touristProfileDropdonw = [
 	{ "My Profile": "link" },
-	{ "My Bookings": "link" },
+	{ "My Bookings": "/bookings" },
 	{ "My Bookmarks": "link" },
-	{ "My Complaints": "link" },
+	{ "My Complaints": "/complaints" },
 ];
 
 const NavBar = () => {
@@ -53,9 +53,7 @@ const NavBar = () => {
 		if (userType !== "Guest") {
 			console.log("WebSocket connection establishing");
 			const socket = new WebSocket(
-				`${URI.replace("http://", "ws://")}/notifications?token=${Cookies.get(
-					"jwt"
-				)}`
+				`${URI.replace("http://", "ws://")}/notifications?token=${Cookies.get("jwt")}`
 			);
 
 			socket.onopen = () => {
@@ -130,9 +128,17 @@ const NavBar = () => {
 
 	return (
 		<nav className="navbar">
-			<Link to="/" className="navbar-logo">
-				<img src="/logo.png" alt="Website Logo" className="logo-image" />
-			</Link>
+			<img
+				style={{
+					padding: "0px",
+					borderRadius: "20px",
+					height: "5.2vh",
+					objectFit: "contain",
+					marginLeft: "-.8vw",
+				}}
+				src="/logo.png"
+			/>
+
 			{/* Center: Navbar items */}
 			<div className="navbar-links">
 				{navbarItems.map((item, index) => renderItem(item, index))}
@@ -162,17 +168,9 @@ const NavBar = () => {
 					</>
 				) : (
 					<div className="notifications-profile">
-						<div
-							className="notification-icon"
-							onClick={handleNotificationClick}
-						>
-							<FontAwesomeIcon
-								icon={faBell}
-								className="notification-image"
-							/>
-							<span className="notification-badge">
-								{notificationCount}
-							</span>
+						<div className="notification-icon" onClick={handleNotificationClick}>
+							<FontAwesomeIcon icon={faBell} className="notification-image" />
+							<span className="notification-badge">{notificationCount}</span>
 						</div>
 						<div className="profile-dropdown">
 							<img
@@ -189,11 +187,7 @@ const NavBar = () => {
 									touristProfileDropdonw.map((item, index) => {
 										const [label, link] = Object.entries(item)[0];
 										return (
-											<Link
-												key={index}
-												to={link}
-												className="dropdown-item"
-											>
+											<Link key={index} to={link} className="dropdown-item">
 												{label}
 											</Link>
 										);

@@ -17,7 +17,7 @@ const CardActivity = ({
     firstLineButtons = [],
     bottomButtons = [],
 }) => {
-    const image = activity.picture;
+    const image = activity.pictures[0];
     const line1 = (
         <div style={{ fontSize: "1.3rem" }}>
             <TitleAndButtons title={activity.name} buttons={firstLineButtons} />
