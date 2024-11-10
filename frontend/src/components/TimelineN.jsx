@@ -154,6 +154,7 @@ const TimelineN = ({ date, time }) => {
 
         const handleSubmit = () => {
             if (!startTime || !endTime) {
+                a;
                 alert("select the time interval!!!!!");
                 return;
             }
@@ -174,8 +175,6 @@ const TimelineN = ({ date, time }) => {
                 startTime: startDate,
                 endTime: endDate,
             });
-            setSelectTimeIntervalOpen(false);
-            return;
             if (
                 !addActivityToTimeline({
                     activityType: activeTab,
@@ -199,9 +198,24 @@ const TimelineN = ({ date, time }) => {
                 <div
                     style={{
                         display: "flex",
+                        flexDirection: "column",
+                        gap: "1em",
+                        alignItems: "center",
+                    }}
+                >
+                    {activeTab == "Activity" && (
+                        <p>
+                            The Activity starts at{" "}
+                            {formatToAMPM(new Date(selectedActivity.startDate))} and ends
+                            at {formatToAMPM(new Date(selectedActivity.endDate))}
+                        </p>
+                    )}
+                </div>
+                <div
+                    style={{
+                        display: "flex",
                         padding: "2em",
                         width: "90%",
-                        maxHeight: "80vh",
                         overflowY: "auto",
                         justifyContent: "center",
                     }}
@@ -211,7 +225,7 @@ const TimelineN = ({ date, time }) => {
                             <StaticTimePicker
                                 onChange={(e) => {
                                     console.log("start Date:", e.$d);
-                                    setStartTime(e);
+                                    setStartTime(e.$d);
                                 }}
                             />
                         </DemoItem>
@@ -219,7 +233,7 @@ const TimelineN = ({ date, time }) => {
                             <StaticTimePicker
                                 onChange={(e) => {
                                     console.log("end Date:", e.$d);
-                                    setEndTime(e);
+                                    setEndTime(e.$d);
                                 }}
                             />
                         </DemoItem>
@@ -327,23 +341,21 @@ const TimelineN = ({ date, time }) => {
                                             </div>
                                             <div className={classes.timelineContent}>
                                                 <h3 className={classes.title}>
-                                                    {activity.name}
+                                                    {activity.activity.name}
                                                 </h3>
                                                 <p className={classes.details}>
-                                                    {formatToAMPM(
-                                                        new Date(
-                                                            activity.currentStartDate
-                                                        )
-                                                    )}
+                                                    {formatToAMPM(activity.startTime)}
                                                 </p>
                                                 <p className={classes.details}>
-                                                    {formatToAMPM(
-                                                        new Date(activity.currentEndDate)
-                                                    )}
+                                                    {formatToAMPM(activity.endTime)}
                                                 </p>
                                                 <p
                                                     className={classes.details}
                                                     onClick={() => handleShowMore(index)}
+                                                    style={{
+                                                        cursor: "pointer",
+                                                        color: "var(--accent-color)",
+                                                    }}
                                                 >
                                                     Show more
                                                 </p>
@@ -487,10 +499,11 @@ const TimelineN = ({ date, time }) => {
                         display: "flex",
                         justifyContent: "space-around",
                         width: "50%",
+                        marginBottom: "2vh",
                     }}
                 >
                     <CustomButton
-                        stylingMode="1"
+                        stylingMode="2"
                         text="Previous"
                         handleClick={() => {
                             navigate(-1);
@@ -514,6 +527,7 @@ const TimelineN = ({ date, time }) => {
                                         ...location.state,
                                         availableDatesAndTimes: [convertedDate],
                                         price: totalPrice,
+                                        picture: timelineActivities[0].activity.picture,
                                     },
                                     {
                                         withCredentials: true,

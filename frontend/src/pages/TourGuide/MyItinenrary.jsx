@@ -154,7 +154,7 @@ const MyItinenrary = () => {
             const response = await axiosInstance.delete(
                 `/itinerary/deleteItinerary/${itineraryID}`
             );
-            sortItineraries((prevItineraries) =>
+            setitineraries((prevItineraries) =>
                 prevItineraries.filter((itinerary) => itinerary._id !== itineraryID)
             );
         } catch (error) {
