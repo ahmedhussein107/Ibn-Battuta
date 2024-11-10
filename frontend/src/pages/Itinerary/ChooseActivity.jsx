@@ -14,12 +14,12 @@ const ChooseActivity = () => {
         description,
         date,
         time,
-        pickupLocationlatitude,
-        pickupLocationlongitude,
-        dropOffLocationlatitude,
-        dropOffLocationlongitude,
+        pickuplatitude,
+        pickuplongitude,
+        dropOfflatitude,
+        dropOfflongitude,
         tags,
-        accessibilityTypes,
+        accessibility,
         price,
     } = location.state;
 
@@ -29,12 +29,12 @@ const ChooseActivity = () => {
         description,
         date,
         time,
-        pickupLocationlatitude,
-        pickupLocationlongitude,
-        dropOffLocationlatitude,
-        dropOffLocationlongitude,
+        pickuplatitude,
+        pickuplongitude,
+        dropOfflatitude,
+        dropOfflongitude,
         tags,
-        accessibilityTypes,
+        accessibility,
         price
     );
 
@@ -85,7 +85,22 @@ const ChooseActivity = () => {
                     Create A New Itinerary
                 </div>
             </div>
-            <TimeLine date={date} time={time} />
+            <TimeLine
+                date={date}
+                time={time}
+                state={{
+                    name,
+                    language,
+                    description,
+                    pickuplatitude,
+                    pickuplongitude,
+                    dropOfflatitude,
+                    dropOfflongitude,
+                    tags,
+                    accessibility,
+                    price,
+                }}
+            />
             <Footer />
         </div>
     );
