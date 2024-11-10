@@ -107,21 +107,21 @@ export const updateAdvertiser = async (req, res) => {
 export const deleteAdvertiser = async (req, res) => {
     const advertiserId = req.user.userId;
     try {
-        const today = new Date();
-        const activities = await Activity.find({ advertiserID: advertiserId });
-        const upcomingActivities = activities.filter(
-            (activity) => new Date(activity.endDate) >= today
-        );
-        const bookings = await Bookings.find({ advertiserID: advertiserId });
-        const bookingsWithUpcomingActivities = upcomingActivities.filter((activity) =>
-            bookings.find((booking) => booking.activityID.equals(activity._id))
-        );
-        if (bookingsWithUpcomingActivities.length > 0) {
+        const upcomingActivities = await Activity.find({
+            advertiserID: advertiserId,
+            endDate: { $gte: new Date() },
+        }).distinct("_id");
+
+        // Then check if any of these activities have bookings
+        const hasUpcoming = await Booking.exists({
+            bookingType: "Activity",
+            typeId: { $in: upcomingActivities },
+        });
+        if (hasUpcoming) {
             return res.status(400).json({
                 message: "Cannot delete advertiser with upcoming bookings",
             });
         } else {
-            console.log("these are params", req.params);
             const advertiser = await Advertiser.findByIdAndDelete(advertiserId);
             console.log("after find", advertiser);
             if (advertiser) {
@@ -136,7 +136,6 @@ export const deleteAdvertiser = async (req, res) => {
                         })
                     );
                 }
-
                 // Delete all activities associated with the advertiser
                 const activities = await Activity.find({ advertiserID: advertiser._id });
                 if (activities.length > 0) {
