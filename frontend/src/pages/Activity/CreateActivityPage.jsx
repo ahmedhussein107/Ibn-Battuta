@@ -3,15 +3,15 @@ import styled, { keyframes } from "styled-components";
 import axiosInstance from "../../api/axiosInstance";
 import { uploadFiles } from "../../api/firebase";
 import PhotosUpload from "../../components/PhotosUpload.jsx";
-import DateModal from "./DateModal.jsx";
-import TimeModal from "./TimeModal.jsx";
+import DateModal from "../../components/DateModal.jsx";
+import TimeModal from "../../components/TimeModal.jsx";
 import Button from "../../components/Button.jsx";
 import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
 import NavBar from "../../components/NavBar.jsx";
 import Map from "../map";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
@@ -166,18 +166,18 @@ const CreateActivityPage = () => {
 
         try {
             const convertTo24System = (timeObj) => {
-                const [time, period] = timeObj.split(' ');
+                const [time, period] = timeObj.split(" ");
                 let [hours, minutes] = time.split(":").map(Number);
-                if (period == 'PM' && hours < 12) hours += 12;
-                if (period == 'AM' && hours === 12) hours = 0;
-                return {hours, minutes};
+                if (period == "PM" && hours < 12) hours += 12;
+                if (period == "AM" && hours === 12) hours = 0;
+                return { hours, minutes };
             };
 
             const combinedStartDate = new Date(startDate);
             const combinedEndDate = new Date(endDate);
             const startTime24 = convertTo24System(startTime);
             const endTime24 = convertTo24System(endTime);
-            combinedStartDate.setHours(startTime24.hours,startTime24.minutes);
+            combinedStartDate.setHours(startTime24.hours, startTime24.minutes);
             combinedEndDate.setHours(endTime24.hours, endTime24.minutes);
 
             const files = imagePreviews.map((preview) => preview.file);
@@ -215,7 +215,7 @@ const CreateActivityPage = () => {
 
             showPopupMessage("Activity created successfully!", false);
 
-            setTimeout(() => navigate('/advertiser/assigned'), 1000);
+            setTimeout(() => navigate("/advertiser/assigned"), 1000);
         } catch (error) {
             console.error("Error creating activity:", error);
             showPopupMessage(
@@ -241,7 +241,6 @@ const CreateActivityPage = () => {
 
     return (
         <PageContainer>
-            <NavBar />
             {showPopup && (
                 <Popup
                     message={popupMessage}
@@ -656,7 +655,7 @@ const CreateActivityPage = () => {
                         <Button
                             stylingMode="2"
                             text="Cancel"
-                            handleClick={() => navigate('/advertiser/assigned')}
+                            handleClick={() => navigate("/advertiser/assigned")}
                             width="auto"
                         />
                         <Button

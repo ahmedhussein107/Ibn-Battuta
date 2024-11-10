@@ -11,7 +11,7 @@ const adminSchema = new Schema(
             unique: true,
         },
         password: { type: String, required: true },
-        name: { type: String, required: true },
+        name: { type: String },
         email: { type: String, ref: "Email" },
         picture: String,
         notifications: [{ type: Schema.ObjectId, ref: "Notifiction" }],

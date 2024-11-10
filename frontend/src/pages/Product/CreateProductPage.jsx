@@ -104,7 +104,6 @@ const CreateProductPage = () => {
 
     return (
         <PageContainer>
-            <NavBar />
             {showPopup && (
                 <Popup
                     message={popupMessage}

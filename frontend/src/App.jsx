@@ -41,8 +41,6 @@ import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
 import AllActivities from "./pages/Admin/AllActivities";
 import AllItineraries from "./pages/Admin/AllItineraries";
 import Shop from "./pages/Product/Shop";
-import Bookings from "./pages/Tourist/Bookings.jsx";
-import CreateCustomActivityPopup from "./components/CreateCustomActivityPopup.jsx";
 
 function App() {
     return (
@@ -53,7 +51,6 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/test" element={<PopUp />} />
                     <Route path="/complaints" element={<ComplaintList />} />
-                    <Route path="/shop" element={<Shop />} />
                     <Route
                         path="/complaint/:complaintId"
                         element={<ViewSingleComplaint />}
@@ -74,6 +71,7 @@ function App() {
                     <Route path="/itineraries" element={<Itineraries />} />
                     <Route path="/itinerary-details" element={<ItineraryDetails />} />
                     <Route path="/landmarks" element={<Landmarks />} />
+                    <Route path="/shop" element={<Shop />} />
 
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/create-product" element={<CreateProductPage />} />
@@ -89,10 +87,7 @@ function App() {
                     <Route path="/advertiser/assigned" element={<MyActivity />} />
                     <Route path="/tourguide/assigned" element={<MyItinenrary />} />
                     <Route path="/inventory" element={<Inventory />} />
-                    <Route
-                        path="/create-custom-activity"
-                        element={<CreateCustomActivityPopup />}
-                    />
+
                     <Route path="/create-activity" element={<CreateActivityPage />} />
                     <Route path="/update-activity" element={<UpdateActivityPage />} />
                     <Route path="/view-products" element={<ViewProductsPage />} />
@@ -106,8 +101,6 @@ function App() {
                     <Route path="/admin/category" element={<ViewCategories />} />
                     <Route path="/admin/activities" element={<AllActivities />} />
                     <Route path="/admin/itineraries" element={<AllItineraries />} />
-
-                    <Route path="/bookings" element={<Bookings />} />
                 </Routes>
             </Router>
         </HeaderProvider>
