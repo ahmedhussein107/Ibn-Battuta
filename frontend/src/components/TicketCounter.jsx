@@ -42,11 +42,11 @@ const TicketCounter = ({
 			<div className="price-display">
 				<div className="price-row">
 					<span>Price per person</span>
-					<span className="price">{pricePerPerson.toFixed(2)}</span>
+					<span className="price">EGP {pricePerPerson.toFixed(2)} </span>
 				</div>
 				<div className="price-row">
 					<span>Total Price</span>
-					<span className="price">{totalPrice.toFixed(2)}</span>
+					<span className="price">EGP {totalPrice.toFixed(2)} EGP</span>
 				</div>
 			</div>
 			{maxReached && (

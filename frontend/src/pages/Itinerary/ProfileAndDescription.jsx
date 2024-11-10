@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const ProfileAndDescription = ({
+	mode= "Itinerary",
 	name,
 	picture,
 	description,
@@ -17,7 +18,7 @@ const ProfileAndDescription = ({
 				<Name>{name}</Name>
 			</ProfileHeader>
 			<AboutSection>
-				<SectionTitle>About This Itinerary</SectionTitle>
+				<SectionTitle>About This  {mode}</SectionTitle>
 				<Description>{description}</Description>
 			</AboutSection>
 		</Container>

@@ -1,5 +1,5 @@
 import express from "express";
-
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 const bookingRouter = express.Router();
 
 import {
@@ -11,7 +11,7 @@ import {
 
 bookingRouter.get("/getBookings", getBookings);
 
-bookingRouter.post("/createBooking", createBooking);
+bookingRouter.post("/createBooking", isAuthenticated, createBooking);
 
 bookingRouter.patch("/redeemPoints/:id", redeemPoints);
 

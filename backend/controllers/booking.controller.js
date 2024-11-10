@@ -16,7 +16,8 @@ export const createBooking = async (req, res) => {
     try {
         // The Logic here is to buy with wallet only
         let totprice = 0;
-        const { touristID, typeId, bookingType, count } = req.body;
+        const {  typeId, bookingType, count } = req.body;
+        const touristID = req.user.userId;
         const tourist = await Tourist.findById(touristID);
         if (bookingType === "Itinerary") {
             const itinerary = await Itinary.findById(typeId);
@@ -76,12 +77,13 @@ export const createBooking = async (req, res) => {
         } else if (tourist.points <= 500000) {
             pointsAdded = totprice;
         } else {
-            pointsAdded = totprice * 1.5;
+            pointsAdded = totprice * 1.5;ي
         }
         tourist.loyalityPoints += pointsAdded;
         tourist.points += pointsAdded;
         await tourist.save();
         const booking = await Booking.create({
+            touristID,
             ...req.body,
             totalPrice: totprice,
             pointsAdded,

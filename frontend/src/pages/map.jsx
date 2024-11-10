@@ -2,20 +2,21 @@
 import React, { useState } from "react";
 import MapComponent from "../components/MapComponent";
 
-const map = ({ setMarkerPosition }) => {
+const map = ({ setMarkerPosition, defaultPosition, customStyles}) => {
     const [marker, setMarker] = useState(null);
 
     const handleMapClick = (position) => {
         setMarker(position);
         setMarkerPosition(position);
     };
-
+    console.log(defaultPosition);
     return (
         <div>
             <MapComponent
                 apiKey="AIzaSyC_zN08IM5_NV1yi_gVMJfmLigewujCn8w"
-                markerPosition={marker}
+                markerPosition={defaultPosition || marker}
                 onMapClick={handleMapClick}
+                customStyles={customStyles}
             />
             {/* {markerPosition && (
                 // <div>

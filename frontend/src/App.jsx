@@ -39,6 +39,7 @@ import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 import PopUp from "./components/PopUpsGeneric/PopUp";
 import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
 import TestShopLayout from "./components/Shop/Shop";
+import ActivityDetails from "./pages/Activity/ActivityDetails.jsx";
 
 function App() {
     return (
@@ -66,6 +67,7 @@ function App() {
 
                     {/* other pages */}
                     <Route path="/activities" element={<Activities />} />
+                    <Route path="/activity-details" element={<ActivityDetails />} />
                     <Route path="/itineraries" element={<Itineraries />} />
                     <Route path="/itinerary-details" element={<ItineraryDetails />} />
                     <Route path="/landmarks" element={<Landmarks />} />

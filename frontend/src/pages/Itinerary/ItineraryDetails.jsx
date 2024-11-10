@@ -1,66 +1,77 @@
-import ReviewsSection from "./ReviewsSection.jsx";
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+// External libraries or API instance
 import axiosInstance from "../../api/axiosInstance";
+
+// Components relevant to this file
+import ReviewsSection from "./ReviewsSection.jsx";
 import ProfileAndDescription from "./ProfileAndDescription.jsx";
 import CyclicPhotoDisplay from "./CyclicPhotoDisplay.jsx";
-import ItineraryAndActivityHeader from "../../components/ItineraryAndActivityHeader.jsx";
+
+// Top-level components
 import NavBar from "../../components/NavBar.jsx";
+import ItineraryAndActivityHeader from "../../components/ItineraryAndActivityHeader.jsx";
 import Tags from "../../components/Tags.jsx";
 import Accessibility from "../../components/Accessibility.jsx";
-import Book from "../../components/ItineraryDetails/Book.jsx";
 import Footer from "../../components/Footer.jsx";
-import AvailableDates from "../../components/ItineraryDetails/AvailableDates.jsx";
-import "../../styles/ItineraryDetails.css";
-import ItineraryTimeline from "../../components/ItineraryTimline.jsx";
 import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
 import TicketCounter from "../../components/TicketCounter.jsx";
 import SuccessfulBooking from "../../components/SuccessfulBooking.jsx";
 import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
+
+// Itinerary details components
+import Book from "../../components/ItineraryDetails/Book.jsx";
+import AvailableDates from "../../components/ItineraryDetails/AvailableDates.jsx";
+import ItineraryTimeline from "../../components/ItineraryTimline.jsx";
+
+// Styles
+import "../../styles/ItineraryDetails.css";
+
 const ItineraryDetails = () => {
-	const [itinerary, setItinerary] = useState({
-		_id: "6703f5310ecc1ad25ff95144",
-		name: "Tour a the German University in Cairo",
-		description:
-			"Join me on a tour of GUC, where algorithms roam free, data structures tower like monuments, and every lecture hall holds the secrets of untamed code. Get ready to navigate loops, dodge runtime errors, and debug your way to enlightenment! And finally Balabizo!",
-		tourguideID: "6700044e887e126c909d6f21",
-		activities: [
-			{
-				activityType: "Activity",
-				activity: "670405f81ddb4f53fd971cd8",
-				startTime: "2024-11-07T09:30:00.000Z",
-				endTime: "2024-11-07T12:45:00.000Z",
-				_id: "6703f5310ecc1ad25ff95145",
-				id: "6703f5310ecc1ad25ff95145",
-			},
-			{
-				activityType: "Activity",
-				activity: "670740b8290174553a39cd54",
-				startTime: "2024-11-07T09:30:00.000Z",
-				endTime: "2024-11-07T12:45:00.000Z",
-				_id: "672cb13500b4345568fbfae6",
-				id: "672cb13500b4345568fbfae6",
-			},
-		],
-		pickupTime: "2024-11-07T12:45:00.000Z",
-		language: "Arabic",
-		accessibility: ["weelchair", "ambulance cars"],
-		price: 1000,
-		availableDateAndTime: "2024-12-20T00:00:00.000Z",
-		pickup: "GUC",
-		dropOff: "GUC",
-		tags: ["sky diving", "sea"],
-		isActivated: true,
-		isFlagged: false,
-		ratings: ["672b666a8c7e37c372c27ebd"],
-		sumOfRatings: 125,
-		createdAt: "2024-10-07T14:50:25.807Z",
-		updatedAt: "2024-11-06T12:51:54.972Z",
-		location: "Cairo,Eg",
-		picture: "https://i.postimg.cc/dtYPjDgS/guc.jpg",
-		__v: 1,
-		rating: 125,
-		id: "6703f5310ecc1ad25ff95144",
-	});
+	const location = useLocation();
+	usePageHeader(null, null);
+	const [itinerary, setItinerary] = useState(
+		(location.state && location.state.itineraryDetails) || {
+			_id: "6703f5310ecc1ad25ff95144",
+			name: "Tour in GUC (Don't touch it)",
+			description:
+				"Join me on a tour of GUC, where algorithms roam free, data structures tower like monuments, and every lecture hall holds the secrets of untamed code. Get ready to navigate loops, dodge runtime errors, and debug your way to enlightenment! And finally Balabizo!",
+			tourguideID: "6700044e887e126c909d6f21",
+			activities: [
+				{
+					activityType: "Activity",
+					activity: "672fb44bebf736b1cf3d51a8",
+					startTime: "2024-11-07T09:30:00.000Z",
+					endTime: "2024-11-07T12:45:00.000Z",
+				},
+				{
+					activityType: "Activity",
+					activity: "672fb349ebf736b1cf3d519b",
+					startTime: "2024-11-07T09:30:00.000Z",
+					endTime: "2024-11-07T12:45:00.000Z",
+				},
+			],
+			pickupTime: "2024-11-07T12:45:00.000Z",
+			language: "Arabic",
+			accessibility: ["weelchair", "ambulance cars"],
+			price: 1000,
+			availableDateAndTime: "2024-12-20T00:00:00.000Z",
+			pickup: "GUC",
+			dropOff: "GUC",
+			tags: ["sky diving", "sea"],
+			isActivated: true,
+			isFlagged: false,
+			ratings: ["672b666a8c7e37c372c27ebd", ],
+			sumOfRatings: 125,
+			createdAt: "2024-10-07T14:50:25.807Z",
+			updatedAt: "2024-11-06T12:51:54.972Z",
+			location: "Cairo,Eg",
+			picture: "https://i.postimg.cc/dtYPjDgS/guc.jpg",
+			__v: 1,
+			rating: 125,
+			id: "6703f5310ecc1ad25ff95144",
+		}
+	);
 
 	//For mangaing page logic
 	const [BookPopUp, setBookPopUp] = useState(false);
@@ -68,23 +79,22 @@ const ItineraryDetails = () => {
 
 	const handleBooking = async () => {
 		try {
-			// TODO: handle if the payment can be made due to tourist money.
-			// TODO: get the touristId from the browser
-			//TODO: handle points calculation after additition of requirement 55
+			// TODO: add different ways of payeen
+
 			const bookingResponse = await axiosInstance.post(
 				"booking/createBooking",
 				{
-					touristID: "670442014aa7c398b29183c9",
 					bookingType: "Itinerary",
 					typeId: itinerary._id,
-					totalPrice,
 					count: ticketCount,
-				}
+				},
+				{ withCredentials: true }
 			);
 
 			// Check the response status
 			if (bookingResponse.status === 201) {
 				// Add any additional success handling here
+				setPointsAdded(bookingResponse.data.pointsAdded);
 				setBookPopUp(false);
 				setBookingDonePopUp(true);
 			} else {
@@ -110,24 +120,19 @@ const ItineraryDetails = () => {
 			}
 		}
 	};
-	usePageHeader(null, null);
+
 	//For managing itinerary data
 	const [photoList, setPhotoList] = useState([]);
+	const [pointsAdded, setPointsAdded] = useState(0);
 	const [tourGuideName, setTourGuideName] = useState(null);
 	const [tourGuidePicture, setTourGuidePicture] = useState(null);
-	const [tags, setTags] = useState(itinerary.tags);
 	const [activities, setActivities] = useState([]);
-	const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
 	const [ticketCount, setTicketCount] = useState(0);
-	const description = itinerary.description;
-	const price = itinerary.price;
-	const totalPrice = ticketCount * price;
-	const language = itinerary.language;
-	const accessibility = itinerary.accessibility;
-	const itineraryTitle = itinerary.name;
-	const pickup = itinerary.pickup;
-	const dropoff = itinerary.dropOff;
-	const pickuptime = itinerary.pickupTime;
+	const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
+	const totalPrice = itinerary.price * ticketCount;
+
+	//For getting free spots
+
 	//For Tour guide name and photo
 	useEffect(() => {
 		const fetchTourGuide = async () => {
@@ -139,7 +144,7 @@ const ItineraryDetails = () => {
 				setTourGuideName(tourguide.name);
 				setTourGuidePicture(tourguide.picture);
 			} catch (error) {
-				console.error("Error fetching reviews: ", error);
+				console.error("Error fetching Tour guid	: ", error);
 			}
 		};
 		fetchTourGuide();
@@ -211,11 +216,10 @@ const ItineraryDetails = () => {
 					.filter(
 						(activity) =>
 							activity.activityType === "Activity" &&
-							activity.activityData.picture
+							activity.activityData.pictures
 					)
-					.map((activity) => {
-						return activity.activityData.picture;
-					});
+					.flatMap((activity) => activity.activityData.pictures);
+
 				photosData.push(itinerary.picture);
 
 				setPhotoList(photosData);
@@ -242,7 +246,7 @@ const ItineraryDetails = () => {
 				handleSubmit={handleBooking}
 			>
 				<TicketCounter
-					pricePerPerson={price}
+					pricePerPerson={itinerary.price}
 					maxCount={freeSpots}
 					currentCount={ticketCount}
 					setCount={setTicketCount}
@@ -256,21 +260,21 @@ const ItineraryDetails = () => {
 				containsActionButton={false}
 				cancelText={"Ok"}
 			>
-				<SuccessfulBooking />
+				<SuccessfulBooking  points={pointsAdded}/>
 			</PopUp>
 
 			<ItineraryAndActivityHeader
 				mode="itinerary"
-				title={itineraryTitle}
+				title={itinerary.name}
 			/>
 			<CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
 
 			<div className="itinerary-info">
 				<div className="placeholder">
 					<ItineraryTimeline
-						pickUpLocation={pickup}
-						pickUpTime={pickuptime}
-						dropOffLocation={dropoff}
+						pickUpLocation={itinerary.pickup}
+						pickUpTime={itinerary.pickupTime}
+						dropOffLocation={itinerary.dropOff}
 						activities={activities}
 					/>
 					{/* pickyp location, pickup time, drop off location, and activity details array */}
@@ -280,7 +284,7 @@ const ItineraryDetails = () => {
 					<ProfileAndDescription
 						name={tourGuideName || "balabizo"}
 						picture={tourGuidePicture}
-						description={description}
+						description={itinerary.description}
 						width={"80%"}
 						// height={"50%"}
 						fontSize={"1.2em"}
@@ -297,14 +301,14 @@ const ItineraryDetails = () => {
 										alt=""
 										className="language-icon"
 									/>
-									<span>Language: {language}</span>
+									<span>Language: {itinerary.language}</span>
 								</div>
 							</div>
 							<Accessibility
-								accessibilities={accessibility}
+								accessibilities={itinerary.accessibility}
 								fontSize={"0.8em"}
 							/>
-							<Tags tags={tags} fontSize={"0.85em"} />
+							<Tags tags={itinerary.tags} fontSize={"0.85em"} />
 							<ReviewsSection
 								ratingIds={itinerary.ratings}
 								width={"100%"}
@@ -315,7 +319,7 @@ const ItineraryDetails = () => {
 						{/* Done */}
 						<div className="book-availabledates">
 							<Book
-								price={price}
+								price={itinerary.price}
 								text={"Likely to be out "}
 								onClick={() => {
 									// Open pop up with booking details
