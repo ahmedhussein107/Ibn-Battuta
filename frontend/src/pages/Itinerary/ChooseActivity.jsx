@@ -1,23 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import i1 from "../../assets/images/iti.png";
 import i2 from "../../assets/images/i2.png";
 import Footer from "../../components/Footer";
 import TimeLine from "../../components/TimelineN";
 import { useLocation } from "react-router-dom";
+import NavBar from "../../components/NavBar";
 const ChooseActivity = () => {
     const location = useLocation();
+    console.log("state: ", location.state);
     const {
         name,
         language,
         description,
         date,
         time,
-        pickupLocationlatitude,
-        pickupLocationlongitude,
-        dropOffLocationlatitude,
-        dropOffLocationlongitude,
+        pickuplatitude,
+        pickuplongitude,
+        dropOfflatitude,
+        dropOfflongitude,
         tags,
-        accessibilityTypes,
+        accessibility,
         price,
     } = location.state;
 
@@ -27,14 +29,15 @@ const ChooseActivity = () => {
         description,
         date,
         time,
-        pickupLocationlatitude,
-        pickupLocationlongitude,
-        dropOffLocationlatitude,
-        dropOffLocationlongitude,
+        pickuplatitude,
+        pickuplongitude,
+        dropOfflatitude,
+        dropOfflongitude,
         tags,
-        accessibilityTypes,
+        accessibility,
         price
     );
+
     return (
         <div
             style={{
@@ -82,9 +85,22 @@ const ChooseActivity = () => {
                     Create A New Itinerary
                 </div>
             </div>
-            <div style={{ marginLeft: "10vw" }}>
-                <TimeLine />
-            </div>
+            <TimeLine
+                date={date}
+                time={time}
+                state={{
+                    name,
+                    language,
+                    description,
+                    pickuplatitude,
+                    pickuplongitude,
+                    dropOfflatitude,
+                    dropOfflongitude,
+                    tags,
+                    accessibility,
+                    price,
+                }}
+            />
             <Footer />
         </div>
     );

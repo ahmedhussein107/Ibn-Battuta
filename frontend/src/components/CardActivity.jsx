@@ -8,14 +8,14 @@ import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 
-const iconSize = "0.85rem";
-
 const CardActivity = ({
     activity,
     width,
     height,
     firstLineButtons = [],
     bottomButtons = [],
+    iconSize = "0.85rem",
+    fontSize = "0.9rem",
 }) => {
     const image = activity.pictures[0];
     const line1 = (
@@ -28,7 +28,7 @@ const CardActivity = ({
             style={{
                 display: "flex",
                 flexDirection: "row",
-                fontSize: "0.9rem",
+                fontSize: fontSize,
                 gap: "2vw",
             }}
         >
