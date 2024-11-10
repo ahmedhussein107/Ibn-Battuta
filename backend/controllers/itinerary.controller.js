@@ -3,6 +3,7 @@ import Activity from "../models/activity.model.js";
 import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 
 export const createItinerary = async (req, res) => {
+    req.body.tourguideID = req.user.userId;
     try {
         const itinerary = new Itinerary(req.body);
         await itinerary.save();
@@ -186,17 +187,24 @@ export const toggleFlaggedItineraries = async (req, res) => {
 
 export const toggleActivatedItineraries = async (req, res) => {
     try {
+        console.log("1");
         const itineraryID = req.params.id;
+        console.log("2");
         const itinerary = await Itinerary.findById(itineraryID);
+        console.log("3");
         if (!itinerary) {
             return res.status(404).json({ message: "Itinerary not found" });
         }
+        console.log("4");
         itinerary.isActivated = !itinerary.isActivated;
+        console.log("5");
         await itinerary.save();
+        console.log("6");
         res.status(200).json({
             message: "Itinerary activated status changed successfully",
             itinerary,
         });
+        console.log("7");
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

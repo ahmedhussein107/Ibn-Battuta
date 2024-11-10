@@ -6,6 +6,8 @@ import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import GenericCard from "../../components/GenericCard";
 import CardBooking from "../../components/CardBooking";
+import TouristHotelBookings from "../../components/Hotels/TouristHotelBookings";
+import HotelList from "../../components/Hotels/HotelList";
 
 const Bookings = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -28,16 +30,21 @@ const Bookings = () => {
         Itineraries: "booking/getItineraryBookings",
         Activities: "booking/getActivityBookings",
         Flights: "booking/getActivityBookings",
-        Hotels: "booking/getActivityBookings",
+        Hotels: "booking/getHotelBookings",
     };
 
     const fetchBookings = async () => {
         try {
             const response = await axiosInstance.get(URI[selected], {
+                params: {
+                    page: currentPage,
+                    limit: itemsPerPage,
+                },
                 withCredentials: true,
             });
-            console.log("response", response.data);
-            setBookings(response.data);
+            console.log("response", response);
+            setBookings(response.data.result);
+            setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error("Failed to fetch bookings", error);
         }
@@ -71,16 +78,18 @@ const Bookings = () => {
                     {(selected == "Itineraries" || selected == "Activities") && (
                         <>
                             {bookings.map((booking) => (
-                                <CardBooking
-                                    booking={booking}
-                                    width="46vw"
-                                    height="34vh"
-                                />
+                                <div style={{ padding: "1%" }}>
+                                    <CardBooking
+                                        booking={booking}
+                                        width="46vw"
+                                        height="34vh"
+                                    />
+                                </div>
                             ))}
                         </>
                     )}
                     {selected == "Flights" && <> </>}
-                    {selected == "Hotels" && <> </>}
+                    {selected == "Hotels" && <TouristHotelBookings rooms={bookings} />}
                 </div>
                 <PaginationComponent
                     totalPages={totalPages}

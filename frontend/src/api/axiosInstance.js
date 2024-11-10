@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const URI = import.meta.env.VITE_API_URI;
-
 console.log("VITE_API_URI:", URI);
 
 const axiosInstance = axios.create({

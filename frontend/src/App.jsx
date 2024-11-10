@@ -39,9 +39,12 @@ import PopUp from "./components/PopUpsGeneric/PopUp";
 import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
 import AllActivities from "./pages/Admin/AllActivities";
 import AllItineraries from "./pages/Admin/AllItineraries";
-import Shop from "./components/Shop.jsx";
+import Shop from "./pages/Product/Shop.jsx";
 import Bookings from "./pages/Tourist/Bookings.jsx";
 import NavBar from "./components/NavBar.jsx";
+import ShowOfferDetails from "./components/Hotels/ShowOfferDetails.jsx";
+import HotelList from "./components/Hotels/HotelList.jsx";
+import Orders from "./pages/Tourist/Orders.jsx";
 import AdminProfilePage from "./pages/Admin/AdminProfilePage";
 import AdvertiserProfilePage from "./pages/Advertiser/AdvertiserProfilePage";
 import GovernorProfilePage from "./pages/Governor/GovernorProfilePage";
@@ -62,21 +65,22 @@ function App() {
         <HeaderProvider>
             <Router>
                 <Header />
+
                 <Routes>
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/signin" element={<Signin />} />
+                    <Route path="/select-your-role" element={<SelectYourRole />} />
 
                     <Route element={<LayoutWithNav />}>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/test" element={<PopUp />} />
                         <Route path="/complaints" element={<ComplaintList />} />
-                        <Route path="/shop" element={<Shop />} />
                         <Route
                             path="/complaint/:complaintId"
                             element={<ViewSingleComplaint />}
                         />
+                        {/* signin and signup pages */}
 
-                        <Route path="/select-your-role" element={<SelectYourRole />} />
                         {/* home pages for each role */}
                         <Route path="/admin" element={<AdminHome />} />
                         <Route path="/advertiser" element={<AdvertiserHome />} />
@@ -89,15 +93,12 @@ function App() {
                         <Route path="/itineraries" element={<Itineraries />} />
                         <Route path="/itinerary-details" element={<ItineraryDetails />} />
                         <Route path="/landmarks" element={<Landmarks />} />
+                        <Route path="/shop" element={<Shop />} />
 
                         <Route path="/about" element={<AboutPage />} />
                         <Route path="/create-product" element={<CreateProductPage />} />
                         <Route path="/add-new-user" element={<AddNewUser />} />
                         <Route path="admin/users" element={<UserManagement />} />
-                        <Route
-                            path="admin/pending-users"
-                            element={<UserManagement isAll={false} />}
-                        />
                         <Route
                             path="/update-product/:productId"
                             element={<UpdateProductPage />}
@@ -133,6 +134,13 @@ function App() {
                         <Route path="/admin/itineraries" element={<AllItineraries />} />
 
                         <Route path="/bookings" element={<Bookings />} />
+                        <Route path="/orders" element={<Orders />} />
+
+                        <Route path="/hotel/offers" element={<HotelList />} />
+                        <Route
+                            path="/hotel/offer-details/:id"
+                            element={<ShowOfferDetails />}
+                        />
                         <Route path="/admin-profile" element={<AdminProfilePage />} />
                         <Route
                             path="/advertiser-profile"

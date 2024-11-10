@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useHeader } from "./HeaderContext";
 
 const usePageHeader = (
-    imageSrc,
+    imageSrc = null,
     text,
     SearchBarComponent = null,
     ProfilePictureComponent = null
@@ -11,8 +11,19 @@ const usePageHeader = (
     const { setHeaderData, clearHeader } = useHeader();
 
     useEffect(() => {
+        // Set the header data for this component
         setHeaderData({ imageSrc, text, SearchBarComponent, ProfilePictureComponent });
-    }, [setHeaderData, imageSrc, text, clearHeader]);
+
+        // Clear the header on component unmount to prevent overlap
+        return () => clearHeader();
+    }, [
+        setHeaderData,
+        imageSrc,
+        text,
+        SearchBarComponent,
+        ProfilePictureComponent,
+        clearHeader,
+    ]);
 };
 
 export default usePageHeader;

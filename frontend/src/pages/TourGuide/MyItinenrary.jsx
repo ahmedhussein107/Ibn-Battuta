@@ -17,86 +17,7 @@ import DeleteButton from "../../components/DeleteButton";
 const MyItinenrary = () => {
     const navigate = useNavigate();
 
-    const [itineraries, setitineraries] = useState([
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair", "Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair", "Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-    ]);
+    const [itineraries, setitineraries] = useState([]);
     const [searchedTerm, setSearchedTerm] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
 
@@ -154,7 +75,7 @@ const MyItinenrary = () => {
             const response = await axiosInstance.delete(
                 `/itinerary/deleteItinerary/${itineraryID}`
             );
-            sortItineraries((prevItineraries) =>
+            setitineraries((prevItineraries) =>
                 prevItineraries.filter((itinerary) => itinerary._id !== itineraryID)
             );
         } catch (error) {
@@ -164,10 +85,12 @@ const MyItinenrary = () => {
 
     const activateItineraryHandler = async (itineraryID) => {
         try {
+            console.log("1");
             const response = await axiosInstance.patch(
                 `/itinerary/toggleActive/${itineraryID}`
             );
-            sortItineraries((prevItineraries) =>
+            console.log("2");
+            setitineraries((prevItineraries) =>
                 prevItineraries.map((itinerary) =>
                     itinerary._id === itineraryID
                         ? { ...itinerary, isActivated: !itinerary.isActivated }
@@ -175,7 +98,8 @@ const MyItinenrary = () => {
                 )
             );
         } catch (error) {
-            alert("Error activating itinerary");
+            // see error message
+            console.log(error);
         }
     };
 

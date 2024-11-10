@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import NavBar from "../../components/NavBar";
+import React, { useEffect, useState } from "react";
 import i1 from "../../assets/images/iti.png";
 import i2 from "../../assets/images/i2.png";
 import Map from "../map";
 import Button from "../../components/Button.jsx";
 import { Link, useNavigate } from "react-router-dom";
+import axiosInstance from "../../api/axiosInstance.js";
+import NavBar from "../../components/NavBar";
 
 const CreateItineraryPage = () => {
     const [name, setName] = useState("");
@@ -21,17 +22,26 @@ const CreateItineraryPage = () => {
     const [accessibilityTypes, setAccessibilityTypes] = useState([]);
     const [selectedAccessibility, setSelectedAccessibility] = useState("");
     const [price, setPrice] = useState("");
+    const [predefinedTags, setPredefinedTags] = useState([]);
+
+    useEffect(() => {
+        const fetchPredefinedTags = async () => {
+            try {
+                const response = await axiosInstance.get(`/tag/allTags/`);
+                console.log(response);
+                let tags = [];
+                for (let tag of response.data) {
+                    tags.push(tag._id);
+                }
+                setPredefinedTags(tags);
+            } catch (error) {
+                console.error("Error fetching Tags:", error);
+            }
+        };
+        fetchPredefinedTags();
+    }, []);
 
     const navigate = useNavigate();
-
-    const predefinedTags = [
-        "Adventure",
-        "Relaxation",
-        "Cultural",
-        "Nature",
-        "Family",
-        "Romantic",
-    ];
 
     const addTag = () => {
         if (selectedTag && !tags.includes(selectedTag)) {
@@ -224,7 +234,10 @@ const CreateItineraryPage = () => {
                             <input
                                 type="date"
                                 value={date}
-                                onChange={(e) => setDate(e.target.value)}
+                                onChange={(e) => {
+                                    // console.log(e.target.value);
+                                    setDate(e.target.value);
+                                }}
                                 style={{
                                     width: "49%",
                                     padding: "1vh",
@@ -479,6 +492,8 @@ const CreateItineraryPage = () => {
                         text="Next"
                         width={"10vw"}
                         handleClick={() => {
+                            console.log("date in createItinerary:", date);
+                            console.log("time in createItinerary:", time);
                             navigate("/choose-activity", {
                                 state: {
                                     name: name,
@@ -486,12 +501,12 @@ const CreateItineraryPage = () => {
                                     description: description,
                                     date: date,
                                     time: time,
-                                    pickupLocationlatitude: pickupLocationlatitude,
-                                    pickupLocationlongitude: pickupLocationlongitude,
-                                    dropOffLocationlatitude: dropOffLocationlatitude,
-                                    dropOffLocationlongitude: dropOffLocationlongitude,
+                                    pickuplatitude: pickupLocationlatitude,
+                                    pickuplongitude: pickupLocationlongitude,
+                                    dropOfflatitude: dropOffLocationlatitude,
+                                    dropOfflongitude: dropOffLocationlongitude,
                                     tags: tags,
-                                    accessibilityTypes: accessibilityTypes,
+                                    accessibility: accessibilityTypes,
                                     price: price,
                                 },
                             });
@@ -512,7 +527,6 @@ const CreateItineraryPage = () => {
             </div>
         </div>
     );
-    console.log("description", description);
 };
 
 export default CreateItineraryPage;

@@ -4,6 +4,8 @@ const bookingRouter = express.Router();
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 import {
 	getBookings,
+	getBooking,
+	updateBooking,
 	createBooking,
 	redeemPoints,
 	deleteBooking,
@@ -13,7 +15,11 @@ import {
 
 bookingRouter.get("/getBookings", getBookings);
 
+bookingRouter.get("/getBooking/:id", getBooking);
+
 bookingRouter.post("/createBooking", createBooking);
+
+bookingRouter.patch("/updateBooking/:id", updateBooking);
 
 bookingRouter.patch("/redeemPoints/:id", redeemPoints);
 
