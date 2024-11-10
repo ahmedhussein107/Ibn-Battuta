@@ -8,10 +8,12 @@ const customActivitySchema = new mongoose.Schema(
             ref: "TourGuide",
             required: true,
         },
-        title: String,
+        name: String,
         description: String,
         location: String, // search for it in the lamdmarks
-        picture: String,
+        Longitude: Number,
+        Latitude: Number,
+        pictures: [String],
     },
     { timestamps: true }
 );

@@ -6,6 +6,7 @@ import {
     updateTourGuide,
     deleteTourGuide,
     getTourGuidesDocuments,
+    changeTourguidePassword,
 } from "../controllers/tourguide.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 
@@ -15,11 +16,13 @@ tourGuideRouter.post("/createTourGuide", createTourGuide);
 
 tourGuideRouter.get("/getTourGuides", getTourGuides);
 
-tourGuideRouter.get("/getTourGuideById", isAuthenticated, getTourGuideById);
+tourGuideRouter.get("/tourGuide", isAuthenticated, getTourGuideById);
 
-tourGuideRouter.patch("/updateTourGuide/:id", updateTourGuide);
+tourGuideRouter.put("/updateTourGuide", isAuthenticated, updateTourGuide);
 
-tourGuideRouter.delete("/deleteTourGuide/:id", deleteTourGuide);
+tourGuideRouter.delete("/deleteTourGuide", isAuthenticated, deleteTourGuide);
+
+tourGuideRouter.put("/changeTourguidePassword", isAuthenticated, changeTourguidePassword);
 
 tourGuideRouter.get("/documents", getTourGuidesDocuments);
 

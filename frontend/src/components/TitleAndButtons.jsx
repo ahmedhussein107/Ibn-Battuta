@@ -15,12 +15,16 @@ const TitleAndButtons = ({ title, buttons }) => {
                     marginTop: "1%",
                     marginBottom: "2%",
                     fontWeight: "bold",
-                    fontSize: "3vh",
+                    fontSize: "1em",
                 }}
             >
                 {title}
             </p>
-            {buttons.map((button) => button)}
+            <div style={{ display: "flex", gap: "1em" }}>
+                {buttons.map((button, index) => (
+                    <div key={index}>{button}</div>
+                ))}
+            </div>
         </div>
     );
 };

@@ -31,9 +31,9 @@ const navbarUserItems = {
 
 const touristProfileDropdonw = [
     { "My Profile": "/tourist-profile" },
-    { "My Bookings": "link" },
+    { "My Bookings": "/bookings" },
     { "My Bookmarks": "link" },
-    { "My Complaints": "link" },
+    { "My Complaints": "/complaints" },
 ];
 
 const NavBar = () => {
@@ -131,9 +131,17 @@ const NavBar = () => {
 
     return (
         <nav className="navbar">
-            <Link to="/" className="navbar-logo">
-                <img src="/logo.png" alt="Website Logo" className="logo-image" />
-            </Link>
+            <img
+                style={{
+                    padding: "0px",
+                    borderRadius: "20px",
+                    height: "5.2vh",
+                    objectFit: "contain",
+                    marginLeft: "-.8vw",
+                }}
+                src="/logo.png"
+            />
+
             {/* Center: Navbar items */}
             <div className="navbar-links">
                 {navbarItems.map((item, index) => renderItem(item, index))}
@@ -156,7 +164,7 @@ const NavBar = () => {
                                 marginLeft: "20px",
                                 width: "120",
                                 height: "55px",
-                                minHeight: "70px",
+                                minHieght: "70px",
                                 borderRadius: "60px",
                             }}
                         />
@@ -171,9 +179,11 @@ const NavBar = () => {
                                 icon={faBell}
                                 className="notification-image"
                             />
-                            <span className="notification-badge">
-                                {notificationCount}
-                            </span>
+                            {notificationCount > 0 && (
+                                <span className="notification-badge">
+                                    {notificationCount}
+                                </span>
+                            )}
                         </div>
                         <div className="profile-dropdown">
                             <img
@@ -182,57 +192,52 @@ const NavBar = () => {
                                 className="profile-image"
                             />
                             <div className="dropdown-content">
-                                {
-                                    userType === "Admin" ? (
-                                        <Link
-                                            to={"/admin-profile"}
-                                            className="dropdown-item"
-                                        >
-                                            {"My Profile"}
-                                        </Link>
-                                    ) : userType === "Seller" ? (
-                                        <Link
-                                            to={"/seller-profile"}
-                                            className="dropdown-item"
-                                        >
-                                            {"My Profile"}
-                                        </Link>
-                                    ) : userType === "Advertiser" ? (
-                                        <Link
-                                            to={"/advertiser-profile"}
-                                            className="dropdown-item"
-                                        >
-                                            {"My Profile"}
-                                        </Link>
-                                    ) : userType === "Governor" ? (
-                                        <Link
-                                            to={"/governor-profile"}
-                                            className="dropdown-item"
-                                        >
-                                            {"My Profile"}
-                                        </Link>
-                                    ) : userType === "TourGuide" ? (
-                                        <Link
-                                            to={"/tourguide-profile"}
-                                            className="dropdown-item"
-                                        >
-                                            {"My Profile"}
-                                        </Link>
-                                    ) : userType === "Tourist" ? (
-                                        touristProfileDropdonw.map((item, index) => {
-                                            const [label, link] = Object.entries(item)[0];
-                                            return (
-                                                <Link
-                                                    key={index}
-                                                    to={link}
-                                                    className="dropdown-item"
-                                                >
-                                                    {label}
-                                                </Link>
-                                            );
-                                        })
-                                    )
-                                : null}
+                                {userType === "Admin" ? (
+                                    <Link to={"/admin-profile"} className="dropdown-item">
+                                        {"My Profile"}
+                                    </Link>
+                                ) : userType === "Seller" ? (
+                                    <Link
+                                        to={"/seller-profile"}
+                                        className="dropdown-item"
+                                    >
+                                        {"My Profile"}
+                                    </Link>
+                                ) : userType === "Advertiser" ? (
+                                    <Link
+                                        to={"/advertiser-profile"}
+                                        className="dropdown-item"
+                                    >
+                                        {"My Profile"}
+                                    </Link>
+                                ) : userType === "Governor" ? (
+                                    <Link
+                                        to={"/governor-profile"}
+                                        className="dropdown-item"
+                                    >
+                                        {"My Profile"}
+                                    </Link>
+                                ) : userType === "TourGuide" ? (
+                                    <Link
+                                        to={"/tourguide-profile"}
+                                        className="dropdown-item"
+                                    >
+                                        {"My Profile"}
+                                    </Link>
+                                ) : userType === "Tourist" ? (
+                                    touristProfileDropdonw.map((item, index) => {
+                                        const [label, link] = Object.entries(item)[0];
+                                        return (
+                                            <Link
+                                                key={index}
+                                                to={link}
+                                                className="dropdown-item"
+                                            >
+                                                {label}
+                                            </Link>
+                                        );
+                                    })
+                                ) : null}
                                 <div className="dropdown-separator"></div>
                                 <div className="log-out" onClick={handleLogout}>
                                     Logout

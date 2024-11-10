@@ -37,6 +37,12 @@ const Button = styled.button`
     border: none;
     border-radius: 0.5vh;
     cursor: pointer;
+    padding: 1vh 2vh;
+    font-size: 1.5vh;
+    font-weight: bold;
+    border: none;
+    border-radius: 0.5vh;
+    cursor: pointer;
 `;
 
 const ChangePassword = styled(Button)`
@@ -46,9 +52,21 @@ const ChangePassword = styled(Button)`
     border-radius: 20vh;
     border: 0.1vh solid black;
     color: black;
+    width: 20vh;
+    height: 5vh;
+    background: white;
+    border-radius: 20vh;
+    border: 0.1vh solid black;
+    color: black;
 `;
 
 const DeleteAccount = styled(Button)`
+    width: 20vh;
+    height: 5vh;
+    background: white;
+    border-radius: 20vh;
+    border: 0.1vh solid #d00c09;
+    color: red;
     width: 20vh;
     height: 5vh;
     background: white;
@@ -84,15 +102,34 @@ const ProfileDetailsBox = styled.div`
     border-radius: 20px;
     padding: 20px;
     position: relative;
+    width: 831px;
+    background: white;
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 20px;
+    position: relative;
 `;
 
 const InfoBoxesContainer = styled.div`
     display: flex;
     gap: 20px;
     margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
 `;
 
 const WalletBox = styled.div`
+    width: 378px;
+    background: white;
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
     width: 378px;
     background: white;
     box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
@@ -147,6 +184,12 @@ const RedeemBox = styled.div`
     border-radius: 20px;
     padding: 20px;
     text-align: center;
+    width: 378px;
+    background: white;
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
 `;
 
 const InputBox = styled.input`
@@ -156,9 +199,18 @@ const InputBox = styled.input`
     border-radius: 5px;
     text-align: center;
     margin: 5px;
+    width: 100px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    margin: 5px;
 `;
 
 const Arrow = styled.span`
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 10px;
     font-size: 24px;
     font-weight: bold;
     margin: 0 10px;
@@ -172,9 +224,23 @@ const RedeemButton = styled.button`
     border-radius: 20px;
     cursor: pointer;
     margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #f86624;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
 `;
 
 const PreferenceTagsBox = styled.div`
+    width: 831px;
+    background: white;
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
     width: 831px;
     background: white;
     box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
@@ -193,6 +259,14 @@ const TagBubble = styled.span`
     padding: 5px 10px;
     margin: 5px;
     font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    background-color: #ffe0cc;
+    color: black;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin: 5px;
+    font-size: 14px;
 `;
 
 const CloseButton = styled.span`
@@ -200,9 +274,15 @@ const CloseButton = styled.span`
     cursor: pointer;
     color: black;
     font-weight: bold;
+    margin-left: 8px;
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
 `;
 
 const Dropdown = styled.select`
+    margin-top: 10px;
+    padding: 5px;
     margin-top: 10px;
     padding: 5px;
 `;
@@ -442,9 +522,9 @@ export default function TouristProfilePage() {
     };
 
     const currentLevel = tourist
-        ? tourist.loyalityPoints < 100000
+        ? tourist.points < 100000
             ? 1
-            : tourist.loyalityPoints < 500000
+            : tourist.points < 500000
             ? 2
             : 3
         : 1; // Default to level 1
@@ -782,7 +862,7 @@ export default function TouristProfilePage() {
                         <p>Balance: {tourist?.wallet || 0}</p>
                         <PointsSection>
                             <h3>My Points</h3>
-                            <p>Points: {tourist?.points || 0}</p>
+                            <p>Points: {tourist?.loyalityPoints || 0}</p>
                             Level: {currentLevel}
                             <LevelContainer>
                                 <WalletIcon

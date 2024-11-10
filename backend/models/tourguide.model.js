@@ -18,11 +18,13 @@ const tourGuideSchema = new mongoose.Schema(
         documents: [String],
         mobile: { type: String, default: null },
         yearsOfExperience: { type: Number, default: null },
-        previousWork: {
-            title: { type: String, required: true },
-            duration: { type: Number, required: true },
-            description: { type: String, default: null },
-        },
+        previousWork: [
+            {
+                title: { type: String, required: true },
+                duration: { type: Number, required: true },
+                description: { type: String, default: null },
+            },
+        ],
         picture: String,
         notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notifiction" }],
         ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],

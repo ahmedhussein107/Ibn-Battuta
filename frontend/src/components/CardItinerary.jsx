@@ -8,27 +8,38 @@ import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 
-const CardItinerary = ({ itinerary, width, height, firstLineButtons }) => {
+const CardItinerary = ({
+    itinerary,
+    width,
+    height,
+    firstLineButtons = [],
+    bottomButtons = [],
+}) => {
     const image = itinerary.picture;
-    const line1 = <TitleAndButtons title={itinerary.name} buttons={firstLineButtons} />;
+    const line1 = (
+        <div style={{ fontSize: "1.2rem" }}>
+            <TitleAndButtons title={itinerary.name} buttons={firstLineButtons} />
+        </div>
+    );
     const line2 = (
         <div
             style={{
                 display: "flex",
                 flexDirection: "row",
                 gap: "3vw",
+                fontSize: "0.9rem",
             }}
         >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
-                <LocationIcon style={{ fontSize: "2vh" }} />
+                <LocationIcon style={{ fontSize: "0.8rem" }} />
                 <span>{itinerary.location}</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
-                <LanguageIcon style={{ fontSize: "2vh" }} />
+                <LanguageIcon style={{ fontSize: "0.8rem" }} />
                 <span>{itinerary.language}</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
-                <TagsIcon style={{ fontSize: "2vh" }} />
+                <TagsIcon style={{ fontSize: "0.8rem" }} />
                 <span>{itinerary.tags.join(", ")}</span>
             </div>
         </div>
@@ -38,7 +49,7 @@ const CardItinerary = ({ itinerary, width, height, firstLineButtons }) => {
         <TruncatedText
             text={itinerary.description}
             width={"100%"}
-            height={"40%"}
+            height={"60%"}
             fontSize={"2vh"}
         />
     );
@@ -65,9 +76,8 @@ const CardItinerary = ({ itinerary, width, height, firstLineButtons }) => {
         </div>
     );
     const rating = Math.floor(itinerary.rating);
-    console.log("rating", rating);
     const ratings = (
-        <div style={{ display: "flex", flexDirection: "row", marginTop: "-2%" }}>
+        <div style={{ display: "flex", flexDirection: "row" }}>
             <Rating name="read-only" value={rating} readOnly />
             <p style={{ marginLeft: "5%", marginTop: "0%" }}>
                 {itinerary.ratings.length}
@@ -89,42 +99,40 @@ const CardItinerary = ({ itinerary, width, height, firstLineButtons }) => {
                 display: "flex",
                 flexDirection: "row",
                 fontWeight: "bold",
-                marginTop: "-15%",
             }}
         >
             <p>USD</p>
             <p style={{ marginLeft: "5%" }}>{itinerary.price}</p>
         </div>
     );
-    const editButton = (
-        <Button
-            stylingMode="1"
-            text="Edit"
-            width="70%"
-            customStyle={{ marginTop: "-5%" }}
-        />
-    );
-    const deactivateButton = (
-        <Button
-            stylingMode="2"
-            text={itinerary.isActivated ? "Deactivate" : "Activate"}
-            width="70%"
-            customStyle={{
-                marginTop: "2%",
-                color: itinerary.isActivated ? "red" : "green",
-                borderColor: itinerary.isActivated ? "red" : "green",
-                ":hover": {
-                    backgroundColor: itinerary.isActivated ? "red" : "green",
-                },
+
+    const buttons = (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: "100%",
             }}
-        />
+        >
+            {bottomButtons.map(({ text, type, width, onClick, styles }) => (
+                <Button
+                    text={text}
+                    stylingMode={type}
+                    width={width}
+                    handleClick={onClick}
+                    customStyle={styles}
+                />
+            ))}
+        </div>
     );
+
     const card = (
         <GenericCard
             image={image}
             aboveLine={[line1, line2]}
             bottomLeft={[description, accessibility, ratings]}
-            bottomRight={[bookingAvaliable, price, editButton, deactivateButton]}
+            bottomRight={[bookingAvaliable, price, buttons]}
             width={width}
             height={height}
         />

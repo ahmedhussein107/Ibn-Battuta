@@ -6,6 +6,7 @@ import {
     updateSeller,
     deleteSeller,
     getSellersDocuments,
+    changeSellerPassword,
 } from "../controllers/seller.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 
@@ -17,9 +18,11 @@ sellerRouter.get("/getSellers", getSellers);
 
 sellerRouter.get("/getSellerById", isAuthenticated, getSellerById);
 
-sellerRouter.patch("/updateSeller/:id", updateSeller);
+sellerRouter.put("/updateSeller", isAuthenticated, updateSeller);
 
-sellerRouter.delete("/deleteSeller/:id", deleteSeller);
+sellerRouter.delete("/deleteSeller", isAuthenticated, deleteSeller);
+
+sellerRouter.put("/changeSellerPassword", isAuthenticated, changeSellerPassword);
 
 sellerRouter.get("/documents", getSellersDocuments);
 

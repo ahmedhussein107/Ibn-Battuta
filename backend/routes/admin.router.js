@@ -9,6 +9,7 @@ import {
     updateAdmin,
     getUsers,
     getAdminById,
+    changeAdminPassword,
 } from "../controllers/admin.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 const adminRouter = express.Router();
@@ -25,7 +26,7 @@ adminRouter.put("/updateAdmin", isAuthenticated, updateAdmin);
 
 adminRouter.get("/getAdminById", isAuthenticated, getAdminById);
 
-adminRouter.get("/getAdminById", isAuthenticated, getAdminById);
+adminRouter.put("/changeAdminPassword", isAuthenticated, changeAdminPassword);
 
 // New route for deleting a user based on userType and ID
 adminRouter.delete("/deleteUser/:userType/:id", deleteUser);

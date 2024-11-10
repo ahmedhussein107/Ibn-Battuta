@@ -6,6 +6,7 @@ import {
     updateAdvertiser,
     deleteAdvertiser,
     getAdvertisersDocuments,
+    changeAdvertiserPassword,
 } from "../controllers/advertiser.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 
@@ -20,6 +21,12 @@ advertiserRouter.get("/advertiser", isAuthenticated, getAdvertiserById);
 advertiserRouter.put("/updateAdvertiser", isAuthenticated, updateAdvertiser);
 
 advertiserRouter.delete("/deleteAdvertiser", isAuthenticated, deleteAdvertiser);
+
+advertiserRouter.put(
+    "/changeAdvertiserPassword",
+    isAuthenticated,
+    changeAdvertiserPassword
+);
 
 advertiserRouter.get("/documents", getAdvertisersDocuments);
 

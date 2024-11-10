@@ -34,7 +34,7 @@ export default function ItineraryAndActivityHeader({
 				)}
 			</div>
 
-			<ShareAndMark width="15%" />
+			<ShareAndMark width="15%" mode="header" />
 		</div>
 	);
 }

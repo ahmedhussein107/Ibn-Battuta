@@ -7,6 +7,7 @@ import {
     deleteGovernor,
     getGovernor,
     updateGovernor,
+    changeGovernorPassword,
 } from "../controllers/governor.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 
@@ -21,5 +22,7 @@ governorRouter.get("/getGovernor", isAuthenticated, getGovernor);
 governorRouter.delete("/deleteGovernor", isAuthenticated, deleteGovernor);
 
 governorRouter.put("/updateGovernor", isAuthenticated, updateGovernor);
+
+governorRouter.put("/changeGovernorPassword", isAuthenticated, changeGovernorPassword);
 
 export default governorRouter;
