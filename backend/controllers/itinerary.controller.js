@@ -3,6 +3,7 @@ import Activity from "../models/activity.model.js";
 import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 
 export const createItinerary = async (req, res) => {
+    req.body.tourguideID = req.user.userId;
     try {
         const itinerary = new Itinerary(req.body);
         await itinerary.save();

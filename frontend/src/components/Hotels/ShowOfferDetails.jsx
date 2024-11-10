@@ -61,7 +61,12 @@ const ShowOfferDetails = () => {
                 </div>
                 <div className="hotel-booking">
                     <h4>Show On Map</h4>
-                    <MapComponent />
+                    <MapComponent
+                        setMarkerPosition={(position) => {
+                            position.lat = offer.lat || "31.3244";
+                            position.lng = offer.lng || "42.3242";
+                        }}
+                    />
                     <div className="offer-description">
                         <h3 className="room-title">{offer.miniDescription}</h3>
                         <div className="room-info">

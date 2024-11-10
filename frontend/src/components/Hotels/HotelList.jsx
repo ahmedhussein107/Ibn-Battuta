@@ -36,29 +36,23 @@ const HotelList = () => {
 
     const [rooms, setRooms] = useState([]);
     const [citySearch, setCitySearch] = useState(null);
-    let _list = [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
-
     const [searchParams, setSearchParams] = useSearchParams();
-
     const [lat, setLat] = useState(searchParams.get("lat") || "");
     const [lng, setLng] = useState(searchParams.get("lng") || "");
     const [start, setStart] = useState(searchParams.get("start") || "");
     const [end, setEnd] = useState(searchParams.get("end") || "");
+
     const getGuestCount = () => {
         const guestCount = Number(searchParams.get("guests"));
-        console.log("guest count is", guestCount);
-        if (isNaN(guestCount)) {
-            return 2;
-        }
-        return guestCount && guestCount > 0 ? guestCount : 2;
+        return isNaN(guestCount) || guestCount <= 0 ? 2 : guestCount;
     };
     const [guests, setGuests] = useState(getGuestCount());
     const [chosenCity, setChosenCity] = useState(null);
 
     const fetchRooms = async () => {
         let url = "amadeus/hotels/search/hotel-offers";
-        console.log("i am here at my hotel bookings");
-
+        console.log("Fetching hotel bookings...");
+        console.log("lat is ", lat);
         try {
             const { data } = await axiosInstance.get(url, {
                 params: {
@@ -70,35 +64,53 @@ const HotelList = () => {
                 },
                 withCredentials: true,
             });
-            console.log("data is", data);
+            console.log("Fetched data:", data);
             setRooms(data.data);
         } catch (err) {
-            console.log(err);
+            console.error("Error fetching rooms:", err);
             setRooms([]);
         }
     };
 
-    const handleSearchButton = async () => {
+    const handleSearchButton = () => {
+        console.log("Chosen city when clicked is:", chosenCity);
         let newParams = {
-            lat: chosenCity.geoCode.latitude,
-            lng: chosenCity.geoCode.longitude,
+            lat: chosenCity?.geoCode?.latitude,
+            lng: chosenCity?.geoCode?.longitude,
         };
         if (guests) newParams.guests = guests;
         if (start.trim()) newParams.start = start;
         if (end.trim()) newParams.end = end;
-        console.log("the new params are", newParams);
+
+        console.log("Updating search parameters:", newParams);
         setSearchParams(newParams);
-        await fetchRooms();
         setCitySearch(chosenCity);
     };
 
+    useEffect(() => {
+        const newLat = searchParams.get("lat") || "";
+        const newLng = searchParams.get("lng") || "";
+        const newStart = searchParams.get("start");
+        const newEnd = searchParams.get("end");
+        const newGuests = getGuestCount();
+
+        setLat(newLat);
+        setLng(newLng);
+        setStart(newStart);
+        setEnd(newEnd);
+        setGuests(newGuests);
+
+        if (newLat && newLng) {
+            fetchRooms();
+        }
+    }, [searchParams]);
+
     const getRoomDetails = (roomOffer) => {
-        console.log("room offer is", roomOffer);
         const details = {
             name: roomOffer.hotel.name,
             address: "123 Main Street, New York, USA",
             addressLandmark: "New Downtown",
-            city: citySearch.name + ", " + citySearch.address.countryCode,
+            city: `${citySearch.name}, ${citySearch.address.countryCode}`,
             image: "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
             rooms: 1,
             bathrooms: 1,
@@ -111,21 +123,30 @@ const HotelList = () => {
             paymentMethod: "Credit Card",
             miniDescription: "This is a sample description.",
             description:
-                "This is the whole description for the room.it is a lot of text and unnecessary information",
-            bookingId: 344542321, // when booked
-            _id: "git-it-done",
+                "This is a long description for the room with additional information.",
+            bookingId: 344542321,
+            _id: "unique-room-id",
         };
         return details;
     };
 
     useEffect(() => {
-        setLat(searchParams.get("lat"));
-        setLng(searchParams.get("lng"));
-        setStart(searchParams.get("start"));
-        setEnd(searchParams.get("end"));
-        setGuests(getGuestCount());
-    }, [searchParams]);
+        const newLat = searchParams.get("lat") || "";
+        const newLng = searchParams.get("lng") || "";
+        const newStart = searchParams.get("start");
+        const newEnd = searchParams.get("end");
+        const newGuests = getGuestCount();
 
+        setLat(newLat);
+        setLng(newLng);
+        setStart(newStart);
+        setEnd(newEnd);
+        setGuests(newGuests);
+
+        if (newLat && newLng) {
+            fetchRooms();
+        }
+    }, [searchParams]);
     useEffect(() => {
         if (citySearch) {
             fetchRooms();
@@ -149,7 +170,7 @@ const HotelList = () => {
             <div className="hotel-list-container">
                 <div className="hotel-grid">
                     {/* change later for rooms.map(offer=(item)) */}
-                    {_list.map((item, index) => (
+                    {Array.from({ length: 20 }).map((item, index) => (
                         <HotelCard
                             key={index}
                             offer={false ? getRoomDetails(room) : room}

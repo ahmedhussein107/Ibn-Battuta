@@ -97,7 +97,6 @@ const MyItinenrary = () => {
                         : itinerary
                 )
             );
-            // window.location.reload();
         } catch (error) {
             // see error message
             console.log(error);
