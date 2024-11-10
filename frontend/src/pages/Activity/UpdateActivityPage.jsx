@@ -30,6 +30,4 @@ export default function UpdateActivityPage() {
     const location = useLocation();
     const { activity } = location.state;
 
-
-
 }
