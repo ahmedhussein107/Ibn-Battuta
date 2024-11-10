@@ -41,7 +41,7 @@
     display: flex;
     flex-wrap: wrap; /* Allow buttons to wrap */
     gap: 20px; /* Adjust spacing between buttons */
-    padding-top: calc(3 * var(--spacing-large));
+    padding-top: calc(2 * var(--spacing-large));
 }
 
 .back-button,
@@ -129,4 +129,9 @@
     100% {
         transform: rotate(360deg);
     }
+}
+.signup-error {
+    color: red;
+    text-align: center;
+    margin-top: auto;
 }

@@ -10,8 +10,9 @@ import DatePicker from "../../components/DatePicker";
 import CheckboxList from "../../components/CheckBoxList";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
-import ActivityCard from "../../components/ActivityCard";
 import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
+import CardActivity from "../../components/CardActivity";
+import ShareAndMark from "../../components/ShareAndMark";
 
 const minPrice = 0;
 const maxPrice = 1000;
@@ -23,7 +24,7 @@ const Activities = () => {
     const [selectedTags, setSelectedTags] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-    const [ratingRange, setRatingRange] = useState([1, 5]);
+    const [ratingRange, setRatingRange] = useState([null, 5]);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [sortBy, setSortBy] = useState("priceAsc");
@@ -129,7 +130,7 @@ const Activities = () => {
         }
 
         if (ratingRange[0] || ratingRange[1]) {
-            if (ratingRange[0] === 1) {
+            if (!ratingRange[0]) {
                 query.rating = "-" + ratingRange[1];
             } else {
                 query.rating = ratingRange[0] + "-" + ratingRange[1];
@@ -226,15 +227,16 @@ const Activities = () => {
                     backgroundRepeat: "no-repeat",
                 }}
             ></div>
-            <div style={{ position: "fixed", top: 0, left: "9%" }}>
+            {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
                 <NavBar />
-            </div>
+            </div> */}
             <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
                 <div
                     style={{
-                        width: "25vw",
-                        boxShadow: "0 5vh 5vh rgba(0, 0, 0, 0.1)",
+                        width: "40vw",
                         borderRadius: "3vh",
+                        marginTop: "1%",
+                        marginBottom: "1%",
                     }}
                 >
                     <SideBar
@@ -245,24 +247,48 @@ const Activities = () => {
                 </div>
                 <div
                     style={{
-                        position: "absolute",
-                        top: "14vh",
-                        left: "8vw",
-                        fontSize: "8vh",
-                        color: "white",
-                        pointerEvents: "none",
-                        fontFamily: "serif", // Try "" or "serif" for other options
+                        minHeight: "50vh",
+                        width: "100vw",
+                        display: "flex",
+                        flexDirection: "column",
+                        flexWrap: "wrap",
+                        justifyContent: "space-evenly",
                     }}
                 >
-                    Activities
+                    {activities.map((activity, index) => (
+                        <div key={index} style={{ padding: "1.5vh" }}>
+                            <CardActivity
+                                activity={activity}
+                                width={"60vw"}
+                                height={"34vh"}
+                                firstLineButtons={[
+                                    <ShareAndMark
+                                        width="1.2vw"
+                                        height="1.2vw"
+                                        styles={{ padding: "0.5vh" }}
+                                    />,
+                                ]}
+                                bottomButtons={[
+                                    {
+                                        text: "Book Now",
+                                        onClick: () =>
+                                            navigate("/activity-details", {
+                                                state: activity,
+                                            }),
+                                        type: "1",
+                                        width: "50%",
+                                        styles: {
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
+                                        },
+                                    },
+                                ]}
+                            />
+                        </div>
+                    ))}
                 </div>
-                {/* <div style={{ width: "75vw" }}>
-                    {activities.map((activity) => {
-                        return (
-                            <ActivityCard activity={activity} handleDelete={() => {}} />
-                        );
-                    })}
-                </div> */}
             </div>
             <Footer />
         </div>

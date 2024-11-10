@@ -3,6 +3,10 @@ button:hover {
     border: none;
 }
 
+.button-text {
+    font-size: 1em;
+}
+
 .button-1 {
     border-radius: var(--spacing-medium);
     padding: var(--spacing-small) var(--spacing-medium);
@@ -33,14 +37,12 @@ button:hover {
     background-color: var(--accent-color);
     cursor: pointer;
     transition: background-color 0.3s; /* Transition for hover effect */
-    flex: 1; /* Make buttons flexible */
     margin: 0 var(--spacing-small);
     color: white;
-    flex-direction: block;
     display: flex;
-    align-self: center;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
 .button-submit:hover {
@@ -54,4 +56,50 @@ button:hover {
 .button-2:hover {
     color: white;
     background-color: var(--accent-color);
+}
+
+.loader {
+    width: 3vmin;
+    height: 3vmin;
+    border: 3px dotted #fff;
+    border-style: solid solid dotted dotted;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 2s linear infinite;
+}
+.loader::after {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border: 3px dotted #ff3d00;
+    border-style: solid solid dotted;
+    width: 1.5vmin;
+    height: 1.5vmin;
+    border-radius: 50%;
+    animation: rotationBack 1s linear infinite;
+    transform-origin: center center;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@keyframes rotationBack {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
 }

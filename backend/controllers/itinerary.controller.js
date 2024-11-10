@@ -1,4 +1,5 @@
 import Itinerary from "../models/itinerary.model.js";
+import Activity from "../models/activity.model.js";
 import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 
 export const createItinerary = async (req, res) => {
@@ -12,8 +13,9 @@ export const createItinerary = async (req, res) => {
 };
 
 export const getItineraries = async (req, res) => {
+    const query = buildFilter(req.query);
     try {
-        const itineraries = await Itinerary.find();
+        const itineraries = await Itinerary.find(query);
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -31,6 +33,7 @@ export const deleteItineraries = async (req, res) => {
 
 export const getItineraryById = async (req, res) => {
     try {
+        console.log("I am here");
         const itinerary = await Itinerary.findById(req.params.id);
         if (itinerary) {
             res.status(200).json(itinerary);
@@ -39,6 +42,31 @@ export const getItineraryById = async (req, res) => {
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
+    }
+};
+// I want to make a function that returns the minimum no of free spot for an Itinrary by taking minimum of free spots of all its activities
+export const getFreeSpots = async (id) => {
+    try {
+        const itinerary = await Itinerary.findById(id);
+        if (!itinerary) {
+            throw new Error("Itinerary not found");
+        }
+
+        let mn = 1e9 + 7;
+        const activities = itinerary.activities;
+
+        for (const object of activities) {
+            if (object.activityType === "Activity") {
+                const activityInfo = await Activity.findById(object.activity);
+                mn = Math.min(mn, activityInfo.freeSpots);
+            } else if (object.activityType === "CustomActivity") {
+                // Handle CustomActivity if needed
+            }
+        }
+
+        return mn;
+    } catch (error) {
+        throw new Error(error.message); // Return error to the caller
     }
 };
 
@@ -118,7 +146,7 @@ export const getUpcomingItineraries = async (req, res) => {
 
 export const getTourGuideItinerary = async (req, res) => {
     const query = buildFilter(req.query);
-    const tourguideId = req.params.id;
+    const tourguideId = req.user.userId;
     try {
         const itineraries = await Itinerary.find({ tourguideID: tourguideId, ...query }); // Find all activities for the given advertiser ID
         res.status(200).json(itineraries);
@@ -151,6 +179,31 @@ export const toggleFlaggedItineraries = async (req, res) => {
         });
 
         // to be continued?
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const toggleActivatedItineraries = async (req, res) => {
+    try {
+        console.log("1");
+        const itineraryID = req.params.id;
+        console.log("2");
+        const itinerary = await Itinerary.findById(itineraryID);
+        console.log("3");
+        if (!itinerary) {
+            return res.status(404).json({ message: "Itinerary not found" });
+        }
+        console.log("4");
+        itinerary.isActivated = !itinerary.isActivated;
+        console.log("5");
+        await itinerary.save();
+        console.log("6");
+        res.status(200).json({
+            message: "Itinerary activated status changed successfully",
+            itinerary,
+        });
+        console.log("7");
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

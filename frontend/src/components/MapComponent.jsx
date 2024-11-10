@@ -5,7 +5,7 @@ const map_api_key = import.meta.env.VITE_MAP_API_KEY;
 
 const containerStyle = {
     width: "100%",
-    height: "300px",
+    height: "38vh",
     margin: "auto",
 };
 

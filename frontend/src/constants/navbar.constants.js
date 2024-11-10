@@ -64,8 +64,8 @@ export const adminNavbarItems = [
     },
     {
         Browse: [
-            { Activities: "/activities" },
-            { Itineraries: "/itineraries" },
+            { Activities: "/admin/activities" },
+            { Itineraries: "/admin/itineraries" },
             { Landmarks: "/landmarks" },
             { Products: "/shop" },
         ],

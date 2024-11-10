@@ -18,10 +18,11 @@ import { assignCookies } from "./general.controller.js";
 // Create a model mapping to access user models dynamically
 const models = {
     advertiser: Advertiser,
-    governor: Governor,
     seller: Seller,
     tourguide: TourGuide,
     tourist: Tourist,
+    governor: Governor,
+    admin: Admin,
 };
 
 // Create a controller mapping to access delete functions dynamically
@@ -57,10 +58,10 @@ export const deleteUser = async (req, res) => {
 export const createAdmin = async (req, res) => {
     const inputUsername = req.body.username;
     const inputEmail = req.body.email;
-
+    console.log("inputUsername", inputUsername);
     const username = await Username.findById(inputUsername);
     const email = await Email.findById(inputEmail);
-
+    console.log("email", email);
     if (username) {
         console.log("duplicate username");
         return res
@@ -91,9 +92,7 @@ export const createAdmin = async (req, res) => {
         req.body.password = hashedPassword;
 
         const newAdmin = await Admin.create(req.body);
-        assignCookies(res, "Admin", newAdmin._id)
-            .status(201)
-            .json({ message: "Sign up successful" });
+        res.status(201).json({ message: "Admin created successfully" });
         console.log("Admin created successfully");
     } catch (e) {
         res.status(500).json({ message: e.message });
@@ -134,5 +133,60 @@ export const deleteAdmin = async (req, res) => {
         res.status(200).json("Admin deleted successfully!");
     } catch (err) {
         res.status(400).json(err.message);
+    }
+};
+
+export const getUsers = async (req, res) => {
+    try {
+        console.log("admin params are", req.query);
+        let result = [];
+        const isAccepted =
+            req.query.isAccepted == null || req.query.isAccepted === "true";
+        const name = !req.query.name ? "" : req.query.name;
+        const currentPage = req.query.page ? parseInt(req.query.page) : 1;
+        const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+        const skipCount = (currentPage - 1) * pageSize;
+
+        const query = {};
+        query.name = { $regex: name, $options: "i" };
+
+        let totalUserCount = 0;
+        let usersFetched = 0;
+
+        for (const [role, model] of Object.entries(models)) {
+            query.isAccepted = isAccepted;
+            if (role === "tourist" || role === "admin" || role === "governor")
+                delete query.isAccepted;
+
+            if (
+                !isAccepted &&
+                (role === "tourist" || role === "admin" || role === "governor")
+            )
+                continue;
+            const userCount = await model.countDocuments(query);
+            totalUserCount += userCount;
+
+            if (result.length >= pageSize) continue;
+            const remainingToSkip = Math.max(skipCount - usersFetched, 0);
+            const limit = Math.min(pageSize - result.length, pageSize);
+
+            if (limit > 0) {
+                const users = await model.find(query).skip(remainingToSkip).limit(limit);
+                users.forEach((user) => result.push({ ...user._doc, role }));
+            }
+
+            usersFetched += userCount;
+        }
+        console.log("result", result);
+
+        res.status(200).json({
+            result,
+            totalPages: Math.ceil(totalUserCount / pageSize),
+            currentPage,
+            pageSize,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error fetching users" });
     }
 };

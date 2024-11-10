@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import i2 from "../../assets/images/i2.png";
 import i1 from "../../assets/images/iti.png";
 import NavBar from "../../components/NavBar";
-import { Avatar } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
 import Footer from "../../components/Footer";
-import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
-import ItineraryCard from "../../components/ItineraryCard";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import CardItinerary from "../../components/CardItinerary";
+import travellerBackground from "../../assets/backgrounds/travellerBackground.png";
+import DeleteButton from "../../components/DeleteButton";
+
 const MyItinenrary = () => {
     const navigate = useNavigate();
 
@@ -37,14 +38,11 @@ const MyItinenrary = () => {
     };
 
     const fetchData = async (query) => {
-        const tourGuideID = Cookies.get("userId");
         try {
-            const response = await axiosInstance.get(
-                `/itinerary/getTourGuideItinerary/${tourGuideID}`,
-                {
-                    params: query,
-                }
-            );
+            const response = await axiosInstance.get(`/itinerary/getTourGuideItinerary`, {
+                params: query,
+                withCredentials: true,
+            });
             const data = response.data;
             sortItineraries(data);
             console.log("response sata is", data);
@@ -72,29 +70,50 @@ const MyItinenrary = () => {
         sortItineraries(itineraries);
     }, [sortBy]);
 
-    return (
-        <div>
-            <div
-                style={{
-                    position: "fixed",
-                    top: 0,
-                    left: "9%",
-                    zIndex: 1,
-                }}
-            >
-                <NavBar />
-            </div>
+    const deleteItineraryHandler = async (itineraryID) => {
+        try {
+            const response = await axiosInstance.delete(
+                `/itinerary/deleteItinerary/${itineraryID}`
+            );
+            setitineraries((prevItineraries) =>
+                prevItineraries.filter((itinerary) => itinerary._id !== itineraryID)
+            );
+        } catch (error) {
+            alert("Error deleting itinerary");
+        }
+    };
 
+    const activateItineraryHandler = async (itineraryID) => {
+        try {
+            console.log("1");
+            const response = await axiosInstance.patch(
+                `/itinerary/toggleActive/${itineraryID}`
+            );
+            console.log("2");
+            setitineraries((prevItineraries) =>
+                prevItineraries.map((itinerary) =>
+                    itinerary._id === itineraryID
+                        ? { ...itinerary, isActivated: !itinerary.isActivated }
+                        : itinerary
+                )
+            );
+            // window.location.reload();
+        } catch (error) {
+            // see error message
+            console.log(error);
+        }
+    };
+
+    return (
+        <div style={{ position: "absolute", left: 0, top: 0 }}>
             <div>
                 <img
                     src={i1}
                     style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "166.27vh",
-                        height: "35%",
+                        width: "100vw",
+                        height: "35vh",
                         pointerEvents: "none",
+                        zIndex: -1,
                     }}
                 />
                 <img
@@ -103,17 +122,18 @@ const MyItinenrary = () => {
                         position: "absolute",
                         top: 0,
                         left: 0,
-                        width: "166.27vh",
-                        height: "35%",
+                        width: "100vw",
+                        height: "35vh",
                         pointerEvents: "none",
+                        zIndex: 0, // This will place the second image on top of the first
                     }}
                 />
 
                 <div
                     style={{
                         position: "absolute",
-                        top: "17vh",
-                        left: "74vh",
+                        top: "18vh",
+                        left: "45vw",
                         fontSize: "3.2vh",
                         fontWeight: "bold",
                         color: "White",
@@ -121,14 +141,14 @@ const MyItinenrary = () => {
                         // this is to prevent the text from being highlighted when clicked
                     }}
                 >
-                    My Itinenrary
+                    My Itinenraries
                 </div>
 
                 <div
                     style={{
                         position: "absolute",
                         top: "24vh",
-                        left: "67vh",
+                        left: "41vw",
                         display: "flex",
                         alignItems: "center",
                     }}
@@ -141,7 +161,7 @@ const MyItinenrary = () => {
                             onChange={(e) => setSearchedTerm(e.target.value)}
                             style={{
                                 borderRadius: "4vh",
-                                minWidth: "30vh",
+                                minWidth: "18vw",
                                 minHeight: "3vh",
                                 backgroundColor: "white",
                                 outline: "none",
@@ -152,15 +172,11 @@ const MyItinenrary = () => {
                         <Avatar
                             sx={{
                                 position: "absolute",
-                                width: "4.8vh",
+                                width: "2.7vw",
                                 height: "4.8vh",
-                                marginLeft: "29.6vh",
+                                marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
                                 bgcolor: orange[700],
-                                cursor: "pointer",
-                            }}
-                            onClick={() => {
-                                console.log("clicked");
                             }}
                         >
                             <SearchIcon />
@@ -171,10 +187,9 @@ const MyItinenrary = () => {
                 </div>
                 <Button
                     style={{
-                        marginTop: "5vh",
-                        marginLeft: "2.5vh",
+                        marginLeft: "2vw",
                         borderRadius: "4vh",
-                        minWidth: "15vh",
+                        minWidth: "2vw",
                         color: "black",
                         borderColor: "black",
                         maxHeight: "4.2vh",
@@ -189,13 +204,12 @@ const MyItinenrary = () => {
                 </Button>
                 <Button
                     style={{
-                        marginTop: "5vh",
-                        marginLeft: "3vh",
+                        marginLeft: "2vw",
                         borderRadius: "4vh",
-                        minWidth: "15vh",
+                        minWidth: "1vw",
                         color: "black",
                         borderColor: "black",
-                        maxHeight: "4vh",
+                        maxHeight: "4.2vh",
                     }}
                     variant="outlined"
                     onClick={() => {
@@ -207,23 +221,66 @@ const MyItinenrary = () => {
                 </Button>
                 <div
                     style={{
+                        marginTop: "1%",
+                        minHeight: "50vh",
+                        minWidth: "100vw",
                         display: "flex",
                         flexWrap: "wrap",
-                        gap: "4vh",
-                        padding: "3vh",
-                        marginTop: "-1vh",
+                        justifyContent: "space-evenly",
                     }}
                 >
-                    {itineraries.map((itinerary, index) => (
-                        <div key={index} style={{ flex: "1 2 calc(50% - 2vh)" }}>
-                            <ItineraryCard
+                    {itineraries.map((itinerary) => (
+                        <div style={{ padding: "1.5vh" }}>
+                            <CardItinerary
                                 itinerary={itinerary}
-                                handleDelete={async () => {
-                                    await axiosInstance.delete(
-                                        `/itinerary/deleteItinerary/${itinerary._id}`
-                                    );
-                                    window.location.reload();
-                                }}
+                                width={"45vw"}
+                                height={"32vh"}
+                                setItineraries={sortItineraries}
+                                firstLineButtons={[
+                                    [
+                                        <DeleteButton
+                                            deleteHandler={deleteItineraryHandler}
+                                            ID={itinerary._id}
+                                        />,
+                                    ],
+                                ]}
+                                bottomButtons={[
+                                    {
+                                        text: "Edit",
+                                        onClick: () =>
+                                            navigate(`/edit-itinerary/${itinerary._id}`),
+                                        type: "1",
+                                        width: "70%",
+                                        styles: {
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
+                                        },
+                                    },
+                                    {
+                                        text: itinerary.isActivated
+                                            ? "Deactivate"
+                                            : "Activate",
+                                        onClick: () =>
+                                            activateItineraryHandler(itinerary._id),
+                                        type: "2",
+                                        width: "70%",
+                                        styles: {
+                                            marginTop: "2%",
+                                            color: itinerary.isActivated
+                                                ? "red"
+                                                : "green",
+                                            borderColor: itinerary.isActivated
+                                                ? "red"
+                                                : "green",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
+                                        },
+                                    },
+                                ]}
                             />
                         </div>
                     ))}

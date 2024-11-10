@@ -9,8 +9,11 @@ import {
     deleteItineraries,
     getTourGuideItinerary,
     searchItineraries,
+    getFreeSpots,
     toggleFlaggedItineraries,
+    toggleActivatedItineraries,
 } from "../controllers/itinerary.controller.js";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const itineraryRouter = express.Router();
 
@@ -26,12 +29,16 @@ itineraryRouter.get("/getItinerary/:id", getItineraryById);
 
 itineraryRouter.get("/getUpcomingItineraries", getUpcomingItineraries);
 
-itineraryRouter.get("/getTourGuideItinerary/:id", getTourGuideItinerary);
+itineraryRouter.get("/getTourGuideItinerary/", isAuthenticated, getTourGuideItinerary);
 
 itineraryRouter.get("/searchItineraries", searchItineraries);
 
 itineraryRouter.delete("/", deleteItineraries);
 
+itineraryRouter.get("/getFreeSpots/:id", getFreeSpots);
+
 itineraryRouter.patch("/toggleFlag/:id", toggleFlaggedItineraries);
+
+itineraryRouter.patch("/toggleActive/:id", toggleActivatedItineraries);
 
 export default itineraryRouter;
