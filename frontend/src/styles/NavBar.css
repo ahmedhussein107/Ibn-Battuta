@@ -15,7 +15,7 @@
     top: 0; /* Position at the top */
     left: 50%;
     transform: translateX(-50%);
-    z-index: 100000;
+    z-index: 2;
 }
 
 .navbar-logo {

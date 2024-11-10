@@ -4,6 +4,7 @@ import Map from "../pages/map";
 import PhotosUpload from "./PhotosUpload";
 import axiosInstance from "../api/axiosInstance";
 import { uploadFiles } from "../api/firebase";
+import CustomButton from "./Button";
 const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -14,20 +15,20 @@ const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
 
     const handleSubmit = async () => {
         try {
-            const formData = new FormData();
-            formData.append("name", name);
-            formData.append("description", description);
-            console.log(locationlatitude, locationlongitude);
-            formData.append("Longitude", locationlongitude);
-            formData.append("Latitude", locationlatitude);
+            const data = {
+                name,
+                description,
+                Longitude: locationlongitude,
+                Latitude: locationlatitude,
+            };
 
             const pictures = await uploadFiles(
                 imagePreviews.map((preview) => preview.file),
                 `customActivities/${name}`
             );
 
-            formData.append("pictures", JSON.stringify(pictures));
-            await axiosInstance.post("/customActivity/createCustomActivity", formData, {
+            data.pictures = pictures;
+            await axiosInstance.post("/customActivity/createCustomActivity", data, {
                 withCredentials: true,
             });
             setPopUpOpen(false);
@@ -44,13 +45,13 @@ const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
     };
 
     return (
-        <div style={{ width: "80vw" }}>
+        <>
             <PopUp
                 isOpen={popUpOpen}
                 setIsOpen={setPopUpOpen}
                 headerText={"Create new Custom Activity"}
-                actionText="Create Activity"
-                handleSubmit={handleSubmit}
+                containsActionButton={false}
+                containsFooter={false}
             >
                 <div style={{ marginBottom: "2vh" }}>
                     <div style={{ width: "90%" }}>
@@ -110,37 +111,53 @@ const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
                     <div
                         style={{
                             width: "45%",
-                            padding: "2vh",
-                            height: "29vh",
-                            borderRadius: "1vh",
-                            border: "0.1vh solid #fff",
-                            backgroundColor: "#FAF4F4",
+                            height: "130%",
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
+                            gap: "2vh",
                         }}
                     >
-                        <label style={{ marginBottom: "1vh", fontWeight: "bold" }}>
-                            pin location on the Map
-                        </label>
                         <div
                             style={{
                                 width: "100%",
-                                height: "25vh",
-                                overflow: "hidden",
+                                padding: "2vh",
+                                height: "50%",
                                 borderRadius: "1vh",
+                                border: "0.1vh solid #fff",
+                                backgroundColor: "#FAF4F4",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
                             }}
                         >
-                            <Map
-                                style={{ width: "100%", height: "100%" }}
-                                setMarkerPosition={(position) => {
-                                    setLocationlongitude(position.lng);
-                                    setLocationlatitude(position.lat);
+                            <label style={{ marginBottom: "1vh", fontWeight: "bold" }}>
+                                pin location on the Map
+                            </label>
+                            <div
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    overflow: "hidden",
+                                    borderRadius: "1vh",
                                 }}
-                            />
+                            >
+                                <Map
+                                    style={{ width: "100%", height: "100%" }}
+                                    setMarkerPosition={(position) => {
+                                        setLocationlongitude(position.lng);
+                                        setLocationlatitude(position.lat);
+                                    }}
+                                />
+                            </div>
                         </div>
+                        <CustomButton
+                            stylingMode="1"
+                            text="Create Activity"
+                            handleClick={handleSubmit}
+                        />
                     </div>
-                    <div style={{ width: "45%" }}>
+                    <div style={{ width: "45%", height: "60%" }}>
                         <PhotosUpload
                             label="Activity Photos"
                             imagePreviews={imagePreviews}
@@ -150,7 +167,7 @@ const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
                     </div>
                 </div>
             </PopUp>
-        </div>
+        </>
     );
 };
 

@@ -14,10 +14,12 @@ const CardCustomActivity = ({
     iconSize = "0.85rem",
     fontSize = "0.9rem",
 }) => {
-    const image = activity.picture;
+    console.log("activity", activity);
+    const image = activity.pictures[0];
+    console.log("image", image);
     const line1 = (
         <div style={{ fontSize: "1.3rem" }}>
-            <TitleAndButtons title={activity.title} buttons={firstLineButtons} />
+            <TitleAndButtons title={activity.name} buttons={firstLineButtons} />
         </div>
     );
     const line2 = (

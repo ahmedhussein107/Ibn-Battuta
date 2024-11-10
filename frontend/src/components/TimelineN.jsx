@@ -164,135 +164,118 @@ const TimelineN = ({ date, time }) => {
     }
 
     return (
-        <div className={classes.pageContainer}>
-            <div className={classes.leftPanel}>
-                <div className={classes.container}>
-                    <div className={classes.timelineItem}>
-                        <div className={classes.pickupMarker}>
-                            <FaMapMarkerAlt className={classes.markerIcon} />
+        <>
+            <CreateCustomActivityPopup
+                popUpOpen={createCustomActivityPopupOpen}
+                setPopUpOpen={setCreateCustomActivityPopupOpen}
+            />
+            <div className={classes.pageContainer}>
+                <div className={classes.leftPanel}>
+                    <div className={classes.container}>
+                        <div className={classes.timelineItem}>
+                            <div className={classes.pickupMarker}>
+                                <FaMapMarkerAlt className={classes.markerIcon} />
+                            </div>
+                            <div className={classes.timelineContent}>
+                                <h3 className={classes.title}>Pickup</h3>
+                                <p className={classes.details}>
+                                    7:00 am - Pickup Location
+                                </p>
+                            </div>
                         </div>
-                        <div className={classes.timelineContent}>
-                            <h3 className={classes.title}>Pickup</h3>
-                            <p className={classes.details}>7:00 am - Pickup Location</p>
-                        </div>
-                    </div>
 
-                    <TransitionGroup>
-                        {timelineActivities.map((activity, index) => (
-                            <CSSTransition key={index} timeout={300} classNames="scale">
-                                <div className={classes.timelineItem}>
-                                    <div className={classes.starMarker}>
-                                        <svg
-                                            className={classes.starIcon}
-                                            viewBox="0 0 24 24"
+                        <TransitionGroup>
+                            {timelineActivities.map((activity, index) => (
+                                <CSSTransition
+                                    key={index}
+                                    timeout={300}
+                                    classNames="scale"
+                                >
+                                    <div className={classes.timelineItem}>
+                                        <div className={classes.starMarker}>
+                                            <svg
+                                                className={classes.starIcon}
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    fill="white"
+                                                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <div className={classes.timelineContent}>
+                                            <h3 className={classes.title}>
+                                                {activity.name}
+                                            </h3>
+                                            <p className={classes.details}>
+                                                {formatToAMPM(
+                                                    new Date(activity.currentStartDate)
+                                                )}
+                                            </p>
+                                            <p className={classes.details}>
+                                                {formatToAMPM(
+                                                    new Date(activity.currentEndDate)
+                                                )}
+                                            </p>
+                                            <p
+                                                className={classes.details}
+                                                onClick={() => handleShowMore(index)}
+                                            >
+                                                Show more
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={() => handleDelete(index)}
+                                            className={classes.deleteButton}
                                         >
-                                            <path
-                                                fill="white"
-                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                                            />
-                                        </svg>
+                                            <FaTrash />
+                                        </button>
                                     </div>
-                                    <div className={classes.timelineContent}>
-                                        <h3 className={classes.title}>{activity.name}</h3>
-                                        <p className={classes.details}>
-                                            {formatToAMPM(
-                                                new Date(activity.currentStartDate)
-                                            )}
-                                        </p>
-                                        <p className={classes.details}>
-                                            {formatToAMPM(
-                                                new Date(activity.currentEndDate)
-                                            )}
-                                        </p>
-                                        <p
-                                            className={classes.details}
-                                            onClick={() => handleShowMore(index)}
-                                        >
-                                            Show more
-                                        </p>
-                                    </div>
-                                    <button
-                                        onClick={() => handleDelete(index)}
-                                        className={classes.deleteButton}
-                                    >
-                                        <FaTrash />
-                                    </button>
-                                </div>
-                            </CSSTransition>
-                        ))}
-                    </TransitionGroup>
+                                </CSSTransition>
+                            ))}
+                        </TransitionGroup>
 
-                    <div className={classes.timelineItem}>
-                        <div className={classes.dropoffMarker}></div>
-                        <div className={classes.timelineContent}>
-                            <h3 className={classes.title}>7 drop-off locations:</h3>
-                            <p className={classes.details}>
-                                Stratosphere Casino, Hotel & Tower, Park MGM Las
-                            </p>
-                            <p className={classes.details}>See more</p>
+                        <div className={classes.timelineItem}>
+                            <div className={classes.dropoffMarker}></div>
+                            <div className={classes.timelineContent}>
+                                <h3 className={classes.title}>7 drop-off locations:</h3>
+                                <p className={classes.details}>
+                                    Stratosphere Casino, Hotel & Tower, Park MGM Las
+                                </p>
+                                <p className={classes.details}>See more</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className={classes.activitiesList}>
-                <div className={classes.tabsContainer}>
-                    <button
-                        className={`${classes.tab} ${
-                            activeTab === "Activity"
-                                ? classes.activeTab
-                                : classes.inactiveTab
-                        }`}
-                        onClick={() => setActiveTab("Activity")}
-                    >
-                        Activities
-                    </button>
-                    <button
-                        className={`${classes.tab} ${
-                            activeTab === "CustomActivity"
-                                ? classes.activeTab
-                                : classes.inactiveTab
-                        }`}
-                        onClick={() => setActiveTab("CustomActivity")}
-                    >
-                        Custom Activities
-                    </button>
-                </div>
+                <div className={classes.activitiesList}>
+                    <div className={classes.tabsContainer}>
+                        <button
+                            className={`${classes.tab} ${
+                                activeTab === "Activity"
+                                    ? classes.activeTab
+                                    : classes.inactiveTab
+                            }`}
+                            onClick={() => setActiveTab("Activity")}
+                        >
+                            Activities
+                        </button>
+                        <button
+                            className={`${classes.tab} ${
+                                activeTab === "CustomActivity"
+                                    ? classes.activeTab
+                                    : classes.inactiveTab
+                            }`}
+                            onClick={() => setActiveTab("CustomActivity")}
+                        >
+                            Custom Activities
+                        </button>
+                    </div>
 
-                <div className={classes.cardsContainer}>
-                    {activeTab === "Activity" &&
-                        activities.map((activity) => (
-                            <CardActivity
-                                activity={activity}
-                                width={"55vw"}
-                                height={"30vh"}
-                                fontSize="0.8rem"
-                                iconSize="0.7rem"
-                                bottomButtons={[
-                                    {
-                                        text: "Add",
-                                        onClick: () => {
-                                            setSelectedActivity(activity);
-                                            setIsTimeModalOpen(true);
-                                        },
-                                        type: "1",
-                                        width: "50%",
-                                        styles: {
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            padding: "0.5em",
-                                        },
-                                    },
-                                ]}
-                            />
-                        ))}
-
-                    {activeTab === "CustomActivity" && (
-                        <>
-                            {customActivities.map((activity) => (
-                                <CardCustomActivity
-                                    key={activity.id}
+                    <div className={classes.cardsContainer}>
+                        {activeTab === "Activity" &&
+                            activities.map((activity) => (
+                                <CardActivity
                                     activity={activity}
                                     width={"55vw"}
                                     height={"30vh"}
@@ -317,12 +300,63 @@ const TimelineN = ({ date, time }) => {
                                     ]}
                                 />
                             ))}
-                            <p>Don't see what you want?</p>
-                        </>
-                    )}
+
+                        {activeTab === "CustomActivity" && (
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    gap: "1vh",
+                                }}
+                            >
+                                {customActivities.map((activity) => (
+                                    <CardCustomActivity
+                                        key={activity.id}
+                                        activity={activity}
+                                        width={"55vw"}
+                                        height={"30vh"}
+                                        fontSize="0.8rem"
+                                        iconSize="0.7rem"
+                                        bottomButtons={[
+                                            {
+                                                text: "Add",
+                                                onClick: () => {
+                                                    setSelectedActivity(activity);
+                                                    setIsTimeModalOpen(true);
+                                                },
+                                                type: "1",
+                                                width: "50%",
+                                                styles: {
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    padding: "0.5em",
+                                                },
+                                            },
+                                        ]}
+                                    />
+                                ))}
+                                <div style={{ display: "flex", gap: "1vw" }}>
+                                    Don't see what you want?{" "}
+                                    <p
+                                        style={{
+                                            color: "#4169E1",
+                                            cursor: "pointer",
+                                        }}
+                                        onClick={() =>
+                                            setCreateCustomActivityPopupOpen(true)
+                                        }
+                                    >
+                                        Create a new custom activity
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
