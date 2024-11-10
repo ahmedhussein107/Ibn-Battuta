@@ -148,9 +148,6 @@ const Itineraries = () => {
     ];
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
-            <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
-                <NavBar />
-            </div>
             <div
                 style={{
                     width: "100vw",

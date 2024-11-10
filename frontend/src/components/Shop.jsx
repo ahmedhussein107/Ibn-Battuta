@@ -165,9 +165,9 @@ const Shop = () => {
                     backgroundRepeat: "no-repeat",
                 }}
             ></div>
-            <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
+            {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
                 <NavBar />
-            </div>
+            </div> */}
             <PopUp
                 isOpen={buyingPopUpOpen}
                 setIsOpen={setBuyingPopUpOpen}
@@ -177,10 +177,19 @@ const Shop = () => {
                 }}
                 actionText="Buy"
             >
-                <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
                     <p>{selectedProduct.name}</p>
                     <p>Price: ${selectedProduct.price}</p>
-                    <p>Total Price: ${(selectedProduct.price * selectedQuantity).toFixed(2)}</p>
+                    <p>
+                        Total Price: $
+                        {(selectedProduct.price * selectedQuantity).toFixed(2)}
+                    </p>
 
                     <QuantityControls
                         selectedQuantity={selectedQuantity}
@@ -188,7 +197,7 @@ const Shop = () => {
                     />
                 </div>
             </PopUp>
-            <div style={{display: "flex", flexDirection: "row", marginLeft: "2%"}}>
+            <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
                 <div
                     style={{
                         width: "25vw",
@@ -197,7 +206,7 @@ const Shop = () => {
                         marginBottom: "1%",
                     }}
                 >
-                <SideBar
+                    <SideBar
                         collapsibleItems={collapsibleItems}
                         nonCollapsibleItems={nonCollapsibleItems}
                         titles={titles}
