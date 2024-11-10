@@ -157,10 +157,17 @@ const TimelineN = ({ date, time }) => {
                 alert("select the time interval!!!!!");
                 return;
             }
+            console.log("100");
             let startDate = new Date(convertedDate);
+            console.log("100");
+            console.log(startTime);
+            console.log(startTime);
             startDate.setHours(startTime.getHours(), startTime.getMinutes());
+            console.log("100");
             let endDate = new Date(convertedDate);
+            console.log("100");
             endDate.setHours(endTime.getHours(), endTime.getMinutes());
+            console.log("100");
             console.log({
                 activityType: activeTab,
                 activity: selectedActivity,
@@ -257,12 +264,14 @@ const TimelineN = ({ date, time }) => {
         for (let i = 0; i + 1 < newTimeline.length; i++) {
             const currentActivity = newTimeline[i];
             const nextActivity = newTimeline[i + 1];
-            if (activity.startTime >= currentActivity.endTime &&
-                activity.endTime <= nextActivity.startTime) {
+            if (
+                activity.startTime >= currentActivity.endTime &&
+                activity.endTime <= nextActivity.startTime
+            ) {
                 const updatedTimeline = [
                     ...newTimeline.slice(0, i + 1),
                     activity,
-                    ...newTimeline.slice(i + 1)
+                    ...newTimeline.slice(i + 1),
                 ];
                 setTimelineActivities(updatedTimeline);
                 return true;
