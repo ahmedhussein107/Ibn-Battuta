@@ -38,17 +38,6 @@ const ChooseActivity = () => {
         price
     );
 
-    const [convertedDate, setConvertedDate] = useState(new Date(date));
-
-    useEffect(() => {
-        console.log("date before changes", date);
-        const newConvertedDate = new Date(date);
-        const [hours, minutes] = time.split(":").map(Number);
-        newConvertedDate.setHours(hours, minutes);
-        console.log("convertedDate", newConvertedDate);
-        setConvertedDate(newConvertedDate);
-    }, []);
-
     return (
         <div
             style={{
@@ -96,7 +85,7 @@ const ChooseActivity = () => {
                     Create A New Itinerary
                 </div>
             </div>
-            <TimeLine date={convertedDate} />
+            <TimeLine date={date} time={time} />
             <Footer />
         </div>
     );
