@@ -180,3 +180,29 @@ export const redeemPoints = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+// get bookings by tourist id
+export const getitineraryBookings = async (req, res) => {
+    try {
+        const id = req.user.userId;
+        const bookings = await Booking.find({
+            touristID: id,
+            bookingType: "Itinerary",
+        }).populate("typeId");
+        res.status(200).json(bookings);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+export const getActivityBookings = async (req, res) => {
+    try {
+        const id = req.user.userId;
+        const bookings = await Booking.find({
+            touristID: id,
+            bookingType: "Activity",
+        }).populate("typeId");
+        res.status(200).json(bookings);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};

@@ -227,9 +227,9 @@ const Activities = () => {
                     backgroundRepeat: "no-repeat",
                 }}
             ></div>
-            <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
+            {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
                 <NavBar />
-            </div>
+            </div> */}
             <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
                 <div
                     style={{

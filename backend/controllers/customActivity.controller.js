@@ -10,6 +10,8 @@ export const getCustomActivities = async (req, res) => {
 };
 
 export const createCustomActivity = async (req, res) => {
+    const id = req.user.userId;
+    req.body.tourguideID = id;
     const activity = new customActivity(req.body);
 
     try {
