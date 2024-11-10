@@ -30,16 +30,21 @@ const Bookings = () => {
         Itineraries: "booking/getItineraryBookings",
         Activities: "booking/getActivityBookings",
         Flights: "booking/getActivityBookings",
-        Hotels: "hotels/my",
+        Hotels: "booking/getHotelBookings",
     };
 
     const fetchBookings = async () => {
         try {
             const response = await axiosInstance.get(URI[selected], {
+                params: {
+                    page: currentPage,
+                    limit: itemsPerPage,
+                },
                 withCredentials: true,
             });
-            console.log("response", response.data);
-            setBookings(response.data);
+            console.log("response", response);
+            setBookings(response.data.result);
+            setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error("Failed to fetch bookings", error);
         }

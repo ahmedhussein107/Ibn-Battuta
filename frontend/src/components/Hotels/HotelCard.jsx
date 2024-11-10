@@ -101,7 +101,7 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
                     handleClick={handleShowMore}
                     customStyle={{
                         width: "60%",
-                        height: "2.5rem",
+                        height: "3rem",
                         minHieght: "70px",
                         borderRadius: "30px",
                         marginBottom: "20px",
