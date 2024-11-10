@@ -162,6 +162,38 @@ const TimelineN = ({ date, time }) => {
         return `${hours}:${formattedMinutes}:${formattedSeconds} ${ampm}`;
     }
 
+    const addActivityToTimeline = (activity) => {
+        let newTimeline = [...timelineActivities];
+        if (newTimeline.length === 0) {
+            setTimelineActivities([activity]);
+            return true;
+        }
+        if (activity.endTime <= newTimeline[0].startTime) {
+            setTimelineActivities([activity, ...newTimeline]);
+            return true;
+        }
+        const lastActivity = newTimeline[newTimeline.length - 1];
+        if (activity.startTime >= lastActivity.endTime) {
+            setTimelineActivities([...newTimeline, activity]);
+            return true;
+        }
+        for (let i = 0; i + 1 < newTimeline.length; i++) {
+            const currentActivity = newTimeline[i];
+            const nextActivity = newTimeline[i + 1];
+            if (activity.startTime >= currentActivity.endTime &&
+                activity.endTime <= nextActivity.startTime) {
+                const updatedTimeline = [
+                    ...newTimeline.slice(0, i + 1),
+                    activity,
+                    ...newTimeline.slice(i + 1)
+                ];
+                setTimelineActivities(updatedTimeline);
+                return true;
+            }
+        }
+        return false;
+    };
+
     return (
         <>
             <CreateCustomActivityPopup
