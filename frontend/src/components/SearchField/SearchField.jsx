@@ -22,8 +22,7 @@ const SearchField = ({ placeholder, searchText, setSearchText }) => {
                         <div style={{ cursor: "pointer" }}>
                             <SearchIcon
                                 sx={{
-                                    maxHeight: "2vh",
-                                    fontSize: "2vh",
+                                    fontSize: "2em",
                                     marginTop: "1vh",
                                 }}
                             />
@@ -36,7 +35,7 @@ const SearchField = ({ placeholder, searchText, setSearchText }) => {
                             onClick={handleClear}
                             style={{ visibility: searchText ? "visible" : "hidden" }}
                         >
-                            <ClearIcon sx={{ fontSize: "1vh" }} />
+                            <ClearIcon sx={{ fontSize: "1em" }} />
                         </IconButton>
                     </InputAdornment>
                 ),

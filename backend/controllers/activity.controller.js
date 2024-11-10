@@ -12,8 +12,8 @@ export const getAllActivities = async (req, res) => {
 };
 
 export const createActivity = async (req, res) => {
+    req.body.advertiserID = req.user.userId;
     const activity = new Activity(req.body);
-
     try {
         await activity.save();
         res.status(201).json(activity);

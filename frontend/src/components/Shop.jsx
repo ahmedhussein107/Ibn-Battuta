@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
-import axiosInstance from "../../api/axiosInstance";
+import axiosInstance from "../api/axiosInstance.js";
 import "react-datetime/css/react-datetime.css";
-import SideBar from "../../components/SideBar/SideBar";
-import SearchField from "../../components/SearchField/SearchField";
-import Sorter from "../../components/Sorter";
-import PriceRange from "../../components/PriceRange";
-import RatingRange from "../../components/RatingRange";
-import NavBar from "../../components/NavBar";
-import Footer from "../../components/Footer";
-import shopBackground from "../../assets/backgrounds/shopBackground.png";
-import ShareAndMark from "../../components/ShareAndMark";
-import CardProduct from "../../components/CardProduct";
-import CustomButton from "../../components/Button";
-import PopUp from "../../components/PopUpsGeneric/PopUp";
+import SideBar from "./SideBar/SideBar.jsx";
+import SearchField from "./SearchField/SearchField.jsx";
+import Sorter from "./Sorter.jsx";
+import PriceRange from "./PriceRange.jsx";
+import RatingRange from "./RatingRange.jsx";
+import NavBar from "./NavBar.jsx";
+import Footer from "./Footer.jsx";
+import shopBackground from "../assets/backgrounds/shopBackground.png";
+import ShareAndMark from "./ShareAndMark.jsx";
+import CardProduct from "./CardProduct.jsx";
+import CustomButton from "./Button.jsx";
+import PopUp from "./PopUpsGeneric/PopUp.jsx";
+import QuantityControls from "./QuantityControls.jsx";
 
 const minPrice = 0;
 const maxPrice = 1000;
@@ -164,9 +165,9 @@ const Shop = () => {
                     backgroundRepeat: "no-repeat",
                 }}
             ></div>
-            <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
+            {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
                 <NavBar />
-            </div>
+            </div> */}
             <PopUp
                 isOpen={buyingPopUpOpen}
                 setIsOpen={setBuyingPopUpOpen}
@@ -184,8 +185,16 @@ const Shop = () => {
                     }}
                 >
                     <p>{selectedProduct.name}</p>
-                    <p>Price: {selectedProduct.price}</p>
-                    <p>Total Price: {selectedProduct.price * selectedQuantity}</p>
+                    <p>Price: ${selectedProduct.price}</p>
+                    <p>
+                        Total Price: $
+                        {(selectedProduct.price * selectedQuantity).toFixed(2)}
+                    </p>
+
+                    <QuantityControls
+                        selectedQuantity={selectedQuantity}
+                        setSelectedQuantity={setSelectedQuantity}
+                    />
                 </div>
             </PopUp>
             <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
