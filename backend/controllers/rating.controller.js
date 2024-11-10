@@ -75,7 +75,7 @@ export const rateProduct = async (req, res) => {
 			return res.status(404).json({ message: "Product not found" });
 		}
 		const newRating = await Rating.create({ touristID, rating, comment });
-		await product.addRating(newRating);
+		product.addRating(newRating);
 		res.status(201).json(newRating);
 	} catch (e) {
 		res.status(400).json({ e: e.message });
@@ -97,7 +97,7 @@ export const rateTourGuide = async (req, res) => {
 			return res.status(404).json({ message: "Tour guide not found" });
 		}
 		const newRating = await Rating.create({ touristID, rating, comment });
-		await tourGuide.addRating(newRating);
+		tourGuide.addRating(newRating);
 		res.status(201).json({ message: "Rating added to tour guide", tourGuide });
 	} catch (error) {
 		res.status(500).json({ message: "Error rating tour guide", error });
@@ -115,7 +115,7 @@ export const rateItinerary = async (req, res) => {
 			return res.status(404).json({ message: "Itinerary not found" });
 		}
 		const newRating = await Rating.create({ touristID, rating, comment });
-		await itinerary.addRating(newRating);
+		itinerary.addRating(newRating);
 		res.status(201).json({ newRating });
 	} catch (error) {
 		res.status(500).json({ message: "Error rating itinerary", error: error.message });
@@ -134,7 +134,7 @@ export const rateActivity = async (req, res) => {
 		}
 
 		const newRating = await Rating.create({ touristID, rating, comment });
-		await activity.addRating(newRating);
+		activity.addRating(newRating);
 		res.status(201).json({ newRating });
 	} catch (error) {
 		res.status(500).json({ message: "Error rating activity", error: error.message });

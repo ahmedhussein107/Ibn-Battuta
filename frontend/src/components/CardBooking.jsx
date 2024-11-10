@@ -16,10 +16,9 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
 	const [open, setOpen] = useState(false);
 
 	useEffect(() => {
-		if (!open) {
-			setRating(booking.ratingID ? booking.ratingID.rating : 0);
-			setComment(booking.ratingID ? booking.ratingID.comment : "");
-			setIsReadOnly(!!booking.ratingID);
+		if (!open && !isReadOnly) {
+			setRating(0);
+			setComment("");
 		}
 	}, [open]);
 
