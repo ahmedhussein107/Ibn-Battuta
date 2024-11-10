@@ -312,7 +312,7 @@ const TourguideProfilePage = () => {
             <div style={{ position: "fixed", top: 0, left: "9%" }}>
                 <Navbar />
             </div>
-            <div style={{ position: "fixed", bottom: 0 }}>
+            <div style={{ position: "fixed", bottom: 0, width: "100vw", left: 0 }}>
                 <Footer />
             </div>
         </>
