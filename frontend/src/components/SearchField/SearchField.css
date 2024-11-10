@@ -1,5 +1,6 @@
 .search-field {
     border-radius: 5vh;
+    width: 100%;
 }
 
 .custom-outline {
@@ -13,11 +14,12 @@
 }
 
 .search-field .MuiInputBase-input {
+    width: 80%;
     padding: 1vw 5vh;
     background-color: white;
     border-radius: 5vh;
     height: 2vh;
-    width: 9vw;
+    /* width: 9vw; */
     margin-top: 0.5vh;
     margin-bottom: 0.5vh;
     font-size: 2vh;

@@ -1,29 +1,18 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Outlet } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import CreateProductPage from "./pages/Product/CreateProductPage";
 import UpdateProductPage from "./pages/Product/UpdateProductPage";
 import TourGuideProfilePage from "./pages/TourGuide/TourGuideProfilePage";
-import UpdateCategory from "./pages/Category/UpdateCategory";
-import CreateCategory from "./pages/Category/CreateCategory";
-import GetAllCategories from "./pages/Category/GetAllCategories";
-import UpdateTag from "./pages/Tag/UpdateTag";
-import CreateTag from "./pages/Tag/CreateTag";
-import GetAllTags from "./pages/Tag/GetAllTags";
 import GovernorLandmarks from "./pages/Governor/GovernorLandmarks";
-import TourGuideItineraries from "./pages/TourGuide/TourGuideItineraries";
-import TourGuideCustomActivities from "./pages/TourGuide/TourGuideCustomActivities";
-import AdvertiserActivities from "./pages/Advertiser/AdvertiserActivities";
 import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import CreateActivityPage from "./pages/Activity/CreateActivityPage";
 import UpdateActivityPage from "./pages/Activity/UpdateActivityPage";
-import FilterLandmarks from "./pages/Landmarks/FilterLandmarks";
 import AddNewUser from "./pages/Admin/AddNewUser";
 import UserManagement from "./pages/Admin/UserManagement";
 import ViewProductsPage from "./pages/Product/ViewProductsPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
-import FilterItineraries from "./pages/Itinerary/FilterItineraries";
 import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
 import MyActivity from "./pages/Advertiser/MyActivity";
@@ -46,12 +35,25 @@ import ViewTags from "./pages/Admin/ViewTags";
 import ViewCategories from "./pages/Admin/ViewCategories";
 import { HeaderProvider } from "./components/Header/HeaderContext";
 import Header from "./components/Header/Header";
-import NavBar from "./components/NavBar";
 import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
-import Test from "./components/Test";
 import PopUp from "./components/PopUpsGeneric/PopUp";
+import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
+import AllActivities from "./pages/Admin/AllActivities";
+import AllItineraries from "./pages/Admin/AllItineraries";
+import Shop from "./components/Shop.jsx";
+import Bookings from "./pages/Tourist/Bookings.jsx";
+import NavBar from "./components/NavBar.jsx";
 import TermsAndConditions from "./pages/Privacy/TermsAndConditions";
 import Flights from "./pages/Flights/Flights";
+
+const LayoutWithNav = () => (
+    <>
+        <NavBar />
+        <main>
+            <Outlet /> {/* This renders the nested routes */}
+        </main>
+    </>
+);
 
 function App() {
     return (
@@ -59,65 +61,77 @@ function App() {
             <Router>
                 <Header />
                 <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/test" element={<PopUp />} />
-                    <Route path="/complaints" element={<ComplaintList />} />
-                    <Route
-                        path="/complaint/:complaintId"
-                        element={<ViewSingleComplaint />}
-                    />
-                    {/* signin and signup pages */}
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/signin" element={<Signin />} />
-                    <Route path="/select-your-role" element={<SelectYourRole />} />
-                    {/* home pages for each role */}
-                    <Route path="/admin" element={<AdminHome />} />
-                    <Route path="/advertiser" element={<AdvertiserHome />} />
-                    <Route path="/tourguide" element={<TourGuideHome />} />
-                    <Route path="/seller" element={<SellerHome />} />
 
-                    {/* other pages */}
-                    <Route path="/activities" element={<Activities />} />
-                    <Route path="/itineraries" element={<Itineraries />} />
-                    <Route path="/itinerary-details" element={<ItineraryDetails />} />
-                    <Route path="/landmarks" element={<Landmarks />} />
+                    <Route element={<LayoutWithNav />}>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/test" element={<PopUp />} />
+                        <Route path="/complaints" element={<ComplaintList />} />
+                        <Route path="/shop" element={<Shop />} />
+                        <Route
+                            path="/complaint/:complaintId"
+                            element={<ViewSingleComplaint />}
+                        />
 
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/create-product" element={<CreateProductPage />} />
-                    <Route path="/add-new-user" element={<AddNewUser />} />
-                    <Route path="admin/users" element={<UserManagement />} />
-                    <Route
-                        path="/update-product/:productId"
-                        element={<UpdateProductPage />}
-                    />
-                    <Route path="/products/:productId" element={<ViewProductPage />} />
-                    <Route path="/tourguide" element={<TourGuideProfilePage />} />
-                    <Route path="/category/:id" element={<UpdateCategory />} />
-                    <Route path="/category-create" element={<CreateCategory />} />
-                    <Route path="/category-all" element={<GetAllCategories />} />
-                    <Route path="/tag/:id" element={<UpdateTag />} />
-                    <Route path="/tag-create" element={<CreateTag />} />
-                    <Route path="/tag-all" element={<GetAllTags />} />
-                    <Route path="/landmark-governor" element={<GovernorLandmarks />} />
-                    <Route path="/itinerary" element={<TourGuideItineraries />} />
-                    <Route
-                        path="/itinerary-customAvtivity"
-                        element={<TourGuideCustomActivities />}
-                    />
-                    <Route path="/activity" element={<AdvertiserActivities />} />
-                    <Route path="/advertiser/assigned" element={<MyActivity />} />
-                    <Route path="/tourguide/assigned" element={<MyItinenrary />} />
-                    <Route path="/inventory" element={<Inventory />} />
+                        <Route path="/select-your-role" element={<SelectYourRole />} />
+                        {/* home pages for each role */}
+                        <Route path="/admin" element={<AdminHome />} />
+                        <Route path="/advertiser" element={<AdvertiserHome />} />
+                        <Route path="/tourguide" element={<TourGuideHome />} />
+                        <Route path="/seller" element={<SellerHome />} />
+                        <Route path="/governor" element={<GovernorHome />} />
 
-                    <Route path="/create-activity" element={<CreateActivityPage />} />
-                    <Route path="/update-activity" element={<UpdateActivityPage />} />
-                    <Route path="/filter-landmarks" element={<FilterLandmarks />} />
-                    <Route path="/view-products" element={<ViewProductsPage />} />
+                        {/* other pages */}
+                        <Route path="/activities" element={<Activities />} />
+                        <Route path="/itineraries" element={<Itineraries />} />
+                        <Route path="/itinerary-details" element={<ItineraryDetails />} />
+                        <Route path="/landmarks" element={<Landmarks />} />
 
-                    <Route path="/landmark/landmark/" element={<LandmarkPage />} />
-                    <Route path="/create-itinerary" element={<CreateItineraryPage />} />
-                    <Route path="/create-landmark" element={<CreateLandmarkPage />} />
+                        <Route path="/about" element={<AboutPage />} />
+                        <Route path="/create-product" element={<CreateProductPage />} />
+                        <Route path="/add-new-user" element={<AddNewUser />} />
+                        <Route path="admin/users" element={<UserManagement />} />
+                        <Route
+                            path="admin/pending-users"
+                            element={<UserManagement isAll={false} />}
+                        />
+                        <Route
+                            path="/update-product/:productId"
+                            element={<UpdateProductPage />}
+                        />
+                        <Route
+                            path="/products/:productId"
+                            element={<ViewProductPage />}
+                        />
+                        <Route path="/tourguide" element={<TourGuideProfilePage />} />
+                        <Route
+                            path="/landmark-governor"
+                            element={<GovernorLandmarks />}
+                        />
+                        <Route path="/advertiser/assigned" element={<MyActivity />} />
+                        <Route path="/tourguide/assigned" element={<MyItinenrary />} />
+                        <Route path="/inventory" element={<Inventory />} />
 
+                        <Route path="/create-activity" element={<CreateActivityPage />} />
+                        <Route path="/update-activity" element={<UpdateActivityPage />} />
+                        <Route path="/view-products" element={<ViewProductsPage />} />
+                        <Route path="/choose-activity" element={<ChooseActivity />} />
+
+                        <Route path="/landmark/landmark/" element={<LandmarkPage />} />
+                        <Route
+                            path="/create-itinerary"
+                            element={<CreateItineraryPage />}
+                        />
+                        <Route path="/create-landmark" element={<CreateLandmarkPage />} />
+
+                        <Route path="/admin/tags" element={<ViewTags />} />
+                        <Route path="/admin/category" element={<ViewCategories />} />
+                        <Route path="/admin/activities" element={<AllActivities />} />
+                        <Route path="/admin/itineraries" element={<AllItineraries />} />
+
+                        <Route path="/bookings" element={<Bookings />} />
+                    </Route>
                     <Route path="/admin/tags" element={<ViewTags />} />
                     <Route path="/admin/category" element={<ViewCategories />} />
 

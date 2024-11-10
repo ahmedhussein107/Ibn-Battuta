@@ -18,6 +18,7 @@ const orderSchema = new mongoose.Schema(
         address: String,
         method: { type: String, enum: ["card", "wallet", "cash on delivery"] },
         status: { type: String, enum: ["delivered", "canceled", "pending"] },
+        ratingID: { type: mongoose.Schema.Types.ObjectId, ref: "Rating" },
     },
     { timestamps: true }
 );

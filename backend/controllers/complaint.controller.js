@@ -103,7 +103,10 @@ export const getSomeComplaints = async (req, res) => {
         }
         const totalComplaints = await Complaint.countDocuments(query);
 
-        let complaintsQuery = Complaint.find(query).populate("touristID", "name picture");
+        let complaintsQuery = await Complaint.find(query).populate(
+            "touristID",
+            "name picture"
+        );
 
         if (isSorted === "true") {
             complaintsQuery = complaintsQuery.sort({ createdAt: -1 }); // Sort by createdAt descending
@@ -114,7 +117,6 @@ export const getSomeComplaints = async (req, res) => {
         res.json({
             complaints,
             totalPages: Math.ceil(totalComplaints / limit),
-            currentPage: page,
         });
     } catch (error) {
         res.status(500).json({ message: "Server Error" });

@@ -150,48 +150,37 @@ const MyItinenrary = () => {
     }, [sortBy]);
 
     const deleteItineraryHandler = async (itineraryID) => {
-        const response = await axiosInstance.delete(
-            `/itinerary/deleteItinerary/${itineraryID}`
-        );
-        if (response.status === 200) {
+        try {
+            const response = await axiosInstance.delete(
+                `/itinerary/deleteItinerary/${itineraryID}`
+            );
             sortItineraries((prevItineraries) =>
                 prevItineraries.filter((itinerary) => itinerary._id !== itineraryID)
             );
-        } else {
+        } catch (error) {
             alert("Error deleting itinerary");
         }
     };
 
     const activateItineraryHandler = async (itineraryID) => {
-        const response = await axiosInstance.patch(
-            `/itinerary/toggleActive/${itineraryID}`
-        );
-        if (response.status === 200) {
+        try {
+            const response = await axiosInstance.patch(
+                `/itinerary/toggleActive/${itineraryID}`
+            );
             sortItineraries((prevItineraries) =>
                 prevItineraries.map((itinerary) =>
                     itinerary._id === itineraryID
-                        ? { ...itinerary, isActivated: true }
+                        ? { ...itinerary, isActivated: !itinerary.isActivated }
                         : itinerary
                 )
             );
-        } else {
+        } catch (error) {
             alert("Error activating itinerary");
         }
     };
 
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>
-            <div
-                style={{
-                    position: "fixed",
-                    top: 0,
-                    left: "9%",
-                    zIndex: 1,
-                }}
-            >
-                <NavBar />
-            </div>
-
             <div>
                 <img
                     src={i1}
@@ -227,7 +216,7 @@ const MyItinenrary = () => {
                         // this is to prevent the text from being highlighted when clicked
                     }}
                 >
-                    My Itinenrary
+                    My Itinenraries
                 </div>
 
                 <div
@@ -321,7 +310,7 @@ const MyItinenrary = () => {
                                 itinerary={itinerary}
                                 width={"45vw"}
                                 height={"32vh"}
-                                setItineraries={setitineraries}
+                                setItineraries={sortItineraries}
                                 firstLineButtons={[
                                     [
                                         <DeleteButton
@@ -338,10 +327,12 @@ const MyItinenrary = () => {
                                         type: "1",
                                         width: "70%",
                                         styles: {
-                                            marginTop: "-5%",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
                                         },
                                     },
-
                                     {
                                         text: itinerary.isActivated
                                             ? "Deactivate"
@@ -358,6 +349,10 @@ const MyItinenrary = () => {
                                             borderColor: itinerary.isActivated
                                                 ? "red"
                                                 : "green",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
                                         },
                                     },
                                 ]}

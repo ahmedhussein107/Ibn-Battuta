@@ -1,9 +1,10 @@
 import Activity from "../models/activity.model.js";
 import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 
-export const getActivity = async (req, res) => {
+export const getAllActivities = async (req, res) => {
+    const query = buildFilter(req.query);
     try {
-        const activity = await Activity.find();
+        const activity = await Activity.find(query);
         res.status(200).json(activity);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -11,8 +12,8 @@ export const getActivity = async (req, res) => {
 };
 
 export const createActivity = async (req, res) => {
+    req.body.advertiserID = req.user.userId;
     const activity = new Activity(req.body);
-
     try {
         await activity.save();
         res.status(201).json(activity);
