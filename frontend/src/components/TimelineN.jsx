@@ -7,7 +7,13 @@ import axiosInstance from "../api/axiosInstance";
 import CardActivity from "./CardActivity";
 import CardCustomActivity from "./CardCustomActivity";
 import CreateCustomActivityPopup from "./CreateCustomActivityPopup";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import CustomButton from "./Button";
+import PopUp from "./PopUpsGeneric/PopUp.jsx";
 
 const TimelineN = ({ date, time }) => {
     const location = useLocation();
@@ -24,6 +30,10 @@ const TimelineN = ({ date, time }) => {
 
     const [createCustomActivityPopupOpen, setCreateCustomActivityPopupOpen] =
         useState(false);
+
+    const [showMorePopupOpen, setShowMorePopupOpen] = useState(false);
+    const [showMoreCustomActivty, setShowMoreCustomActivity] = useState(false);
+    const [selectTimeIntervalOpen, setSelectTimeIntervalOpen] = useState(false);
 
     useEffect(() => {
         if (!date || !time) return;
@@ -94,14 +104,122 @@ const TimelineN = ({ date, time }) => {
         setCustomActivities([...customActivities, activity]);
     };
 
-    const handleAddActivity = (activity) => {
-        setTimelineActivities([...timelineActivities, activity]);
-        setActivities(activities.filter((act) => act._id !== activity._id));
+    const handleShowMore = (index) => {
+        const curActivity = timelineActivities[index];
+        if (curActivity.activityType == "Activity") {
+            navigate("activity-datails", { state: { activity: curActivity.activity } });
+        } else if (curActivity.activityType == "CustomActivity") {
+            setShowMoreCustomActivity(curActivity.activity);
+            setShowMorePopupOpen(true);
+        } else {
+            console.log("What is this ??!!");
+        }
     };
 
-    const handleAddCustom = (activity) => {
-        setTimelineActivities([...timelineActivities, activity]);
-        setCustomActivities(customActivities.filter((act) => act._id !== activity._id));
+    const CustomActivityPopup = () => {
+        if (!showMoreCustomActivty) return null;
+
+        return (
+            <PopUp
+                isOpen={showMorePopupOpen}
+                setIsOpen={setShowMorePopupOpen}
+                headerText={showMoreCustomActivty.name}
+                containsFooter={false}
+            >
+                <div
+                    style={{
+                        padding: "2em",
+                        width: "90%",
+                        maxHeight: "80vh",
+                        overflowY: "auto",
+                    }}
+                >
+                    <CardCustomActivity
+                        activity={showMoreCustomActivty}
+                        width="100%"
+                        height="50vh"
+                        firstLineButtons={[]}
+                        bottomButtons={[]}
+                    />
+                </div>
+            </PopUp>
+        );
+    };
+
+    const SelectTimeInervalPopup = () => {
+        if (!selectTimeIntervalOpen) return null;
+
+        const [startTime, setStartTime] = useState("");
+        const [endTime, setEndTime] = useState("");
+
+        const handleSubmit = () => {
+            if (!startTime || !endTime) {
+                alert("select the time interval!!!!!");
+                return;
+            }
+            let startDate = new Date(convertedDate);
+            startDate.setHours(startTime.getHours(), startTime.getMinutes());
+            let endDate = new Date(convertedDate);
+            endDate.setHours(endTime.getHours(), endTime.getMinutes());
+            console.log({
+                activityType: activeTab,
+                activity: selectedActivity,
+                startTime: startDate,
+                endTime: endDate,
+            });
+            setSelectTimeIntervalOpen(false);
+            return;
+            if (
+                !addActivityToTimeline({
+                    activityType: activeTab,
+                    activity: selectedActivity,
+                    startTime,
+                    endTime,
+                })
+            ) {
+                alert("the activity would intersect with another activity!");
+            }
+            setSelectTimeIntervalOpen(false);
+        };
+
+        return (
+            <PopUp
+                isOpen={selectTimeIntervalOpen}
+                setIsOpen={setSelectTimeIntervalOpen}
+                handleSubmit={handleSubmit}
+                headerText="Set the time interval"
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        padding: "2em",
+                        width: "90%",
+                        maxHeight: "80vh",
+                        overflowY: "auto",
+                        justifyContent: "center",
+                    }}
+                >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoItem label="Start Time">
+                            <StaticTimePicker
+                                onChange={(e) => {
+                                    console.log("start Date:", e.$d);
+                                    setStartTime(e);
+                                }}
+                            />
+                        </DemoItem>
+                        <DemoItem label="End Time">
+                            <StaticTimePicker
+                                onChange={(e) => {
+                                    console.log("end Date:", e.$d);
+                                    setEndTime(e);
+                                }}
+                            />
+                        </DemoItem>
+                    </LocalizationProvider>
+                </div>
+            </PopUp>
+        );
     };
 
     function formatToAMPM(date) {
@@ -127,6 +245,8 @@ const TimelineN = ({ date, time }) => {
                 popUpOpen={createCustomActivityPopupOpen}
                 setPopUpOpen={setCreateCustomActivityPopupOpen}
             />
+            <CustomActivityPopup />
+            <SelectTimeInervalPopup />
             <div
                 style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
             >
@@ -251,7 +371,7 @@ const TimelineN = ({ date, time }) => {
                                                 text: "Add",
                                                 onClick: () => {
                                                     setSelectedActivity(activity);
-                                                    setIsTimeModalOpen(true);
+                                                    setSelectTimeIntervalOpen(true);
                                                 },
                                                 type: "1",
                                                 width: "50%",
@@ -288,7 +408,7 @@ const TimelineN = ({ date, time }) => {
                                                     text: "Add",
                                                     onClick: () => {
                                                         setSelectedActivity(activity);
-                                                        setIsTimeModalOpen(true);
+                                                        setSelectTimeIntervalOpen(true);
                                                     },
                                                     type: "1",
                                                     width: "50%",
