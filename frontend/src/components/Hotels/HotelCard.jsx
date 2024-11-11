@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./HotelCard.css";
 import usePageHeader from "../Header/UseHeaderPage";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -7,12 +7,23 @@ import BathtubIcon from "@mui/icons-material/Bathtub";
 import PersonIcon from "@mui/icons-material/Person";
 import Button from "../Button";
 import { useNavigate } from "react-router-dom";
+import convertCurrency from "../../api/currency";
+import Cookies from "js-cookie";
 const HotelCard = ({ offer, isAllOffers = true }) => {
     const navigate = useNavigate();
+    const [price, setPrice] = useState(offer.totalPrice);
+    useEffect(() => {
+        convertCurrency(offer.totalPrice, "EGP", Cookies.get("currency") || "USD").then(
+            (result) => {
+                setPrice(result);
+            }
+        );
+    }, []);
     const handleShowMore = () => {
         navigate(`/hotel/offer-details/${offer._id}`, { state: { offer } });
         console.log("Show more clicked");
     };
+
     return (
         <div className="hotel-card">
             <h2 className="hotel-name">{offer.name} </h2>
@@ -88,7 +99,8 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
                         <strong>Payment:</strong> {offer.paymentMethod}
                     </p>
                     <p>
-                        <strong>Total Price:</strong> ${offer.totalPrice}
+                        <strong>Total Price:</strong> {Cookies.get("currency") || "EGP"}
+                        {price}
                     </p>
                 </div>
             </div>
