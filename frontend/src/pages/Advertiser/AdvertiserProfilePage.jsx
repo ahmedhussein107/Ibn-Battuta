@@ -108,7 +108,13 @@ const AdvertiserProfilePage = () => {
                 window.location.reload();
             })
             .catch((error) => {
-                console.error("Error deleting Advertiser account:", error);
+                const errorMessage =
+                    error.response && error.response.data && error.response.data.message
+                        ? error.response.data.message
+                        : "An error occurred while deleting the account. Please try again.";
+
+                console.error("Error deleting Admin account:", error);
+                alert(errorMessage); // Display the error message in an alert
             });
     };
     const handleChangePassword = () => {
