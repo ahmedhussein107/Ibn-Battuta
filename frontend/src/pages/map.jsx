@@ -5,7 +5,6 @@ import { MapWrapper } from "../components/MapWrapper";
 const map = ({ setMarkerPosition, defaultPosition, customStyles }) => {
     const [marker, setMarker] = useState(null);
     
-    console.log("Hello", defaultPosition)
     const handleMapClick = (position) => {
         setMarker(position);
         setMarkerPosition(position);

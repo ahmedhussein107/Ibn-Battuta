@@ -13,7 +13,7 @@ import CardItinerary from "../../components/CardItinerary";
 import ShareAndMark from "../../components/ShareAndMark";
 import { useNavigate } from "react-router-dom";
 const minPrice = 0;
-const maxPrice = 1000;
+const maxPrice = 1000000;
 
 import convert from "../../api/convert.js";
 import convertBack from "../../api/convertBack.js";
