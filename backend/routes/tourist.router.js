@@ -6,7 +6,11 @@ import {
     updateTourist,
     deleteTourist,
     redeemPoints,
+    addPreference,
+    removePreference,
+    changeTouristPassword,
 } from "../controllers/tourist.controller.js";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const touristRouter = express.Router();
 
@@ -14,12 +18,18 @@ touristRouter.get("/getTourists", getTourists);
 
 touristRouter.post("/createTourist", createTourist);
 
-touristRouter.get("/tourist/:id", getTouristById);
+touristRouter.get("/tourist", isAuthenticated, getTouristById);
 
-touristRouter.patch("/updateTourist/:id", updateTourist);
+touristRouter.put("/updateTourist", isAuthenticated, updateTourist);
 
-touristRouter.delete("/deleteTourist/:id", deleteTourist);
+touristRouter.delete("/deleteTourist", isAuthenticated, deleteTourist);
 
-touristRouter.patch("/redeemPoints/:id", redeemPoints);
+touristRouter.post("/redeemPoints", isAuthenticated, redeemPoints);
+
+touristRouter.post("/addPreference", isAuthenticated, addPreference);
+
+touristRouter.delete("/removePreference", isAuthenticated, removePreference);
+
+touristRouter.patch("/updatePassword", isAuthenticated, changeTouristPassword);
 
 export default touristRouter;

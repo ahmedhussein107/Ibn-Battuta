@@ -15,9 +15,10 @@ import {
     governorNavbarItems,
     adminNavbarItems,
 } from "../constants/navbar.constants";
+import UserProfile from "./UserProfile";
 
 const URI = import.meta.env.VITE_API_URI;
-
+const adminId = import.meta.env.VITE_ADMIN_ID;
 const navbarUserItems = {
     Guest: guestNavbarItems,
     Tourist: touristNavbarItems,
@@ -29,7 +30,7 @@ const navbarUserItems = {
 };
 
 const touristProfileDropdonw = [
-    { "My Profile": "link" },
+    { "My Profile": "/tourist-profile" },
     { "My Bookings": "/bookings" },
     { "My Bookmarks": "link" },
     { "My Complaints": "/complaints" },
@@ -191,11 +192,39 @@ const NavBar = () => {
                                 className="profile-image"
                             />
                             <div className="dropdown-content">
-                                {userType !== "Tourist" ? (
-                                    <Link to={"/profile"} className="dropdown-item">
+                                {userType === "Admin" ? (
+                                    <Link to={"/admin-profile"} className="dropdown-item">
                                         {"My Profile"}
                                     </Link>
-                                ) : (
+                                ) : userType === "Seller" ? (
+                                    <Link
+                                        to={"/seller-profile"}
+                                        className="dropdown-item"
+                                    >
+                                        {"My Profile"}
+                                    </Link>
+                                ) : userType === "Advertiser" ? (
+                                    <Link
+                                        to={"/advertiser-profile"}
+                                        className="dropdown-item"
+                                    >
+                                        {"My Profile"}
+                                    </Link>
+                                ) : userType === "Governor" ? (
+                                    <Link
+                                        to={"/governor-profile"}
+                                        className="dropdown-item"
+                                    >
+                                        {"My Profile"}
+                                    </Link>
+                                ) : userType === "TourGuide" ? (
+                                    <Link
+                                        to={"/tourguide-profile"}
+                                        className="dropdown-item"
+                                    >
+                                        {"My Profile"}
+                                    </Link>
+                                ) : userType === "Tourist" ? (
                                     touristProfileDropdonw.map((item, index) => {
                                         const [label, link] = Object.entries(item)[0];
                                         return (
@@ -208,7 +237,7 @@ const NavBar = () => {
                                             </Link>
                                         );
                                     })
-                                )}
+                                ) : null}
                                 <div className="dropdown-separator"></div>
                                 <div className="log-out" onClick={handleLogout}>
                                     Logout

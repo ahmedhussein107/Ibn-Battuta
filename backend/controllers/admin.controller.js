@@ -111,15 +111,28 @@ export const getAdmins = async (req, res) => {
 
 // Updating an admin
 export const updateAdmin = async (req, res) => {
+    const adminId = req.user.userId;
     try {
+        const admin = await Admin.findById(adminId);
+        if (!admin) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
         if (req.body.password) {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
-        const admin = await Admin.findByIdAndUpdate(req.params.id, req.body, {
+        if (req.body.email) {
+            await Email.findByIdAndDelete(admin.email);
+            await Email.create({
+                _id: req.body.email,
+            });
+        }
+
+        // Update admin details
+        const updatedAdmin = await Admin.findByIdAndUpdate(adminId, req.body, {
             new: true,
         });
-        if (!admin) return res.status(404).json({ message: "Admin not found" });
-        res.status(200).json(admin);
+
+        res.status(200).json(updatedAdmin);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -127,12 +140,62 @@ export const updateAdmin = async (req, res) => {
 
 // Deleting an admin
 export const deleteAdmin = async (req, res) => {
+    const adminId = req.user.userId;
     try {
-        const admin = await Admin.findByIdAndDelete(req.params.id);
-        if (!admin) return res.status(404).json("Admin not found");
-        res.status(200).json("Admin deleted successfully!");
+        const admin = await Admin.findByIdAndDelete(adminId);
+        if (admin) {
+            // Delete email associated with the governor
+            await Email.findByIdAndDelete(admin.email);
+
+            // Delete username associated with the governor
+            await Username.findByIdAndDelete(admin.username);
+
+            res.json({ message: "Admin deleted successfully" });
+        } else {
+            res.status(404).json({ message: "Admin not found" });
+        }
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+};
+
+export const getAdminById = async (req, res) => {
+    const adminId = req.user.userId;
+    try {
+        const admin = await Admin.findById(adminId);
+        if (admin) res.status(200).json(admin);
+        else res.status(404).json({ message: "Admin not found" });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+export const changeAdminPassword = async (req, res) => {
+    const adminId = req.user.userId;
+    const { oldPassword, newPassword } = req.body;
+
+    try {
+        if (!oldPassword || !newPassword) {
+            return res
+                .status(400)
+                .json({ message: "Both old and new passwords are required" });
+        }
+        const admin = await Admin.findById(adminId);
+        if (!admin) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+        const isMatch = await bcrypt.compare(oldPassword, admin.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Incorrect old password" });
+        }
+        admin.password = await bcrypt.hash(newPassword, 10);
+        await admin.save();
+        return res.status(200).json({ message: "Password changed successfully!" });
     } catch (err) {
-        res.status(400).json(err.message);
+        console.error("Error changing password:", err);
+        return res
+            .status(400)
+            .json({ message: "An error occurred while changing the password" });
     }
 };
 
