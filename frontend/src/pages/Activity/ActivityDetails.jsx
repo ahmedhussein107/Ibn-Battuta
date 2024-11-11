@@ -49,8 +49,9 @@ export default function ActivityDetails() {
 				const activityResponse = await axiosInstance.get(
 					`activity/getActivity/${activityId}`
 				);
-
+				// setAdvertiserName(activityResponse.data.advertiser);
 				setActivityData(activityResponse.data);
+				setAdvertiserName(activityResponse.data.advertiserID.name);
 			} catch (error) {
 				console.error("Error fetching activity data:", error);
 			}
@@ -115,24 +116,6 @@ export default function ActivityDetails() {
 			}
 		}
 	};
-
-	//For advertiser name
-	useEffect(() => {
-		const fetchAdvertiser = async () => {
-			if (!activityData) return;
-			try {
-				console.log("Im here");
-				const response = await axiosInstance.get(
-					`advertiser/advertiser/${activityData.advertiserID}`
-				);
-				const advertiser = response.data;
-				setAdvertiserName(advertiser.name);
-			} catch (error) {
-				console.error("Error fetching advertiser: ", error);
-			}
-		};
-		fetchAdvertiser();
-	}, [activityData]);
 
 	if (!activityData) {
 		return <div>Loading...</div>;
@@ -202,10 +185,14 @@ export default function ActivityDetails() {
 						</div>
 						<Map
 							setMarkerPosition={(position) => {}}
-							defaultPosition={activityData.Latitude ? {
-								lat: activityData.Latitude,
-								lng: activityData.Longitude,
-							} : null}
+							defaultPosition={
+								activityData.Latitude
+									? {
+											lat: activityData.Latitude,
+											lng: activityData.Longitude,
+									  }
+									: null
+							}
 							customStyles={{ height: "70vh", width: "50vw" }}
 						/>
 					</div>
@@ -234,11 +221,11 @@ export default function ActivityDetails() {
 							height="25%"
 							onClick={() => {
 								// Open pop up with booking details
-								if(userType == "Guest" || !userType) {
-									navigate("/signin")
-									return
+								if (userType == "Guest" || !userType) {
+									navigate("/signin");
+									return;
 								}
-								
+
 								setBookPopUp(true);
 							}}
 						/>
