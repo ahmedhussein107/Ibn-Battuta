@@ -70,6 +70,23 @@ export const getTourGuideById = async (req, res) => {
     }
 };
 
+export const getTourGuide = async (req, res) => {
+    const tourguideId = req.params.id;
+    try {
+        const tourGuide = await TourGuide.findById(tourguideId);
+        if (tourGuide) {
+            const { isAccepted, documents, createdAt, updatedAt, __v, ...others } =
+                tourGuide._doc;
+            res.status(200).json(others);
+        } else {
+            res.status(404).json({ e: "TourGuide not found" });
+        }
+    } catch (e) {
+        //console.log(e.message);
+        res.status(400).json({ e: e.message });
+    }
+};
+
 export const updateTourGuide = async (req, res) => {
     let tourguideId = req.user.userId;
     const admin = await Admin.findById(req.user.userId);
@@ -110,10 +127,6 @@ export const updateTourGuide = async (req, res) => {
 
 export const deleteTourGuide = async (req, res) => {
     let tourguideId = req.user.userId;
-    const admin = await Admin.findById(req.user.userId);
-    if (admin) {
-        tourguideId = req.query.userId;
-    }
     try {
         const upcomingItineraries = await Itinerary.find({
             tourguideID: tourguideId,
@@ -130,6 +143,10 @@ export const deleteTourGuide = async (req, res) => {
                 message: "Cannot delete tour guide with upcoming itineraries",
             });
         } else {
+            const admin = await Admin.findById(req.user.userId);
+            if (admin) {
+                tourguideId = req.query.userId;
+            }
             const tourGuide = await TourGuide.findByIdAndDelete(tourguideId);
             console.log(tourGuide);
             if (tourGuide) {

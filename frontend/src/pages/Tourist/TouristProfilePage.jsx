@@ -337,6 +337,7 @@ export default function TouristProfilePage() {
                 .then((response) => {
                     alert(response.data.message);
                     setSelectedTags([...selectedTags, selectedTag]);
+                    window.location.reload();
                 })
                 .catch((error) => {
                     console.error("Error adding preference:", error);
@@ -366,6 +367,7 @@ export default function TouristProfilePage() {
                         (tag) => tag !== tagToRemove
                     );
                     setTourist({ ...tourist, preferences: updatedPreferences });
+                    window.location.reload();
                 })
                 .catch((error) => {
                     console.error("Error removing preference:", error);
@@ -529,7 +531,15 @@ export default function TouristProfilePage() {
                 navigate("/");
             })
             .catch((error) => {
-                console.error("Error deleting Your account:", error);
+                const errorMessage =
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.message
+                        ? error.response.data.message
+                        : "An error occurred while deleting the account. Please try again.";
+
+                console.error("Error deleting your account:", error);
+                alert(errorMessage); // Display the error message in an alert
             });
     };
 

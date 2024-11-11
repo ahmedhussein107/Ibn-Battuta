@@ -31,38 +31,64 @@ const ItineraryDetails = () => {
     const navigate = useNavigate();
     const [userType, setUserType] = useState(null);
 
-    useEffect(() => {
-        // Retrieve the userType from cookies when the component mounts
-        const userTypeFromCookie = Cookies.get("userType");
-        setUserType(userTypeFromCookie);
-    }, []);
-    const location = useLocation();
-    usePageHeader(null, null);
-    //6703f5310ecc1ad25ff95144
-    const { itineraryId } = useParams();
-    const [itinerary, setItinerary] = useState(null);
+	useEffect(() => {
+		// Retrieve the userType from cookies when the component mounts
+		const userTypeFromCookie = Cookies.get("userType");
+		setUserType(userTypeFromCookie);
+	}, []);
+	const location = useLocation();
+	usePageHeader(null, null);
+	//6703f5310ecc1ad25ff95144
+	const { itineraryId } = useParams();
+	const [itinerary, setItinerary] = useState(null);
+	//For managing itinerary data
+	const [photoList, setPhotoList] = useState([]);
+	const [pointsAdded, setPointsAdded] = useState(0);
+	const [tourGuideName, setTourGuideName] = useState(null);
+	const [tourGuidePicture, setTourGuidePicture] = useState(null);
+	const [activities, setActivities] = useState([]);
+	const [ticketCount, setTicketCount] = useState(0);
+	const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
+	const totalPrice = itinerary ? itinerary.price * ticketCount : 0;
 
     //For mangaing page logic
     const [BookPopUp, setBookPopUp] = useState(false);
     const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
 
-    useEffect(() => {
-        const fetchItinerary = async () => {
-            try {
-                const itineraryResponse = await axiosInstance.get(
-                    `itinerary/getItinerary/${itineraryId}`
-                );
-                setItinerary(itineraryResponse.data);
-            } catch (err) {
-                console.error("Error fetching itinerary:", err);
-            }
-        };
-        fetchItinerary();
-    }, [itineraryId]);
-    const handleBooking = async () => {
-        if (!itinerary) return;
-        try {
-            // TODO: add different ways of payeen
+	const fetchFreeSpots = async () => {
+		if (!itinerary) return;
+		try {
+			const response = await axiosInstance.get(
+				`itinerary/getFreeSpots/${itinerary._id}`
+			);
+			setFreeSpots(response.data);
+		} catch (error) {
+			console.error("Error fetching free spots:", error);
+		}
+	};
+
+	useEffect(() => {
+		const fetchItinerary = async () => {
+			try {
+				const itineraryResponse = await axiosInstance.get(
+					`itinerary/getItinerary/${itineraryId}`
+				);
+				setItinerary(itineraryResponse.data);
+				console.log(itineraryResponse.data)
+				setTourGuideName(itineraryResponse.data.tourguideID.name);
+				setTourGuidePicture(itineraryResponse.data.tourguideID.picture);
+			} catch (err) {
+				console.error("Error fetching itinerary:", err);
+			}
+		};
+		fetchItinerary();
+		fetchFreeSpots();
+	}, [itineraryId]);
+
+	const handleBooking = async () => {
+		if (!itinerary) return;
+		try {
+			// TODO: add different ways of payeen
 
             const bookingResponse = await axiosInstance.post(
                 "booking/createBooking",
@@ -74,95 +100,67 @@ const ItineraryDetails = () => {
                 { withCredentials: true }
             );
 
-            // Check the response status
-            if (bookingResponse.status === 201) {
-                // Add any additional success handling here
-                setPointsAdded(bookingResponse.data.pointsAdded);
-                setBookPopUp(false);
-                setBookingDonePopUp(true);
-            } else {
-                console.log(
-                    "Booking response received, but status is not 201:",
-                    bookingResponse.status
-                );
-                // Handle other status codes as needed
-            }
-        } catch (error) {
-            console.error("Booking failed:", error);
-            // Handle error here, like displaying a notification to the user
-            if (error.response) {
-                // The request was made and the server responded with a status code outside the 2xx range
-                console.error("Error status:", error.response.status);
-                console.error("Error data:", error.response.data);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.error("No response received:", error.request);
-            } else {
-                // Something happened in setting up the request
-                console.error("Error setting up request:", error.message);
-            }
-        }
-    };
+			// Check the response status
+			if (bookingResponse.status === 201) {
+				// Add any additional success handling here
+				setPointsAdded(bookingResponse.data.pointsAdded);
+				setBookPopUp(false);
+				setBookingDonePopUp(true);
+				fetchFreeSpots();
+			} else {
+				console.log(
+					"Booking response received, but status is not 201:",
+					bookingResponse.status
+				);
+				// Handle other status codes as needed
+			}
+		} catch (error) {
+			console.error("Booking failed:", error);
+			// Handle error here, like displaying a notification to the user
+			if (error.response) {
+				// The request was made and the server responded with a status code outside the 2xx range
+				console.error("Error status:", error.response.status);
+				console.error("Error data:", error.response.data);
+			} else if (error.request) {
+				// The request was made but no response was received
+				console.error("No response received:", error.request);
+			} else {
+				// Something happened in setting up the request
+				console.error("Error setting up request:", error.message);
+			}
+		}
+	};
 
-    //For managing itinerary data
-    const [photoList, setPhotoList] = useState([]);
-    const [pointsAdded, setPointsAdded] = useState(0);
-    const [tourGuideName, setTourGuideName] = useState(null);
-    const [tourGuidePicture, setTourGuidePicture] = useState(null);
-    const [activities, setActivities] = useState([]);
-    const [ticketCount, setTicketCount] = useState(0);
-    const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
-    const totalPrice = itinerary ? itinerary.price * ticketCount : 0;
 
-    //For getting free spots
 
-    //For Tour guide name and photo
-    useEffect(() => {
-        if (!itinerary) return;
-        const fetchTourGuide = async () => {
-            try {
-                const response = await axiosInstance.get(
-                    `tourguide/tourGuide/${itinerary.tourguideID}`
-                );
-                const tourguide = response.data;
-                setTourGuideName(tourguide.name);
-                setTourGuidePicture(tourguide.picture);
-            } catch (error) {
-                console.error("Error fetching Tour guid	: ", error);
-            }
-        };
-        fetchTourGuide();
-    }, [itinerary]);
+	//For activities and photos
+	useEffect(() => {
+		if (!itinerary) return;
+		const fetchActivites = async () => {
+			try {
+				const activitiesData = await Promise.all(
+					itinerary.activities.map(async (activityObj) => {
+						// First API call to get the rating details
+						const isCustom = activityObj.activityType != "Activity";
+						const activityResponse = await axiosInstance.get(
+							!isCustom
+								? `activity/getActivity/${activityObj.activity}`
+								: `customActivity/getCustomActivity/${activityObj.activity}`
+						);
+						const activity = activityResponse.data;
 
-    //For activities and photos
-    useEffect(() => {
-        if (!itinerary) return;
-        const fetchActivites = async () => {
-            try {
-                const activitiesData = await Promise.all(
-                    itinerary.activities.map(async (activityObj) => {
-                        // First API call to get the rating details
-                        const isCustom = activityObj.activityType != "Activity";
-                        const activityResponse = await axiosInstance.get(
-                            !isCustom
-                                ? `activity/getActivity/${activityObj.activity}`
-                                : `customActivity/getCustomActivity/${activityObj.activity}`
-                        );
-                        const activity = activityResponse.data;
-                        if (!isCustom && activity && activity.freeSpots !== undefined) {
-                            setFreeSpots((prevFreeSpots) =>
-                                Math.min(prevFreeSpots, activity.freeSpots)
-                            );
-                        }
-                        // Extract and format start and end times
-                        const formatTime = (date) => {
-                            const options = {
-                                hour: "numeric",
-                                minute: "numeric",
-                                hour12: true,
-                            };
-                            return new Date(date).toLocaleTimeString("en-US", options);
-                        };
+						// Extract and format start and end times
+						const formatTime = (date) => {
+							const options = {
+								hour: "numeric",
+								minute: "numeric",
+								hour12: true,
+							};
+							return new Date(date).toLocaleTimeString(
+								"en-US",
+								options
+							);
+						};
 
                         const startTimeFormatted = formatTime(activityObj.startTime);
                         const endTimeFormatted = formatTime(activityObj.endTime);
@@ -216,19 +214,22 @@ const ItineraryDetails = () => {
             />
             <CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
 
-            <PopUp
-                isOpen={BookPopUp}
-                setIsOpen={setBookPopUp}
-                headerText={"Please fill in the following to complete your booking"}
-                handleSubmit={handleBooking}
-            >
-                <TicketCounter
-                    pricePerPerson={itinerary.price}
-                    maxCount={freeSpots}
-                    currentCount={ticketCount}
-                    setCount={setTicketCount}
-                />
-            </PopUp>
+			<PopUp
+				isOpen={BookPopUp}
+				setIsOpen={setBookPopUp}
+				headerText={
+					"Please fill in the following to complete your booking"
+				}
+				handleSubmit={handleBooking}
+				containsActionButton={ticketCount > 0}
+			>
+				<TicketCounter
+					pricePerPerson={itinerary.price}
+					maxCount={freeSpots}
+					currentCount={ticketCount}
+					setCount={setTicketCount}
+				/>
+			</PopUp>
 
             <PopUp
                 isOpen={bookingDonePopUp}
@@ -287,24 +288,24 @@ const ItineraryDetails = () => {
                             />
                         </div>
 
-                        {/* Done */}
-                        <div className="book-availabledates">
-                            {(!userType ||
-                                userType == "Tourist" ||
-                                userType == "Guest") && (
-                                <Book
-                                    price={itinerary.price}
-                                    text={"Likely to be out "}
-                                    onClick={() => {
-                                        // Open pop up with booking details
-                                        if (userType == "Guest" || !userType) {
-                                            navigate("/signin");
-                                            return;
-                                        }
-                                        setBookPopUp(true);
-                                    }}
-                                />
-                            )}
+						{/* Done */}
+						<div className="book-availabledates">
+							{(!userType ||
+								userType == "Tourist" ||
+								userType == "Guest") && (
+								<Book
+									price={itinerary.price}
+									text={"Likely to be out "}
+									onClick={() => {
+										// Open pop up with booking details
+										if (userType == "Guest" || !userType) {
+											navigate("/signin");
+											return;
+										}
+										setBookPopUp(true);
+									}}
+								/>
+							)}
 
                             <AvailableDates
                                 date={itinerary.availableDateAndTime}

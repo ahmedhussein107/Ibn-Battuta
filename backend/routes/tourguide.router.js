@@ -7,8 +7,10 @@ import {
     deleteTourGuide,
     getTourGuidesDocuments,
     changeTourguidePassword,
+    getTourGuide,
 } from "../controllers/tourguide.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
+import { get } from "http";
 
 const tourGuideRouter = express.Router();
 
@@ -25,5 +27,7 @@ tourGuideRouter.delete("/deleteTourGuide", isAuthenticated, deleteTourGuide);
 tourGuideRouter.put("/changeTourguidePassword", isAuthenticated, changeTourguidePassword);
 
 tourGuideRouter.get("/documents", getTourGuidesDocuments);
+
+tourGuideRouter.get("/tourGuide/:id", getTourGuide);
 
 export default tourGuideRouter;

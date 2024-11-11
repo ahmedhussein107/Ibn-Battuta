@@ -30,12 +30,12 @@ const FlightList = ({ flightOffers, flightBookings, airlines, handleView, mode =
                     <FlightCard
                         key={index}
                         trip={flightBooking.flightOffers[0]}
-                        airlines={airlines || flightBooking.airlines || {}}
+                        airlines={flightBooking.airlines || {}}
                         handleClick={() =>
                             navigate("/flight-booking-details", {
                                 state: {
                                     flightOffer: flightBooking.flightOffers[0],
-                                    airlines: airlines || flightBooking.airlines || {},
+                                    airlines: flightBooking.airlines || {},
                                     bookingNumber: flightBooking.id,
                                 },
                             })

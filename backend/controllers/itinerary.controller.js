@@ -35,7 +35,7 @@ export const deleteItineraries = async (req, res) => {
 export const getItineraryById = async (req, res) => {
     try {
         console.log("I am here");
-        const itinerary = await Itinerary.findById(req.params.id);
+        const itinerary = await Itinerary.findById(req.params.id).populate("tourguideID");
         if (itinerary) {
             res.status(200).json(itinerary);
         } else {
@@ -65,7 +65,7 @@ export const getFreeSpots = async (id) => {
             }
         }
 
-        return mn;
+        return mn == 1e9 + 7 ? 0 : mn;
     } catch (error) {
         throw new Error(error.message); // Return error to the caller
     }
