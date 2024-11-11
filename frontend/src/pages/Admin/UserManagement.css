@@ -8,7 +8,7 @@
 }
 
 .admin-search-buttons {
-    z-index: 100;
+    z-index: 0;
     display: flex;
     justify-content: space-evenly;
     margin-bottom: 20px;

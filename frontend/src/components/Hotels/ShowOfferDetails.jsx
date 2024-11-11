@@ -14,11 +14,14 @@ import axiosInstance from "../../api/axiosInstance";
 const ShowOfferDetails = () => {
     const { state } = useLocation();
     const { offer } = state || {};
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [bookingId, setBookingId] = useState(offer.bookingId);
     console.log("offer in detail page", offer);
     const handleOnAction = async () => {
         setIsLoading(true);
         try {
-            await axiosInstance.post(
+            const resopnse = await axiosInstance.post(
                 "amadeus/hotels/book-hotel",
                 {
                     offer,
@@ -27,12 +30,13 @@ const ShowOfferDetails = () => {
                     withCredentials: true,
                 }
             );
+            setBookingId(resopnse.data.bookingId);
+            offer.bookingId = resopnse.data.bookingId;
         } catch (err) {
         } finally {
             setIsLoading(false);
         }
     };
-    const [isLoading, setIsLoading] = useState(false);
     return (
         <div className="hotel-details-page-container">
             <div className="hotel-details-container">
@@ -61,12 +65,12 @@ const ShowOfferDetails = () => {
                 </div>
                 <div className="hotel-booking">
                     <h4>Show On Map</h4>
-                    <MapComponent
+                    {/* <MapComponent
                         setMarkerPosition={(position) => {
                             position.lat = offer.lat || "31.3244";
                             position.lng = offer.lng || "42.3242";
                         }}
-                    />
+                    /> */}
                     <div className="offer-description">
                         <h3 className="room-title">{offer.miniDescription}</h3>
                         <div className="room-info">
@@ -125,7 +129,7 @@ const ShowOfferDetails = () => {
                     </div>
                 </div>
             </div>
-            {!offer.bookingId ? (
+            {!bookingId ? (
                 <Button
                     stylingMode="submit"
                     text="Book Now"
@@ -148,7 +152,7 @@ const ShowOfferDetails = () => {
                         borderRadius: "40px",
                     }}
                 >
-                    <h3 style={{ color: "black" }}>Your Booking ID: {offer.bookingId}</h3>
+                    <h3 style={{ color: "black" }}>Your Booking ID: {bookingId}</h3>
                 </div>
             )}
         </div>
