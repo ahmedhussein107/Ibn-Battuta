@@ -1,6 +1,7 @@
 import express from "express";
 import Amadeus from "amadeus";
-
+import Tourist from "../models/tourist.model.js";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 import { API_KEY, API_SECRET } from "../config/config.js";
 
 const amadeusHotelsRouter = express.Router();
@@ -92,7 +93,7 @@ amadeusHotelsRouter.get("/search/hotel-offers", async (req, res) => {
                     hotelOffer?.price?.total + " " + hotelOffer?.price?.currency;
                 offer.checkIn = hotelOffer?.checkInDate;
                 offer.checkOut = hotelOffer?.checkOutDate;
-                offer.guests = hotelOffer?.guests?.adults;
+                offer.guests = guests;
                 offer.paymentMethod = hotelOffer?.policies?.paymentType;
                 offer.description = hotelOffer?.room?.description?.text;
                 offer.beds = hotelOffer?.room?.typeEstimated?.beds;
@@ -118,11 +119,25 @@ amadeusHotelsRouter.get("/search/hotel-offers", async (req, res) => {
 
 //TODO: add booking to tourist
 
-amadeusHotelsRouter.post("/book-hotel", async (req, res) => {
-    const { body } = req;
+amadeusHotelsRouter.post("/book-hotel", isAuthenticated, async (req, res) => {
+    const offer = req.body.offer;
+    console.log("offer is of hotel booking", offer);
+    const touristId = req.user.userId;
     try {
-        const { result } = await amadeus.booking.hotelOrders.post(body);
-        res.status(200).send(result);
+        const tourist = await Tourist.findById(touristId);
+        if (!tourist) {
+            return res.status(404).send({ error: "Tourist not found" });
+        }
+        if (tourist.wallet < offer.totalPrice) {
+            return res.status(400).send({ error: "Not enough money" });
+        }
+        const randomId = Math.floor(Math.random() * 10000000000000);
+        offer.bookingId = randomId;
+        tourist.wallet -= offer.totalPrice;
+
+        tourist.hotelBookings.push(offer);
+        await tourist.save();
+        res.status(200).send({ bookingId: randomId });
     } catch (error) {
         res.status(400).send({ error: error.message });
     }
@@ -218,13 +233,36 @@ const api_key = "13f30476a7msh7c7b0bf653e92d8p1ad710jsn75d88c3a6625";
 //         res.status(500).json({ error: err.message });
 //     }
 // });
-
+const paymentMethods = ["Deposit", "Cash", "Credit card"];
+const beds = [1, 2, 3];
+const room = {
+    name: "Grand City Hotel",
+    address: "123 Main Street, Alex",
+    addressLandmark: "Near Downtown",
+    city: "Alexandria",
+    image: "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
+    rooms: 2,
+    bathrooms: 2,
+    beds: 2,
+    guests: 4,
+    totalPrice: 200,
+    checkIn: "12:00 PM",
+    checkOut: "10:00 PM",
+    cancellationPolicy: "Free cancellation",
+    paymentMethod: "Credit Card",
+    miniDescription: "This is a sample description.",
+    description:
+        "This is the whole description for the room.it is a lot of text and unnecessary information",
+    //bookingId: 344542321, // when booked
+    _id: "git-it-done",
+};
 const getHotelsByCoordinates = (query, callback) => {
+    console.log("query is 2", query);
     const options = {
         method: "GET",
         hostname: "booking-com.p.rapidapi.com",
         port: null,
-        path: `/v1/hotels/search-by-coordinates?adults_number=2&checkin_date=${query.checkIn}&children_number=2&locale=en-gb&room_number=1&units=metric&filter_by_currency=USD&longitude=${query.lng}&children_ages=5%2C0&checkout_date=${query.checkOut}&latitude=${query.lat}&order_by=popularity&include_adjacency=true&page_number=0&categories_filter_ids=class%3A%3A2%2Cclass%3A%3A4%2Cfree_cancellation%3A%3A1`,
+        path: `/v1/hotels/search-by-coordinates?adults_number=${query.guests}&checkin_date=${query.checkIn}&children_number=2&locale=en-gb&room_number=1&units=metric&filter_by_currency=USD&longitude=${query.lng}&children_ages=5%2C0&checkout_date=${query.checkOut}&latitude=${query.lat}&order_by=popularity&include_adjacency=true&page_number=0&categories_filter_ids=class%3A%3A2%2Cclass%3A%3A4%2Cfree_cancellation%3A%3A1`,
         headers: {
             "x-rapidapi-key": api_key,
             "x-rapidapi-host": "booking-com.p.rapidapi.com",
@@ -233,41 +271,71 @@ const getHotelsByCoordinates = (query, callback) => {
 
     const req = http.request(options, (res) => {
         const chunks = [];
-
         res.on("data", (chunk) => {
             chunks.push(chunk);
         });
-
         res.on("end", () => {
             const body = Buffer.concat(chunks);
-            callback(null, JSON.parse(body.toString()));
+            const parseData = JSON.parse(body);
+            const hotels = parseData?.result?.map((hotel) => {
+                return {
+                    name: hotel?.hotel_name || room.name,
+                    image: hotel?.main_image_url || room.image,
+                    totalPrice:
+                        hotel?.price_breakdown?.all_inclusive_price || room.totalPrice,
+                    currency: hotel?.price_breakdown?.currency || "USD",
+                    checkIn: hotel?.checkin?.from || room.checkIn,
+                    checkOut: hotel?.checkout?.from || room.checkOut,
+                    guests: query.guests,
+                    paymentMethod:
+                        paymentMethods[Math.floor(Math.random() * paymentMethods.length)],
+                    beds: beds[Math.floor(Math.random() * beds.length)],
+                    miniDescription: hotel?.short_description || room.miniDescription,
+                    description: hotel?.description || room.description,
+                    _id: hotel?.id || room._id,
+                    cancellationPolicy: hotel?.is_free_cancellation
+                        ? "Free Cancellation"
+                        : "Non-refundable",
+                    city: hotel?.city || room.city,
+                    lat: hotel?.latitude || null,
+                    lng: hotel?.longitude || null,
+                    address: hotel?.address || room.address,
+                    addressLandmark: room.addressLandmark, // Kept from `room` as it wasn't in `hotel`
+                    rooms: room.rooms, // Default to room's value
+                    bathrooms: room.bathrooms, // Default to room's value
+                };
+            });
+
+            callback(null, hotels);
         });
     });
 
     req.on("error", (error) => {
-        callback(error, null);
+        callback(error, []);
     });
 
     req.end();
 };
 
 const getHotelsByCoordinatesHandler = (req, res) => {
+    console.log("query is 1", req.query);
     const lat = req.query.lat || 25.2048;
     const lng = req.query.lng || 55.2708;
     const checkIn = req.query.checkIn || new Date().toISOString().split("T")[0];
     const checkOut =
         req.query.checkOut ||
         new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split("T")[0];
-
-    const query = { lat, lng, checkIn, checkOut };
+    const guests = req.query.guests || 2;
+    const query = { lat, lng, checkIn, checkOut, guests };
 
     getHotelsByCoordinates(query, (err, hotels) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
-
+        console.log("please print good news", hotels);
         res.json({ hotels });
     });
 };
 
+amadeusHotelsRouter.get("/search/hotel-offers-2", getHotelsByCoordinatesHandler);
 export default amadeusHotelsRouter;
