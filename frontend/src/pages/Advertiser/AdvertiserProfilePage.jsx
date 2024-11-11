@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import { uploadFile } from "../../api/firebase.js";
 import axios from "axios";
 
 const AdvertiserProfilePage = () => {
@@ -24,9 +25,10 @@ const AdvertiserProfilePage = () => {
         website: "",
         hotline: "",
     });
-    const [image, setImage] = useState(
-        "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
-    );
+    const defaultImage =
+        "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg";
+    const [image, setImage] = useState(defaultImage);
+    const [imageFile, setImageFile] = useState(null);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -48,6 +50,7 @@ const AdvertiserProfilePage = () => {
                     hotline: response.data.hotline,
                 });
                 console.log("Advertiser:", response.data);
+                setImage(response.data.picture || defaultImage);
             })
             .catch((error) => {
                 console.error("Error fetching Advertiser:", error);
@@ -154,29 +157,30 @@ const AdvertiserProfilePage = () => {
         const file = event.target.files[0];
         if (file) {
             const formData = new FormData();
-            formData.append("picture", file);
+            const image = await uploadFile(file, "advertiser-profile-pictures");
+            formData.append("picture", image);
 
-            try {
-                // Send the image to the server
-                const response = await axiosInstance.put(
-                    "/advertiser/updateAdvertiser",
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                        withCredentials: true,
-                    }
-                );
+            axiosInstance
+                .put("/advertiser/updateAdvertiser", formData, {
+                    withCredentials: true,
+                })
+                .then((response) => {
+                    alert("Profile picture updated successfully!");
+                    console.log("Updated Advertiser Picture:", response.data.picture);
 
-                // Update state with new image URL from the response
-                setImage(response.data.picture); // Assuming the response returns the new image URL
+                    // Ensure response.data contains the full URL of the picture
+                    setResponse((prev) => ({
+                        ...prev,
+                        picture: response.data.picture, // This should be a string URL
+                    }));
 
-                alert("Profile picture updated successfully");
-            } catch (error) {
-                console.error("Error updating profile picture:", error);
-                alert("Failed to update profile picture");
-            }
+                    console.log("Updated Advertiser Picture:", response.data.picture);
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.error("Error uploading picture:", error);
+                    alert("An error occurred while uploading the picture.");
+                });
         }
     };
 

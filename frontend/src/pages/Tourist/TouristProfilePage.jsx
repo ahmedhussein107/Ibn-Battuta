@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import Navbar from "../../components/NavBar";
 import styled from "styled-components";
@@ -8,6 +8,7 @@ import bg from "../../assets/images/bg.jpg";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
+import { uploadFile } from "../../api/firebase";
 const PageWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -102,9 +103,6 @@ const ProfileDetailsBox = styled.div`
 `;
 
 const InfoBoxesContainer = styled.div`
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
     display: flex;
     gap: 20px;
     margin-top: 20px;
@@ -235,6 +233,7 @@ export default function TouristProfilePage() {
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
     const [redeemValue, setRedeemValue] = useState(0);
     const [isEditing, setIsEditing] = useState(false);
+    const fileInputRef = useRef(null);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -276,13 +275,56 @@ export default function TouristProfilePage() {
             tourist.preferences.map((tag, index) => (
                 <TagBubble key={index}>
                     {tag}
-                    <CloseButton onClick={() => handleTagRemove(tag)}>×</CloseButton>
+                    <CloseButton onClick={() => handleTagRemove(tag)}>
+                        ×
+                    </CloseButton>
                 </TagBubble>
             ))
         ) : (
             <p>No preferences available</p> // Add a message for when there are no preferences
         );
     }
+    const handleImageClick = () => {
+        fileInputRef.current.click();
+    };
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            const image = await uploadFile(file, "tourist-profile-pictures");
+            formData.append("picture", image);
+
+            axiosInstance
+                .put("/tourist/updateTourist", formData, {
+                    withCredentials: true,
+                })
+                .then((response) => {
+                    alert("Profile picture updated successfully!");
+                    console.log(
+                        "Updated Tourist Picture:",
+                        response.data.picture
+                    );
+
+                    // Ensure response.data contains the full URL of the picture
+                    setTourist((prev) => ({
+                        ...prev,
+                        picture: response.data.picture, // This should be a string URL
+                    }));
+
+                    // Log the updated tourist picture to the console
+                    console.log(
+                        "Updated Tourist Picture:",
+                        response.data.picture
+                    );
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.error("Error uploading picture:", error);
+                    alert("An error occurred while uploading the picture.");
+                });
+        }
+    };
+
     const handleTagSelect = (event) => {
         const selectedTag = event.target.value;
         if (selectedTag && !selectedTags.includes(selectedTag)) {
@@ -307,7 +349,9 @@ export default function TouristProfilePage() {
     };
 
     const handleTagRemove = (tagToRemove) => {
-        const updatedSelectedTags = selectedTags.filter((tag) => tag !== tagToRemove);
+        const updatedSelectedTags = selectedTags.filter(
+            (tag) => tag !== tagToRemove
+        );
         setSelectedTags(updatedSelectedTags);
 
         if (tourist?.preferences.includes(tagToRemove)) {
@@ -424,7 +468,8 @@ export default function TouristProfilePage() {
             .catch((error) => {
                 console.error("Error updating profile:", error);
                 alert(
-                    error.response?.data?.e || "An error occurred while updating profile."
+                    error.response?.data?.e ||
+                        "An error occurred while updating profile."
                 );
             });
     };
@@ -432,7 +477,8 @@ export default function TouristProfilePage() {
     const [newAddressName, setNewAddressName] = useState("");
     const [newAddressLocation, setNewAddressLocation] = useState("");
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+        useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -491,9 +537,11 @@ export default function TouristProfilePage() {
         setIsPopUpOpen(true);
     };
 
-    const handleCurrentPasswordChange = (e) => setCurrentPassword(e.target.value);
+    const handleCurrentPasswordChange = (e) =>
+        setCurrentPassword(e.target.value);
     const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
-    const handleConfirmNewPasswordChange = (e) => setConfirmNewPassword(e.target.value);
+    const handleConfirmNewPasswordChange = (e) =>
+        setConfirmNewPassword(e.target.value);
 
     const PopUpAction = () => {
         if (newPassword !== confirmNewPassword) {
@@ -525,7 +573,7 @@ export default function TouristProfilePage() {
             <div
                 style={{
                     width: "100vw",
-                    height: "70vh",
+                    height: "40vh",
                     backgroundImage: `url(${bg})`,
                     backgroundSize: "100% 100%",
                     // backgroundPosition: "center",
@@ -536,6 +584,7 @@ export default function TouristProfilePage() {
             ></div>
             <Navbar />
             <div
+                onClick={handleImageClick}
                 style={{
                     width: "10vw",
                     height: "10vw",
@@ -550,10 +599,16 @@ export default function TouristProfilePage() {
                     })`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
+                    cursor: "pointer", // Make it look clickable
                 }}
-            >
-                {" "}
-            </div>
+            ></div>
+            <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                accept="image/*"
+                onChange={handleFileChange}
+            />
             <strong>
                 <p>{tourist?.name}</p>{" "}
             </strong>
@@ -689,10 +744,13 @@ export default function TouristProfilePage() {
                                     {formData.address.map((address, index) => (
                                         <div key={index}>
                                             <span>
-                                                {address.name} - {address.location}
+                                                {address.name} -{" "}
+                                                {address.location}
                                             </span>
                                             <button
-                                                onClick={() => handleRemoveAddress(index)}
+                                                onClick={() =>
+                                                    handleRemoveAddress(index)
+                                                }
                                             >
                                                 Remove
                                             </button>
@@ -705,7 +763,9 @@ export default function TouristProfilePage() {
                                             placeholder="Address Name"
                                             value={newAddressName}
                                             onChange={(e) =>
-                                                setNewAddressName(e.target.value)
+                                                setNewAddressName(
+                                                    e.target.value
+                                                )
                                             }
                                         />
                                         <input
@@ -713,7 +773,9 @@ export default function TouristProfilePage() {
                                             placeholder="Address Location"
                                             value={newAddressLocation}
                                             onChange={(e) =>
-                                                setNewAddressLocation(e.target.value)
+                                                setNewAddressLocation(
+                                                    e.target.value
+                                                )
                                             }
                                         />
                                         <button onClick={handleAddAddress}>
@@ -723,12 +785,52 @@ export default function TouristProfilePage() {
                                 </p>
                                 <p>
                                     <strong>Preferred Currency:</strong>{" "}
-                                    <input
-                                        type="text"
+                                    <select
                                         name="currency"
                                         value={formData.currency}
                                         onChange={handleChange}
-                                    />
+                                        style={{ width: "30%" }} // Optional styling for the dropdown
+                                    >
+                                        <option value="">
+                                            Select Currency
+                                        </option>{" "}
+                                        {/* Default option */}
+                                        <option value="AED">
+                                            AED - United Arab Emirates Dirham
+                                        </option>
+                                        <option value="AUD">
+                                            AUD - Australian Dollar
+                                        </option>
+                                        <option value="EGP">
+                                            EGP - Egyptian Pound
+                                        </option>
+                                        <option value="EUR">EUR - Euro</option>
+                                        <option value="GBP">
+                                            GBP - British Pound
+                                        </option>
+                                        <option value="GTQ">
+                                            GTQ - Guatemalan Quetzal
+                                        </option>
+                                        <option value="IDR">
+                                            IDR - Indonesian Rupiah
+                                        </option>
+                                        <option value="KWD">
+                                            KWD - Kuwaiti Dinar
+                                        </option>
+                                        <option value="USD">
+                                            USD - United States Dollar
+                                        </option>
+                                        <option value="WST">
+                                            WST - Samoan Tala
+                                        </option>
+                                        <option value="XAF">
+                                            XAF - Central African CFA Franc
+                                        </option>
+                                        <option value="ZWL">
+                                            ZWL - Zimbabwean Dollar
+                                        </option>
+                                        {/* Add more currencies as needed */}
+                                    </select>
                                 </p>
                                 <p>
                                     <button onClick={handleSaveChanges}>
@@ -755,16 +857,19 @@ export default function TouristProfilePage() {
                                     {tourist?.nationality || "Not Provided"}
                                 </p>
                                 <p>
-                                    <strong>Job:</strong> {tourist?.job || "Not Provided"}
+                                    <strong>Job:</strong>{" "}
+                                    {tourist?.job || "Not Provided"}
                                 </p>
                                 <p>
                                     <strong>Addresses:</strong>{" "}
-                                    {tourist?.address && tourist.address.length > 0
+                                    {tourist?.address &&
+                                    tourist.address.length > 0
                                         ? tourist.address.map((addr, index) => (
                                               <span key={index}>
                                                   {addr.name} - {addr.location}
-                                                  {index < tourist.address.length - 1 &&
-                                                      ", "}{" "}
+                                                  {index <
+                                                      tourist.address.length -
+                                                          1 && ", "}{" "}
                                                   {/* Add a comma except after the last address */}
                                               </span>
                                           ))
@@ -824,7 +929,9 @@ export default function TouristProfilePage() {
                             ].map((tag, index) => (
                                 <TagBubble key={index}>
                                     {tag}
-                                    <CloseButton onClick={() => handleTagRemove(tag)}>
+                                    <CloseButton
+                                        onClick={() => handleTagRemove(tag)}
+                                    >
                                         ×
                                     </CloseButton>
                                 </TagBubble>
@@ -848,7 +955,9 @@ export default function TouristProfilePage() {
                             value={redeemValue.toFixed(2)}
                             readOnly
                         />
-                        <RedeemButton onClick={handleRedeemPoints}>Redeem</RedeemButton>
+                        <RedeemButton onClick={handleRedeemPoints}>
+                            Redeem
+                        </RedeemButton>
                     </RedeemBox>
                 </InfoBoxesContainer>
             </MainContent>

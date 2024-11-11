@@ -8,7 +8,7 @@ import CustomActivity from "../models/customActivity.model.js";
 import Bookings from "../models/booking.model.js";
 import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
-
+import Admin from "../models/admin.model.js";
 export const createTourGuide = async (req, res) => {
     //console.log(req.body);
     const inputUsername = req.body.username;
@@ -28,9 +28,7 @@ export const createTourGuide = async (req, res) => {
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
             req.body.password = hashedPassword;
             const newTourGuide = await TourGuide.create(req.body);
-            assignCookies(res, "TourGuide", newTourGuide._id)
-                .status(200)
-                .json({ message: "Sign up successful" });
+            res.status(201).json({ message: "Sign up successful", user: newTourGuide });
         } else {
             if (username) {
                 res.status(400).json({ e: "Username already exists" });
@@ -73,9 +71,15 @@ export const getTourGuideById = async (req, res) => {
 };
 
 export const updateTourGuide = async (req, res) => {
-    const tourGuideId = req.user.userId;
+    let tourguideId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        tourguideId = req.query.userId;
+    }
+    console.log("ahmed");
+    console.log(tourguideId);
     try {
-        const tourGuide = await TourGuide.findById(tourGuideId);
+        const tourGuide = await TourGuide.findById(tourguideId);
         if (!tourGuide) {
             return res.status(404).json({ message: "tourGuide not found" });
         }
@@ -91,7 +95,7 @@ export const updateTourGuide = async (req, res) => {
 
         // Update tourGuide details
         const updatedtourGuide = await TourGuide.findByIdAndUpdate(
-            tourGuideId,
+            tourguideId,
             req.body,
             {
                 new: true,
@@ -105,7 +109,11 @@ export const updateTourGuide = async (req, res) => {
 };
 
 export const deleteTourGuide = async (req, res) => {
-    const tourguideId = req.user.userId;
+    let tourguideId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        tourguideId = req.query.userId;
+    }
     try {
         const upcomingItineraries = await Itinerary.find({
             tourguideID: tourguideId,
@@ -123,11 +131,11 @@ export const deleteTourGuide = async (req, res) => {
             });
         } else {
             const tourGuide = await TourGuide.findByIdAndDelete(tourguideId);
+            console.log(tourGuide);
             if (tourGuide) {
                 await Username.findByIdAndDelete(tourGuide.username);
                 await Email.findByIdAndDelete(tourGuide.email);
 
-                // If there are notifications, delete each one
                 if (tourGuide.notifications && tourGuide.notifications.length > 0) {
                     await Promise.all(
                         tourGuide.notifications.map(async (notificationId) => {
@@ -136,7 +144,6 @@ export const deleteTourGuide = async (req, res) => {
                     );
                 }
 
-                // If there are ratings, delete each one
                 if (tourGuide.ratings && tourGuide.ratings.length > 0) {
                     await Promise.all(
                         tourGuide.ratings.map(async (ratingId) => {

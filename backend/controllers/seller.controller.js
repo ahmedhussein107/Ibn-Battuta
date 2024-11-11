@@ -7,7 +7,7 @@ import Rating from "../models/rating.model.js";
 import Order from "../models/order.model.js";
 import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
-
+import Admin from "../models/admin.model.js";
 export const createSeller = async (req, res) => {
     //console.log(req.body);
     const inputUsername = req.body.username;
@@ -28,9 +28,7 @@ export const createSeller = async (req, res) => {
             req.body.password = hashedPassword;
 
             const newSeller = await Seller.create(req.body);
-            assignCookies(res, "Seller", newSeller._id)
-                .status(201)
-                .json({ message: "Sign up successful" });
+            res.status(201).json({ message: "Sign up successful", user: newSeller });
         } else {
             if (username) {
                 res.status(400).json({ e: "Username already exists" });
@@ -71,7 +69,11 @@ export const getSellerById = async (req, res) => {
 };
 
 export const updateSeller = async (req, res) => {
-    const sellerId = req.user.userId;
+    let sellerId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        sellerId = req.query.userId;
+    }
     try {
         const seller = await Seller.findById(sellerId);
         if (!seller) {
@@ -99,7 +101,11 @@ export const updateSeller = async (req, res) => {
 };
 
 export const deleteSeller = async (req, res) => {
-    const sellerId = req.user.userId;
+    let sellerId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        sellerId = req.query.userId;
+    }
     try {
         const products = await Product.find({
             ownerID: sellerId,

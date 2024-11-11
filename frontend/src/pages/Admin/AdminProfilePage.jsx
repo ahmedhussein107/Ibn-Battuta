@@ -146,29 +146,35 @@ const AdminProfilePage = () => {
         fileInputRef.current.click(); // Triggers the file input click
     };
 
-    //Function to handle file input change
     const handleImageChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
             const formData = new FormData();
-            formData.append("picture", file);
+            const image = await uploadFile(file, "admin-profile-pictures");
+            formData.append("picture", image);
 
-            try {
-                const response = await axiosInstance.put("/admin/updateAdmin", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
+            axiosInstance
+                .put("/admin/updateAdmin", formData, {
                     withCredentials: true,
-                });
-                const picture = await uploadFile(imageFile, "profilePictures");
+                })
+                .then((response) => {
+                    alert("Profile picture updated successfully!");
+                    console.log("Updated Tourist Picture:", response.data.picture);
 
-                // Update the image state with the new image URL or fallback to default
-                setImage(response.data.picture || defaultImage);
-                alert("Profile picture updated successfully");
-            } catch (error) {
-                console.error("Error updating profile picture:", error);
-                alert("Failed to update profile picture");
-            }
+                    // Ensure response.data contains the full URL of the picture
+                    setResponse((prev) => ({
+                        ...prev,
+                        picture: response.data.picture, // This should be a string URL
+                    }));
+
+                    // Log the updated tourist picture to the console
+                    console.log("Updated Tourist Picture:", response.data.picture);
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.error("Error uploading picture:", error);
+                    alert("An error occurred while uploading the picture.");
+                });
         }
     };
 

@@ -1,6 +1,5 @@
 import React from "react";
-import { GoogleMap,  Marker } from "@react-google-maps/api";
-
+import { GoogleMap, Marker } from "@react-google-maps/api";
 
 const containerStyle = {
 	width: "100%",
@@ -14,25 +13,24 @@ const center = {
 };
 
 const MapComponent = ({ markerPosition, onMapClick, customStyles }) => {
-	console.log(customStyles);
-	const styles = customStyles ? { ...containerStyle, ...customStyles} : containerStyle;
-	console.log(styles);
+	const styles = customStyles
+		? { ...containerStyle, ...customStyles }
+		: containerStyle;
+
 	return (
-
-			<GoogleMap
-				mapContainerStyle={ styles}
-				center={markerPosition || center}
-				zoom={10}
-				onClick={(event) =>
-					onMapClick({
-						lat: event.latLng.lat(),
-						lng: event.latLng.lng(),
-					})
-				}
-			>
-				{markerPosition && <Marker position={markerPosition} />}
-			</GoogleMap>
-
+		<GoogleMap
+			mapContainerStyle={styles}
+			center={markerPosition || center}
+			zoom={10}
+			onClick={(event) =>
+				onMapClick({
+					lat: event.latLng.lat(),
+					lng: event.latLng.lng(),
+				})
+			}
+		>
+			{markerPosition && <Marker position={markerPosition} />}
+		</GoogleMap>
 	);
 };
 

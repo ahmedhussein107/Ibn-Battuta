@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import MapComponent from "../components/MapComponent";
 import { MapWrapper } from "../components/MapWrapper";
-const map = ({ setMarkerPosition, defaultPosition,  customStyles}) => {
+const map = ({ setMarkerPosition, defaultPosition, customStyles }) => {
     const [marker, setMarker] = useState(null);
     
     console.log("Hello", defaultPosition)
@@ -10,7 +10,7 @@ const map = ({ setMarkerPosition, defaultPosition,  customStyles}) => {
         setMarker(position);
         setMarkerPosition(position);
     };
-    console.log(defaultPosition);
+
     return (
         <div>
             <MapWrapper>
