@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import axiosInstance from "../../api/axiosInstance"; // your axios instance with baseURL
 import { Carousel } from "react-bootstrap"; // Bootstrap Carousel for image sliding
 import { useNavigate } from "react-router-dom";
-import convert from "../api/convert";
+import convert from "../../api/convert";
 import Cookies from "js-cookie";
 const ViewProductsPage = () => {
     const navigate = useNavigate();

@@ -16,7 +16,7 @@ import ActivityPhotos from "../../components/ActivityPhotos.jsx";
 import DateRangeDisplay from "../../components/DateRangeDisplay.jsx";
 import DiscountCard from "../../components/DiscountCard.jsx";
 
-import convert from "../api/convert";
+import convert from "../../api/convert";
 import Cookies from "js-cookie";
 
 // Itinerary-related components
@@ -26,7 +26,6 @@ import Book from "../../components/ItineraryDetails/Book.jsx";
 
 // Other components
 import Map from "../map.jsx";
-import Cookies from "js-cookie";
 
 // Styles
 import "../../styles/ActivityDetails.css";

@@ -4,7 +4,7 @@ import axiosInstance from "../../api/axiosInstance";
 import { Carousel } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import convert from "../api/convert";
+import convert from "../../api/convert";
 import Cookies from "js-cookie";
 const ViewProductPage = () => {
     const { productId } = useParams(); // Get product ID from the URL
