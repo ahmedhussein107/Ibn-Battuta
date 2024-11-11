@@ -27,7 +27,9 @@ export const getBooking = async (req, res) => {
 
 export const updateBooking = async (req, res) => {
 	try {
-		const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, { new: true });
+		const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
+			new: true,
+		});
 		if (booking) {
 			res.status(200).json(booking);
 		} else {
@@ -206,10 +208,19 @@ export const redeemPoints = async (req, res) => {
 export const getitineraryBookings = async (req, res) => {
 	try {
 		const id = req.user.userId;
+		const page = Math.max(1, parseInt(req.query.page) || 1);
+		const limit = Math.max(1, parseInt(req.query.limit) || 10);
+		const toSkip = (page - 1) * limit;
+		const count = await Booking.countDocuments({
+			touristID: id,
+			bookingType: "Itinerary",
+		});
 		const bookings = await Booking.find({
 			touristID: id,
 			bookingType: "Itinerary",
 		})
+			.skip(toSkip)
+			.limit(limit)
 			.populate({
 				path: "typeId",
 				populate: {
@@ -221,7 +232,10 @@ export const getitineraryBookings = async (req, res) => {
 				path: "ratingID",
 				model: "Rating",
 			});
-		res.status(200).json(bookings);
+		res.status(200).json({
+			result: bookings,
+			totalPages: count > 0 ? Math.ceil(count / limit) : 1,
+		});
 	} catch (error) {
 		res.status(400).json({ error: error.message });
 	}
@@ -230,10 +244,21 @@ export const getitineraryBookings = async (req, res) => {
 export const getActivityBookings = async (req, res) => {
 	try {
 		const id = req.user.userId;
+		const page = Math.max(1, parseInt(req.query.page) || 1);
+		const limit = Math.max(1, parseInt(req.query.limit) || 10);
+		const toSkip = (page - 1) * limit;
+		const count = await Booking.countDocuments({
+			touristID: id,
+			bookingType: "Activity",
+			isInItinerary: false,
+		});
 		const bookings = await Booking.find({
 			touristID: id,
 			bookingType: "Activity",
+			isInItinerary: false,
 		})
+			.skip(toSkip)
+			.limit(limit)
 			.populate({
 				path: "typeId",
 				populate: {
@@ -245,8 +270,34 @@ export const getActivityBookings = async (req, res) => {
 				path: "ratingID",
 				model: "Rating",
 			});
-		res.status(200).json(bookings);
+		res.status(200).json({
+			result: bookings,
+			totalPages: count > 0 ? Math.ceil(count / limit) : 1,
+		});
 	} catch (error) {
 		res.status(400).json({ error: error.message });
+	}
+};
+
+export const getHotelBookings = async (req, res) => {
+	try {
+		const page = Math.max(1, parseInt(req.query.page) || 1);
+		const limit = Math.max(1, parseInt(req.query.limit) || 10);
+		const toSkip = (page - 1) * limit;
+
+		const touristId = req.user.userId;
+		const tourist = await Tourist.findById(touristId);
+		if (!tourist) {
+			return res.status(404).json({ error: "Tourist not found" });
+		}
+		const total = tourist.hotelBookings.length;
+		const bookingsSlice = total > 0 ? tourist.hotelBookings.slice(toSkip, toSkip + limit) : [];
+
+		res.status(200).json({
+			result: bookingsSlice,
+			totalPages: total > 0 ? Math.ceil(total / limit) : 1,
+		});
+	} catch (err) {
+		res.status(500).json({ error: err.message });
 	}
 };

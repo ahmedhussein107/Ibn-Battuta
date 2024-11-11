@@ -52,6 +52,11 @@ const Bookings = () => {
 
     useEffect(() => {
         fetchBookings();
+    }, [currentPage]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+        fetchBookings();
     }, [selected]);
 
     return (
@@ -77,16 +82,15 @@ const Bookings = () => {
                     {/* <GenericCard width="40vw" height="20vw" /> */}
                     {(selected == "Itineraries" || selected == "Activities") && (
                         <>
-                            {bookings &&
-                                bookings.map((booking) => (
-                                    <div style={{ padding: "1%" }}>
-                                        <CardBooking
-                                            booking={booking}
-                                            width="46vw"
-                                            height="34vh"
-                                        />
-                                    </div>
-                                ))}
+                            {bookings.map((booking) => (
+                                <div style={{ padding: "1%" }}>
+                                    <CardBooking
+                                        booking={booking}
+                                        width="46vw"
+                                        height="34vh"
+                                    />
+                                </div>
+                            ))}
                         </>
                     )}
                     {selected == "Flights" && <> </>}

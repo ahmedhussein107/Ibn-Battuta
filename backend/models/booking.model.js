@@ -24,6 +24,7 @@ const bookingSchema = mongoose.Schema(
 		pointsAdded: { type: Number, required: true },
 		isInItinerary: { type: Boolean, default: false },
 		ratingID: { type: mongoose.Schema.Types.ObjectId, ref: "Rating" },
+		ratingTourGuideID: { type: mongoose.Schema.Types.ObjectId, ref: "Rating" },
 	},
 	{ timestamps: true }
 );
