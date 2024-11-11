@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./ShowOfferDetails.css";
 import "./HotelCard.css";
 import MapComponent from "../MapComponent";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PersonIcon from "@mui/icons-material/Person";
 import BedIcon from "@mui/icons-material/Bed";
@@ -14,6 +14,7 @@ import { convertCurrency } from "../../api/currency";
 import Cookies from "js-cookie";
 import convert from "../../api/convert";
 const ShowOfferDetails = () => {
+    const navigate = useNavigate();
     const { state } = useLocation();
     const { offer } = state || {};
     const [isLoading, setIsLoading] = useState(false);
@@ -36,6 +37,7 @@ const ShowOfferDetails = () => {
         } catch (err) {
         } finally {
             setIsLoading(false);
+            setTimeout(() => navigate("/bookings"), 1000);
         }
     };
     return (

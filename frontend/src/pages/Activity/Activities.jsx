@@ -220,7 +220,14 @@ const Activities = () => {
         />,
     ];
     return (
-        <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+        <div
+            style={{
+                width: "100vw",
+                position: "absolute",
+                top: "0",
+                left: "0",
+            }}
+        >
             <div
                 style={{
                     width: "100vw",
@@ -234,6 +241,7 @@ const Activities = () => {
             {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
                 <NavBar />
             </div> */}
+
             <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
                 <div
                     style={{
@@ -270,13 +278,14 @@ const Activities = () => {
                                         width="1.2vw"
                                         height="1.2vw"
                                         styles={{ padding: "0.5vh" }}
+                                        direction={`/activity-details/${activity.id}`}
                                     />,
                                 ]}
                                 bottomButtons={[
                                     {
                                         text: "Book Now",
                                         onClick: () =>
-                                            navigate(`/activity-details${activity.id}`),
+                                            navigate(`/activity-details/${activity.id}`),
                                         type: "1",
                                         width: "50%",
                                         styles: {

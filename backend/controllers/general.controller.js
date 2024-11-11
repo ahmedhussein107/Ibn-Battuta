@@ -50,14 +50,25 @@ export const login = async (req, res) => {
                 .json({ message: `No user found with the username: ${username}` });
         }
 
-        // const isPasswordValid = await bcrypt.compare(password, user.password);
-        // if (!isPasswordValid) {
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+
+        // for test with no encryption
+        // if (password !== user.password) {
         //     return res.status(401).json({ message: "Invalid credentials" });
         // }
 
-        // for test with no encryption
-        if (password !== user.password) {
-            return res.status(401).json({ message: "Invalid credentials" });
+        if (
+            userRecord.userType === "TourGuide" ||
+            userRecord.userType === "Advertiser" ||
+            userRecord.userType === "Seller"
+        ) {
+            if (!user.isAccepted) {
+                res.status(400).json({ message: "User is not accepted" });
+                return;
+            }
         }
 
         assignCookies(res, userRecord.userType, user._id.toString())

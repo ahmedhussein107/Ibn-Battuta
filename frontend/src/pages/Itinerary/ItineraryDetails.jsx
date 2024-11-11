@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 // External libraries or API instance
 import axiosInstance from "../../api/axiosInstance";
 
@@ -7,8 +7,7 @@ import axiosInstance from "../../api/axiosInstance";
 import ReviewsSection from "./ReviewsSection.jsx";
 import ProfileAndDescription from "./ProfileAndDescription.jsx";
 import CyclicPhotoDisplay from "./CyclicPhotoDisplay.jsx";
-import convert from "../api/convert";
-import Cookies from "js-cookie";
+
 // Top-level components
 import NavBar from "../../components/NavBar.jsx";
 import ItineraryAndActivityHeader from "../../components/ItineraryAndActivityHeader.jsx";
@@ -27,8 +26,16 @@ import ItineraryTimeline from "../../components/ItineraryTimline.jsx";
 
 // Styles
 import "../../styles/ItineraryDetails.css";
-
+import Cookies from "js-cookie";
 const ItineraryDetails = () => {
+    const navigate = useNavigate();
+    const [userType, setUserType] = useState(null);
+
+    useEffect(() => {
+        // Retrieve the userType from cookies when the component mounts
+        const userTypeFromCookie = Cookies.get("userType");
+        setUserType(userTypeFromCookie);
+    }, []);
     const location = useLocation();
     usePageHeader(null, null);
     //6703f5310ecc1ad25ff95144
@@ -233,8 +240,6 @@ const ItineraryDetails = () => {
                 <SuccessfulBooking points={pointsAdded} />
             </PopUp>
 
-            <ItineraryAndActivityHeader mode="itinerary" title={itinerary.name} />
-
             <div className="itinerary-info">
                 <div className="placeholder">
                     <ItineraryTimeline
@@ -284,14 +289,23 @@ const ItineraryDetails = () => {
 
                         {/* Done */}
                         <div className="book-availabledates">
-                            <Book
-                                price={itinerary.price}
-                                text={"Likely to be out "}
-                                onClick={() => {
-                                    // Open pop up with booking details
-                                    setBookPopUp(true);
-                                }}
-                            />
+                            {(!userType ||
+                                userType == "Tourist" ||
+                                userType == "Guest") && (
+                                <Book
+                                    price={itinerary.price}
+                                    text={"Likely to be out "}
+                                    onClick={() => {
+                                        // Open pop up with booking details
+                                        if (userType == "Guest" || !userType) {
+                                            navigate("/signin");
+                                            return;
+                                        }
+                                        setBookPopUp(true);
+                                    }}
+                                />
+                            )}
+
                             <AvailableDates
                                 date={itinerary.availableDateAndTime}
                                 width="18vw"

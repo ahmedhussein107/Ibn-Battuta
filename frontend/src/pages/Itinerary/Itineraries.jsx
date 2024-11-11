@@ -61,7 +61,9 @@ const Itineraries = () => {
             console.log("query", query);
             const response = await axiosInstance.get(
                 `/itinerary/getUpcomingItineraries/`,
-                { params: query }
+                {
+                    params: query,
+                }
             );
             console.log("response", response.data);
             sortItineraries(response.data);
@@ -209,6 +211,8 @@ const Itineraries = () => {
                                         width="1.2vw"
                                         height="1.2vw"
                                         styles={{ padding: "0.5vh" }}
+                                        id={itinerary.id}
+                                        direction={`/itinerary-details/${itinerary.id}`}
                                     />,
                                 ]}
                                 bottomButtons={[

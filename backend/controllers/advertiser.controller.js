@@ -7,7 +7,7 @@ import Bookings from "../models/booking.model.js";
 import Rating from "../models/rating.model.js";
 import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
-
+import Admin from "../models/admin.model.js";
 export const createAdvertiser = async (req, res) => {
     console.log(req.body);
     const inputUsername = req.body.username;
@@ -27,9 +27,7 @@ export const createAdvertiser = async (req, res) => {
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
             req.body.password = hashedPassword;
             const newAdvertiser = await Advertiser.create(req.body);
-            assignCookies(res, "Advertiser", newAdvertiser._id)
-                .status(201)
-                .json({ message: "Sign up successful" });
+            res.status(201).json({ message: "Sign up successful", user: newAdvertiser });
         } else {
             if (username) {
                 res.status(400).json({ e: "Username already exists" });
@@ -73,7 +71,11 @@ export const getAdvertiserById = async (req, res) => {
 };
 
 export const updateAdvertiser = async (req, res) => {
-    const advertiserId = req.user.userId;
+    let advertiserId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        advertiserId = req.query.userId;
+    }
     try {
         const advertiser = await Advertiser.findById(advertiserId);
         if (!advertiser) {
@@ -105,7 +107,12 @@ export const updateAdvertiser = async (req, res) => {
 };
 
 export const deleteAdvertiser = async (req, res) => {
-    const advertiserId = req.user.userId;
+    let advertiserId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        advertiserId = req.query.userId;
+    }
+
     try {
         const upcomingActivities = await Activity.find({
             advertiserID: advertiserId,

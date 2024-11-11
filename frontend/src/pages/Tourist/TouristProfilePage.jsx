@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import Navbar from "../../components/NavBar";
 import styled from "styled-components";
@@ -8,6 +8,7 @@ import bg from "../../assets/images/bg.jpg";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
+import { uploadFile } from "../../api/firebase";
 const PageWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -102,9 +103,6 @@ const ProfileDetailsBox = styled.div`
 `;
 
 const InfoBoxesContainer = styled.div`
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
     display: flex;
     gap: 20px;
     margin-top: 20px;
@@ -235,6 +233,7 @@ export default function TouristProfilePage() {
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
     const [redeemValue, setRedeemValue] = useState(0);
     const [isEditing, setIsEditing] = useState(false);
+    const fileInputRef = useRef(null);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -285,6 +284,47 @@ export default function TouristProfilePage() {
             <p>No preferences available</p> // Add a message for when there are no preferences
         );
     }
+    const handleImageClick = () => {
+        fileInputRef.current.click();
+    };
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            const image = await uploadFile(file, "tourist-profile-pictures");
+            formData.append("picture", image);
+
+            axiosInstance
+                .put("/tourist/updateTourist", formData, {
+                    withCredentials: true,
+                })
+                .then((response) => {
+                    alert("Profile picture updated successfully!");
+                    console.log(
+                        "Updated Tourist Picture:",
+                        response.data.picture
+                    );
+
+                    // Ensure response.data contains the full URL of the picture
+                    setTourist((prev) => ({
+                        ...prev,
+                        picture: response.data.picture, // This should be a string URL
+                    }));
+
+                    // Log the updated tourist picture to the console
+                    console.log(
+                        "Updated Tourist Picture:",
+                        response.data.picture
+                    );
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.error("Error uploading picture:", error);
+                    alert("An error occurred while uploading the picture.");
+                });
+        }
+    };
+
     const handleTagSelect = (event) => {
         const selectedTag = event.target.value;
         if (selectedTag && !selectedTags.includes(selectedTag)) {
@@ -533,7 +573,7 @@ export default function TouristProfilePage() {
             <div
                 style={{
                     width: "100vw",
-                    height: "70vh",
+                    height: "40vh",
                     backgroundImage: `url(${bg})`,
                     backgroundSize: "100% 100%",
                     // backgroundPosition: "center",
@@ -544,6 +584,7 @@ export default function TouristProfilePage() {
             ></div>
             <Navbar />
             <div
+                onClick={handleImageClick}
                 style={{
                     width: "10vw",
                     height: "10vw",
@@ -558,10 +599,16 @@ export default function TouristProfilePage() {
                     })`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
+                    cursor: "pointer", // Make it look clickable
                 }}
-            >
-                {" "}
-            </div>
+            ></div>
+            <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                accept="image/*"
+                onChange={handleFileChange}
+            />
             <strong>
                 <p>{tourist?.name}</p>{" "}
             </strong>
@@ -738,12 +785,52 @@ export default function TouristProfilePage() {
                                 </p>
                                 <p>
                                     <strong>Preferred Currency:</strong>{" "}
-                                    <input
-                                        type="text"
+                                    <select
                                         name="currency"
                                         value={formData.currency}
                                         onChange={handleChange}
-                                    />
+                                        style={{ width: "30%" }} // Optional styling for the dropdown
+                                    >
+                                        <option value="">
+                                            Select Currency
+                                        </option>{" "}
+                                        {/* Default option */}
+                                        <option value="AED">
+                                            AED - United Arab Emirates Dirham
+                                        </option>
+                                        <option value="AUD">
+                                            AUD - Australian Dollar
+                                        </option>
+                                        <option value="EGP">
+                                            EGP - Egyptian Pound
+                                        </option>
+                                        <option value="EUR">EUR - Euro</option>
+                                        <option value="GBP">
+                                            GBP - British Pound
+                                        </option>
+                                        <option value="GTQ">
+                                            GTQ - Guatemalan Quetzal
+                                        </option>
+                                        <option value="IDR">
+                                            IDR - Indonesian Rupiah
+                                        </option>
+                                        <option value="KWD">
+                                            KWD - Kuwaiti Dinar
+                                        </option>
+                                        <option value="USD">
+                                            USD - United States Dollar
+                                        </option>
+                                        <option value="WST">
+                                            WST - Samoan Tala
+                                        </option>
+                                        <option value="XAF">
+                                            XAF - Central African CFA Franc
+                                        </option>
+                                        <option value="ZWL">
+                                            ZWL - Zimbabwean Dollar
+                                        </option>
+                                        {/* Add more currencies as needed */}
+                                    </select>
                                 </p>
                                 <p>
                                     <button onClick={handleSaveChanges}>

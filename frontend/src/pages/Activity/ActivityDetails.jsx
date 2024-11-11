@@ -1,5 +1,5 @@
 import React, { useState, useEffect, act } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 // External libraries or API instance
 import axiosInstance from "../../api/axiosInstance";
@@ -26,11 +26,20 @@ import Book from "../../components/ItineraryDetails/Book.jsx";
 
 // Other components
 import Map from "../map.jsx";
+import Cookies from "js-cookie";
 
 // Styles
 import "../../styles/ActivityDetails.css";
 
 export default function ActivityDetails() {
+    const navigate = useNavigate();
+    const [userType, setUserType] = useState(null);
+
+    useEffect(() => {
+        // Retrieve the userType from cookies when the component mounts
+        const userTypeFromCookie = Cookies.get("userType");
+        setUserType(userTypeFromCookie);
+    }, []);
     const [activityData, setActivityData] = useState(null);
     const { activityId } = useParams();
     // console.log(`The activity id ${activityId}`);
@@ -195,8 +204,8 @@ export default function ActivityDetails() {
                         <Map
                             setMarkerPosition={(position) => {}}
                             defaultPosition={{
-                                lat: 29.9792,
-                                lng: 31.1342,
+                                lat: activityData.Latitude,
+                                lng: activityData.Longitude,
                             }}
                             customStyles={{ height: "70vh", width: "50vw" }}
                         />
@@ -215,17 +224,24 @@ export default function ActivityDetails() {
                         height="10%"
                     />
 
-                    <DiscountCard
-                        availableSeats={activityData.freeSpots}
-                        price={activityData.price}
-                        discountPercentage={activityData.specialDiscount}
-                        width="65%"
-                        height="25%"
-                        onClick={() => {
-                            // Open pop up with booking details
-                            setBookPopUp(true);
-                        }}
-                    />
+                    {(!userType || userType == "Tourist" || userType == "Guest") && (
+                        <DiscountCard
+                            availableSeats={activityData.freeSpots}
+                            price={activityData.price}
+                            discountPercentage={activityData.specialDiscount}
+                            width="65%"
+                            height="25%"
+                            onClick={() => {
+                                // Open pop up with booking details
+                                if (userType == "Guest" || !userType) {
+                                    navigate("/signin");
+                                    return;
+                                }
+
+                                setBookPopUp(true);
+                            }}
+                        />
+                    )}
 
                     <ReviewsSection
                         ratingIds={activityData.ratings}
