@@ -17,7 +17,9 @@ const Orders = () => {
 
 	const fetchOrders = async () => {
 		try {
-			const response = await axiosInstance.get("order/getOrders", { withCredentials: true });
+			const response = await axiosInstance.get("order/getMyOrders", {
+				withCredentials: true,
+			});
 			console.log("Orders", response.data);
 			setOrders(response.data);
 		} catch (error) {
