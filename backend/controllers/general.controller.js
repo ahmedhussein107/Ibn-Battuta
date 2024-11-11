@@ -69,7 +69,7 @@ export const login = async (req, res) => {
     }
 };
 
-export const assignCookies = (res, userType, userId) => {
+export const assignCookies = (res, userType, userId, currency = "EGP") => {
     const maxAge = 5 * 60 * 60 * 1000; // 5 hours
     const token = jwt.sign({ userId, userType }, secretKey, {
         expiresIn: "5h",
@@ -77,5 +77,9 @@ export const assignCookies = (res, userType, userId) => {
 
     res.cookie("jwt", token, { maxAge });
     res.cookie("userType", userType, { maxAge });
+    if (userType === "tourist") {
+        res.cookie("currency", currency, { maxAge });
+    }
+
     return res;
 };
