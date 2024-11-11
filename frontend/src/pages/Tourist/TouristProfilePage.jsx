@@ -531,7 +531,15 @@ export default function TouristProfilePage() {
                 navigate("/");
             })
             .catch((error) => {
-                console.error("Error deleting Your account:", error);
+                const errorMessage =
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.message
+                        ? error.response.data.message
+                        : "An error occurred while deleting the account. Please try again.";
+
+                console.error("Error deleting your account:", error);
+                alert(errorMessage); // Display the error message in an alert
             });
     };
 
