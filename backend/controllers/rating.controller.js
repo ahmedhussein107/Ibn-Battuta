@@ -98,7 +98,7 @@ export const rateTourGuide = async (req, res) => {
 		}
 		const newRating = await Rating.create({ touristID, rating, comment });
 		tourGuide.addRating(newRating);
-		res.status(201).json({ message: "Rating added to tour guide", tourGuide });
+		res.status(201).json({ message: "Rating added to tour guide", newRating });
 	} catch (error) {
 		res.status(500).json({ message: "Error rating tour guide", error });
 	}
