@@ -135,7 +135,8 @@ const SignUpPage = () => {
 
             const response = await axiosInstance.post(
                 `/${userType.toLowerCase()}/create${userType}`,
-                userData
+                userData,
+                { withCredentials: true }
             );
             // Handle the file upload logic here
             alert("Files submitted successfully!");

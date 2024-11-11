@@ -12,6 +12,7 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const TourguideProfilePage = () => {
     const [response, setResponse] = useState(null);
@@ -216,6 +217,11 @@ const TourguideProfilePage = () => {
         }));
     };
 
+    const handleDeleteExperience = (index) => {
+        const updatedPreviousWork = formData.previousWork.filter((_, i) => i !== index);
+        setFormData((prev) => ({ ...prev, previousWork: updatedPreviousWork }));
+    };
+
     return (
         <>
             <div
@@ -370,81 +376,102 @@ const TourguideProfilePage = () => {
                         <div style={{ marginBottom: "6vw" }}>
                             <h3>Previous Work</h3>
 
-                            {formData.previousWork.length > 0 ? (
-                                formData.previousWork.map((work, index) => (
-                                    <div
-                                        key={index}
-                                        style={{
-                                            border: "1px solid #ccc",
-                                            padding: "1vw",
-                                            marginBottom: "1vw",
-                                            borderRadius: "8px",
-                                        }}
-                                    >
-                                        <p>
-                                            <strong>Title:</strong>{" "}
-                                            {isEditing ? (
-                                                <input
-                                                    type="text"
-                                                    value={work.title}
-                                                    onChange={(e) =>
-                                                        handlePreviousWorkChange(
-                                                            index,
-                                                            "title",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                />
-                                            ) : (
-                                                work.title || "No title provided"
-                                            )}
-                                        </p>
-                                        <p>
-                                            <strong>Duration:</strong>{" "}
-                                            {isEditing ? (
-                                                <input
-                                                    type="number"
-                                                    value={work.duration}
-                                                    onChange={(e) =>
-                                                        handlePreviousWorkChange(
-                                                            index,
-                                                            "duration",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                />
-                                            ) : (
-                                                `${work.duration || 0} months`
-                                            )}
-                                        </p>
-                                        <p>
-                                            <strong>Description:</strong>{" "}
-                                            {isEditing ? (
-                                                <textarea
-                                                    value={work.description}
-                                                    onChange={(e) =>
-                                                        handlePreviousWorkChange(
-                                                            index,
-                                                            "description",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    rows={4}
-                                                    style={{
-                                                        width: "100%",
-                                                        resize: "vertical",
-                                                    }}
-                                                />
-                                            ) : (
-                                                work.description ||
-                                                "No description provided"
-                                            )}
-                                        </p>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>No previous work provided</p>
-                            )}
+                            {formData.previousWork.length > 0
+                                ? formData.previousWork.map((work, index) => (
+                                      <div
+                                          key={index}
+                                          style={{
+                                              border: "1px solid #ccc",
+                                              padding: "1vw",
+                                              marginBottom: "1vw",
+                                              borderRadius: "8px",
+                                              position: "relative", // For positioning the delete icon
+                                          }}
+                                      >
+                                          <p>
+                                              <strong>Title:</strong>{" "}
+                                              {isEditing ? (
+                                                  <input
+                                                      type="text"
+                                                      value={work.title}
+                                                      onChange={(e) =>
+                                                          handlePreviousWorkChange(
+                                                              index,
+                                                              "title",
+                                                              e.target.value
+                                                          )
+                                                      }
+                                                  />
+                                              ) : (
+                                                  work.title || "No title provided"
+                                              )}
+                                          </p>
+                                          <p>
+                                              <strong>Duration:</strong>{" "}
+                                              {isEditing ? (
+                                                  <input
+                                                      type="number"
+                                                      value={work.duration}
+                                                      onChange={(e) =>
+                                                          handlePreviousWorkChange(
+                                                              index,
+                                                              "duration",
+                                                              e.target.value
+                                                          )
+                                                      }
+                                                  />
+                                              ) : (
+                                                  `${work.duration || 0} months`
+                                              )}
+                                          </p>
+                                          <p>
+                                              <strong>Description:</strong>{" "}
+                                              {isEditing ? (
+                                                  <textarea
+                                                      value={work.description}
+                                                      onChange={(e) =>
+                                                          handlePreviousWorkChange(
+                                                              index,
+                                                              "description",
+                                                              e.target.value
+                                                          )
+                                                      }
+                                                      rows={4}
+                                                      style={{
+                                                          width: "100%",
+                                                          resize: "vertical",
+                                                      }}
+                                                  />
+                                              ) : (
+                                                  work.description ||
+                                                  "No description provided"
+                                              )}
+                                          </p>
+
+                                          {/* Delete icon */}
+                                          {isEditing && (
+                                              <button
+                                                  onClick={() =>
+                                                      handleDeleteExperience(index)
+                                                  }
+                                                  style={{
+                                                      position: "absolute",
+                                                      top: "10px",
+                                                      right: "10px",
+                                                      cursor: "pointer",
+                                                      background: "transparent",
+                                                      border: "none",
+                                                      color: "red",
+                                                      fontSize: "1.2em",
+                                                  }}
+                                              >
+                                                  <DeleteIcon />
+                                              </button>
+                                          )}
+                                      </div>
+                                  ))
+                                : // Only show this message if not editing and no experience
+                                  !isEditing && <p>No previous work provided</p>}
 
                             {isEditing && (
                                 <button
