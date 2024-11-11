@@ -94,11 +94,11 @@ const Itineraries = () => {
             delete query.tags;
         }
 
-        if (priceRange[0] || priceRange[1]) {
-            query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
-        } else {
-            delete query.price;
-        }
+        // if (priceRange[0] || priceRange[1]) {
+        //     query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
+        // } else {
+        //     delete query.price;
+        // }
 
         if (name) {
             query.name = "~" + name;
