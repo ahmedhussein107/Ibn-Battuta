@@ -24,7 +24,7 @@ const room = {
     miniDescription: "This is a sample description.",
     description:
         "This is the whole description for the room.it is a lot of text and unnecessary information",
-    bookingId: 344542321, // when booked
+    //bookingId: 344542321, // when booked
     _id: "git-it-done",
 };
 
@@ -35,37 +35,32 @@ const HotelList = () => {
     );
 
     const [rooms, setRooms] = useState([]);
-    const [citySearch, setCitySearch] = useState(null);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [chosenCity, setChosenCity] = useState(null);
     const [lat, setLat] = useState(searchParams.get("lat") || "");
     const [lng, setLng] = useState(searchParams.get("lng") || "");
     const [start, setStart] = useState(searchParams.get("start") || "");
     const [end, setEnd] = useState(searchParams.get("end") || "");
 
+    // Parse guest count with a fallback
     const getGuestCount = () => {
         const guestCount = Number(searchParams.get("guests"));
         return isNaN(guestCount) || guestCount <= 0 ? 2 : guestCount;
     };
     const [guests, setGuests] = useState(getGuestCount());
-    const [chosenCity, setChosenCity] = useState(null);
 
-    const fetchRooms = async () => {
-        let url = "amadeus/hotels/search/hotel-offers";
-        console.log("Fetching hotel bookings...");
-        console.log("lat is ", lat);
+    // Fetch rooms with current search parameters
+    const fetchRooms = async (params) => {
+        const url = "amadeus/hotels/search/hotel-offers-2"; // API endpoint
+        console.log("Fetching hotel bookings with params:", params);
+
         try {
-            const { data } = await axiosInstance.get(url, {
-                params: {
-                    lat,
-                    lng,
-                    start,
-                    end,
-                    guests,
-                },
+            const response = await axiosInstance.get(url, {
+                params,
                 withCredentials: true,
             });
-            console.log("Fetched data:", data);
-            setRooms(data.data);
+            console.log("Fetched data:", response);
+            setRooms(response.data.hotels || []);
         } catch (err) {
             console.error("Error fetching rooms:", err);
             setRooms([]);
@@ -74,85 +69,37 @@ const HotelList = () => {
 
     const handleSearchButton = () => {
         console.log("Chosen city when clicked is:", chosenCity);
-        let newParams = {
-            lat: chosenCity?.geoCode?.latitude,
-            lng: chosenCity?.geoCode?.longitude,
-        };
-        if (guests) newParams.guests = guests;
-        if (start.trim()) newParams.start = start;
-        if (end.trim()) newParams.end = end;
 
-        console.log("Updating search parameters:", newParams);
+        const newParams = {
+            lat: chosenCity?.geoCode?.latitude || lat,
+            lng: chosenCity?.geoCode?.longitude || lng,
+            guests,
+            start: start.trim(),
+            end: end.trim(),
+        };
+
         setSearchParams(newParams);
-        setCitySearch(chosenCity);
+        fetchRooms(newParams);
     };
 
     useEffect(() => {
-        const newLat = searchParams.get("lat") || "";
-        const newLng = searchParams.get("lng") || "";
-        const newStart = searchParams.get("start");
-        const newEnd = searchParams.get("end");
-        const newGuests = getGuestCount();
-
-        setLat(newLat);
-        setLng(newLng);
-        setStart(newStart);
-        setEnd(newEnd);
-        setGuests(newGuests);
-
-        if (newLat && newLng) {
-            fetchRooms();
-        }
-    }, [searchParams]);
-
-    const getRoomDetails = (roomOffer) => {
-        const details = {
-            name: roomOffer.hotel.name,
-            address: "123 Main Street, New York, USA",
-            addressLandmark: "New Downtown",
-            city: `${citySearch.name}, ${citySearch.address.countryCode}`,
-            image: "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
-            rooms: 1,
-            bathrooms: 1,
-            beds: roomOffer.offers[0].room.typeEstimated.beds,
-            guests: guests,
-            totalPrice: roomOffer.offers[0].price.total,
-            checkIn: roomOffer.offers[0].checkInDate,
-            checkOut: roomOffer.offers[0].checkOutDate,
-            cancellationPolicy: "Free cancellation",
-            paymentMethod: "Credit Card",
-            miniDescription: "This is a sample description.",
-            description:
-                "This is a long description for the room with additional information.",
-            bookingId: 344542321,
-            _id: "unique-room-id",
+        const newParams = {
+            lat: searchParams.get("lat") || "",
+            lng: searchParams.get("lng") || "",
+            start: searchParams.get("start") || "",
+            end: searchParams.get("end") || "",
+            guests: getGuestCount(),
         };
-        return details;
-    };
 
-    useEffect(() => {
-        const newLat = searchParams.get("lat") || "";
-        const newLng = searchParams.get("lng") || "";
-        const newStart = searchParams.get("start");
-        const newEnd = searchParams.get("end");
-        const newGuests = getGuestCount();
+        setLat(newParams.lat);
+        setLng(newParams.lng);
+        setStart(newParams.start);
+        setEnd(newParams.end);
+        setGuests(newParams.guests);
 
-        setLat(newLat);
-        setLng(newLng);
-        setStart(newStart);
-        setEnd(newEnd);
-        setGuests(newGuests);
-
-        if (newLat && newLng) {
-            fetchRooms();
-        }
+        fetchRooms(newParams);
     }, [searchParams]);
-    useEffect(() => {
-        if (citySearch) {
-            fetchRooms();
-            console.log("city search is", citySearch);
-        }
-    }, [citySearch]);
+
     return (
         <div className="hotel-list-with-controls">
             <HotelsControls
@@ -170,12 +117,8 @@ const HotelList = () => {
             <div className="hotel-list-container">
                 <div className="hotel-grid">
                     {/* change later for rooms.map(offer=(item)) */}
-                    {Array.from({ length: 20 }).map((item, index) => (
-                        <HotelCard
-                            key={index}
-                            offer={false ? getRoomDetails(room) : room}
-                            isAllOffers={true}
-                        />
+                    {rooms?.map((item, index) => (
+                        <HotelCard key={index} offer={item} isAllOffers={true} />
                     ))}
                 </div>
             </div>

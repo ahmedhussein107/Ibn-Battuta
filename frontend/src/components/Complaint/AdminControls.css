@@ -18,10 +18,11 @@
 button {
     margin-right: 10px;
 }
+/* 
 button:hover {
     background-color: var(--accent-color-light);
     border: 1px solid black;
-}
+} */
 
 button.selected {
     background-color: var(--accent-color);
@@ -30,7 +31,7 @@ button.selected {
 }
 
 button:hover:not(.selected) {
-    background-color: var(--accent-color);
+    /* background-color: var(--accent-color); */
     border-color: black;
 }
 

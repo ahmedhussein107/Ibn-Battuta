@@ -52,6 +52,11 @@ const Bookings = () => {
 
     useEffect(() => {
         fetchBookings();
+    }, [currentPage]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+        fetchBookings();
     }, [selected]);
 
     return (

@@ -199,14 +199,9 @@ const SignUpPage = () => {
                                 />
                                 <label htmlFor="terms">
                                     I accept the
-                                    <a href="https://google.com" target="_blank">
+                                    <a href="/privacy" target="_blank">
                                         {" "}
-                                        terms{" "}
-                                    </a>
-                                    and
-                                    <a href="https://google.com" target="_blank">
-                                        {" "}
-                                        conditions{" "}
+                                        terms and conditions{" "}
                                     </a>
                                 </label>
                             </div>
