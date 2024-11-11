@@ -144,7 +144,7 @@ const UserManagement = ({ isAll = true }) => {
                 user._id
             }`;
             console.log(uri);
-            await axiosInstance.put(uri, { isAccepted: true });
+            await axiosInstance.put(uri, { isAccepted: true }, { withCredentials: true });
             setMessage("User Accepted successfully!");
             fetchUsers();
         } catch (error) {

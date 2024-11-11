@@ -71,7 +71,11 @@ export const getSellerById = async (req, res) => {
 };
 
 export const updateSeller = async (req, res) => {
-    const sellerId = req.user.userId;
+    let sellerId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        sellerId = req.query.userId;
+    }
     try {
         const seller = await Seller.findById(sellerId);
         if (!seller) {

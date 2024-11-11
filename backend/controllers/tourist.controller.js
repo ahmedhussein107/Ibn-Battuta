@@ -5,6 +5,7 @@ import Notification from "../models/notification.model.js";
 import TouristActivityNotification from "../models/touristActivityNotification.model.js";
 import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
+import Admin from "../models/admin.model.js";
 export const getTourists = async (req, res) => {
     try {
         const tourguides = await Tourist.find();
@@ -123,9 +124,9 @@ export const deleteTourist = async (req, res) => {
         let ID = req.user.userId;
         const admin = await Admin.findById(req.user.userId);
         if (admin) {
-            tourguideId = req.query.userId;
+            ID = req.query.userId;
         }
-        const tourist = await Tourist.findByIdAndDelete(req.user.userId);
+        const tourist = await Tourist.findByIdAndDelete(ID);
         if (tourist) {
             await Username.findByIdAndDelete(tourist.username);
             await Email.findByIdAndDelete(tourist.email);

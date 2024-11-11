@@ -73,9 +73,15 @@ export const getTourGuideById = async (req, res) => {
 };
 
 export const updateTourGuide = async (req, res) => {
-    const tourGuideId = req.user.userId;
+    let tourguideId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        tourguideId = req.query.userId;
+    }
+    console.log("ahmed");
+    console.log(tourguideId);
     try {
-        const tourGuide = await TourGuide.findById(tourGuideId);
+        const tourGuide = await TourGuide.findById(tourguideId);
         if (!tourGuide) {
             return res.status(404).json({ message: "tourGuide not found" });
         }
@@ -91,7 +97,7 @@ export const updateTourGuide = async (req, res) => {
 
         // Update tourGuide details
         const updatedtourGuide = await TourGuide.findByIdAndUpdate(
-            tourGuideId,
+            tourguideId,
             req.body,
             {
                 new: true,

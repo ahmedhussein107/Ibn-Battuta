@@ -73,7 +73,11 @@ export const getAdvertiserById = async (req, res) => {
 };
 
 export const updateAdvertiser = async (req, res) => {
-    const advertiserId = req.user.userId;
+    let advertiserId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        advertiserId = req.query.userId;
+    }
     try {
         const advertiser = await Advertiser.findById(advertiserId);
         if (!advertiser) {
