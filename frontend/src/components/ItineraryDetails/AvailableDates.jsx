@@ -1,10 +1,9 @@
 import "../../styles/AvailableDates.css";
 import { useState } from "react";
-export default function AvailableDates({ dates, width, height, fontSize }) {
+export default function AvailableDates({ date, width, height, fontSize }) {
 	const [showAll, setShowAll] = useState(false);
-	const dateArray = dates || [	];
-
-
+	const dateArray = [];
+	if(date) dateArray.push(new Date(date));
 	const dateTimeArray = dateArray.map((dateObj) => {
 
 		return {
@@ -30,7 +29,7 @@ export default function AvailableDates({ dates, width, height, fontSize }) {
 			className="available-dates-and-times-container"
 			style={{ width: width, height: height, fontSize: fontSize }}
 		>
-			<span>{ displayArray.length === 0 ? "No " :""}Available Dates and times</span>
+			<span>{ displayArray.length === 0 ? "No " :""} {`Available Date${dateArray.length > 1? "s":""} and time${dateArray.length > 1? "s":""}`}</span>
 			<div className="dates-and-times-cards-container">
 				{displayArray.map((item, index) => (
 					<div key={index} className="card">

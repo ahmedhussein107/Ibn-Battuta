@@ -67,7 +67,7 @@ const TripDetails = ({ flight, airlines }) => {
             alignItems: "center", // Center horizontally
             justifyContent: "center",
         },
-        airline: { fontWeight: 600 },
+        airline: { fontWeight: 600, maxWidth: "6vw", fontSize: "1.5vh" },
         timeAndAirport: {
             display: "flex",
             flexDirection: "column", // Add this
@@ -121,9 +121,7 @@ const TripDetails = ({ flight, airlines }) => {
 
     return (
         <div style={styles.tripDetails}>
-            <span style={styles.airline}>
-                {airlines[flight.segments[0].operating.carrierCode]}
-            </span>
+            <span style={styles.airline}>{airlines[flight.segments[0].carrierCode]}</span>
 
             <div style={styles.timeAndAirport}>
                 <span style={styles.time}>

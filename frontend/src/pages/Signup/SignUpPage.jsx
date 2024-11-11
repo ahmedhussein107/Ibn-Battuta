@@ -9,7 +9,7 @@ import TouristFields from "../../components/SignUp/TouristFields.jsx";
 import axiosInstance from "../../api/axiosInstance.js";
 const SignUpPage = () => {
     const location = useLocation();
-    const { userType } = location.state || { userType: "TourGuide" };
+    const { userType } = location.state;
 
     const [error, setError] = useState(null);
     const [step, setSetp] = useState(1);
@@ -34,7 +34,6 @@ const SignUpPage = () => {
         if (file) {
             setImageFile(file); // Update the state with the raw file
 
-            // Create a preview URL for the selected image
             const reader = new FileReader();
             reader.onload = () => {
                 setImage(reader.result); // Update the state for the image preview
@@ -113,18 +112,25 @@ const SignUpPage = () => {
                 return;
             }
             if (imageFile) {
+                console.log("ana hna");
                 const picture = await uploadFile(imageFile, "profilePictures");
                 console.log("Picture uploaded:", picture);
-                setUserData((prevData) => ({
-                    ...prevData,
-                    picture: picture,
-                }));
+                userData.picture = picture;
             }
+            /// i want to sleep 1 sec
+            setTimeout(() => {
+                console.log("I'm done sleeping!");
+                console.log("ahmed kamal", userData.picture);
+            }, 4000);
+
+            console.log("Picture:", imageFile);
+            console.log("User data:", userData);
+            console.log("ahmed kamal", userData.picture);
             if (file1) {
                 const IdPath = await uploadFile(file1, "documents");
                 let certificatesPath = await uploadFiles(file2, "documents");
                 certificatesPath.push(IdPath);
-                setUserData({ ...userData, documents: certificatesPath });
+                userData.documents = certificatesPath;
             }
 
             const response = await axiosInstance.post(
@@ -135,6 +141,7 @@ const SignUpPage = () => {
             alert("Files submitted successfully!");
             console.log("File 1:", file1);
             console.log("Files 2:", file2);
+            console.log("pict", imageFile);
             navigate("/signin");
         } catch (error) {
             setError(error.response.data.e);

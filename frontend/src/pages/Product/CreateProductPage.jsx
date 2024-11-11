@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import styled, { keyframes } from 'styled-components';
-import axiosInstance from '../../api/axiosInstance';
-import { uploadFiles } from '../../api/firebase';
-import PhotosUpload from '../../components/PhotosUpload.jsx';
-import Button from '../../components/Button.jsx';
+import React, { useState } from "react";
+import styled, { keyframes } from "styled-components";
+import axiosInstance from "../../api/axiosInstance";
+import { uploadFiles } from "../../api/firebase";
+import PhotosUpload from "../../components/PhotosUpload.jsx";
+import Button from "../../components/Button.jsx";
 import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
 import NavBar from "../../components/NavBar.jsx";
-
-
+import { useNavigate } from "react-router-dom";
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
         <PopupContent>
@@ -19,32 +18,32 @@ const Popup = ({ message, onClose, isError }) => (
 
 const defaultData = {
     pictures: [],
-    name: '',
+    name: "",
     price: 0,
-    description: '',
+    description: "",
     quantity: 1,
     isArchived: false,
-}
+};
 
 const CreateProductPage = () => {
     const [formData, setFormData] = useState(defaultData);
     const [imagePreviews, setImagePreviews] = useState([]);
-    const [popupMessage, setPopupMessage] = useState('');
+    const [popupMessage, setPopupMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [isErrorPopup, setIsErrorPopup] = useState(false);
-
+    const navigate = useNavigate();
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === 'price' && isNaN(value)) return;
+        if (name === "price" && isNaN(value)) return;
 
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleStockChange = (change) => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            quantity: Math.max(1, prev.quantity + change)
+            quantity: Math.max(1, prev.quantity + change),
         }));
     };
 
@@ -58,50 +57,51 @@ const CreateProductPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.name || !formData.description || imagePreviews.length === 0) {
-            showPopupMessage('Please fill out all details.', true);
+            showPopupMessage("Please fill out all details.", true);
             return;
         }
 
         try {
-            const files = imagePreviews.map(preview => preview.file);
-            const uploadedFileUrls = await uploadFiles(files, 'products');
+            const files = imagePreviews.map((preview) => preview.file);
+            const uploadedFileUrls = await uploadFiles(files, "products");
 
             const finalFormData = {
                 ...formData,
                 pictures: uploadedFileUrls,
             };
 
-            const response = await axiosInstance.post('/product/createProduct', finalFormData, {
-                withCredentials: true,
-            });
-            console.log('Product created:', response.data);
+            const response = await axiosInstance.post(
+                "/product/createProduct",
+                finalFormData,
+                {
+                    withCredentials: true,
+                }
+            );
+            console.log("Product created:", response.data);
 
-            showPopupMessage('Product created successfully!', false);
-
-            setFormData(defaultData);
-            setImagePreviews([]);
+            showPopupMessage("Product created successfully!", false);
+            setTimeout(() => navigate("/inventory"), 1000);
         } catch (error) {
-            console.error('Error creating product:', error);
-            showPopupMessage('Error creating product. Please try again.', true);
+            console.error("Error creating product:", error);
+            showPopupMessage("Error creating product. Please try again.", true);
         }
     };
 
     const handleImageAdd = (newImages) => {
-        setImagePreviews(prev => [...prev, ...newImages]);
+        setImagePreviews((prev) => [...prev, ...newImages]);
     };
 
     const handleImageRemove = (idToRemove) => {
-        setImagePreviews(prev => prev.filter(image => image.id !== idToRemove));
+        setImagePreviews((prev) => prev.filter((image) => image.id !== idToRemove));
     };
 
     usePageHeader(
         "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzB8fHNvdXZlbmlyJTIwc2hvcHxlbnwwfHwwfHx8MA%3D%3D",
         "Create a New Product"
-        );
+    );
 
     return (
         <PageContainer>
-            <NavBar />
             {showPopup && (
                 <Popup
                     message={popupMessage}
@@ -110,7 +110,7 @@ const CreateProductPage = () => {
                 />
             )}
 
-            <form>
+            <form style={{ marginTop: "35vh" }}>
                 <FormContainer>
                     <div>
                         <FormSection>
@@ -151,9 +151,38 @@ const CreateProductPage = () => {
                             <FlexGroup>
                                 <Label>Stock</Label>
                                 <StockControl>
-                                    <StockButton type="button" onClick={() => handleStockChange(-1)}>-</StockButton>
-                                    <StockDisplay>{formData.quantity}</StockDisplay>
-                                    <StockButton type="button" onClick={() => handleStockChange(1)}>+</StockButton>
+                                    <StockButton
+                                        type="button"
+                                        onClick={() => handleStockChange(-1)}
+                                    >
+                                        -
+                                    </StockButton>
+                                    <input
+                                        type="number"
+                                        value={formData.quantity}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                quantity:
+                                                    parseInt(e.target.value, 10) || 0,
+                                            })
+                                        }
+                                        style={{
+                                            width: "3em",
+                                            textAlign: "center",
+                                            fontSize: "1.2em",
+                                            fontWeight: "bold",
+                                            border: "none",
+                                            outline: "none",
+                                            backgroundColor: "transparent",
+                                        }}
+                                    />
+                                    <StockButton
+                                        type="button"
+                                        onClick={() => handleStockChange(1)}
+                                    >
+                                        +
+                                    </StockButton>
                                 </StockControl>
                             </FlexGroup>
                         </FormSection>
@@ -167,25 +196,68 @@ const CreateProductPage = () => {
                             onImageRemove={handleImageRemove}
                         />
 
-                        <FormSection>
+                        <FormSection style={{ marginTop: "4.5vh" }}>
                             <FlexGroup>
                                 <Label>Archive</Label>
-                                <ArchiveToggle>
-                                    <ArchiveButton
-                                        type="button"
-                                        active={formData.isArchived}
-                                        onClick={() => setFormData(prev => ({ ...prev, isArchived: true }))}
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        borderRadius: "1em",
+                                        overflow: "hidden",
+                                        backgroundColor: "#eaeaea",
+                                        padding: "0.2em",
+                                        marginLeft: "5vw",
+                                    }}
+                                >
+                                    <div
+                                        onClick={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                isArchived: true,
+                                            }))
+                                        }
+                                        style={{
+                                            padding: "0.5em 1em",
+                                            cursor: "pointer",
+                                            fontSize: "1em",
+                                            fontWeight: "500",
+                                            color: formData.isArchived
+                                                ? "#a83232"
+                                                : "#333",
+                                            backgroundColor: formData.isArchived
+                                                ? "#fcd8d8"
+                                                : "transparent",
+                                            borderRadius: "1em",
+                                            transition: "all 0.3s ease",
+                                        }}
                                     >
                                         Yes
-                                    </ArchiveButton>
-                                    <ArchiveButton
-                                        type="button"
-                                        active={!formData.isArchived}
-                                        onClick={() => setFormData(prev => ({ ...prev, isArchived: false }))}
+                                    </div>
+                                    <div
+                                        onClick={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                isArchived: false,
+                                            }))
+                                        }
+                                        style={{
+                                            padding: "0.5em 1em",
+                                            cursor: "pointer",
+                                            fontSize: "1em",
+                                            fontWeight: "500",
+                                            color: !formData.isArchived
+                                                ? "#a83232"
+                                                : "#333",
+                                            backgroundColor: !formData.isArchived
+                                                ? "#fcd8d8"
+                                                : "transparent",
+                                            borderRadius: "1em",
+                                            transition: "all 0.3s ease",
+                                        }}
                                     >
                                         No
-                                    </ArchiveButton>
-                                </ArchiveToggle>
+                                    </div>
+                                </div>
                             </FlexGroup>
                         </FormSection>
                     </div>
@@ -230,11 +302,11 @@ const PopupContainer = styled.div`
     right: 1em;
     z-index: 1000;
     animation: ${fadeIn} 0.3s ease;
-    background-color: ${({ isError }) => (isError ? '#f8d7da' : '#d4edda')}; 
+    background-color: ${({ isError }) => (isError ? "#f8d7da" : "#d4edda")};
 `;
 
 const PopupContent = styled.div`
-    color: ${({ isError }) => (isError ? '#721c24' : '#155724')}; // Dark red for error
+    color: ${({ isError }) => (isError ? "#721c24" : "#155724")}; // Dark red for error
     padding: 1em 1.5em;
     border-radius: 0.25em;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -258,22 +330,6 @@ const PageContainer = styled.div`
     padding: 2em;
 `;
 
-const Header = styled.div`
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url('/store-background.jpg') center/cover;
-    height: 25vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    margin-bottom: 2em;
-`;
-
-const Title = styled.h1`
-    font-size: clamp(1.5em, 4vw, 2.5em);
-    font-weight: bold;
-`;
-
 const FormContainer = styled.div`
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -285,7 +341,7 @@ const FormContainer = styled.div`
 `;
 
 const FormSection = styled.div`
-    background: #FAF4F4;
+    background: #faf4f4;
     padding: clamp(1em, 3vw, 2em);
     border-radius: 1em;
     box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.1);
@@ -337,26 +393,9 @@ const TextArea = styled.textarea`
 
 const ButtonGroup = styled.div`
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     gap: 1em;
     margin-top: 2em;
-`;
-
-const CancelButton = styled(Button)`
-    background-color: transparent;
-    border: 0.0625em solid #ff5722;
-    color: #ff5722;
-    &:hover {
-        background-color: #fff5f2;
-    }
-`;
-
-const CreateButton = styled(Button)`
-    background-color: #ff5722;
-    color: white;
-    &:hover {
-        background-color: #f4511e;
-    }
 `;
 
 const StockControl = styled.div`
@@ -376,34 +415,7 @@ const StockButton = styled.button`
     cursor: pointer;
 
     &:hover {
-        background-color: #d77d7d; 
-    }
-`;
-
-const StockDisplay = styled.span`
-    font-size: 1.2em;
-    font-weight: 500;
-`;
-
-const ArchiveToggle = styled.div`
-    display: flex;
-    gap: 0.5em;
-`;
-
-const ArchiveButton = styled.button`
-    padding: 0.5em 1.5em;
-    border-radius: 20px;
-    min-height: 2.5em;
-    margin-right: 1em;
-    background-color: ${({ active }) => (active ? '#f28b82' : '#f5f5f5')};
-    color: ${({ active }) => (active ? '#fff' : '#757575')};
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
-
-    &:hover {
-        background-color: ${({ active }) => (active ? '#d77d7d' : '#e0e0e0')};
+        background-color: #d77d7d;
     }
 `;
 

@@ -5,8 +5,10 @@ import NavBar from "../../components/NavBar";
 import { Avatar } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
+import DateIcon from "@mui/icons-material/DateRange";
 import Footer from "../../components/Footer";
 import Button from "@mui/material/Button";
+import CustomButton from "../../components/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
 import axiosInstance from "../../api/axiosInstance";
@@ -72,27 +74,31 @@ const Inventory = () => {
             `/product/deleteProduct/${productID}`
         );
         if (response.status === 200) {
-            sortProducts((prevProducts) =>
-                prevProducts.filter((product) => product._id !== productID)
-            );
+            setProducts(products.filter((product) => product._id !== productID));
         } else {
             alert("Error deleting itinerary");
         }
     };
 
+    const archiveProductHandler = async (product) => {
+        try {
+            await axiosInstance.patch(`/product/archiveProduct/${product._id}`);
+        } catch (error) {
+            console.error("Error archiving product", error);
+        }
+    };
+
+    const unarchiveProductHandler = async (product) => {
+        try {
+            await axiosInstance.patch(`/product/unarchiveProduct/${product._id}`);
+            product.isArchived = false;
+        } catch (error) {
+            console.error("Error unarchiving product", error);
+        }
+    };
+
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>
-            <div
-                style={{
-                    position: "fixed",
-                    top: 0,
-                    left: "9%",
-                    zIndex: 1,
-                }}
-            >
-                <NavBar />
-            </div>
-
             <div>
                 <div style={{ position: "relative" }}>
                     <img
@@ -239,6 +245,44 @@ const Inventory = () => {
                                         product={product}
                                         width={"45vw"}
                                         height={"32vh"}
+                                        line2={
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                    gap: "3vw",
+                                                }}
+                                            >
+                                                <div>
+                                                    <span
+                                                        style={{
+                                                            color: "white",
+                                                            backgroundColor: "red",
+                                                            borderRadius: "50%",
+                                                            fontSize: "1rem",
+                                                            padding: "0.2rem",
+                                                        }}
+                                                    >
+                                                        {product.quantity}
+                                                    </span>
+                                                    {" in stock"}
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: "0.5vw",
+                                                    }}
+                                                >
+                                                    <DateIcon
+                                                        style={{ fontSize: "2vh" }}
+                                                    />
+                                                    {new Date(
+                                                        product.createdAt
+                                                    ).toLocaleDateString()}
+                                                </div>
+                                            </div>
+                                        }
                                         firstLineButtons={[
                                             [
                                                 <DeleteButton
@@ -247,6 +291,58 @@ const Inventory = () => {
                                                 />,
                                             ],
                                         ]}
+                                        controlButtons={
+                                            <>
+                                                <CustomButton
+                                                    stylingMode="1"
+                                                    text="Edit"
+                                                    width="70%"
+                                                    height="30%"
+                                                    customStyle={{
+                                                        display: "flex",
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                    }}
+                                                />
+                                                <CustomButton
+                                                    stylingMode="2"
+                                                    text={
+                                                        product.isArchived
+                                                            ? "Unarchive"
+                                                            : "Archive"
+                                                    }
+                                                    width="70%"
+                                                    height="30%"
+                                                    customStyle={{
+                                                        display: "flex",
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                        color: product.isArchived
+                                                            ? "red"
+                                                            : "green",
+                                                        borderColor: product.isArchived
+                                                            ? "red"
+                                                            : "green",
+                                                        "&:hover": {
+                                                            backgroundColor:
+                                                                product.isArchived
+                                                                    ? "red"
+                                                                    : "green",
+                                                        },
+                                                    }}
+                                                    handleClick={() => {
+                                                        product.isArchived
+                                                            ? unarchiveProductHandler(
+                                                                  product
+                                                              )
+                                                            : archiveProductHandler(
+                                                                  product
+                                                              );
+                                                        window.location.reload();
+                                                    }}
+                                                />
+                                            </>
+                                        }
                                     />
                                 </div>
                             ))}

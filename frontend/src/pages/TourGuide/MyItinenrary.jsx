@@ -17,86 +17,7 @@ import DeleteButton from "../../components/DeleteButton";
 const MyItinenrary = () => {
     const navigate = useNavigate();
 
-    const [itineraries, setitineraries] = useState([
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair", "Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair", "Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-    ]);
+    const [itineraries, setitineraries] = useState([]);
     const [searchedTerm, setSearchedTerm] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
 
@@ -150,48 +71,40 @@ const MyItinenrary = () => {
     }, [sortBy]);
 
     const deleteItineraryHandler = async (itineraryID) => {
-        const response = await axiosInstance.delete(
-            `/itinerary/deleteItinerary/${itineraryID}`
-        );
-        if (response.status === 200) {
-            sortItineraries((prevItineraries) =>
+        try {
+            const response = await axiosInstance.delete(
+                `/itinerary/deleteItinerary/${itineraryID}`
+            );
+            setitineraries((prevItineraries) =>
                 prevItineraries.filter((itinerary) => itinerary._id !== itineraryID)
             );
-        } else {
+        } catch (error) {
             alert("Error deleting itinerary");
         }
     };
 
     const activateItineraryHandler = async (itineraryID) => {
-        const response = await axiosInstance.patch(
-            `/itinerary/toggleActive/${itineraryID}`
-        );
-        if (response.status === 200) {
-            sortItineraries((prevItineraries) =>
+        try {
+            console.log("1");
+            const response = await axiosInstance.patch(
+                `/itinerary/toggleActive/${itineraryID}`
+            );
+            console.log("2");
+            setitineraries((prevItineraries) =>
                 prevItineraries.map((itinerary) =>
                     itinerary._id === itineraryID
-                        ? { ...itinerary, isActivated: true }
+                        ? { ...itinerary, isActivated: !itinerary.isActivated }
                         : itinerary
                 )
             );
-        } else {
-            alert("Error activating itinerary");
+        } catch (error) {
+            // see error message
+            console.log(error);
         }
     };
 
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>
-            <div
-                style={{
-                    position: "fixed",
-                    top: 0,
-                    left: "9%",
-                    zIndex: 1,
-                }}
-            >
-                <NavBar />
-            </div>
-
             <div>
                 <img
                     src={i1}
@@ -227,7 +140,7 @@ const MyItinenrary = () => {
                         // this is to prevent the text from being highlighted when clicked
                     }}
                 >
-                    My Itinenrary
+                    My Itinenraries
                 </div>
 
                 <div
@@ -321,7 +234,7 @@ const MyItinenrary = () => {
                                 itinerary={itinerary}
                                 width={"45vw"}
                                 height={"32vh"}
-                                setItineraries={setitineraries}
+                                setItineraries={sortItineraries}
                                 firstLineButtons={[
                                     [
                                         <DeleteButton
@@ -338,10 +251,12 @@ const MyItinenrary = () => {
                                         type: "1",
                                         width: "70%",
                                         styles: {
-                                            marginTop: "-5%",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
                                         },
                                     },
-
                                     {
                                         text: itinerary.isActivated
                                             ? "Deactivate"
@@ -358,6 +273,10 @@ const MyItinenrary = () => {
                                             borderColor: itinerary.isActivated
                                                 ? "red"
                                                 : "green",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
                                         },
                                     },
                                 ]}

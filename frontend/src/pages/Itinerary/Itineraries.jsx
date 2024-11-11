@@ -148,9 +148,6 @@ const Itineraries = () => {
     ];
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
-            <div style={{ position: "fixed", top: 0, left: "9%" }}>
-                <NavBar />
-            </div>
             <div
                 style={{
                     width: "100vw",
@@ -162,11 +159,18 @@ const Itineraries = () => {
                 }}
             ></div>
 
-            <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: "1%",
+                    marginTop: "1%",
+                    marginBottom: "1%",
+                }}
+            >
                 <div
                     style={{
-                        width: "25vw",
-                        // boxShadow: "0 5vh 5vh rgba(0, 0, 0, 0.1)",
+                        width: "35vw",
                         borderRadius: "3vh",
                     }}
                 >
@@ -189,24 +193,27 @@ const Itineraries = () => {
                 >
                     Itineraries
                 </div>
-                <div style={{ width: "75vw", marginTop: "1%" }}>
+                <div style={{ width: "75vw" }}>
                     {itineraries.map((itinerary, index) => (
                         <div key={index} style={{ padding: "1.5vh" }}>
                             <CardItinerary
                                 itinerary={itinerary}
                                 width="60vw"
-                                height="30vh"
+                                height="32vh"
                                 firstLineButtons={[
                                     <ShareAndMark
-                                        width="1.5vw"
-                                        height="1.5vw"
+                                        width="1.2vw"
+                                        height="1.2vw"
                                         styles={{ padding: "0.5vh" }}
                                     />,
                                 ]}
                                 bottomButtons={[
                                     {
                                         text: "Book Now",
-                                        onClick: () => navigate("itinerary"), // TODO: change url
+                                        onClick: () =>
+                                            navigate("/itinerary-details", {
+                                                state: { itinerary },
+                                            }),
                                         type: "1",
                                         width: "70%",
                                     },

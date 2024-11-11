@@ -1,7 +1,9 @@
 import Itinerary from "../models/itinerary.model.js";
+import Activity from "../models/activity.model.js";
 import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 
 export const createItinerary = async (req, res) => {
+    req.body.tourguideID = req.user.userId;
     try {
         const itinerary = new Itinerary(req.body);
         await itinerary.save();
@@ -12,8 +14,9 @@ export const createItinerary = async (req, res) => {
 };
 
 export const getItineraries = async (req, res) => {
+    const query = buildFilter(req.query);
     try {
-        const itineraries = await Itinerary.find();
+        const itineraries = await Itinerary.find(query);
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -40,6 +43,31 @@ export const getItineraryById = async (req, res) => {
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
+    }
+};
+// I want to make a function that returns the minimum no of free spot for an Itinrary by taking minimum of free spots of all its activities
+export const getFreeSpots = async (id) => {
+    try {
+        const itinerary = await Itinerary.findById(id);
+        if (!itinerary) {
+            throw new Error("Itinerary not found");
+        }
+
+        let mn = 1e9 + 7;
+        const activities = itinerary.activities;
+
+        for (const object of activities) {
+            if (object.activityType === "Activity") {
+                const activityInfo = await Activity.findById(object.activity);
+                mn = Math.min(mn, activityInfo.freeSpots);
+            } else if (object.activityType === "CustomActivity") {
+                // Handle CustomActivity if needed
+            }
+        }
+
+        return mn;
+    } catch (error) {
+        throw new Error(error.message); // Return error to the caller
     }
 };
 
@@ -159,17 +187,24 @@ export const toggleFlaggedItineraries = async (req, res) => {
 
 export const toggleActivatedItineraries = async (req, res) => {
     try {
+        console.log("1");
         const itineraryID = req.params.id;
+        console.log("2");
         const itinerary = await Itinerary.findById(itineraryID);
+        console.log("3");
         if (!itinerary) {
             return res.status(404).json({ message: "Itinerary not found" });
         }
+        console.log("4");
         itinerary.isActivated = !itinerary.isActivated;
+        console.log("5");
         await itinerary.save();
+        console.log("6");
         res.status(200).json({
             message: "Itinerary activated status changed successfully",
             itinerary,
         });
+        console.log("7");
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

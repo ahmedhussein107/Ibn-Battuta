@@ -1,7 +1,7 @@
 import Button from "../Button";
 import TripDetails from "./TripDetails";
 
-const FlightCard = ({ trip, airlines }) => {
+const FlightCard = ({ trip, airlines, handleClick }) => {
     const styles = {
         card: {
             width: "45vw",
@@ -9,8 +9,9 @@ const FlightCard = ({ trip, airlines }) => {
             margin: "2vh 2vw 2vh 2vw",
             display: "flex",
             flexDirection: "row",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+            boxShadow: "0 2px 12px rgba(0,0,0,0.16)",
             borderRadius: "2vh",
+            backgroundColor: "#f7f7f7", // Set the background color
         },
         cardLeft: {
             width: "80%",
@@ -39,13 +40,13 @@ const FlightCard = ({ trip, airlines }) => {
         <div style={styles.card}>
             <div style={styles.cardLeft}>
                 {trip.itineraries.map((flight, index) => (
-                    <TripDetails flight={flight} airlines={airlines} />
+                    <TripDetails flight={flight} airlines={airlines} key={index} />
                 ))}
             </div>
 
             <div style={styles.cardRight}>
                 <h4>{`${trip.price.total} ${trip.price.currency}`}</h4>
-                <Button stylingMode="1" text="View"></Button>
+                <Button stylingMode="1" text="View" handleClick={handleClick}></Button>
             </div>
         </div>
     );
