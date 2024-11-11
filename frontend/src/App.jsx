@@ -52,6 +52,7 @@ import Test from "./components/Test";
 import PopUp from "./components/PopUpsGeneric/PopUp";
 import TermsAndConditions from "./pages/Privacy/TermsAndConditions";
 import Flights from "./pages/Flights/Flights";
+import FlightDetails from "./pages/Flights/FlightDetails";
 
 function App() {
     return (
@@ -123,6 +124,7 @@ function App() {
 
                     <Route path="/privacy" element={<TermsAndConditions />} />
                     <Route path="/flights" element={<Flights />} />
+                    <Route path="/flightDetails" element={<FlightDetails />} />
                 </Routes>
             </Router>
         </HeaderProvider>
