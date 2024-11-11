@@ -12,6 +12,7 @@ const governorSchema = new mongoose.Schema(
         password: { type: String, required: true },
         name: { type: String },
         email: { type: String, ref: "Email" },
+        picture: String,
     },
     { timestamps: true }
 );
