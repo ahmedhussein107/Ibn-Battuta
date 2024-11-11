@@ -110,7 +110,6 @@ const AllItineraries = () => {
     }, [sortBy]);
 
     const flagItineraryHandler = async (itinerary, index) => {
-        console.log("flagItineraryHandler", itinerary._id);
         try {
             const response = await axiosInstance.patch(
                 `/itinerary/toggleFlag/${itinerary._id}`
@@ -118,7 +117,7 @@ const AllItineraries = () => {
             console.log(response.data);
             setitineraries((itineraries) => {
                 const newItineraries = [...itineraries];
-                newItineraries[index].isFlagged = !newItineraries[index].isFlagged;
+                newItineraries[index] = { ...itinerary, isFlagged: !itinerary.isFlagged };
                 return newItineraries;
             });
         } catch (error) {
@@ -235,7 +234,7 @@ const AllItineraries = () => {
                         justifyContent: "space-evenly",
                     }}
                 >
-                    {itineraries.map((itinerary) => (
+                    {itineraries.map((itinerary, index) => (
                         <div style={{ padding: "1.5vh" }}>
                             <CardItinerary
                                 itinerary={itinerary}
@@ -251,7 +250,7 @@ const AllItineraries = () => {
                                                     cursor: "pointer",
                                                 }}
                                                 onClick={() =>
-                                                    flagItineraryHandler(itinerary._id)
+                                                    flagItineraryHandler(itinerary, index)
                                                 }
                                             />
                                         ) : (
@@ -261,7 +260,7 @@ const AllItineraries = () => {
                                                     cursor: "pointer",
                                                 }}
                                                 onClick={() =>
-                                                    flagItineraryHandler(itinerary._id)
+                                                    flagItineraryHandler(itinerary, index)
                                                 }
                                             />
                                         ),

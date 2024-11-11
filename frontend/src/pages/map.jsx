@@ -1,10 +1,11 @@
 // App.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MapComponent from "../components/MapComponent";
 import { MapWrapper } from "../components/MapWrapper";
 const map = ({ setMarkerPosition, defaultPosition, customStyles }) => {
     const [marker, setMarker] = useState(null);
-
+    
+    console.log("Hello", defaultPosition)
     const handleMapClick = (position) => {
         setMarker(position);
         setMarkerPosition(position);
@@ -13,11 +14,7 @@ const map = ({ setMarkerPosition, defaultPosition, customStyles }) => {
     return (
         <div>
             <MapWrapper>
-                <MapComponent
-                    markerPosition={marker || marker}
-                    onMapClick={handleMapClick}
-                    customStyles={customStyles}
-                />
+                <MapComponent markerPosition={defaultPosition || marker} onMapClick={handleMapClick} customStyles={customStyles} />
             </MapWrapper>
         </div>
     );
