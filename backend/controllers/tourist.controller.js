@@ -6,6 +6,7 @@ import TouristActivityNotification from "../models/touristActivityNotification.m
 import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
 import Admin from "../models/admin.model.js";
+import Complaint from "../models/complaint.model.js";
 export const getTourists = async (req, res) => {
     try {
         const tourguides = await Tourist.find();
@@ -136,6 +137,13 @@ export const deleteTourist = async (req, res) => {
                 await Promise.all(
                     tourist.notifications.map(async (notificationId) => {
                         await Notification.findByIdAndDelete(notificationId);
+                    })
+                );
+            }
+            if (tourist.complaints && tourist.complaints.length > 0) {
+                await Promise.all(
+                    tourist.complaints.map(async (complaintId) => {
+                        await Complaint.findByIdAndDelete(complaintId);
                     })
                 );
             }
