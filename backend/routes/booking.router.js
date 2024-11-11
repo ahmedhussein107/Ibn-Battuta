@@ -1,7 +1,6 @@
 import express from "express";
-
-const bookingRouter = express.Router();
 import { isAuthenticated } from "../routers.middleware/authentication.js";
+const bookingRouter = express.Router();
 import {
     getBookings,
     getBooking,
@@ -16,9 +15,9 @@ import {
 
 bookingRouter.get("/getBookings", getBookings);
 
+bookingRouter.post("/createBooking", isAuthenticated, createBooking);
 bookingRouter.get("/getBooking/:id", getBooking);
 
-bookingRouter.post("/createBooking", createBooking);
 
 bookingRouter.patch("/updateBooking/:id", updateBooking);
 

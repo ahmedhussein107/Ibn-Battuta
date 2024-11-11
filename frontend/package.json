@@ -16,6 +16,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@mui/icons-material": "^6.1.2",
+    "@mui/lab": "^6.0.0-beta.14",
     "@mui/material": "^6.1.6",
     "@mui/x-date-pickers": "^7.22.1",
     "@react-google-maps/api": "^2.19.3",
@@ -39,6 +40,8 @@
     "react-phone-input-2": "^2.15.1",
     "react-phone-number-input": "^3.4.9",
     "react-router-dom": "^6.26.2",
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1",
     "react-time-picker": "^7.0.0",
     "styled-components": "^6.1.13"
   },

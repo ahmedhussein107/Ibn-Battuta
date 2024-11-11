@@ -1,0 +1,77 @@
+.activity-details-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-height: 300%;
+}
+
+.activity-info {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	padding-top: 30px;
+	/* border: 2px dashed red; */
+}
+
+.activity-info-left {
+	padding-left: 2%;
+	/* border: 2px dashed green; */
+	width: 60%;
+}
+.activity-info-right {
+	display: flex;
+	flex-direction: column;
+	align-items: end;
+	justify-content: space-between;
+	padding-right: 4%;
+	width: 33%;
+	/* border: 2px dashed blue; */
+}
+
+/* date */
+.activity-info-right > div:nth-child(1) {
+	margin-bottom: 5%;
+	margin-top: 15%;
+	
+}
+/* booking */
+.activity-info-right > div:nth-child(2) {
+	margin-bottom: 5%;
+}
+/* reviews */
+.activity-info-right > div:nth-child(3) {
+}
+
+.activity-info-left > div:nth-child(2) {
+	width:80%;
+    /* border: 2px dashed blue */
+}
+.activity-info-left > div:nth-child(4) {
+	padding-left: 15%;
+    /* border: 2px dashed blue */
+}
+
+.activity-location-on-map {
+	margin-top: 4vh;
+}
+.activity-location {
+	display: flex;
+	gap: 3%;
+	padding: 10px;
+	padding-left: 15px;
+	margin-bottom: 10px;
+}
+
+.activity-location {
+	/* border: 2px dashed blue; */
+    width: 80%;
+    padding-left:2.5% ;
+}
+.activity-location > img {
+	/* border: 2px dashed blue; */
+	width: 3%;
+}
+.activity-location > span {
+	font-size: 1.5em;
+	/* border: 2px dashed blue; */
+}

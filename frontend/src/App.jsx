@@ -37,6 +37,7 @@ import Header from "./components/Header/Header";
 import ItineraryDetails from "./pages/Itinerary/ItineraryDetails";
 import PopUp from "./components/PopUpsGeneric/PopUp";
 import ChooseActivity from "./pages/Itinerary/ChooseActivity.jsx";
+import ActivityDetails from "./pages/Activity/ActivityDetails.jsx";
 import AllActivities from "./pages/Admin/AllActivities";
 import AllItineraries from "./pages/Admin/AllItineraries";
 import Shop from "./pages/Product/Shop.jsx";
@@ -88,12 +89,13 @@ function App() {
 						<Route path="/seller" element={<SellerHome />} />
 						<Route path="/governor" element={<GovernorHome />} />
 
-						{/* other pages */}
-						<Route path="/activities" element={<Activities />} />
-						<Route path="/itineraries" element={<Itineraries />} />
-						<Route path="/itinerary-details" element={<ItineraryDetails />} />
-						<Route path="/landmarks" element={<Landmarks />} />
-						<Route path="/shop" element={<Shop />} />
+                        {/* other pages */}
+                        <Route path="/activities" element={<Activities />} />
+                        <Route path="/activity-details/:activityId" element={<ActivityDetails />} />
+                        <Route path="/itineraries" element={<Itineraries />} />
+                        <Route path="/itinerary-details/:itineraryId" element={<ItineraryDetails />} />
+                        <Route path="/landmarks" element={<Landmarks />} />
+                        <Route path="/shop" element={<Shop />} />
 
 						<Route path="/about" element={<AboutPage />} />
 						<Route path="/create-product" element={<CreateProductPage />} />

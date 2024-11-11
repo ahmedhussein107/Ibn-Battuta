@@ -7,7 +7,7 @@ export default function Book({ price, text, onClick, width, height }) {
 			<div className="price-button-container">
 				<div className="price-container">
 					<span>From</span>
-					<span id="price">{price}</span>
+					<span id="price">EGP {price}</span>
 					<span>per person</span>
 				</div>
 				<Button

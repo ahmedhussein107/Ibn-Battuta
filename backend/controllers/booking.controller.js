@@ -41,79 +41,85 @@ export const updateBooking = async (req, res) => {
 };
 
 export const createBooking = async (req, res) => {
-	try {
-		// The Logic here is to buy with wallet only
-		let totprice = 0;
-		const { touristID, typeId, bookingType, count } = req.body;
-		const tourist = await Tourist.findById(touristID);
-		if (bookingType === "Itinerary") {
-			const itinerary = await Itinary.findById(typeId);
-			if (itinerary.isActivated === false) {
-				return res.status(400).json({ message: "The itinerary is not open for booking" });
-			}
-			// loop over activities in this itinerary
-			const mn = await getFreeSpots(itinerary._id);
-			console.log(mn);
-			if (mn < req.body.count) {
-				return res.status(400).json({ message: "Not enough free spots" });
-			}
-			totprice = itinerary.price * count;
-			if (tourist.wallet < totprice) {
-				return res.status(400).json({ message: "your balance is not enough" });
-			}
-			for (const object of itinerary.activities) {
-				if (object.activityType === "Activity") {
-					const activityInfo = await Activity.findById(object.activity);
-					activityInfo.freeSpots = activityInfo.freeSpots - count;
-					await activityInfo.save();
-					await Booking.create({
-						touristID,
-						bookingType: "Activity",
-						typeId: object.activity,
-						count,
-						totalPrice: itinerary.price * count,
-						pointsAdded: 0,
-						isInItinerary: true,
-					});
-				} else if (object.activityType === "CustomActivity") {
-					// Handle CustomActivity if needed
-				}
-			}
-		} else {
-			const activity = await Activity.findById(typeId);
-			if (activity.isOpenForBooking === false) {
-				return res.status(400).json({ message: "The activity is not open for booking" });
-			}
-			activity.freeSpots = activity.freeSpots - count;
-			totprice = activity.price * count;
-			totprice -= totprice * (activity.specialDiscount / 100.0);
-			if (tourist.wallet < totprice) {
-				return res.status(400).json({ message: "your balance is not enough" });
-			}
-			await activity.save();
-		}
+    try {
+        // The Logic here is to buy with wallet only
+        let totprice = 0;
+        const {  typeId, bookingType, count } = req.body;
+        const touristID = req.user.userId;
+        const tourist = await Tourist.findById(touristID);
+        if (bookingType === "Itinerary") {
+            const itinerary = await Itinary.findById(typeId);
+            if (itinerary.isActivated === false) {
+                return res
+                    .status(400)
+                    .json({ message: "The itinerary is not open for booking" });
+            }
+            // loop over activities in this itinerary
+            const mn = await getFreeSpots(itinerary._id);
+            console.log(mn);
+            if (mn < req.body.count) {
+                return res.status(400).json({ message: "Not enough free spots" });
+            }
+            totprice = itinerary.price * count;
+            if (tourist.wallet < totprice) {
+                return res.status(400).json({ message: "your balance is not enough" });
+            }
+            for (const object of itinerary.activities) {
+                if (object.activityType === "Activity") {
+                    const activityInfo = await Activity.findById(object.activity);
+                    activityInfo.freeSpots = activityInfo.freeSpots - count;
+                    await activityInfo.save();
+                    await Booking.create({
+                        touristID,
+                        bookingType: "Activity",
+                        typeId: object.activity,
+                        count,
+                        totalPrice: itinerary.price * count,
+                        pointsAdded: 0,
+                        isInItinerary: true,
+                    });
+                } else if (object.activityType === "CustomActivity") {
+                    // Handle CustomActivity if needed
+                }
+            }
+        } else {
+            const activity = await Activity.findById(typeId);
+            if (activity.isOpenForBooking === false) {
+                return res
+                    .status(400)
+                    .json({ message: "The activity is not open for booking" });
+            }
+            activity.freeSpots = activity.freeSpots - count;
+            totprice = activity.price * count;
+            totprice -= totprice * (activity.specialDiscount / 100.0);
+            if (tourist.wallet < totprice) {
+                return res.status(400).json({ message: "your balance is not enough" });
+            }
+            await activity.save();
+        }
 
-		tourist.wallet = tourist.wallet - totprice;
-		let pointsAdded = 0;
-		if (tourist.points <= 100000) {
-			pointsAdded = 0.5 * totprice;
-		} else if (tourist.points <= 500000) {
-			pointsAdded = totprice;
-		} else {
-			pointsAdded = totprice * 1.5;
-		}
-		tourist.loyalityPoints += pointsAdded;
-		tourist.points += pointsAdded;
-		await tourist.save();
-		const booking = await Booking.create({
-			...req.body,
-			totalPrice: totprice,
-			pointsAdded,
-		});
-		res.status(201).json(booking);
-	} catch (error) {
-		res.status(400).json({ error: error.message });
-	}
+        tourist.wallet = tourist.wallet - totprice;
+        let pointsAdded = 0;
+        if (tourist.points <= 100000) {
+            pointsAdded = 0.5 * totprice;
+        } else if (tourist.points <= 500000) {
+            pointsAdded = totprice;
+        } else {
+            pointsAdded = totprice * 1.5;ي
+        }
+        tourist.loyalityPoints += pointsAdded;
+        tourist.points += pointsAdded;
+        await tourist.save();
+        const booking = await Booking.create({
+            touristID,
+            ...req.body,
+            totalPrice: totprice,
+            pointsAdded,
+        });
+        res.status(201).json(booking);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
 
 export const deleteBooking = async (req, res) => {
