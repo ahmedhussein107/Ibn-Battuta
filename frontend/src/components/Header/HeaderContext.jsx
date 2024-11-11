@@ -1,7 +1,8 @@
 import React, { createContext, useState, useContext } from "react";
 import { useCallback } from "react";
 const HeaderContext = createContext();
-
+import { getExchangeRates } from "../../api/currency";
+import { useEffect } from "react";
 export const HeaderProvider = ({ children }) => {
     const [headerData, setHeaderDataState] = useState({
         imageSrc: null,
@@ -9,13 +10,17 @@ export const HeaderProvider = ({ children }) => {
         SearchBarComponent: null,
         ProfilePictureComponent: null,
     });
-
-    // Wrap `setHeaderData` in `useCallback`
     const setHeaderData = useCallback((data) => {
         setHeaderDataState(data);
     }, []);
 
-    // Wrap `clearHeader` in `useCallback`
+    const [currencyRates, setCurrencyRates] = useState({});
+    useEffect(() => {
+        getExchangeRates().then((rates) => {
+            setCurrencyRates(rates);
+        });
+    }, []);
+
     const clearHeader = useCallback(() => {
         setHeaderDataState({
             imageSrc: null,
@@ -26,7 +31,15 @@ export const HeaderProvider = ({ children }) => {
     }, []);
 
     return (
-        <HeaderContext.Provider value={{ headerData, setHeaderData, clearHeader }}>
+        <HeaderContext.Provider
+            value={{
+                headerData,
+                setHeaderData,
+                clearHeader,
+                currencyRates,
+                setCurrencyRates,
+            }}
+        >
             {children}
         </HeaderContext.Provider>
     );

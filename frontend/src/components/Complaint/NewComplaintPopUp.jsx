@@ -21,6 +21,7 @@ const ComplaintFormPopup = ({ isOpen, setIsOpen }) => {
 				}
 			);
 			setIsOpen(false);
+			window.location.reload();
 		} catch (err) {}
 	};
 

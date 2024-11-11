@@ -10,23 +10,16 @@ import BathtubIcon from "@mui/icons-material/Bathtub";
 import Button from "../Button";
 import { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
-import convertCurrency from "../../api/currency";
+import { convertCurrency } from "../../api/currency";
 import Cookies from "js-cookie";
+import convert from "../../api/convert";
 const ShowOfferDetails = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
     const { offer } = state || {};
     const [isLoading, setIsLoading] = useState(false);
     const [bookingId, setBookingId] = useState(offer.bookingId);
-    const [price, setPrice] = useState(offer.totalPrice);
-    useEffect(() => {
-        convertCurrency(offer.totalPrice, "EGP", Cookies.get("currency") || "EGP").then(
-            (result) => {
-                setPrice(result);
-            }
-        );
-    }, []);
-    console.log("offer in detail page", offer);
+
     const handleOnAction = async () => {
         setIsLoading(true);
         try {
@@ -135,7 +128,7 @@ const ShowOfferDetails = () => {
                             <p>
                                 <strong>Total Price:</strong>{" "}
                                 {Cookies.get("currency") || "EGP"}
-                                {price}
+                                {convert(offer.totalPrice)}
                             </p>
                         </div>
                     </div>

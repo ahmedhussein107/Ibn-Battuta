@@ -65,7 +65,7 @@ export const getFreeSpots = async (id) => {
             }
         }
 
-        return mn;
+        return mn == 1e9 + 7 ? 0 : mn;
     } catch (error) {
         throw new Error(error.message); // Return error to the caller
     }

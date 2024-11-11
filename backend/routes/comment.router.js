@@ -1,18 +1,20 @@
 import express from "express";
 import {
-    createComment,
-    getComplaintComments,
-    getCommentById,
-    updateComment,
-    deleteComment,
-    getComments,
-    replyToComplaint,
-    replyToComment,
+	createComment,
+	getComplaintComments,
+	getCommentById,
+	updateComment,
+	deleteComment,
+	getComments,
+	replyToComplaint,
+	replyToComment,
 } from "../controllers/comment.controller.js";
+
+import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const commentRouter = express.Router();
 
-commentRouter.post("/createcomment", createComment);
+commentRouter.post("/createcomment", isAuthenticated, createComment);
 
 commentRouter.get("/getCommentByID/:id", getCommentById);
 

@@ -4,7 +4,8 @@ import GenericCard from "./GenericCard";
 import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
-
+import convert from "../api/convert";
+import Cookies from "js-cookie";
 const CardProduct = ({
     product,
     width,
@@ -57,8 +58,8 @@ const CardProduct = ({
                 fontWeight: "bold",
             }}
         >
-            <p>USD</p>
-            <p style={{ marginLeft: "5%" }}>{product.price}</p>
+            <p>{Cookies.get("currency") || "EGP"}</p>
+            <p style={{ marginLeft: "5%" }}>{convert(product.price)}</p>
         </div>
     );
     const buttons = (

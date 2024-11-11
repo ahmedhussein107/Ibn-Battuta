@@ -13,6 +13,7 @@ import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { uploadFile } from "../../api/firebase.js";
 
 const TourguideProfilePage = () => {
     const [response, setResponse] = useState(null);
@@ -20,9 +21,10 @@ const TourguideProfilePage = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
-    const [image, setImage] = useState(
-        "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
-    );
+    const defaultImage =
+        "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg";
+    const [image, setImage] = useState(defaultImage);
+    const [imageFile, setImageFile] = useState(null);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -58,6 +60,7 @@ const TourguideProfilePage = () => {
                 const averageRating =
                     ratings.length > 0 ? sumOfRatings / ratings.length : 0;
                 setValue(averageRating);
+                setImage(response.data.picture || defaultImage);
             })
             .catch((error) => {
                 console.error("Error fetching Tourguide:", error);
@@ -176,34 +179,34 @@ const TourguideProfilePage = () => {
         fileInputRef.current.click(); // Triggers the file input click
     };
 
-    // Function to handle file input change
     const handleImageChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
             const formData = new FormData();
-            formData.append("picture", file);
+            const image = await uploadFile(file, "tourguide-profile-pictures");
+            formData.append("picture", image);
 
-            try {
-                // Send the image to the server
-                const response = await axiosInstance.put(
-                    "/tourguide/updateTourguide",
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                        withCredentials: true,
-                    }
-                );
+            axiosInstance
+                .put("/tourguide/updateTourGuide", formData, {
+                    withCredentials: true,
+                })
+                .then((response) => {
+                    alert("Profile picture updated successfully!");
+                    console.log("Updated Tourguide Picture:", response.data.picture);
 
-                // Update state with new image URL from the response
-                setImage(response.data.picture); // Assuming the response returns the new image URL
+                    // Ensure response.data contains the full URL of the picture
+                    setResponse((prev) => ({
+                        ...prev,
+                        picture: response.data.picture, // This should be a string URL
+                    }));
 
-                alert("Profile picture updated successfully");
-            } catch (error) {
-                console.error("Error updating profile picture:", error);
-                alert("Failed to update profile picture");
-            }
+                    console.log("Updated Touguide Picture:", response.data.picture);
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.error("Error uploading picture:", error);
+                    alert("An error occurred while uploading the picture.");
+                });
         }
     };
 

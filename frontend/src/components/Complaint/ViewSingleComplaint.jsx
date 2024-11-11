@@ -15,19 +15,26 @@ const ViewSingleComplaint = () => {
         touristID: {
             name: "Name",
         },
+        replies: [],
+        createdAt: "2023-09-10T12:34:56Z",
     });
     const [comment, setComment] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [parentComment, setParentComment] = useState(null);
     useEffect(() => {
+        console.log("complaintId:", complaintId);
         axiosInstance
             .get(`/complaint/getComplaintAlongWithReplies/${complaintId}`, {
                 withCredentials: true,
             })
             .then((res) => {
                 console.log("res:", res);
+
                 setComplaint(res.data.data.complaint);
                 setComment(res.data.data.comment);
+            })
+            .catch((err) => {
+                console.log("error i caught is:", err);
             });
     }, []);
 

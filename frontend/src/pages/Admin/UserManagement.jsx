@@ -93,10 +93,14 @@ const UserManagement = ({ isAll = true }) => {
     };
     const addPoints = async (touristID) => {
         try {
-            const uri = `tourist/updateTourist/${touristID}`;
-            await axiosInstance.patch(uri, {
-                wallet: 1000000,
-            });
+            const uri = `tourist/updateTourist`;
+            await axiosInstance.put(
+                uri,
+                {
+                    wallet: 1000000,
+                },
+                { withCredentials: true, params: { userId: touristID } }
+            );
             setMessage("Points added successfully!");
         } catch (error) {
             console.error("Error adding point  user:", touristID, error);
