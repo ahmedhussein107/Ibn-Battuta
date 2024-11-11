@@ -59,7 +59,7 @@ export const adminNavbarItems = [
         "Manage Users": [
             { "Users List": "/admin/users" },
             { "Pending Users": "/admin/pending" },
-            { Complaints: "/admin/complaints" },
+            { Complaints: "/complaints" },
         ],
     },
     {
