@@ -1,14 +1,14 @@
 import express from "express";
 import {
-    getTourists,
-    getTouristById,
-    createTourist,
-    updateTourist,
-    deleteTourist,
-    redeemPoints,
-    addPreference,
-    removePreference,
-    changeTouristPassword,
+	getTourists,
+	getTouristById,
+	createTourist,
+	updateTourist,
+	deleteTourist,
+	redeemPoints,
+	addPreference,
+	removePreference,
+	changeTouristPassword,
 } from "../controllers/tourist.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 
@@ -20,7 +20,7 @@ touristRouter.post("/createTourist", createTourist);
 
 touristRouter.get("/tourist", isAuthenticated, getTouristById);
 
-touristRouter.put("/updateTourist", isAuthenticated, updateTourist);
+touristRouter.patch("/updateTourist", isAuthenticated, updateTourist);
 
 touristRouter.delete("/deleteTourist", isAuthenticated, deleteTourist);
 
