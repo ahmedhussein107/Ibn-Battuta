@@ -8,24 +8,21 @@ import ProfileButton from "../../components/ProfileButtons";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
+import { uploadFile } from "../../api/firebase.js";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import axios from "axios";
 
-const SellerProfilePage = () => {
+const AdminProfilePage = () => {
     const [response, setResponse] = useState(null);
-    const [userType, setUserType] = useState("Seller");
+    const [userType, setUserType] = useState("Admin");
     const [isEditing, setIsEditing] = useState(false);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
-    const [formData, setFormData] = useState({
-        name: "",
-        username: "",
-        email: "",
-        description: "",
-    });
-    const [image, setImage] = useState(
-        "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
-    );
+    const [formData, setFormData] = useState({ name: "", username: "", email: "" });
+    const defaultImage =
+        "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg";
+    const [image, setImage] = useState(defaultImage);
+    const [imageFile, setImageFile] = useState(null);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -35,21 +32,21 @@ const SellerProfilePage = () => {
 
     useEffect(() => {
         axiosInstance
-            .get("/seller/getSellerById", { withCredentials: true })
+            .get("/admin/getAdminById", { withCredentials: true })
             .then((response) => {
                 setResponse(response.data);
-                console.log("Seller:", response.data);
                 setFormData({
-                    name: response.data.name || "",
-                    username: response.data.username || "",
-                    email: response.data.email || "",
-                    description: response.data.description || "",
+                    name: response.data.name,
+                    username: response.data.username,
+                    email: response.data.email,
                 });
+                setImage(response.data.picture || defaultImage);
             })
             .catch((error) => {
-                console.error("Error fetching Seller:", error);
+                console.error("Error fetching Admin:", error);
             });
     }, []);
+
     const handleEditProfileSubmit = () => {
         setIsEditing(true);
     };
@@ -64,11 +61,10 @@ const SellerProfilePage = () => {
         if (
             formData.name !== response.name ||
             formData.username !== response.username ||
-            formData.email !== response.email ||
-            formData.description !== response.description
+            formData.email !== response.email
         ) {
             axiosInstance
-                .put("/seller/updateSeller", formData, { withCredentials: true })
+                .put("/admin/updateAdmin", formData, { withCredentials: true })
                 .then((response) => {
                     setResponse(response.data);
                     setIsEditing(false);
@@ -90,22 +86,22 @@ const SellerProfilePage = () => {
 
     const handleDeleteAccountConfirm = () => {
         axiosInstance
-            .delete("/seller/deleteSeller", { withCredentials: true })
+            .delete("/admin/deleteAdmin", { withCredentials: true })
             .then(() => {
-                alert("Seller account deleted successfully");
+                alert("Admin account deleted successfully");
                 Cookies.remove("userType");
                 setUserType("Guest");
                 navigate("/");
                 window.location.reload();
             })
             .catch((error) => {
-                if (error.response && error.response.status === 400) {
-                    // Show an alert or message indicating that the seller can't be deleted due to pending orders
-                    alert(error.response.data.e); // Display the error message from the backend
-                } else {
-                    console.error("Error deleting Seller account:", error);
-                    alert("An unexpected error occurred while deleting the account.");
-                }
+                const errorMessage =
+                    error.response && error.response.data && error.response.data.message
+                        ? error.response.data.message
+                        : "An error occurred while deleting the account. Please try again.";
+
+                console.error("Error deleting Admin account:", error);
+                alert(errorMessage); // Display the error message in an alert
             });
     };
 
@@ -124,7 +120,7 @@ const SellerProfilePage = () => {
         }
         axiosInstance
             .put(
-                "/seller/changeSellerPassword",
+                "/admin/changeAdminPassword",
                 { oldPassword: currentPassword, newPassword },
                 { withCredentials: true }
             )
@@ -150,7 +146,7 @@ const SellerProfilePage = () => {
         fileInputRef.current.click(); // Triggers the file input click
     };
 
-    // Function to handle file input change
+    //Function to handle file input change
     const handleImageChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -158,21 +154,16 @@ const SellerProfilePage = () => {
             formData.append("picture", file);
 
             try {
-                // Send the image to the server
-                const response = await axiosInstance.put(
-                    "/seller/updateSeller",
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                        withCredentials: true,
-                    }
-                );
+                const response = await axiosInstance.put("/admin/updateAdmin", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    withCredentials: true,
+                });
+                const picture = await uploadFile(imageFile, "profilePictures");
 
-                // Update state with new image URL from the response
-                setImage(response.data.picture); // Assuming the response returns the new image URL
-
+                // Update the image state with the new image URL or fallback to default
+                setImage(response.data.picture || defaultImage);
                 alert("Profile picture updated successfully");
             } catch (error) {
                 console.error("Error updating profile picture:", error);
@@ -273,31 +264,11 @@ const SellerProfilePage = () => {
                             width: "60%",
                             textAlign: "left",
                             marginTop: "-2vw",
-                            padding: "5vh",
+                            padding: "3vw",
                         }}
                     >
-                        <h3 style={{ paddingBottom: "1vh" }}>About Me</h3>
-                        {isEditing ? (
-                            <textarea
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                                style={{
-                                    width: "100%",
-                                    height: "150px",
-                                    padding: "10px",
-                                    borderRadius: "5px",
-                                    border: "1px solid #ccc",
-                                    fontSize: "16px",
-                                    resize: "vertical",
-                                }}
-                            />
-                        ) : (
-                            <p>{response?.description || "No description provided"}</p>
-                        )}
-
                         <h3>Profile Details</h3>
-                        <p style={{ paddingTop: "1vh" }}>
+                        <p>
                             <strong>Email:</strong>{" "}
                             {isEditing ? (
                                 <input
@@ -405,4 +376,5 @@ const SellerProfilePage = () => {
         </>
     );
 };
-export default SellerProfilePage;
+
+export default AdminProfilePage;

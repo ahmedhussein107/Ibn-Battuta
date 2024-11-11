@@ -7,17 +7,22 @@ import {
     deleteGovernor,
     getGovernor,
     updateGovernor,
+    changeGovernorPassword,
 } from "../controllers/governor.controller.js";
+import { isAuthenticated } from "../routers.middleware/authentication.js";
+
 const governorRouter = express.Router();
 
 governorRouter.post("/createGovernor", createGovernor);
 
 governorRouter.get("/getGovernors", getGovernors);
 
-governorRouter.get("/getGovernor/:id", getGovernor);
+governorRouter.get("/getGovernor", isAuthenticated, getGovernor);
 
-governorRouter.delete("/deleteGovernor/:id", deleteGovernor);
+governorRouter.delete("/deleteGovernor", isAuthenticated, deleteGovernor);
 
-governorRouter.patch("/updateGovernor/:id", updateGovernor);
+governorRouter.put("/updateGovernor", isAuthenticated, updateGovernor);
+
+governorRouter.put("/changeGovernorPassword", isAuthenticated, changeGovernorPassword);
 
 export default governorRouter;

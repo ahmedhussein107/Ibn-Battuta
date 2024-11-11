@@ -135,7 +135,8 @@ const SignUpPage = () => {
 
             const response = await axiosInstance.post(
                 `/${userType.toLowerCase()}/create${userType}`,
-                userData
+                userData,
+                { withCredentials: true }
             );
             // Handle the file upload logic here
             alert("Files submitted successfully!");
@@ -199,14 +200,9 @@ const SignUpPage = () => {
                                 />
                                 <label htmlFor="terms">
                                     I accept the
-                                    <a href="https://google.com" target="_blank">
+                                    <a href="/privacy" target="_blank">
                                         {" "}
-                                        terms{" "}
-                                    </a>
-                                    and
-                                    <a href="https://google.com" target="_blank">
-                                        {" "}
-                                        conditions{" "}
+                                        terms and conditions{" "}
                                     </a>
                                 </label>
                             </div>

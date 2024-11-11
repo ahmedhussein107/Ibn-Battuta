@@ -4,7 +4,6 @@ import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import CreateProductPage from "./pages/Product/CreateProductPage";
 import UpdateProductPage from "./pages/Product/UpdateProductPage";
-import TourGuideProfilePage from "./pages/TourGuide/TourGuideProfilePage";
 import GovernorLandmarks from "./pages/Governor/GovernorLandmarks";
 import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import CreateActivityPage from "./pages/Activity/CreateActivityPage";
@@ -47,6 +46,14 @@ import NavBar from "./components/NavBar.jsx";
 import ShowOfferDetails from "./components/Hotels/ShowOfferDetails.jsx";
 import HotelList from "./components/Hotels/HotelList.jsx";
 import Orders from "./pages/Tourist/Orders.jsx";
+import AdminProfilePage from "./pages/Admin/AdminProfilePage";
+import AdvertiserProfilePage from "./pages/Advertiser/AdvertiserProfilePage";
+import GovernorProfilePage from "./pages/Governor/GovernorProfilePage";
+import SellerProfilePage from "./pages/Seller/SellerProfilePage";
+import TouristProfilePage from "./pages/Tourist/TouristProfilePage";
+import TourGuideProfilePage from "./pages/TourGuide/TourGuideProfilePage";
+import TermsAndConditions from "./pages/Privacy/TermsAndConditions";
+import Flights from "./pages/Flights/Flights";
 
 const LayoutWithNav = () => (
 	<>
@@ -56,6 +63,7 @@ const LayoutWithNav = () => (
 		</main>
 	</>
 );
+
 function App() {
 	return (
 		<HeaderProvider>
@@ -119,13 +127,33 @@ function App() {
 						<Route path="/bookings" element={<Bookings />} />
 						<Route path="/orders" element={<Orders />} />
 
-						<Route path="/hotel/offers" element={<HotelList />} />
-						<Route path="/hotel/offer-details/:id" element={<ShowOfferDetails />} />
-					</Route>
-				</Routes>
-			</Router>
-		</HeaderProvider>
-	);
+                        <Route path="/hotel/offers" element={<HotelList />} />
+                        <Route
+                            path="/hotel/offer-details/:id"
+                            element={<ShowOfferDetails />}
+                        />
+                        <Route path="/admin-profile" element={<AdminProfilePage />} />
+                        <Route
+                            path="/advertiser-profile"
+                            element={<AdvertiserProfilePage />}
+                        />
+                        <Route
+                            path="/governor-profile"
+                            element={<GovernorProfilePage />}
+                        />
+                        <Route path="/seller-profile" element={<SellerProfilePage />} />
+                        <Route
+                            path="/tourguide-profile"
+                            element={<TourGuideProfilePage />}
+                        />
+                        <Route path="/tourist-profile" element={<TouristProfilePage />} />
+                        <Route path="/privacy" element={<TermsAndConditions />} />
+                        <Route path="/flights" element={<Flights />} />
+                    </Route>
+                </Routes>
+            </Router>
+        </HeaderProvider>
+    );
 }
 
 export default App;

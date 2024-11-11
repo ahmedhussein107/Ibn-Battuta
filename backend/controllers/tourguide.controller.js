@@ -5,6 +5,7 @@ import Notification from "../models/notification.model.js";
 import Rating from "../models/rating.model.js";
 import Itinerary from "../models/itinerary.model.js";
 import CustomActivity from "../models/customActivity.model.js";
+import Bookings from "../models/booking.model.js";
 import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
 
@@ -55,19 +56,12 @@ export const getTourGuides = async (req, res) => {
 };
 
 export const getTourGuideById = async (req, res) => {
+    const tourguideId = req.user.userId;
     try {
-        const tourGuide = await TourGuide.findById(req.params.id);
+        const tourGuide = await TourGuide.findById(tourguideId);
         if (tourGuide) {
-            const {
-                isAccepted,
-                documents,
-                ratings,
-                sumOfRatings,
-                createdAt,
-                updatedAt,
-                __v,
-                ...others
-            } = tourGuide._doc;
+            const { isAccepted, documents, createdAt, updatedAt, __v, ...others } =
+                tourGuide._doc;
             res.status(200).json(others);
         } else {
             res.status(404).json({ e: "TourGuide not found" });
@@ -79,85 +73,145 @@ export const getTourGuideById = async (req, res) => {
 };
 
 export const updateTourGuide = async (req, res) => {
+    const tourGuideId = req.user.userId;
     try {
+        const tourGuide = await TourGuide.findById(tourGuideId);
+        if (!tourGuide) {
+            return res.status(404).json({ message: "tourGuide not found" });
+        }
         if (req.body.password) {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
-        const tourGuide = await TourGuide.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        });
-        if (tourGuide) {
-            res.status(200).json(tourGuide);
-        } else {
-            res.status(404).json({ e: "TourGuide not found" });
+        if (req.body.email) {
+            await Email.findByIdAndDelete(tourGuide.email);
+            await Email.create({
+                _id: req.body.email,
+            });
         }
-    } catch (e) {
-        res.status(400).json({ e: e.message });
+
+        // Update tourGuide details
+        const updatedtourGuide = await TourGuide.findByIdAndUpdate(
+            tourGuideId,
+            req.body,
+            {
+                new: true,
+            }
+        );
+
+        res.status(200).json(updatedtourGuide);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 };
 
 export const deleteTourGuide = async (req, res) => {
+    const tourguideId = req.user.userId;
     try {
-        const tourGuide = await TourGuide.findByIdAndDelete(req.params.id);
-        if (tourGuide) {
-            await Username.findByIdAndDelete(tourGuide.username);
-            await Email.findByIdAndDelete(tourGuide.email);
+        const upcomingItineraries = await Itinerary.find({
+            tourguideID: tourguideId,
+            availableDatesAndTimes: { $gte: new Date() },
+        }).distinct("_id");
 
-            // If there are notifications, delete each one
-            if (tourGuide.notifications && tourGuide.notifications.length > 0) {
-                await Promise.all(
-                    tourGuide.notifications.map(async (notificationId) => {
-                        await Notification.findByIdAndDelete(notificationId);
-                    })
-                );
-            }
+        const hasUpcoming = await Bookings.exists({
+            bookingType: "Itinerary",
+            typeId: { $in: upcomingItineraries },
+        });
 
-            // If there are ratings, delete each one
-            if (tourGuide.ratings && tourGuide.ratings.length > 0) {
-                await Promise.all(
-                    tourGuide.ratings.map(async (ratingId) => {
-                        await Rating.findByIdAndDelete(ratingId);
-                    })
-                );
-            }
-
-            // Delete related itineraries
-            const itineraries = await Itinerary.find({ tourguideID: tourGuide._id });
-            if (itineraries.length > 0) {
-                await Promise.all(
-                    itineraries.map(async (itinerary) => {
-                        // Delete ratings associated with each itinerary
-                        if (itinerary.ratings && itinerary.ratings.length > 0) {
-                            await Promise.all(
-                                itinerary.ratings.map(async (ratingId) => {
-                                    await Rating.findByIdAndDelete(ratingId);
-                                })
-                            );
-                        }
-                        await Itinerary.findByIdAndDelete(itinerary._id);
-                    })
-                );
-            }
-
-            // Delete related custom activities
-            const customActivities = await CustomActivity.find({
-                tourguideID: tourGuide._id,
+        if (hasUpcoming) {
+            return res.status(400).json({
+                message: "Cannot delete tour guide with upcoming itineraries",
             });
-            if (customActivities.length > 0) {
-                await Promise.all(
-                    customActivities.map(async (customActivity) => {
-                        await CustomActivity.findByIdAndDelete(customActivity._id);
-                    })
-                );
-            }
-
-            res.status(200).json({ message: "TourGuide deleted successfully" });
         } else {
-            res.status(404).json({ e: "TourGuide not found" });
+            const tourGuide = await TourGuide.findByIdAndDelete(tourguideId);
+            if (tourGuide) {
+                await Username.findByIdAndDelete(tourGuide.username);
+                await Email.findByIdAndDelete(tourGuide.email);
+
+                // If there are notifications, delete each one
+                if (tourGuide.notifications && tourGuide.notifications.length > 0) {
+                    await Promise.all(
+                        tourGuide.notifications.map(async (notificationId) => {
+                            await Notification.findByIdAndDelete(notificationId);
+                        })
+                    );
+                }
+
+                // If there are ratings, delete each one
+                if (tourGuide.ratings && tourGuide.ratings.length > 0) {
+                    await Promise.all(
+                        tourGuide.ratings.map(async (ratingId) => {
+                            await Rating.findByIdAndDelete(ratingId);
+                        })
+                    );
+                }
+
+                // Delete related itineraries
+                const itineraries = await Itinerary.find({ tourguideID: tourGuide._id });
+                if (itineraries.length > 0) {
+                    await Promise.all(
+                        itineraries.map(async (itinerary) => {
+                            // Delete ratings associated with each itinerary
+                            if (itinerary.ratings && itinerary.ratings.length > 0) {
+                                await Promise.all(
+                                    itinerary.ratings.map(async (ratingId) => {
+                                        await Rating.findByIdAndDelete(ratingId);
+                                    })
+                                );
+                            }
+                            await Itinerary.findByIdAndDelete(itinerary._id);
+                        })
+                    );
+                }
+
+                // Delete related custom activities
+                const customActivities = await CustomActivity.find({
+                    tourguideID: tourGuide._id,
+                });
+                if (customActivities.length > 0) {
+                    await Promise.all(
+                        customActivities.map(async (customActivity) => {
+                            await CustomActivity.findByIdAndDelete(customActivity._id);
+                        })
+                    );
+                }
+
+                res.status(200).json({ message: "TourGuide deleted successfully" });
+            } else {
+                res.status(404).json({ e: "TourGuide not found" });
+            }
         }
     } catch (e) {
         //console.log(e.message);
         res.status(400).json({ e: e.message });
+    }
+};
+
+export const changeTourguidePassword = async (req, res) => {
+    const tourguideId = req.user.userId;
+    const { oldPassword, newPassword } = req.body;
+
+    try {
+        if (!oldPassword || !newPassword) {
+            return res
+                .status(400)
+                .json({ message: "Both old and new passwords are required" });
+        }
+        const tourguide = await TourGuide.findById(tourguideId);
+        if (!tourguide) {
+            return res.status(404).json({ message: "tourguide not found" });
+        }
+        const isMatch = await bcrypt.compare(oldPassword, tourguide.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Incorrect old password" });
+        }
+        tourguide.password = await bcrypt.hash(newPassword, 10);
+        await tourguide.save();
+        return res.status(200).json({ message: "Password changed successfully!" });
+    } catch (err) {
+        console.error("Error changing password:", err);
+        return res
+            .status(400)
+            .json({ message: "An error occurred while changing the password" });
     }
 };
 
