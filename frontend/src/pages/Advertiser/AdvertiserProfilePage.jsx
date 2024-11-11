@@ -166,7 +166,7 @@ const AdvertiserProfilePage = () => {
                 })
                 .then((response) => {
                     alert("Profile picture updated successfully!");
-                    console.log("Updated Tourist Picture:", response.data.picture);
+                    console.log("Updated Advertiser Picture:", response.data.picture);
 
                     // Ensure response.data contains the full URL of the picture
                     setResponse((prev) => ({
@@ -174,8 +174,7 @@ const AdvertiserProfilePage = () => {
                         picture: response.data.picture, // This should be a string URL
                     }));
 
-                    // Log the updated tourist picture to the console
-                    console.log("Updated Tourist Picture:", response.data.picture);
+                    console.log("Updated Advertiser Picture:", response.data.picture);
                     window.location.reload();
                 })
                 .catch((error) => {
