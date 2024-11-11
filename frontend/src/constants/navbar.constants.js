@@ -22,7 +22,7 @@ export const touristNavbarItems = [
     {
         Travel: [
             { Flights: "/flights" },
-            { Hotels: "/hotels" },
+            { Hotels: "/hotel/offers" },
             { Packages: "/packages" },
         ],
     },
