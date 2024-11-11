@@ -245,10 +245,7 @@ const ItineraryDetails = () => {
 				<SuccessfulBooking points={pointsAdded} />
 			</PopUp>
 
-			<ItineraryAndActivityHeader
-				mode="itinerary"
-				title={itinerary.name}
-			/>
+		
 
 			<div className="itinerary-info">
 				<div className="placeholder">
