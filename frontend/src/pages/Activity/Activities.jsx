@@ -24,7 +24,7 @@ const Activities = () => {
     const [selectedTags, setSelectedTags] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-    const [ratingRange, setRatingRange] = useState([1, 5]);
+    const [ratingRange, setRatingRange] = useState([null, 5]);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [sortBy, setSortBy] = useState("priceAsc");
@@ -130,7 +130,7 @@ const Activities = () => {
         }
 
         if (ratingRange[0] || ratingRange[1]) {
-            if (ratingRange[0] === 1) {
+            if (!ratingRange[0]) {
                 query.rating = "-" + ratingRange[1];
             } else {
                 query.rating = ratingRange[0] + "-" + ratingRange[1];
@@ -227,9 +227,9 @@ const Activities = () => {
                     backgroundRepeat: "no-repeat",
                 }}
             ></div>
-            <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
+            {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
                 <NavBar />
-            </div>
+            </div> */}
             <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
                 <div
                     style={{
@@ -270,15 +270,18 @@ const Activities = () => {
                                 ]}
                                 bottomButtons={[
                                     {
-                                        text: "Edit",
-                                        onClick: () => navigate("itinerary"), // TODO: change url
+                                        text: "Book Now",
+                                        onClick: () =>
+                                            navigate("/activity-details", {
+                                                state: activity,
+                                            }),
                                         type: "1",
                                         width: "50%",
                                         styles: {
                                             display: "flex",
                                             justifyContent: "center",
                                             alignItems: "center",
-                                            padding: "1vh",
+                                            padding: "0.5em",
                                         },
                                     },
                                 ]}

@@ -148,9 +148,6 @@ const Itineraries = () => {
     ];
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
-            <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
-                <NavBar />
-            </div>
             <div
                 style={{
                     width: "100vw",
@@ -213,7 +210,10 @@ const Itineraries = () => {
                                 bottomButtons={[
                                     {
                                         text: "Book Now",
-                                        onClick: () => navigate("itinerary"), // TODO: change url
+                                        onClick: () =>
+                                            navigate("/itinerary-details", {
+                                                state: { itinerary },
+                                            }),
                                         type: "1",
                                         width: "70%",
                                     },

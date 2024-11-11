@@ -19,21 +19,16 @@ const PopUp = ({
     //     this part is for closing the popup when clicked outside
     const popupRef = useRef(null);
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (popupRef.current && !popupRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
-        };
-
-        if (isOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
+        // const handleClickOutside = (event) => {
+        //     if (isOpen && popupRef.current && !popupRef.current.contains(event.target)) {
+        //         setIsOpen(false);
+        //     }
+        // };
+        // document.addEventListener("mousedown", handleClickOutside);
+        // // Remove event listener on unmount
+        // return () => {
+        //     document.removeEventListener("mousedown", handleClickOutside);
+        // };
     }, [isOpen, setIsOpen]);
 
     if (!isOpen) return null;

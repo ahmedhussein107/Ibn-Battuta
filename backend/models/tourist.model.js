@@ -51,7 +51,7 @@ touristSchema.pre("save", async function (next) {
             await validateReferences(cart, "Product", next);
         }
         if (preferences) {
-            await validateReferences(preferences, "Tags", next);
+            await validateReferences(preferences, "Tag", next);
         }
 
         if (wishlist) {

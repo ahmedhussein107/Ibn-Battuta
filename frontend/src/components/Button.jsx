@@ -9,7 +9,7 @@ const Button = ({
     handleClick = () => {
         console.log("buttonclick handle needs to be fixed");
     },
-    isLoading,
+    isLoading = false,
     width = "auto",
     height = "auto",
     customStyle = {},
@@ -24,7 +24,7 @@ const Button = ({
             type={type}
         >
             {isLoading ? (
-                <div className="spinner"></div>
+                <span className="loader"></span>
             ) : (
                 <>
                     {icon && <span className="button-icon">{icon}</span>}{" "}

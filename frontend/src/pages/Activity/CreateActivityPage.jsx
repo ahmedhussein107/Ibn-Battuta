@@ -3,13 +3,15 @@ import styled, { keyframes } from "styled-components";
 import axiosInstance from "../../api/axiosInstance";
 import { uploadFiles } from "../../api/firebase";
 import PhotosUpload from "../../components/PhotosUpload.jsx";
+import DateModal from "../../components/DateModal.jsx";
+import TimeModal from "../../components/TimeModal.jsx";
 import Button from "../../components/Button.jsx";
 import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
 import NavBar from "../../components/NavBar.jsx";
 import Map from "../map";
-import DatePicker from "react-datepicker";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import "react-datepicker/dist/react-datepicker.css";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { useNavigate } from "react-router-dom";
 
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
@@ -20,89 +22,16 @@ const Popup = ({ message, onClose, isError }) => (
     </PopupContainer>
 );
 
-const DateModal = ({ isOpen, onClose, startDate, endDate, onDatesChange }) => {
-    return (
-        isOpen && (
-            <ModalOverlay
-                style={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
-                    zIndex: 1000, // Ensure modal is on top
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backdropFilter: "blur(5px)", // Apply blur to the background
-                }}
-            >
-                <ModalContent
-                    style={{
-                        position: "relative",
-                        zIndex: 1001, // Modal content should be above overlay
-                        backgroundColor: "white", // White background for modal content
-                        padding: "20px",
-                        borderRadius: "8px",
-                        maxWidth: "500px", // Adjust size as needed
-                        width: "100%",
-                    }}
-                >
-                    {/* Close button in the top-right corner */}
-                    <div
-                        style={{
-                            position: "absolute",
-                            top: "10px",
-                            right: "10px",
-                            cursor: "pointer",
-                            fontSize: "20px",
-                            fontWeight: "bold",
-                            zIndex: 1,
-                        }}
-                        onClick={onClose}
-                    >
-                        ✕
-                    </div>
-
-                    <h2>Select Dates</h2>
-                    <DatePicker
-                        selected={startDate}
-                        onChange={(date) => onDatesChange(date, endDate)}
-                        selectsStart
-                        startDate={startDate}
-                        endDate={endDate}
-                        placeholderText="Start Date"
-                        dateFormat="MMM dd, yyyy"
-                    />
-                    <DatePicker
-                        selected={endDate}
-                        onChange={(date) => onDatesChange(startDate, date)}
-                        selectsEnd
-                        startDate={startDate}
-                        endDate={endDate}
-                        minDate={startDate}
-                        placeholderText="End Date"
-                        dateFormat="MMM dd, yyyy"
-                    />
-                </ModalContent>
-            </ModalOverlay>
-        )
-    );
-};
-
 const defaultData = {
     name: "",
     startDate: "",
     endDate: "",
-    time: "",
     latitude: 0,
     longitude: 0,
     category: "",
     tags: [],
     freeSpots: 0,
     isOpenForBooking: false,
-    advertiserID: "67040377731df0ac20353236",
 };
 
 const CreateActivityPage = () => {
@@ -113,14 +42,37 @@ const CreateActivityPage = () => {
     const [isErrorPopup, setIsErrorPopup] = useState(false);
     const [categories, setCategories] = useState([]);
     const [tags, setTags] = useState([]);
+    const [selectedTag, setSelectedTag] = useState("");
     const [selectedTags, setSelectedTags] = useState([]);
     const [showDateModal, setShowDateModal] = useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [formattedDate, setFormattedDate] = useState("");
+    const [showTimeModal, setShowTimeModal] = useState(false);
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
+    const [formattedTime, setFormattedTime] = useState("");
 
-    const toggleDateModal = () => {
-        setShowDateModal(!showDateModal);
+    const navigate = useNavigate();
+
+    const handleTimesChange = (start, end) => {
+        setStartTime(start);
+        setEndTime(end);
+        const startString = start || "";
+        const endString = end || "";
+        setFormattedTime(`${startString} to ${endString}`);
+    };
+
+    const addTag = () => {
+        if (selectedTag && !selectedTags.includes(selectedTag)) {
+            setSelectedTags([...selectedTags, selectedTag]);
+            setSelectedTag("");
+        }
+    };
+
+    const removeTag = (tagToRemove, e) => {
+        e.preventDefault();
+        setSelectedTags(selectedTags.filter((tag) => tag !== tagToRemove));
     };
 
     const handleDatesChange = (start, end) => {
@@ -156,7 +108,6 @@ const CreateActivityPage = () => {
 
     const handleInputChange = (e) => {
         let { name, value, type, checked } = e.target;
-
         if (type === "number" && isNaN(value)) return;
         if (type == "number") value = Math.max(value, 0);
         if (name == "specialDiscount") value = Math.min(value, 100);
@@ -191,31 +142,69 @@ const CreateActivityPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(formData);
+
         if (
-            !formData.name ||
-            !formData.startDate ||
-            !formData.endDate ||
-            !formData.time ||
-            !formData.price ||
-            !formData.category ||
-            imagePreviews.length === 0
+            (!formData.name ||
+                !formData.description ||
+                !startDate ||
+                !endDate ||
+                !formData.price ||
+                !formData.category ||
+                imagePreviews.length === 0,
+            !formData.freeSpots)
         ) {
             showPopupMessage("Please fill out all required details.", true);
             return;
         }
 
+        if (tags.length === 0 || selectedTags.length === 0) {
+            showPopupMessage("Please select at least one tag.", true);
+            return;
+        }
+
         try {
+            const convertTo24System = (timeObj) => {
+                const [time, period] = timeObj.split(" ");
+                let [hours, minutes] = time.split(":").map(Number);
+                if (period == "PM" && hours < 12) hours += 12;
+                if (period == "AM" && hours === 12) hours = 0;
+                return { hours, minutes };
+            };
+
+            const combinedStartDate = new Date(startDate);
+            const combinedEndDate = new Date(endDate);
+            const startTime24 = convertTo24System(startTime);
+            const endTime24 = convertTo24System(endTime);
+            combinedStartDate.setHours(startTime24.hours, startTime24.minutes);
+            combinedEndDate.setHours(endTime24.hours, endTime24.minutes);
+
             const files = imagePreviews.map((preview) => preview.file);
             const uploadedFileUrls = await uploadFiles(files, "activities");
 
             const finalFormData = {
                 ...formData,
+                startDate: combinedStartDate.toISOString(),
+                endDate: combinedEndDate.toISOString(),
                 pictures: uploadedFileUrls,
                 tags: selectedTags,
+                freeSpots: parseInt(formData.freeSpots) || 0,
+                specialDiscount: parseFloat(formData.specialDiscount) || 0,
+                price: parseFloat(formData.price) || 0,
+                Latitude: formData.Latitude ? parseFloat(formData.Latitude) : undefined,
+                Longitude: formData.Longitude
+                    ? parseFloat(formData.Longitude)
+                    : undefined,
             };
 
+            console.log(finalFormData);
+
+            Object.keys(finalFormData).forEach(
+                (key) => finalFormData[key] === undefined && delete finalFormData[key]
+            );
+
             const response = await axiosInstance.post(
-                "activity/createActivity",
+                "/activity/createActivity",
                 finalFormData,
                 {
                     withCredentials: true,
@@ -225,12 +214,14 @@ const CreateActivityPage = () => {
 
             showPopupMessage("Activity created successfully!", false);
 
-            setFormData(defaultData);
-            setImagePreviews([]);
-            setSelectedTags([]);
+            setTimeout(() => navigate("/advertiser/assigned"), 1000);
         } catch (error) {
             console.error("Error creating activity:", error);
-            showPopupMessage("Error creating activity. Please try again.", true);
+            showPopupMessage(
+                error.response?.data?.message ||
+                    "Error creating activity. Please try again.",
+                true
+            );
         }
     };
 
@@ -249,7 +240,6 @@ const CreateActivityPage = () => {
 
     return (
         <PageContainer>
-            <NavBar />
             {showPopup && (
                 <Popup
                     message={popupMessage}
@@ -258,7 +248,7 @@ const CreateActivityPage = () => {
                 />
             )}
 
-            <form>
+            <form style={{ marginTop: "35vh" }}>
                 <FormContainer>
                     <div>
                         <FormSection>
@@ -266,9 +256,9 @@ const CreateActivityPage = () => {
                                 <Label>Title</Label>
                                 <Input
                                     type="text"
-                                    name="title"
+                                    name="name"
                                     placeholder="Insert title here..."
-                                    value={formData.title}
+                                    value={formData.name}
                                     onChange={handleInputChange}
                                 />
                             </InputGroup>
@@ -314,44 +304,104 @@ const CreateActivityPage = () => {
                             <Label>Date & Time</Label>
                             <div
                                 style={{
-                                    position: "relative",
-                                    display: "inline-block",
-                                    width: "10vw",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "2rem",
+                                    marginTop: "1rem",
                                 }}
                             >
-                                <DateInput
-                                    type="text"
-                                    value={formattedDate}
-                                    readOnly
-                                    onClick={toggleDateModal}
-                                    placeholder="Select Date"
+                                <div
                                     style={{
-                                        fontSize: "0.9em",
-                                        width: "100%",
-                                        paddingRight: "2em",
+                                        position: "relative",
+                                        display: "inline-block",
+                                        width: "16rem",
                                     }}
-                                />
-                                <CalendarTodayIcon
+                                >
+                                    <input
+                                        type="text"
+                                        value={formattedDate}
+                                        readOnly
+                                        onClick={() => setShowDateModal(true)}
+                                        placeholder="Select Date"
+                                        style={{
+                                            fontSize: "1.125rem",
+                                            width: "14vw",
+                                            height: "3rem",
+                                            paddingLeft: "1rem",
+                                            paddingRight: "2.5rem",
+                                            border: "1px solid #ddd",
+                                            borderRadius: "0.375rem",
+                                            cursor: "pointer",
+                                        }}
+                                    />
+                                    <CalendarTodayIcon
+                                        style={{
+                                            position: "absolute",
+                                            right: "-1rem",
+                                            top: "50%",
+                                            transform: "translateY(-50%)",
+                                            cursor: "pointer",
+                                            fontSize: "1.2em",
+                                            color: "#888",
+                                        }}
+                                        onClick={() => setShowDateModal(true)}
+                                    />
+                                </div>
+
+                                <div
                                     style={{
-                                        position: "absolute",
-                                        right: "-1.7em",
-                                        top: "50%",
-                                        transform: "translateY(-50%)",
-                                        cursor: "pointer",
-                                        fontSize: "1.2em",
-                                        color: "#888",
+                                        marginLeft: "2vw",
+                                        position: "relative",
+                                        display: "inline-block",
+                                        width: "16rem",
                                     }}
-                                    onClick={toggleDateModal}
-                                />
+                                >
+                                    <input
+                                        type="text"
+                                        value={formattedTime}
+                                        readOnly
+                                        onClick={() => setShowTimeModal(true)}
+                                        placeholder="Select Time"
+                                        style={{
+                                            fontSize: "1.125rem",
+                                            width: "14vw",
+                                            height: "3rem",
+                                            paddingLeft: "1rem",
+                                            paddingRight: "2.5rem",
+                                            border: "1px solid #ddd",
+                                            borderRadius: "0.375rem",
+                                            cursor: "pointer",
+                                        }}
+                                    />
+                                    <AccessTimeIcon
+                                        style={{
+                                            position: "absolute",
+                                            right: "-1rem",
+                                            top: "50%",
+                                            transform: "translateY(-50%)",
+                                            cursor: "pointer",
+                                            fontSize: "1.2em",
+                                            color: "#888",
+                                        }}
+                                        onClick={() => setShowTimeModal(true)}
+                                    />
+                                </div>
                             </div>
+                            <DateModal
+                                isOpen={showDateModal}
+                                onClose={() => setShowDateModal(false)}
+                                startDate={startDate}
+                                endDate={endDate}
+                                onDatesChange={handleDatesChange}
+                            />
+                            <TimeModal
+                                isOpen={showTimeModal}
+                                onClose={() => setShowTimeModal(false)}
+                                startTime={startTime}
+                                endTime={endTime}
+                                onTimesChange={handleTimesChange}
+                            />
                         </FormSection>
-                        <DateModal
-                            isOpen={showDateModal}
-                            onClose={toggleDateModal}
-                            startDate={startDate}
-                            endDate={endDate}
-                            onDatesChange={handleDatesChange}
-                        />
 
                         <FormSection>
                             <FlexGroup>
@@ -360,6 +410,7 @@ const CreateActivityPage = () => {
                                     name="category"
                                     value={formData.category}
                                     onChange={handleInputChange}
+                                    style={{ minWidth: "27vw" }}
                                 >
                                     <option value="">Select a category</option>
                                     {categories.map((category) => (
@@ -370,20 +421,95 @@ const CreateActivityPage = () => {
                                 </Select>
                             </FlexGroup>
 
-                            <FlexGroup>
-                                <Label>Tags</Label>
-                                <TagContainer>
-                                    {tags.map((tag) => (
-                                        <TagItem
-                                            key={tag._id}
-                                            value={tag._id}
-                                            checked={selectedTags.includes(tag._id)}
-                                            onChange={handleInputChange}
+                            <FlexGroup
+                                style={{
+                                    display: "flex",
+                                    alignItems: "flex-start",
+                                    gap: "2vh",
+                                    minHeight: "9vh",
+                                }}
+                            >
+                                <Label
+                                    style={{
+                                        paddingTop: "1vh",
+                                    }}
+                                >
+                                    Tags
+                                </Label>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ display: "flex", gap: "1vh" }}>
+                                        <Select
+                                            value={selectedTag}
+                                            onChange={(e) =>
+                                                setSelectedTag(e.target.value)
+                                            }
+                                            style={{
+                                                minWidth: "27vw",
+                                                marginLeft: "1.7vw",
+                                                padding: "1vh 1.5vh",
+                                                borderRadius: "0.5vh",
+                                                border: "0.1vh solid #ccc",
+                                            }}
                                         >
-                                            {tag._id}
-                                        </TagItem>
-                                    ))}
-                                </TagContainer>
+                                            <option value="">Select tag</option>
+                                            {tags.map((tag) => (
+                                                <option key={tag._id} value={tag._id}>
+                                                    {tag._id}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                        <button
+                                            type="button"
+                                            onClick={addTag}
+                                            disabled={!selectedTag}
+                                            style={{
+                                                padding: "1vh 2vh",
+                                                backgroundColor: "#f4cfbf",
+                                                border: "none",
+                                                borderRadius: "0.5vh",
+                                                cursor: selectedTag
+                                                    ? "pointer"
+                                                    : "not-allowed",
+                                                opacity: selectedTag ? 1 : 0.6,
+                                                transition: "background-color 0.2s ease",
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.target.style.backgroundColor =
+                                                    "#edbdaa";
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.target.style.backgroundColor =
+                                                    "#f4cfbf";
+                                            }}
+                                        >
+                                            Add
+                                        </button>
+                                    </div>
+                                    <TagContainer
+                                        style={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: "1vh",
+                                            marginTop: "1.5vh",
+                                            marginLeft: "1.7vw",
+                                        }}
+                                    >
+                                        {selectedTags.map((tag, index) => (
+                                            <Tag
+                                                key={index}
+                                                onClick={(e) => removeTag(tag, e)}
+                                                style={{
+                                                    padding: "0.5vh 1vh",
+                                                    backgroundColor: "#f4cfbf",
+                                                    borderRadius: "0.5vh",
+                                                    cursor: "pointer",
+                                                }}
+                                            >
+                                                {tag} ✕
+                                            </Tag>
+                                        ))}
+                                    </TagContainer>
+                                </div>
                             </FlexGroup>
                         </FormSection>
                     </div>
@@ -395,41 +521,7 @@ const CreateActivityPage = () => {
                             onImageRemove={handleImageRemove}
                         />
 
-                        <FormSection>
-                            <FlexGroup>
-                                <Label>Free Spots</Label>
-                                <StockControl>
-                                    <StockButton
-                                        type="button"
-                                        onClick={() => handleStockChange(-1)}
-                                    >
-                                        -
-                                    </StockButton>
-                                    <StockDisplay>{formData.freeSpots}</StockDisplay>
-                                    <StockButton
-                                        type="button"
-                                        onClick={() => handleStockChange(1)}
-                                    >
-                                        +
-                                    </StockButton>
-                                </StockControl>
-                            </FlexGroup>
-
-                            <FlexGroup>
-                                <Label>Open for Booking</Label>
-                                <ToggleSwitch>
-                                    <ToggleInput
-                                        type="checkbox"
-                                        name="isOpenForBooking"
-                                        checked={formData.isOpenForBooking}
-                                        onChange={handleInputChange}
-                                    />
-                                    <ToggleLabel />
-                                </ToggleSwitch>
-                            </FlexGroup>
-                        </FormSection>
-
-                        <FormSection>
+                        <FormSection style={{ height: "41vh" }}>
                             <Label style={{ marginLeft: "2em" }}>
                                 Pin Activity Location on Map
                             </Label>
@@ -443,69 +535,140 @@ const CreateActivityPage = () => {
                                 }}
                             />
                         </FormSection>
+
+                        <FormSection>
+                            <FlexGroup>
+                                <Label>Booking</Label>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        borderRadius: "3em",
+                                        overflow: "hidden",
+                                        backgroundColor: "#eaeaea",
+                                        padding: "0.2em",
+                                    }}
+                                >
+                                    <div
+                                        onClick={() =>
+                                            handleInputChange({
+                                                target: {
+                                                    name: "isOpenForBooking",
+                                                    value: true,
+                                                },
+                                            })
+                                        }
+                                        style={{
+                                            padding: "0.5em 1em",
+                                            cursor: "pointer",
+                                            fontSize: "1em",
+                                            fontWeight: "500",
+                                            color: formData.isOpenForBooking
+                                                ? "#a83232"
+                                                : "#333",
+                                            backgroundColor: formData.isOpenForBooking
+                                                ? "#fcd8d8"
+                                                : "transparent",
+                                            borderRadius: "3em",
+                                            transition: "all 0.3s ease",
+                                        }}
+                                    >
+                                        Open
+                                    </div>
+                                    <div
+                                        onClick={() =>
+                                            handleInputChange({
+                                                target: {
+                                                    name: "isOpenForBooking",
+                                                    value: false,
+                                                },
+                                            })
+                                        }
+                                        style={{
+                                            padding: "0.5em 1em",
+                                            cursor: "pointer",
+                                            fontSize: "1em",
+                                            fontWeight: "500",
+                                            color: !formData.isOpenForBooking
+                                                ? "#a83232"
+                                                : "#333",
+                                            backgroundColor: !formData.isOpenForBooking
+                                                ? "#fcd8d8"
+                                                : "transparent", // Matching background color
+                                            borderRadius: "1em",
+                                            transition: "all 0.3s ease",
+                                        }}
+                                    >
+                                        Closed
+                                    </div>
+                                </div>
+                            </FlexGroup>
+                            <FlexGroup>
+                                <Label>Capacity</Label>
+                                <StockControl>
+                                    <StockButton
+                                        type="button"
+                                        onClick={() => handleStockChange(-1)}
+                                    >
+                                        -
+                                    </StockButton>
+                                    <input
+                                        type="number"
+                                        value={formData.freeSpots}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                freeSpots:
+                                                    parseInt(e.target.value, 10) || 0,
+                                            })
+                                        }
+                                        style={{
+                                            width: "3em",
+                                            textAlign: "center",
+                                            fontSize: "1.2em",
+                                            fontWeight: "bold",
+                                            border: "none",
+                                            outline: "none",
+                                            backgroundColor: "transparent",
+                                        }}
+                                    />
+                                    <StockButton
+                                        type="button"
+                                        onClick={() => handleStockChange(1)}
+                                    >
+                                        +
+                                    </StockButton>
+                                </StockControl>
+                            </FlexGroup>
+                        </FormSection>
                     </div>
                 </FormContainer>
 
-                <ButtonGroup>
-                    <Button
-                        stylingMode="2"
-                        text="Cancel"
-                        handleClick={() => {
-                            setFormData(defaultData);
-                            setImagePreviews([]);
-                            setSelectedTags([]);
-                        }}
-                        width="auto"
-                    />
-                    <Button
-                        stylingMode="1"
-                        text="Create Activity"
-                        handleClick={handleSubmit}
-                        width="auto"
-                    />
-                </ButtonGroup>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <ButtonGroup>
+                        <Button
+                            stylingMode="2"
+                            text="Cancel"
+                            handleClick={() => navigate("/advertiser/assigned")}
+                            width="auto"
+                        />
+                        <Button
+                            stylingMode="1"
+                            text="Create Activity"
+                            handleClick={handleSubmit}
+                            width="auto"
+                        />
+                    </ButtonGroup>
+                </div>
             </form>
         </PageContainer>
     );
 };
-
-const ModalOverlay = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-
-const ModalContent = styled.div`
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    min-width: 30vw;
-    min-height: 15vh;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-`;
-
-const DateInput = styled.input`
-    flex: 1;
-    padding: 0.75em;
-    border: 1px solid #e0e0e0;
-    border-radius: 0.5em;
-    margin-right: 0.5em;
-
-    &::placeholder {
-        color: #9e9e9e;
-    }
-`;
-
-const DateIcon = styled.span`
-    cursor: pointer;
-    font-size: 1.5em;
-`;
 
 const fadeIn = keyframes`
   from {
@@ -602,133 +765,22 @@ const Input = styled.input`
 `;
 
 const Select = styled.select`
-    width: 100%;
-    padding: 0.75em;
-    border: 0.0625em solid #e0e0e0;
-    border-radius: 0.5em;
-    font-size: 1em;
+    padding: 1vh;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 0.9em;
 `;
 
 const TagContainer = styled.div`
+    margin-top: 1vh;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5em;
-`;
-
-const TagItem = styled.label`
-    background-color: ${(props) => (props.checked ? "#f28b82" : "#f5f5f5")};
-    color: ${(props) => (props.checked ? "#fff" : "#757575")};
-    padding: 0.5em 1em;
-    border-radius: 20px;
-    font-size: 0.9em;
-    cursor: pointer;
-    transition: background-color 0.2s;
-
-    &:hover {
-        background-color: ${(props) => (props.checked ? "#d77d7d" : "#e0e0e0")};
-    }
-`;
-
-const ToggleSwitch = styled.div`
-    position: relative;
-    display: inline-block;
-    width: 3.5em;
-    height: 2em;
-`;
-
-const ToggleInput = styled.input`
-    opacity: 0;
-    width: 0;
-    height: 0;
-
-    &:checked + .toggle-label {
-        background-color: #f28b82;
-
-        &:before {
-            transform: translateX(1.5em);
-        }
-    }
-`;
-
-const ToggleLabel = styled.span`
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    border-radius: 2em;
-    transition: background-color 0.2s;
-
-    &:before {
-        content: "";
-        position: absolute;
-        width: 1.5em;
-        height: 1.5em;
-        left: 0.25em;
-        bottom: 0.25em;
-        background-color: white;
-        border-radius: 50%;
-        transition: transform 0.2s;
-    }
-`;
-
-const ActivityPhotoContainer = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 200px;
-    height: 200px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    margin-bottom: 1.5em;
-`;
-
-const ActivityPhoto = styled.img`
-    max-width: 100%;
-    max-height: 100%;
-`;
-
-const ChooseFileButton = styled.button`
-    background-color: #f28b82;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 0.75em 1.5em;
-    font-size: 0.9em;
-    cursor: pointer;
-    transition: background-color 0.2s;
-
-    &:hover {
-        background-color: #d77d7d;
-    }
-`;
-
-const MapContainer = styled.div`
-    width: 100%;
-    height: 300px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-`;
-
-const BookingStatusContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 2em;
-`;
-
-const BookingStatus = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
+    gap: 1vh;
 `;
 
 const StockControl = styled.div`
     display: flex;
     align-items: center;
-    gap: 1em;
 `;
 
 const StockButton = styled.button`
@@ -746,18 +798,6 @@ const StockButton = styled.button`
     }
 `;
 
-const OpenStatus = styled.div`
-    color: #4caf50;
-`;
-
-const ClosedStatus = styled.div`
-    color: #f44336;
-`;
-
-const CapacityStatus = styled.div`
-    font-weight: bold;
-`;
-
 const ButtonGroup = styled.div`
     display: flex;
     justify-content: flex-end;
@@ -765,114 +805,14 @@ const ButtonGroup = styled.div`
     margin-top: 2em;
 `;
 
-const CancelButton = styled(Button)`
-    stylingmode: "2";
-    text: "Cancel";
-    width: "auto";
-`;
-
-const CreateButton = styled(Button)`
-    stylingmode: "1";
-    text: "Create Activity";
-    width: "auto";
-`;
-
-const DescriptionInput = styled.textarea`
-    width: 100%;
-    padding: 0.75em;
-    border: 0.0625em solid #e0e0e0;
-    border-radius: 0.5em;
-    font-size: 1em;
-    resize: none;
-    min-height: 100px; /* Adjust as needed */
-    &::placeholder {
-        color: #9e9e9e;
-    }
-`;
-
-const ActivityPhotoSection = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 1.5em;
-`;
-
-const ActivityPhotoLabel = styled(Label)`
-    margin-bottom: 0.5em;
-`;
-
-const DateTimeContainer = styled.div`
-    display: flex;
-    gap: 1em;
-    margin-bottom: 1.5em;
-`;
-
-const DatePickerSection = styled.div`
-    flex: 1;
-`;
-
-const TimePickerSection = styled.div`
-    flex: 1;
-`;
-
-const CategorySection = styled.div`
-    margin-bottom: 1.5em;
-`;
-
-const SelectedTagsSection = styled.div`
-    margin-bottom: 1.5em;
-`;
-
-const TagDisplay = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
-`;
-
 const Tag = styled.span`
-    background-color: #f28b82; /* Tag background color */
-    color: white;
-    padding: 0.5em 1em;
-    border-radius: 20px;
-    font-size: 0.9em;
-`;
-
-const CapacityDisplay = styled.div`
-    display: flex;
+    padding: 0.5vh 1vh;
+    background-color: #f4cfbf;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    margin-top: 1em;
-`;
-
-const CapacityLabel = styled.span`
-    font-size: 1em;
-    font-weight: 500;
-`;
-
-const CapacityNumber = styled.span`
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #4caf50; /* Change color based on availability */
-`;
-
-const BookingStatusDisplay = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1em;
-`;
-
-const BookingLabel = styled.span`
-    font-size: 1em;
-    font-weight: 500;
-`;
-
-const StockDisplay = styled.span`
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #333;
-    min-width: 2em;
-    text-align: center;
+    gap: 0.5vh;
 `;
 
 const TextArea = styled.textarea`

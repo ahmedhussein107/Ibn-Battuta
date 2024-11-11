@@ -1,10 +1,10 @@
-// MapComponent.js
 import React from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+const map_api_key = import.meta.env.VITE_MAP_API_KEY;
 
 const containerStyle = {
 	width: "100%",
-	height: "300px",
+	height: "38vh",
 	margin: "auto",
 };
 
@@ -13,9 +13,9 @@ const center = {
 	lng: 31.2357, // Default longitude
 };
 
-const MapComponent = ({ apiKey, markerPosition, onMapClick, customStyles }) => {
+const MapComponent = ({ markerPosition, onMapClick, customStyles }) => {
 	return (
-		<LoadScript googleMapsApiKey={apiKey}>
+		// <LoadScript googleMapsApiKey={apiKey}>
 			<GoogleMap
 				mapContainerStyle={{ containerStyle, ...customStyles }}
 				center={markerPosition || center}
@@ -29,7 +29,7 @@ const MapComponent = ({ apiKey, markerPosition, onMapClick, customStyles }) => {
 			>
 				{markerPosition && <Marker position={markerPosition} />}
 			</GoogleMap>
-		</LoadScript>
+		// </LoadScript>
 	);
 };
 

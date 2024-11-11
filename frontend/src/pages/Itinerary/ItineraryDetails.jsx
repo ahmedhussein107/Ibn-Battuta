@@ -61,6 +61,7 @@ const ItineraryDetails = () => {
 			tags: ["sky diving", "sea"],
 			isActivated: true,
 			isFlagged: false,
+			isOpenForBooking:true,
 			ratings: ["672b666a8c7e37c372c27ebd", ],
 			sumOfRatings: 125,
 			createdAt: "2024-10-07T14:50:25.807Z",
@@ -186,31 +187,27 @@ const ItineraryDetails = () => {
 							);
 						};
 
-						const startTimeFormatted = formatTime(
-							activityObj.startTime
-						);
-						const endTimeFormatted = formatTime(
-							activityObj.endTime
-						);
+                        const startTimeFormatted = formatTime(activityObj.startTime);
+                        const endTimeFormatted = formatTime(activityObj.endTime);
 
-						// Calculate duration in minutes
-						const durationMs =
-							new Date(activityObj.endTime) -
-							new Date(activityObj.startTime);
-						const durationMinutes = Math.floor(durationMs / 60000); // convert ms to minutes
+                        // Calculate duration in minutes
+                        const durationMs =
+                            new Date(activityObj.endTime) -
+                            new Date(activityObj.startTime);
+                        const durationMinutes = Math.floor(durationMs / 60000); // convert ms to minutes
 
-						// Construct the activity object with formatted times and duration
-						return {
-							activityType: activityObj.activityType,
-							activityData: activity,
-							startTime: startTimeFormatted,
-							endTime: endTimeFormatted,
-							duration: `${Math.floor(durationMinutes / 60)}h ${
-								durationMinutes % 60
-							}m`,
-						};
-					})
-				);
+                        // Construct the activity object with formatted times and duration
+                        return {
+                            activityType: activityObj.activityType,
+                            activityData: activity,
+                            startTime: startTimeFormatted,
+                            endTime: endTimeFormatted,
+                            duration: `${Math.floor(durationMinutes / 60)}h ${
+                                durationMinutes % 60
+                            }m`,
+                        };
+                    })
+                );
 
 				const photosData = activitiesData
 					.filter(
@@ -222,20 +219,21 @@ const ItineraryDetails = () => {
 
 				photosData.push(itinerary.picture);
 
-				setPhotoList(photosData);
-				// Update the state with the reviews data
-				setActivities(activitiesData);
-			} catch (error) {
-				console.error("Error fetching activities: ", error);
-			}
-		};
+                setPhotoList(photosData);
+                // Update the state with the reviews data
+                setActivities(activitiesData);
+            } catch (error) {
+                console.error("Error fetching activities: ", error);
+            }
+        };
 
-		fetchActivites();
-	}, [itinerary.activities]);
+        fetchActivites();
+    }, [itinerary.activities]);
 
-	return (
-		<div className="itinerary-details-container">
-			<NavBar />
+    return (
+        <div className="itinerary-details-container">
+            <ItineraryAndActivityHeader mode="itinerary" title={itinerary.itineraryTitle} />
+            <CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
 
 			<PopUp
 				isOpen={BookPopUp}
@@ -267,7 +265,6 @@ const ItineraryDetails = () => {
 				mode="itinerary"
 				title={itinerary.name}
 			/>
-			<CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
 
 			<div className="itinerary-info">
 				<div className="placeholder">
