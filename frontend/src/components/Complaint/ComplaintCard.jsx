@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
+    console.log("complaint in the first thing of the card", complaint);
     const navigate = useNavigate();
     console.log("1");
     console.log("complaint", complaint);
@@ -68,7 +69,7 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
                     <span className="complaint-date">{formattedDate}</span>
                 </div>
                 <div className="status-and-actions">
-                    <span className={`complaint-status ${status}`}>
+                    <span className={`complaint-status-${status}`}>
                         {status.toUpperCase()}
                     </span>
                     {userType === "Admin" && isExpanded && (
