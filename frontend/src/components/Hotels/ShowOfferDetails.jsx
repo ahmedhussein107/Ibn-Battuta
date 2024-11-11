@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./ShowOfferDetails.css";
 import "./HotelCard.css";
 import MapComponent from "../MapComponent";
@@ -10,13 +10,21 @@ import BathtubIcon from "@mui/icons-material/Bathtub";
 import Button from "../Button";
 import { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
-
+import convertCurrency from "../../api/currency";
+import Cookies from "js-cookie";
 const ShowOfferDetails = () => {
     const { state } = useLocation();
     const { offer } = state || {};
     const [isLoading, setIsLoading] = useState(false);
-
     const [bookingId, setBookingId] = useState(offer.bookingId);
+    const [price, setPrice] = useState(offer.totalPrice);
+    useEffect(() => {
+        convertCurrency(offer.totalPrice, "EGP", Cookies.get("currency") || "EGP").then(
+            (result) => {
+                setPrice(result);
+            }
+        );
+    }, []);
     console.log("offer in detail page", offer);
     const handleOnAction = async () => {
         setIsLoading(true);
@@ -123,7 +131,9 @@ const ShowOfferDetails = () => {
                                 <strong>Payment:</strong> {offer.paymentMethod}
                             </p>
                             <p>
-                                <strong>Total Price:</strong> ${offer.totalPrice}
+                                <strong>Total Price:</strong>{" "}
+                                {Cookies.get("currency") || "EGP"}
+                                {price}
                             </p>
                         </div>
                     </div>

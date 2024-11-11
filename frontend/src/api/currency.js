@@ -13,6 +13,6 @@ const getExchangeRates = async (baseCurrency = "EGP", targetCurrency = "USD") =>
 };
 
 const convertCurrency = async (amount, from, to) => {
-    return amount * (await getExchangeRates(from, to));
+    return Math.round(amount * (await getExchangeRates(from, to)) * 100) / 100;
 };
 export default convertCurrency;
