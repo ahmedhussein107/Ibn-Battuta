@@ -2,27 +2,564 @@ import React, { useState, useEffect } from "react";
 import { FaMapMarkerAlt, FaTrash, FaMapMarkerAlt as LocationIcon } from "react-icons/fa";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { createUseStyles } from "react-jss";
+import { useNavigate, useLocation } from "react-router-dom";
+import axiosInstance from "../api/axiosInstance";
+import CardActivity from "./CardActivity";
+import CardCustomActivity from "./CardCustomActivity";
+import CreateCustomActivityPopup from "./CreateCustomActivityPopup";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import CustomButton from "./Button";
+import PopUp from "./PopUpsGeneric/PopUp.jsx";
+
+const TimelineN = ({ date, time }) => {
+    const location = useLocation();
+
+    const classes = useStyles();
+    const [activeTab, setActiveTab] = useState("Activity");
+    const [activities, setActivities] = useState([]);
+    const [customActivities, setCustomActivities] = useState([]);
+    const [timelineActivities, setTimelineActivities] = useState([]);
+    const [convertedDate, setConvertedDate] = useState(null);
+    const [selectedActivity, setSelectedActivity] = useState(null);
+
+    const navigate = useNavigate();
+
+    const [createCustomActivityPopupOpen, setCreateCustomActivityPopupOpen] =
+        useState(false);
+
+    const [showMorePopupOpen, setShowMorePopupOpen] = useState(false);
+    const [showMoreCustomActivty, setShowMoreCustomActivity] = useState(false);
+    const [selectTimeIntervalOpen, setSelectTimeIntervalOpen] = useState(false);
+
+    useEffect(() => {
+        if (!date || !time) return;
+        const [year, month, day] = date.split("-").map(Number);
+        const [hours, minutes] = time.split(":").map(Number);
+        const convertedDate = new Date(year, month - 1, day, hours, minutes);
+        setConvertedDate(convertedDate);
+    }, [date, time]);
+
+    useEffect(() => {
+        if (!convertedDate) return;
+
+        const startDate = new Date(convertedDate);
+        const endDate = new Date(convertedDate);
+        endDate.setHours(startDate.getHours() + 23);
+        endDate.setMinutes(startDate.getMinutes() + 59);
+        endDate.setSeconds(startDate.getSeconds() + 59);
+        const dateRange = startDate.toISOString() + "€" + endDate.toISOString();
+
+        const fetchActivities = async () => {
+            try {
+                const response = await axiosInstance.get(
+                    "/activity/getAllActivities",
+                    { params: { startDate: dateRange } },
+                    {
+                        withCredentials: true,
+                    }
+                );
+                const data = response.data;
+                console.log("activities", data);
+                setActivities(data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        const fetchCustomActivities = async () => {
+            try {
+                const response = await axiosInstance.get(
+                    "/customActivity/getCustomActivityByTourGuideId",
+                    {
+                        withCredentials: true,
+                    }
+                );
+                const data = response.data;
+                console.log("customActivities", data);
+                setCustomActivities(data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchActivities();
+        fetchCustomActivities();
+    }, [convertedDate]);
+
+    const handleDeleteActivity = (activity) => {
+        setTimelineActivities(
+            timelineActivities.filter((act) => act._id !== activity._id)
+        );
+        setActivities([...activities, activity]);
+    };
+
+    const handleDeleteCustom = (activity) => {
+        setTimelineActivities(
+            timelineActivities.filter((act) => act._id !== activity._id)
+        );
+        setCustomActivities([...customActivities, activity]);
+    };
+
+    const handleShowMore = (index) => {
+        const curActivity = timelineActivities[index];
+        if (curActivity.activityType == "Activity") {
+            navigate("activity-datails", { state: { activity: curActivity.activity } });
+        } else if (curActivity.activityType == "CustomActivity") {
+            setShowMoreCustomActivity(curActivity.activity);
+            setShowMorePopupOpen(true);
+        } else {
+            console.log("What is this ??!!");
+        }
+    };
+
+    const CustomActivityPopup = () => {
+        if (!showMoreCustomActivty) return null;
+
+        return (
+            <PopUp
+                isOpen={showMorePopupOpen}
+                setIsOpen={setShowMorePopupOpen}
+                headerText={showMoreCustomActivty.name}
+                containsFooter={false}
+            >
+                <div
+                    style={{
+                        padding: "2em",
+                        width: "90%",
+                        maxHeight: "80vh",
+                        overflowY: "auto",
+                    }}
+                >
+                    <CardCustomActivity
+                        activity={showMoreCustomActivty}
+                        width="100%"
+                        height="50vh"
+                        firstLineButtons={[]}
+                        bottomButtons={[]}
+                    />
+                </div>
+            </PopUp>
+        );
+    };
+
+    const SelectTimeInervalPopup = () => {
+        if (!selectTimeIntervalOpen) return null;
+
+        const [startTime, setStartTime] = useState("");
+        const [endTime, setEndTime] = useState("");
+
+        const handleSubmit = () => {
+            if (!startTime || !endTime) {
+                a;
+                alert("select the time interval!!!!!");
+                return;
+            }
+            console.log("100");
+            let startDate = new Date(convertedDate);
+            console.log("100");
+            console.log(startTime);
+            console.log(startTime);
+            startDate.setHours(startTime.getHours(), startTime.getMinutes());
+            console.log("100");
+            let endDate = new Date(convertedDate);
+            console.log("100");
+            endDate.setHours(endTime.getHours(), endTime.getMinutes());
+            console.log("100");
+            console.log({
+                activityType: activeTab,
+                activity: selectedActivity,
+                startTime: startDate,
+                endTime: endDate,
+            });
+            if (
+                !addActivityToTimeline({
+                    activityType: activeTab,
+                    activity: selectedActivity,
+                    startTime,
+                    endTime,
+                })
+            ) {
+                alert("the activity would intersect with another activity!");
+            }
+            setSelectTimeIntervalOpen(false);
+        };
+
+        return (
+            <PopUp
+                isOpen={selectTimeIntervalOpen}
+                setIsOpen={setSelectTimeIntervalOpen}
+                handleSubmit={handleSubmit}
+                headerText="Set the time interval"
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1em",
+                        alignItems: "center",
+                    }}
+                >
+                    {activeTab == "Activity" && (
+                        <p>
+                            The Activity starts at{" "}
+                            {formatToAMPM(new Date(selectedActivity.startDate))} and ends
+                            at {formatToAMPM(new Date(selectedActivity.endDate))}
+                        </p>
+                    )}
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        padding: "2em",
+                        width: "90%",
+                        overflowY: "auto",
+                        justifyContent: "center",
+                    }}
+                >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoItem label="Start Time">
+                            <StaticTimePicker
+                                onChange={(e) => {
+                                    console.log("start Date:", e.$d);
+                                    setStartTime(e.$d);
+                                }}
+                            />
+                        </DemoItem>
+                        <DemoItem label="End Time">
+                            <StaticTimePicker
+                                onChange={(e) => {
+                                    console.log("end Date:", e.$d);
+                                    setEndTime(e.$d);
+                                }}
+                            />
+                        </DemoItem>
+                    </LocalizationProvider>
+                </div>
+            </PopUp>
+        );
+    };
+
+    function formatToAMPM(date) {
+        let hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        const ampm = hours >= 12 ? "PM" : "AM";
+
+        // Convert hours from 24-hour to 12-hour format
+        hours = hours % 12;
+        hours = hours ? hours : 12; // If hour is 0, set it to 12
+
+        // Format minutes and seconds to be two digits
+        const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+        const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
+        return `${hours}:${formattedMinutes}:${formattedSeconds} ${ampm}`;
+    }
+
+    const addActivityToTimeline = (activity) => {
+        let newTimeline = [...timelineActivities];
+        if (newTimeline.length === 0) {
+            setTimelineActivities([activity]);
+            return true;
+        }
+        if (activity.endTime <= newTimeline[0].startTime) {
+            setTimelineActivities([activity, ...newTimeline]);
+            return true;
+        }
+        const lastActivity = newTimeline[newTimeline.length - 1];
+        if (activity.startTime >= lastActivity.endTime) {
+            setTimelineActivities([...newTimeline, activity]);
+            return true;
+        }
+        for (let i = 0; i + 1 < newTimeline.length; i++) {
+            const currentActivity = newTimeline[i];
+            const nextActivity = newTimeline[i + 1];
+            if (
+                activity.startTime >= currentActivity.endTime &&
+                activity.endTime <= nextActivity.startTime
+            ) {
+                const updatedTimeline = [
+                    ...newTimeline.slice(0, i + 1),
+                    activity,
+                    ...newTimeline.slice(i + 1),
+                ];
+                setTimelineActivities(updatedTimeline);
+                return true;
+            }
+        }
+        return false;
+    };
+
+    return (
+        <>
+            <CreateCustomActivityPopup
+                popUpOpen={createCustomActivityPopupOpen}
+                setPopUpOpen={setCreateCustomActivityPopupOpen}
+            />
+            <CustomActivityPopup />
+            <SelectTimeInervalPopup />
+            <div
+                style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+            >
+                <div className={classes.pageContainer}>
+                    <div className={classes.leftPanel}>
+                        <div className={classes.container}>
+                            <div className={classes.timelineItem}>
+                                <div className={classes.pickupMarker}>
+                                    <FaMapMarkerAlt className={classes.markerIcon} />
+                                </div>
+                                <div className={classes.timelineContent}>
+                                    <h3 className={classes.title}>Pickup</h3>
+                                    <p className={classes.details}>
+                                        7:00 am - Pickup Location
+                                    </p>
+                                </div>
+                            </div>
+
+                            <TransitionGroup>
+                                {timelineActivities.map((activity, index) => (
+                                    <CSSTransition
+                                        key={index}
+                                        timeout={300}
+                                        classNames="scale"
+                                    >
+                                        <div className={classes.timelineItem}>
+                                            <div className={classes.starMarker}>
+                                                <svg
+                                                    className={classes.starIcon}
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        fill="white"
+                                                        d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <div className={classes.timelineContent}>
+                                                <h3 className={classes.title}>
+                                                    {activity.activity.name}
+                                                </h3>
+                                                <p className={classes.details}>
+                                                    {formatToAMPM(activity.startTime)}
+                                                </p>
+                                                <p className={classes.details}>
+                                                    {formatToAMPM(activity.endTime)}
+                                                </p>
+                                                <p
+                                                    className={classes.details}
+                                                    onClick={() => handleShowMore(index)}
+                                                    style={{
+                                                        cursor: "pointer",
+                                                        color: "var(--accent-color)",
+                                                    }}
+                                                >
+                                                    Show more
+                                                </p>
+                                            </div>
+                                            <button
+                                                onClick={() => handleDelete(index)}
+                                                className={classes.deleteButton}
+                                            >
+                                                <FaTrash />
+                                            </button>
+                                        </div>
+                                    </CSSTransition>
+                                ))}
+                            </TransitionGroup>
+
+                            <div className={classes.timelineItem}>
+                                <div className={classes.dropoffMarker}></div>
+                                <div className={classes.timelineContent}>
+                                    <h3 className={classes.title}>
+                                        7 drop-off locations:
+                                    </h3>
+                                    <p className={classes.details}>
+                                        Stratosphere Casino, Hotel & Tower, Park MGM Las
+                                    </p>
+                                    <p className={classes.details}>See more</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={classes.activitiesList}>
+                        <div className={classes.tabsContainer}>
+                            <button
+                                className={`${classes.tab} ${
+                                    activeTab === "Activity"
+                                        ? classes.activeTab
+                                        : classes.inactiveTab
+                                }`}
+                                onClick={() => setActiveTab("Activity")}
+                            >
+                                Activities
+                            </button>
+                            <button
+                                className={`${classes.tab} ${
+                                    activeTab === "CustomActivity"
+                                        ? classes.activeTab
+                                        : classes.inactiveTab
+                                }`}
+                                onClick={() => setActiveTab("CustomActivity")}
+                            >
+                                Custom Activities
+                            </button>
+                        </div>
+
+                        <div className={classes.cardsContainer}>
+                            {activeTab === "Activity" &&
+                                activities.map((activity) => (
+                                    <CardActivity
+                                        activity={activity}
+                                        width={"55vw"}
+                                        height={"30vh"}
+                                        fontSize="0.8rem"
+                                        iconSize="0.7rem"
+                                        bottomButtons={[
+                                            {
+                                                text: "Add",
+                                                onClick: () => {
+                                                    setSelectedActivity(activity);
+                                                    setSelectTimeIntervalOpen(true);
+                                                },
+                                                type: "1",
+                                                width: "50%",
+                                                styles: {
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    padding: "0.5em",
+                                                },
+                                            },
+                                        ]}
+                                    />
+                                ))}
+
+                            {activeTab === "CustomActivity" && (
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        gap: "1vh",
+                                    }}
+                                >
+                                    {customActivities.map((activity) => (
+                                        <CardCustomActivity
+                                            key={activity.id}
+                                            activity={activity}
+                                            width={"55vw"}
+                                            height={"30vh"}
+                                            fontSize="0.8rem"
+                                            iconSize="0.7rem"
+                                            bottomButtons={[
+                                                {
+                                                    text: "Add",
+                                                    onClick: () => {
+                                                        setSelectedActivity(activity);
+                                                        setSelectTimeIntervalOpen(true);
+                                                    },
+                                                    type: "1",
+                                                    width: "50%",
+                                                    styles: {
+                                                        display: "flex",
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                        padding: "0.5em",
+                                                    },
+                                                },
+                                            ]}
+                                        />
+                                    ))}
+                                    <div style={{ display: "flex", gap: "1vw" }}>
+                                        Don't see what you want?{" "}
+                                        <p
+                                            style={{
+                                                color: "#4169E1",
+                                                cursor: "pointer",
+                                            }}
+                                            onClick={() =>
+                                                setCreateCustomActivityPopupOpen(true)
+                                            }
+                                        >
+                                            Create a new custom activity
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        width: "50%",
+                        marginBottom: "2vh",
+                    }}
+                >
+                    <CustomButton
+                        stylingMode="2"
+                        text="Previous"
+                        handleClick={() => {
+                            navigate(-1);
+                        }}
+                        customStyle={{ width: "10vw" }}
+                    />
+                    <CustomButton
+                        stylingMode="1"
+                        text="Create Itinerary"
+                        handleClick={async () => {
+                            let totalPrice = location.state.price;
+                            timelineActivities.forEach((activity) => {
+                                if (activity.activityType === "Activity")
+                                    totalPrice += activity.activity.price;
+                            });
+                            try {
+                                const response = await axiosInstance.post(
+                                    "/itinerary/createItinerary",
+                                    {
+                                        activities: timelineActivities,
+                                        ...location.state,
+                                        availableDatesAndTimes: [convertedDate],
+                                        price: totalPrice,
+                                        picture: timelineActivities[0].activity.picture,
+                                    },
+                                    {
+                                        withCredentials: true,
+                                    }
+                                );
+                                console.log(response.data);
+                                navigate("/tourguide/assigned");
+                            } catch (error) {
+                                console.error(error);
+                                alert("Error creating itinerary");
+                            }
+                        }}
+                        styles={{ width: "10vw" }}
+                    />
+                </div>
+            </div>
+        </>
+    );
+};
 
 const useStyles = createUseStyles({
     pageContainer: {
         display: "flex",
         gap: "2vw",
         padding: "2vh",
-        maxWidth: "90vw",
-        margin: "auto",
-        position: "relative",
+        width: "95vw",
+        justifyContent: "space-between",
     },
     leftPanel: {
-        position: "sticky",
-        top: "2vh",
-        // left: "0vh",
-        height: "fit-content",
-        flex: "0 0 40vw",
-        marginLeft: "-5vw",
-        // minwidth: "-10vw",
+        width: "23vw",
     },
     container: {
-        position: "relative",
         padding: "2vh",
         width: "100%",
         backgroundColor: "#f8f8f8",
@@ -30,7 +567,6 @@ const useStyles = createUseStyles({
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
     },
     timelineLine: {
-        position: "absolute",
         top: "8vh",
         left: "3vw",
         width: "0.8vw",
@@ -114,11 +650,16 @@ const useStyles = createUseStyles({
         marginLeft: "1vw",
     },
     activitiesList: {
-        flex: 1,
-        maxWidth: "35vw",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#f8f8f8",
+        borderRadius: "10px",
+        padding: "2vh 1vw",
+        alignItems: "center",
+        width: "60vw",
         maxHeight: "100vh",
         overflow: "auto",
-        marginLeft: "5vw",
+        marginLeft: "1vw",
     },
     tabsContainer: {
         display: "flex",
@@ -142,6 +683,11 @@ const useStyles = createUseStyles({
         backgroundColor: "white",
         color: "#333",
         border: "1px solid #ddd",
+    },
+    cardsContainer: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "2vh",
     },
     activityCard: {
         backgroundColor: "white",
@@ -218,263 +764,5 @@ const useStyles = createUseStyles({
         },
     },
 });
-
-const TimelineN = () => {
-    const classes = useStyles();
-    const [activeTab, setActiveTab] = useState("activities");
-    const [timelineActivities, setTimelineActivities] = useState([
-        { name: "Activity 1", time: "7:30 am - 9:00 am", details: "See more" },
-        {
-            name: "Hoover Dam",
-            time: "11:00 am - 12:00 pm",
-            details: "Exploring the dam and its history",
-        },
-        {
-            name: "Grand Canyon West Rim",
-            time: "1:00 pm - 3:00 pm",
-            details: "Sightseeing and guided activities",
-        },
-        {
-            name: "Eagle Point",
-            time: "3:30 pm - 4:00 pm",
-            details: "Scenic view and photo stop",
-        },
-        {
-            name: "Guano Point",
-            time: "Visit, Lunch, Sightseeing (1 hour)",
-            details: "Lunch and sightseeing stop",
-        },
-        {
-            name: "Arizona's Joshua Tree Forest",
-            time: "Visit (15 minutes)",
-            details: "Short stop at the Joshua Tree forest",
-        },
-    ]);
-
-    const [availableActivities, setAvailableActivities] = useState([
-        {
-            id: 1,
-            name: "Desert Safari Adventure",
-            location: "Cairo, EG",
-            category: "Adventure",
-            date: "02/11/2024",
-            description:
-                "This itinerary offers a mix of cultural exploration, outdoor adventures, and relaxation, allowing you to experience the destination's highlights.",
-            price: 79.4,
-            rating: 5,
-            reviews: 1340,
-            seats: 5,
-            image: "/api/placeholder/400/320",
-        },
-        {
-            id: 2,
-            name: "Nile River Cruise",
-            location: "Cairo, EG",
-            category: "Cruise",
-            date: "02/11/2024",
-            description:
-                "Experience the majestic Nile River with our luxury cruise package, featuring dinner and entertainment.",
-            price: 89.9,
-            rating: 4,
-            reviews: 890,
-            seats: 8,
-            image: "/api/placeholder/400/320",
-        },
-        {
-            id: 3,
-            name: "Pyramid Tour",
-            location: "Cairo, EG",
-            category: "Cultural",
-            date: "02/12/2024",
-            description:
-                "Explore the ancient pyramids with our expert guides and learn about Egyptian history.",
-            price: 65.0,
-            rating: 5,
-            reviews: 2100,
-            seats: 12,
-            image: "/api/placeholder/400/320",
-        },
-    ]);
-
-    const [timelineHeight, setTimelineHeight] = useState(0);
-
-    useEffect(() => {
-        setTimelineHeight((timelineActivities.length + 2) * 9 + 3.5);
-    }, [timelineActivities]);
-
-    const handleDelete = (index) => {
-        const removedActivity = timelineActivities[index];
-        setTimelineActivities(timelineActivities.filter((_, i) => i !== index));
-        setAvailableActivities([
-            ...availableActivities,
-            {
-                id: Date.now(),
-                name: removedActivity.name,
-                location: "Cairo, EG",
-                category: "Activity",
-                date: removedActivity.time,
-                description: removedActivity.details,
-                price: 79.4,
-                rating: 5,
-                reviews: 1340,
-                seats: 5,
-                image: "/api/placeholder/400/320",
-            },
-        ]);
-    };
-
-    const handleAdd = (activity) => {
-        setTimelineActivities([
-            ...timelineActivities,
-            {
-                name: activity.name,
-                time: activity.date,
-                details: activity.description,
-            },
-        ]);
-        setAvailableActivities(availableActivities.filter((a) => a.id !== activity.id));
-    };
-
-    return (
-        <div className={classes.pageContainer}>
-            <div className={classes.leftPanel}>
-                <div className={classes.container}>
-                    <div
-                        className={classes.timelineLine}
-                        style={{ height: `${timelineHeight}vh` }}
-                    ></div>
-
-                    <div className={classes.timelineItem}>
-                        <div className={classes.pickupMarker}>
-                            <FaMapMarkerAlt className={classes.markerIcon} />
-                        </div>
-                        <div className={classes.timelineContent}>
-                            <h3 className={classes.title}>Pickup</h3>
-                            <p className={classes.details}>7:00 am - Pickup Location</p>
-                        </div>
-                    </div>
-
-                    <TransitionGroup>
-                        {timelineActivities.map((activity, index) => (
-                            <CSSTransition key={index} timeout={300} classNames="scale">
-                                <div className={classes.timelineItem}>
-                                    <div className={classes.starMarker}>
-                                        <svg
-                                            className={classes.starIcon}
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                fill="white"
-                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className={classes.timelineContent}>
-                                        <h3 className={classes.title}>{activity.name}</h3>
-                                        <p className={classes.details}>{activity.time}</p>
-                                        <p className={classes.details}>
-                                            {activity.details}
-                                        </p>
-                                    </div>
-                                    <button
-                                        onClick={() => handleDelete(index)}
-                                        className={classes.deleteButton}
-                                    >
-                                        <FaTrash />
-                                    </button>
-                                </div>
-                            </CSSTransition>
-                        ))}
-                    </TransitionGroup>
-
-                    <div className={classes.timelineItem}>
-                        <div className={classes.dropoffMarker}></div>
-                        <div className={classes.timelineContent}>
-                            <h3 className={classes.title}>7 drop-off locations:</h3>
-                            <p className={classes.details}>
-                                Stratosphere Casino, Hotel & Tower, Park MGM Las
-                            </p>
-                            <p className={classes.details}>See more</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className={classes.activitiesList}>
-                <div className={classes.tabsContainer}>
-                    <button
-                        className={`${classes.tab} ${
-                            activeTab === "activities"
-                                ? classes.activeTab
-                                : classes.inactiveTab
-                        }`}
-                        onClick={() => setActiveTab("activities")}
-                    >
-                        Activities
-                    </button>
-                    <button
-                        className={`${classes.tab} ${
-                            activeTab === "custom"
-                                ? classes.activeTab
-                                : classes.inactiveTab
-                        }`}
-                        onClick={() => setActiveTab("custom")}
-                    >
-                        Custom Activities
-                    </button>
-                </div>
-
-                {availableActivities.map((activity) => (
-                    <div key={activity.id} className={classes.activityCard}>
-                        <img
-                            src={activity.image}
-                            alt={activity.name}
-                            className={classes.activityImage}
-                        />
-                        <div className={classes.activityInfo}>
-                            <div className={classes.activityHeader}>
-                                <h3 className={classes.title}>{activity.name}</h3>
-                                <button
-                                    onClick={() => handleAdd(activity)}
-                                    className={classes.addButton}
-                                >
-                                    Add
-                                </button>
-                            </div>
-                            <div className={classes.activityMetadata}>
-                                <LocationIcon size={14} /> {activity.location}
-                                <span>Category</span>
-                                <span>Tags</span>
-                                <span>{activity.date}</span>
-                            </div>
-                            <p className={classes.details}>{activity.description}</p>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    marginTop: "1vh",
-                                }}
-                            >
-                                <div className={classes.rating}>
-                                    {"★".repeat(activity.rating)}
-                                    <span style={{ color: "#666" }}>
-                                        ({activity.reviews})
-                                    </span>
-                                </div>
-                                <div className={classes.seats}>
-                                    {activity.seats} Available Seats
-                                </div>
-                                <div style={{ fontWeight: "bold" }}>
-                                    USD {activity.price}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
 
 export default TimelineN;

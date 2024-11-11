@@ -1,6 +1,6 @@
-// MapComponent.js
 import React from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+const map_api_key = import.meta.env.VITE_MAP_API_KEY;
 
 const containerStyle = {
     width: "100%",
@@ -9,27 +9,25 @@ const containerStyle = {
 };
 
 const center = {
-    lat: 30.0444, // Default latitude (Cairo for example)
+    lat: 30.0444, // Default latitude (Cairo)
     lng: 31.2357, // Default longitude
 };
 
-const MapComponent = ({ apiKey, markerPosition, onMapClick }) => {
+const MapComponent = ({ markerPosition, onMapClick }) => {
     return (
-        <LoadScript googleMapsApiKey={apiKey}>
-            <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={markerPosition || center}
-                zoom={10}
-                onClick={(event) =>
-                    onMapClick({
-                        lat: event.latLng.lat(),
-                        lng: event.latLng.lng(),
-                    })
-                }
-            >
-                {markerPosition && <Marker position={markerPosition} />}
-            </GoogleMap>
-        </LoadScript>
+        <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={markerPosition || center}
+            zoom={10}
+            onClick={(event) =>
+                onMapClick({
+                    lat: event.latLng.lat(),
+                    lng: event.latLng.lng(),
+                })
+            }
+        >
+            {markerPosition && <Marker position={markerPosition} />}
+        </GoogleMap>
     );
 };
 

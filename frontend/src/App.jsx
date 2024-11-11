@@ -43,6 +43,8 @@ import AllItineraries from "./pages/Admin/AllItineraries";
 import Shop from "./pages/Product/Shop.jsx";
 import Bookings from "./pages/Tourist/Bookings.jsx";
 import NavBar from "./components/NavBar.jsx";
+import ShowOfferDetails from "./components/Hotels/ShowOfferDetails.jsx";
+import HotelList from "./components/Hotels/HotelList.jsx";
 import Orders from "./pages/Tourist/Orders.jsx";
 import TermsAndConditions from "./pages/Privacy/TermsAndConditions";
 import Flights from "./pages/Flights/Flights";
@@ -132,6 +134,11 @@ function App() {
                         <Route path="/bookings" element={<Bookings />} />
                         <Route path="/orders" element={<Orders />} />
 
+                        <Route path="/hotel/offers" element={<HotelList />} />
+                        <Route
+                            path="/hotel/offer-details/:id"
+                            element={<ShowOfferDetails />}
+                        />
                         <Route path="/privacy" element={<TermsAndConditions />} />
                         <Route path="/flights" element={<Flights />} />
                     </Route>

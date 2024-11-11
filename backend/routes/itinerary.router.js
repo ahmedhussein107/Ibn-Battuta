@@ -17,7 +17,7 @@ import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const itineraryRouter = express.Router();
 
-itineraryRouter.post("/createItinerary", createItinerary);
+itineraryRouter.post("/createItinerary", isAuthenticated, createItinerary);
 
 itineraryRouter.patch("/updateItinerary/:id", updateItinerary);
 
