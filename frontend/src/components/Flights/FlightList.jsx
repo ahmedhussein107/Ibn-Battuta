@@ -1,6 +1,9 @@
 import FlightCard from "./FlightCard";
+import { useNavigate } from "react-router-dom";
 
 const FlightList = ({ flightOffers, flightBookings, airlines, handleView, mode = 1 }) => {
+    const navigate = useNavigate();
+
     return (
         <div
             style={{
@@ -27,8 +30,16 @@ const FlightList = ({ flightOffers, flightBookings, airlines, handleView, mode =
                     <FlightCard
                         key={index}
                         trip={flightBooking.flightOffers[0]}
-                        airlines={airlines}
-                        handleClick={() => handleView(index)}
+                        airlines={airlines || flightBooking.airlines || {}}
+                        handleClick={() =>
+                            navigate("/flight-booking-details", {
+                                state: {
+                                    flightOffer: flightBooking.flightOffers[0],
+                                    airlines: airlines || flightBooking.airlines || {},
+                                    bookingNumber: flightBooking.id,
+                                },
+                            })
+                        }
                         mode={2}
                         bookingNumber={flightBooking.id}
                     />

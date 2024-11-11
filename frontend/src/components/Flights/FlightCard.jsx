@@ -19,7 +19,7 @@ const FlightCard = ({ trip, airlines, handleClick, mode = 1, bookingNumber }) =>
             borderRadius: "2vh 0 0 2vh",
             display: "flex",
             flexDirection: "column", // Add this
-            alignItems: "center", // Center horizontally
+            //alignItems: "center", // Center horizontally
             justifyContent: "center",
             gap: "1vh",
         },
@@ -36,25 +36,42 @@ const FlightCard = ({ trip, airlines, handleClick, mode = 1, bookingNumber }) =>
         },
         bookingNumber: {
             fontSize: "1vw",
-            color: "rgb(127,125,125)",
+            color: "rgb(50,50,50)",
+            fontWeight: 500,
+            marginBottom: "3vh",
+        },
+        booking: {
+            fontSize: "1vw",
+            fontWeight: "bold",
+            marginBottom: "3vh",
+        },
+        trips: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "1vh",
         },
     };
 
     return (
         <div style={styles.card}>
             <div style={styles.cardLeft}>
-                <div
-                    style={{
-                        gap: "1vh",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
-                    {mode == 2 && (
-                        <span style={styles.bookingNumber}>{`#${bookingNumber}`}</span>
-                    )}
+                {mode == 2 && (
+                    <div
+                        style={{
+                            margin: "0 0 2% 0",
+                            position: "relative",
+                            top: "0",
+                            left: "3%",
+                        }}
+                    >
+                        {" "}
+                        <span style={styles.booking}>{"Booking ID: "}</span>
+                        <span style={styles.bookingNumber}>{bookingNumber}</span>
+                    </div>
+                )}
+                <div style={styles.trips}>
                     {trip.itineraries.map((flight, index) => (
                         <TripDetails flight={flight} airlines={airlines} key={index} />
                     ))}

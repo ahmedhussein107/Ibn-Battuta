@@ -114,6 +114,7 @@ const Flights = () => {
                 "/amadeus/flights/book",
                 {
                     flightOffer: selectedFlightOffer,
+                    airlines,
                 },
                 { withCredentials: true }
             );
