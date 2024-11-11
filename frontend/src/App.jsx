@@ -86,9 +86,9 @@ function App() {
 
                         {/* other pages */}
                         <Route path="/activities" element={<Activities />} />
-                        <Route path="/activity-details" element={<ActivityDetails />} />
+                        <Route path="/activity-details/:activityId" element={<ActivityDetails />} />
                         <Route path="/itineraries" element={<Itineraries />} />
-                        <Route path="/itinerary-details" element={<ItineraryDetails />} />
+                        <Route path="/itinerary-details/:itineraryId" element={<ItineraryDetails />} />
                         <Route path="/landmarks" element={<Landmarks />} />
                         <Route path="/shop" element={<Shop />} />
 

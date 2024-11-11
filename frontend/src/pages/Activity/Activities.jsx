@@ -13,7 +13,7 @@ import Footer from "../../components/Footer";
 import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
 import CardActivity from "../../components/CardActivity";
 import ShareAndMark from "../../components/ShareAndMark";
-
+import { useNavigate } from "react-router-dom";
 const minPrice = 0;
 const maxPrice = 1000;
 
@@ -30,7 +30,7 @@ const Activities = () => {
     const [sortBy, setSortBy] = useState("priceAsc");
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
-
+    const navigate = useNavigate();
     const fetchTags = async () => {
         try {
             const response = await axiosInstance.get(`/tag/allTags/`);
@@ -272,9 +272,7 @@ const Activities = () => {
                                     {
                                         text: "Book Now",
                                         onClick: () =>
-                                            navigate("/activity-details", {
-                                                state: activity,
-                                            }),
+                                            navigate(`/activity-details${activity.id}`),
                                         type: "1",
                                         width: "50%",
                                         styles: {

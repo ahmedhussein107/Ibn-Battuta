@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 // External libraries or API instance
 import axiosInstance from "../../api/axiosInstance";
 
@@ -30,55 +30,29 @@ import "../../styles/ItineraryDetails.css";
 const ItineraryDetails = () => {
 	const location = useLocation();
 	usePageHeader(null, null);
-	const [itinerary, setItinerary] = useState(
-		(location.state && location.state.itineraryDetails) || {
-			_id: "6703f5310ecc1ad25ff95144",
-			name: "Tour in GUC (Don't touch it)",
-			description:
-				"Join me on a tour of GUC, where algorithms roam free, data structures tower like monuments, and every lecture hall holds the secrets of untamed code. Get ready to navigate loops, dodge runtime errors, and debug your way to enlightenment! And finally Balabizo!",
-			tourguideID: "6700044e887e126c909d6f21",
-			activities: [
-				{
-					activityType: "Activity",
-					activity: "672fb44bebf736b1cf3d51a8",
-					startTime: "2024-11-07T09:30:00.000Z",
-					endTime: "2024-11-07T12:45:00.000Z",
-				},
-				{
-					activityType: "Activity",
-					activity: "672fb349ebf736b1cf3d519b",
-					startTime: "2024-11-07T09:30:00.000Z",
-					endTime: "2024-11-07T12:45:00.000Z",
-				},
-			],
-			pickupTime: "2024-11-07T12:45:00.000Z",
-			language: "Arabic",
-			accessibility: ["weelchair", "ambulance cars"],
-			price: 1000,
-			availableDateAndTime: "2024-12-20T00:00:00.000Z",
-			pickup: "GUC",
-			dropOff: "GUC",
-			tags: ["sky diving", "sea"],
-			isActivated: true,
-			isFlagged: false,
-			isOpenForBooking:true,
-			ratings: ["672b666a8c7e37c372c27ebd", ],
-			sumOfRatings: 125,
-			createdAt: "2024-10-07T14:50:25.807Z",
-			updatedAt: "2024-11-06T12:51:54.972Z",
-			location: "Cairo,Eg",
-			picture: "https://i.postimg.cc/dtYPjDgS/guc.jpg",
-			__v: 1,
-			rating: 125,
-			id: "6703f5310ecc1ad25ff95144",
-		}
-	);
+	//6703f5310ecc1ad25ff95144
+	const {itineraryId} = useParams();
+	const [itinerary, setItinerary] = useState(null);
 
 	//For mangaing page logic
 	const [BookPopUp, setBookPopUp] = useState(false);
 	const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
 
+	useEffect ( () => {
+
+		const fetchItinerary = async () => {
+			try {
+				const itineraryResponse = await axiosInstance.get(`itinerary/getItinerary/${itineraryId}`);
+                setItinerary(itineraryResponse.data);
+			} catch (err) {
+				console.error("Error fetching itinerary:", err);
+			}
+
+		}
+		fetchItinerary();
+	}, [itineraryId])
 	const handleBooking = async () => {
+		if(!itinerary) return;
 		try {
 			// TODO: add different ways of payeen
 
@@ -130,12 +104,13 @@ const ItineraryDetails = () => {
 	const [activities, setActivities] = useState([]);
 	const [ticketCount, setTicketCount] = useState(0);
 	const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
-	const totalPrice = itinerary.price * ticketCount;
+	const totalPrice = (itinerary)? itinerary.price * ticketCount : 0;
 
 	//For getting free spots
 
 	//For Tour guide name and photo
 	useEffect(() => {
+		if(!itinerary) return;
 		const fetchTourGuide = async () => {
 			try {
 				const response = await axiosInstance.get(
@@ -149,10 +124,11 @@ const ItineraryDetails = () => {
 			}
 		};
 		fetchTourGuide();
-	}, [itinerary.tourguideID]);
+	}, [itinerary]);
 
 	//For activities and photos
 	useEffect(() => {
+		if(!itinerary) return;
 		const fetchActivites = async () => {
 			try {
 				const activitiesData = await Promise.all(
@@ -187,27 +163,31 @@ const ItineraryDetails = () => {
 							);
 						};
 
-                        const startTimeFormatted = formatTime(activityObj.startTime);
-                        const endTimeFormatted = formatTime(activityObj.endTime);
+						const startTimeFormatted = formatTime(
+							activityObj.startTime
+						);
+						const endTimeFormatted = formatTime(
+							activityObj.endTime
+						);
 
-                        // Calculate duration in minutes
-                        const durationMs =
-                            new Date(activityObj.endTime) -
-                            new Date(activityObj.startTime);
-                        const durationMinutes = Math.floor(durationMs / 60000); // convert ms to minutes
+						// Calculate duration in minutes
+						const durationMs =
+							new Date(activityObj.endTime) -
+							new Date(activityObj.startTime);
+						const durationMinutes = Math.floor(durationMs / 60000); // convert ms to minutes
 
-                        // Construct the activity object with formatted times and duration
-                        return {
-                            activityType: activityObj.activityType,
-                            activityData: activity,
-                            startTime: startTimeFormatted,
-                            endTime: endTimeFormatted,
-                            duration: `${Math.floor(durationMinutes / 60)}h ${
-                                durationMinutes % 60
-                            }m`,
-                        };
-                    })
-                );
+						// Construct the activity object with formatted times and duration
+						return {
+							activityType: activityObj.activityType,
+							activityData: activity,
+							startTime: startTimeFormatted,
+							endTime: endTimeFormatted,
+							duration: `${Math.floor(durationMinutes / 60)}h ${
+								durationMinutes % 60
+							}m`,
+						};
+					})
+				);
 
 				const photosData = activitiesData
 					.filter(
@@ -219,21 +199,25 @@ const ItineraryDetails = () => {
 
 				photosData.push(itinerary.picture);
 
-                setPhotoList(photosData);
-                // Update the state with the reviews data
-                setActivities(activitiesData);
-            } catch (error) {
-                console.error("Error fetching activities: ", error);
-            }
-        };
+				setPhotoList(photosData);
+				// Update the state with the reviews data
+				setActivities(activitiesData);
+			} catch (error) {
+				console.error("Error fetching activities: ", error);
+			}
+		};
 
-        fetchActivites();
-    }, [itinerary.activities]);
+		fetchActivites();
+	}, [itinerary]);
 
-    return (
-        <div className="itinerary-details-container">
-            <ItineraryAndActivityHeader mode="itinerary" title={itinerary.itineraryTitle} />
-            <CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
+	if(!itinerary) return null ;
+	return (
+		<div className="itinerary-details-container">
+			<ItineraryAndActivityHeader
+				mode="itinerary"
+				title={itinerary.itineraryTitle}
+			/>
+			<CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
 
 			<PopUp
 				isOpen={BookPopUp}
@@ -258,7 +242,7 @@ const ItineraryDetails = () => {
 				containsActionButton={false}
 				cancelText={"Ok"}
 			>
-				<SuccessfulBooking  points={pointsAdded}/>
+				<SuccessfulBooking points={pointsAdded} />
 			</PopUp>
 
 			<ItineraryAndActivityHeader

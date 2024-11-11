@@ -11,7 +11,7 @@ import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import CardItinerary from "../../components/CardItinerary";
 import ShareAndMark from "../../components/ShareAndMark";
-
+import { useNavigate } from "react-router-dom";
 const minPrice = 0;
 const maxPrice = 1000;
 
@@ -23,6 +23,7 @@ const Itineraries = () => {
     const [sortBy, setSortBy] = useState("priceAsc");
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
+    const navigate = useNavigate();
 
     const fetchTags = async () => {
         try {
@@ -211,9 +212,7 @@ const Itineraries = () => {
                                     {
                                         text: "Book Now",
                                         onClick: () =>
-                                            navigate("/itinerary-details", {
-                                                state: { itinerary },
-                                            }),
+                                            navigate(`/itinerary-details/${itinerary.id}`),
                                         type: "1",
                                         width: "70%",
                                     },

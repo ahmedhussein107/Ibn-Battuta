@@ -1,7 +1,7 @@
 import React, { useState, useEffect, act } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
-// External libraries or API instance
+// External libraries or API instance 
 import axiosInstance from "../../api/axiosInstance";
 
 // Top-level components
@@ -28,28 +28,32 @@ import Map from "../map.jsx";
 import "../../styles/ActivityDetails.css";
 
 export default function ActivityDetails() {
-	const location = useLocation();
-	const activityData = (location.state && location.state.activityData) || {
-		_id: "672faf9887fad62d0420dbc4",
-		advertiserID: "67040377731df0ac20353236",
-		name: "Conan",
-		description: "Discovers the mysterious and the exciting",
-		pictures: ["https://i.postimg.cc/28ChMPc3/conan.webp"],
 
-		startDate: "2024-12-22T22:00:00.000+00:00",
-		endDate: "2024-12-23T04:00:00.000+00:00",
-		price: 1000,
-		category: "YahiaSherif",
-		tags: ["tag1", "tag2", "tag3"],
-		ratings: ["672b666a8c7e37c372c27ebd"],
-		isOpenForBooking: true,
-		isFlagged: false,
-		sumOfRatings: 0,
-		freeSpots: 2,
-		specialDiscount: 20,
-		createdAt: "2024-11-09T18:53:12.846+00:00",
-		updatedAt: "2024-11-09T18:53:12.846+00:00",
-	};
+	const [activityData, setActivityData] = useState (null);
+	const {activityId} = useParams();
+	// console.log(`The activity id ${activityId}`);
+	useEffect( () => {
+		console.log("Here");
+		if(activityData) return ;
+
+		const fetchActivityData = async () => {
+			try {
+				console.log(`Fetching activity data`)
+				const activityResponse = await axiosInstance.get (
+					`activity/getActivity/${activityId}`
+				)
+				
+				setActivityData(activityResponse.data);
+			}catch (error) {
+				console.error("Error fetching activity data:", error);
+			}
+		};
+
+		if(activityId) {
+			fetchActivityData();
+		}
+		
+	}, [activityId])
 	//For mangaing page logic
 	const [BookPopUp, setBookPopUp] = useState(false);
 	const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
@@ -109,7 +113,9 @@ export default function ActivityDetails() {
 	//For advertiser name
 	useEffect(() => {
 		const fetchAdvertiser = async () => {
+			if(!activityData) return
 			try {
+				console.log ('Im here')
 				const response = await axiosInstance.get(
 					`advertiser/advertiser/${activityData.advertiserID}`
 				);
@@ -120,8 +126,11 @@ export default function ActivityDetails() {
 			}
 		};
 		fetchAdvertiser();
-	}, [activityData.tourguideID]);
+	}, [activityData]);
 
+	if (!activityData) {
+		return <div>Loading...</div>;
+	}
 	return (
 		<div className="activity-details-container">
 			<NavBar />
