@@ -8,6 +8,7 @@ import GenericCard from "../../components/GenericCard";
 import CardBooking from "../../components/CardBooking";
 import TouristHotelBookings from "../../components/Hotels/TouristHotelBookings";
 import HotelList from "../../components/Hotels/HotelList";
+import FlightList from "../../components/Flights/FlightList";
 
 const Bookings = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +30,7 @@ const Bookings = () => {
     const URI = {
         Itineraries: "booking/getItineraryBookings",
         Activities: "booking/getActivityBookings",
-        Flights: "booking/getActivityBookings",
+        Flights: "booking/getFlightBookings",
         Hotels: "booking/getHotelBookings",
     };
 
@@ -93,7 +94,15 @@ const Bookings = () => {
                             ))}
                         </>
                     )}
-                    {selected == "Flights" && <> </>}
+                    {selected == "Flights" && (
+                        <FlightList
+                            flightBookings={bookings}
+                            mode={2}
+                            handleView={(index) => {
+                                console.log(index);
+                            }}
+                        />
+                    )}
                     {selected == "Hotels" && <TouristHotelBookings rooms={bookings} />}
                 </div>
                 <PaginationComponent

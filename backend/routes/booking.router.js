@@ -11,13 +11,14 @@ import {
     getitineraryBookings,
     getActivityBookings,
     getHotelBookings,
+    getFlightBookings,
 } from "../controllers/booking.controller.js";
 
 bookingRouter.get("/getBookings", getBookings);
 
 bookingRouter.post("/createBooking", isAuthenticated, createBooking);
-bookingRouter.get("/getBooking/:id", getBooking);
 
+bookingRouter.get("/getBooking/:id", getBooking);
 
 bookingRouter.patch("/updateBooking/:id", updateBooking);
 
@@ -30,4 +31,7 @@ bookingRouter.get("/getItineraryBookings", isAuthenticated, getitineraryBookings
 bookingRouter.get("/getActivityBookings", isAuthenticated, getActivityBookings);
 
 bookingRouter.get("/getHotelBookings", isAuthenticated, getHotelBookings);
+
+bookingRouter.get("/getFlightBookings", isAuthenticated, getFlightBookings);
+
 export default bookingRouter;

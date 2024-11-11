@@ -28,9 +28,7 @@ export const createSeller = async (req, res) => {
             req.body.password = hashedPassword;
 
             const newSeller = await Seller.create(req.body);
-            assignCookies(res, "Seller", newSeller._id)
-                .status(201)
-                .json({ message: "Sign up successful" });
+            res.status(201).json({ message: "Sign up successful", user: newSeller });
         } else {
             if (username) {
                 res.status(400).json({ e: "Username already exists" });

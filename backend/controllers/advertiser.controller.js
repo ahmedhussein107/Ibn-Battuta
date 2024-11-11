@@ -27,9 +27,7 @@ export const createAdvertiser = async (req, res) => {
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
             req.body.password = hashedPassword;
             const newAdvertiser = await Advertiser.create(req.body);
-            assignCookies(res, "Advertiser", newAdvertiser._id)
-                .status(201)
-                .json({ message: "Sign up successful" });
+            res.status(201).json({ message: "Sign up successful", user: newAdvertiser });
         } else {
             if (username) {
                 res.status(400).json({ e: "Username already exists" });

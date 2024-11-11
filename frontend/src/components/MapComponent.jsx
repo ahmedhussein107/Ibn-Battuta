@@ -15,6 +15,10 @@ const center = {
 
 const MapComponent = ({ markerPosition, onMapClick, customStyles }) => {
     return (
+<<<<<<< HEAD
+=======
+        // <LoadScript googleMapsApiKey={apiKey}>
+>>>>>>> b95f7acf90bcecf883d14f9df82c2fd7e7d10acf
         <GoogleMap
             mapContainerStyle={{ containerStyle, ...customStyles }}
             center={markerPosition || center}
@@ -28,6 +32,10 @@ const MapComponent = ({ markerPosition, onMapClick, customStyles }) => {
         >
             {markerPosition && <Marker position={markerPosition} />}
         </GoogleMap>
+<<<<<<< HEAD
+=======
+        // </LoadScript>
+>>>>>>> b95f7acf90bcecf883d14f9df82c2fd7e7d10acf
     );
 };
 

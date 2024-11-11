@@ -28,9 +28,7 @@ export const createTourGuide = async (req, res) => {
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
             req.body.password = hashedPassword;
             const newTourGuide = await TourGuide.create(req.body);
-            assignCookies(res, "TourGuide", newTourGuide._id)
-                .status(200)
-                .json({ message: "Sign up successful" });
+            res.status(201).json({ message: "Sign up successful", user: newTourGuide });
         } else {
             if (username) {
                 res.status(400).json({ e: "Username already exists" });
