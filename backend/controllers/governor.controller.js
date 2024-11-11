@@ -1,9 +1,13 @@
 import Governor from "../models/governor.model.js";
 import Email from "../models/email.model.js";
 import Username from "../models/username.model.js";
-
+import Admin from "../models/admin.model.js";
 export const deleteGovernor = async (req, res) => {
-    const governorId = req.user.userId;
+    let governorId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        governorId = req.query.userId;
+    }
     try {
         const governor = await Governor.findByIdAndDelete(governorId);
 

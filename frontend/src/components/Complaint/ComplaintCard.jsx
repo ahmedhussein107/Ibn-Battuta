@@ -15,7 +15,7 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
     console.log("complaint", complaint);
     const { title, createdAt, body, status, touristID, ...more } = complaint;
     console.log("complaint", complaint);
-    const userType = Cookies.get("userType") || "Admin";
+    const userType = Cookies.get("userType") || "Tourist";
     const formatDate = (date) => {
         const d = new Date(date);
         const month = String(d.getMonth() + 1).padStart(2, "0");

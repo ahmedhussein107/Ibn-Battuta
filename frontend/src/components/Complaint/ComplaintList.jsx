@@ -23,17 +23,27 @@ const ComplaintList = () => {
     const userType = Cookies.get("userType") || "Tourist";
     usePageHeader(
         "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
-        "Welcome to the Home Page"
+        "Complaints Page"
     );
 
     useEffect(() => {
         fetchComplaints(currentPage);
         console.log("Here at useEffect:");
-    }, [currentPage, isSorted, selectedFilter]);
+    }, [currentPage, selectedFilter]);
 
     const handleSort = () => {
         setIsSorted(!isSorted);
-        //handle sorting;
+
+        const sortedComplaints = [...complaints].sort((a, b) => {
+            if (isSorted) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            } else {
+                // Sort ascending if currently sorted in descending order
+                return new Date(a.createdAt) - new Date(b.createdAt);
+            }
+        });
+
+        setComplaints(sortedComplaints);
     };
     const handleFilter = (newFilter) => {
         setSelectedFilter(newFilter);
@@ -41,7 +51,6 @@ const ComplaintList = () => {
 
     const fetchComplaints = async (page) => {
         try {
-            console.log("Fetching complaints...");
             const response = await axiosInstance.get(
                 `complaint/getSomeComplaints?page=${page}&limit=${itemsPerPage}&isSorted=${isSorted}&status=${selectedFilter}`,
                 { withCredentials: true }
