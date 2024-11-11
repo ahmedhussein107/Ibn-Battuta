@@ -204,8 +204,8 @@ export default function ActivityDetails() {
 						<Map
 							setMarkerPosition={(position) => {}}
 							defaultPosition={{
-								lat: 29.9792,
-								lng: 31.1342,
+								lat: activityData.Latitude,
+								lng: activityData.Longitude,
 							}}
 							customStyles={{ height: "70vh", width: "50vw" }}
 						/>
