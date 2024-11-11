@@ -12,6 +12,8 @@ import PopUpError from "../../components/PopUpsGeneric/PopUpError";
 const Flights = () => {
     usePageHeader(null, null);
     const [step, setStep] = useState(1);
+    const [keyword, setKeyword] = useState(""); // Search keyword
+    const [keyword2, setKeyword2] = useState(""); // Search keyword
     const [startDate, setStartDate] = useState(null);
     const [returnDate, setReturnDate] = useState(null); // Return Date
     const [departureAirport, setDepartureAirport] = useState(""); // Departure Airport
@@ -83,6 +85,7 @@ const Flights = () => {
                 setAirlines(response.data.dictionaries.carriers);
             } else {
                 setError("No flights found.");
+                setFlightOffers([]);
             }
             setIsLoading(false);
         } catch (error) {
@@ -156,13 +159,19 @@ const Flights = () => {
 
             {step == 1 && (
                 <FlightSearchPage
+                    keyword={keyword}
+                    setKeyword={setKeyword}
+                    keyword2={keyword2}
+                    setKeyword2={setKeyword2}
                     startDate={startDate}
                     setStartDate={setStartDate}
                     returnDate={returnDate}
                     setReturnDate={setReturnDate}
                     setDepartureAirport={setDepartureAirport}
                     setArrivalAirport={setArrivalAirport}
+                    adults={adults}
                     setAdults={setAdults}
+                    children={children}
                     setChildren={setChildren}
                     handleSearch={handleSearch}
                     isLoading={isLoading}
@@ -178,6 +187,8 @@ const Flights = () => {
                     handleBack={handleBack}
                     handleBook={handleBook}
                     isLoading={isBookingLoading}
+                    flightData={selectedFlightOffer}
+                    airlines={airlines}
                 />
             )}
 

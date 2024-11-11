@@ -1,11 +1,11 @@
 import Button from "../Button";
 import TripDetails from "./TripDetails";
 
-const FlightCard = ({ trip, airlines, handleClick }) => {
+const FlightCard = ({ trip, airlines, handleClick, mode = 1, bookingNumber }) => {
     const styles = {
         card: {
             width: "45vw",
-            height: "25vh",
+            height: mode == 2 ? "28vh" : "25vh",
             margin: "2vh 2vw 2vh 2vw",
             display: "flex",
             flexDirection: "row",
@@ -34,14 +34,31 @@ const FlightCard = ({ trip, airlines, handleClick }) => {
             justifyContent: "center",
             gap: "1vh",
         },
+        bookingNumber: {
+            fontSize: "1vw",
+            color: "rgb(127,125,125)",
+        },
     };
 
     return (
         <div style={styles.card}>
             <div style={styles.cardLeft}>
-                {trip.itineraries.map((flight, index) => (
-                    <TripDetails flight={flight} airlines={airlines} key={index} />
-                ))}
+                <div
+                    style={{
+                        gap: "1vh",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    {mode == 2 && (
+                        <span style={styles.bookingNumber}>{`#${bookingNumber}`}</span>
+                    )}
+                    {trip.itineraries.map((flight, index) => (
+                        <TripDetails flight={flight} airlines={airlines} key={index} />
+                    ))}
+                </div>
             </div>
 
             <div style={styles.cardRight}>

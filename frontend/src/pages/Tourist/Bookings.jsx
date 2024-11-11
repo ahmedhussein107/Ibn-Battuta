@@ -77,15 +77,16 @@ const Bookings = () => {
                     {/* <GenericCard width="40vw" height="20vw" /> */}
                     {(selected == "Itineraries" || selected == "Activities") && (
                         <>
-                            {bookings.map((booking) => (
-                                <div style={{ padding: "1%" }}>
-                                    <CardBooking
-                                        booking={booking}
-                                        width="46vw"
-                                        height="34vh"
-                                    />
-                                </div>
-                            ))}
+                            {bookings &&
+                                bookings.map((booking) => (
+                                    <div style={{ padding: "1%" }}>
+                                        <CardBooking
+                                            booking={booking}
+                                            width="46vw"
+                                            height="34vh"
+                                        />
+                                    </div>
+                                ))}
                         </>
                     )}
                     {selected == "Flights" && <> </>}

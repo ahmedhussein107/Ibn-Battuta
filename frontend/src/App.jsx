@@ -48,7 +48,6 @@ import HotelList from "./components/Hotels/HotelList.jsx";
 import Orders from "./pages/Tourist/Orders.jsx";
 import TermsAndConditions from "./pages/Privacy/TermsAndConditions";
 import Flights from "./pages/Flights/Flights";
-import FlightDetails from "./pages/Flights/FlightDetails";
 
 const LayoutWithNav = () => (
     <>
@@ -142,7 +141,6 @@ function App() {
                         />
                         <Route path="/privacy" element={<TermsAndConditions />} />
                         <Route path="/flights" element={<Flights />} />
-                        <Route path="/flightDetails" element={<FlightDetails />} />
                     </Route>
                 </Routes>
             </Router>

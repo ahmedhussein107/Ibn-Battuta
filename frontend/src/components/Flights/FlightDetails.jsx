@@ -1,219 +1,8 @@
 import React from "react";
-import usePageHeader from "../../components/Header/UseHeaderPage";
-import backgroundImage from "../../assets/images/flightsBackgroundImage.png";
-import Footer from "../../components/Footer";
-import NavBar from "../../components/NavBar";
-import TripDetails from "../../components/Flights/TripDetails";
-import FlightJourney from "../../components/Flights/FlightJourney";
+import TripDetails from "./TripDetails";
+import FlightJourney from "./FlightJourney";
 
-const FlightDetails = () => {
-    usePageHeader(null, null);
-
-    const airlines = {
-        PR: "Philippine Airlines",
-        LX: "Swiss International Air Lines",
-        // Add more carrier codes and names as needed
-    };
-
-    const flightData = {
-        type: "flight-offer",
-        id: "30",
-        source: "GDS",
-        instantTicketingRequired: false,
-        nonHomogeneous: false,
-        oneWay: false,
-        isUpsellOffer: false,
-        lastTicketingDate: "2024-11-13",
-        lastTicketingDateTime: "2024-11-13",
-        numberOfBookableSeats: 9,
-        itineraries: [
-            {
-                duration: "PT40H",
-                segments: [
-                    {
-                        departure: {
-                            iataCode: "CAI",
-                            terminal: "3",
-                            at: "2024-11-30T18:25:00",
-                        },
-                        arrival: {
-                            iataCode: "ZRH",
-                            at: "2024-11-30T21:35:00",
-                        },
-                        carrierCode: "LX",
-                        number: "239",
-                        aircraft: {
-                            code: "321",
-                        },
-                        operating: {
-                            carrierCode: "LX",
-                        },
-                        duration: "PT4H10M",
-                        id: "1",
-                        numberOfStops: 1,
-                        blacklistedInEU: false,
-                    },
-                    {
-                        departure: {
-                            iataCode: "ZRH",
-                            at: "2024-11-30T23:00:00",
-                        },
-                        arrival: {
-                            iataCode: "ORD",
-                            at: "2024-12-01T04:25:00",
-                        },
-                        carrierCode: "LX",
-                        number: "189",
-                        aircraft: {
-                            code: "777",
-                        },
-                        operating: {
-                            carrierCode: "LX",
-                        },
-                        duration: "PT10H25M",
-                        id: "2",
-                        numberOfStops: 1,
-                        blacklistedInEU: false,
-                    },
-                ],
-            },
-            {
-                duration: "PT30H50M",
-                segments: [
-                    {
-                        departure: {
-                            iataCode: "ORD",
-                            at: "2024-12-19T13:00:00",
-                        },
-                        arrival: {
-                            iataCode: "ZRH",
-                            terminal: "2",
-                            at: "2024-12-19T22:00:00",
-                        },
-                        carrierCode: "LX",
-                        number: "189",
-                        aircraft: {
-                            code: "777",
-                        },
-                        operating: {
-                            carrierCode: "LX",
-                        },
-                        duration: "PT9H0M",
-                        id: "94",
-                        numberOfStops: 1,
-                        blacklistedInEU: false,
-                    },
-                    {
-                        departure: {
-                            iataCode: "ZRH",
-                            at: "2024-12-20T00:30:00",
-                        },
-                        arrival: {
-                            iataCode: "CAI",
-                            terminal: "3",
-                            at: "2024-12-20T03:10:00",
-                        },
-                        carrierCode: "LX",
-                        number: "239",
-                        aircraft: {
-                            code: "321",
-                        },
-                        operating: {
-                            carrierCode: "LX",
-                        },
-                        duration: "PT4H10M",
-                        id: "95",
-                        numberOfStops: 1,
-                        blacklistedInEU: false,
-                    },
-                ],
-            },
-        ],
-        price: {
-            currency: "EGP",
-            total: "34714.00",
-            base: "6172.00",
-            fees: [
-                {
-                    amount: "0.00",
-                    type: "SUPPLIER",
-                },
-                {
-                    amount: "0.00",
-                    type: "TICKETING",
-                },
-            ],
-            grandTotal: "34714.00",
-            additionalServices: [
-                {
-                    amount: "10643.00",
-                    type: "CHECKED_BAGS",
-                },
-            ],
-        },
-        pricingOptions: {
-            fareType: ["PUBLISHED"],
-            includedCheckedBagsOnly: true,
-        },
-        validatingAirlineCodes: ["LX"],
-        travelerPricings: [
-            {
-                travelerId: "1",
-                fareOption: "STANDARD",
-                travelerType: "ADULT",
-                price: {
-                    currency: "EGP",
-                    total: "34714.00",
-                    base: "6172.00",
-                },
-                fareDetailsBySegment: [
-                    {
-                        segmentId: "1",
-                        cabin: "ECONOMY",
-                        fareBasis: "KNCEG",
-                        brandedFare: "ECOSAVER",
-                        brandedFareLabel: "ECONOMY SAVER",
-                        class: "K",
-                        includedCheckedBags: {
-                            quantity: 1,
-                        },
-                        amenities: [
-                            {
-                                description: "EXTRA LEGROOM SEAT RESERVATION",
-                                isChargeable: true,
-                                amenityType: "PRE_RESERVED_SEAT",
-                                amenityProvider: {
-                                    name: "BrandedFare",
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        segmentId: "2",
-                        cabin: "ECONOMY",
-                        fareBasis: "KNCEG",
-                        brandedFare: "ECOSAVER",
-                        brandedFareLabel: "ECONOMY SAVER",
-                        class: "K",
-                        includedCheckedBags: {
-                            quantity: 1,
-                        },
-                        amenities: [
-                            {
-                                description: "EXTRA LEGROOM SEAT RESERVATION",
-                                isChargeable: true,
-                                amenityType: "PRE_RESERVED_SEAT",
-                                amenityProvider: {
-                                    name: "BrandedFare",
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-        ],
-    };
-
+const FlightDetails = ({ flightData, airlines }) => {
     const countTravellers = (travelerPricings) => {
         let adults = 0;
         let child = 0;
@@ -288,26 +77,11 @@ const FlightDetails = () => {
         : null;
 
     return (
-        <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
-            <div
-                style={{
-                    width: "100vw",
-                    height: "30vh",
-                    backgroundImage: `url(${backgroundImage})`,
-                    backgroundSize: "100% 100%",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                }}
-            ></div>
-
-            <div style={{ position: "fixed", top: 0, left: "9%" }}>
-                <NavBar />
-            </div>
-
+        <div>
             <div
                 style={{
                     width: "50.5vw",
-                    backgroundColor: "#E9E6DC",
+                    backgroundColor: "#F7F7F7",
                     margin: "3vh auto",
                     padding: "2vh",
                     borderRadius: "1vw",
@@ -388,7 +162,7 @@ const FlightDetails = () => {
                 <div
                     style={{
                         width: "50.5vw",
-                        backgroundColor: "#E9E6DC",
+                        backgroundColor: "#F7F7F7",
                         margin: "3vh auto",
                         padding: "2vh",
                         borderRadius: "1vw",
@@ -475,7 +249,7 @@ const FlightDetails = () => {
             <div
                 style={{
                     width: "50.5vw",
-                    backgroundColor: "#E9E6DC",
+                    backgroundColor: "#F7F7F7",
                     margin: "3vh auto",
                     padding: "2vh",
                     borderRadius: "1vw",
@@ -510,8 +284,6 @@ const FlightDetails = () => {
                     </span>
                 </div>
             </div>
-
-            <Footer />
         </div>
     );
 };

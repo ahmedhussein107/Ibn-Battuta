@@ -4,21 +4,25 @@ import Button from "../../components/Button";
 import { useState } from "react";
 
 const FlightSearchFields = ({
+    keyword,
+    setKeyword,
+    keyword2,
+    setKeyword2,
     startDate,
     setStartDate,
     returnDate,
     setReturnDate,
     setDepartureAirport,
     setArrivalAirport,
+    adults,
     setAdults,
+    children,
     setChildren,
     handleSearch,
     isLoading,
     error,
 }) => {
-    const [keyword, setKeyword] = useState(""); // Search keyword
     const [suggestions, setSuggestions] = useState([]); // Search suggestions
-    const [keyword2, setKeyword2] = useState(""); // Search keyword
     const [suggestions2, setSuggestions2] = useState([]); // Search suggestions
     const fetchSuggestions = async (keyword) => {
         if (keyword.length >= 3) {
@@ -411,6 +415,7 @@ const FlightSearchFields = ({
                     <input
                         type="number"
                         placeholder="Enter number"
+                        value={adults}
                         style={{
                             width: "10vw",
                             padding: "1vh",
@@ -454,6 +459,7 @@ const FlightSearchFields = ({
                     <input
                         type="number"
                         placeholder="Enter number"
+                        value={children}
                         style={{
                             width: "10vw",
                             padding: "1vh",
