@@ -206,6 +206,7 @@ const Itineraries = () => {
                                         width="1.2vw"
                                         height="1.2vw"
                                         styles={{ padding: "0.5vh" }}
+                                        id={itinerary.id}
                                     />,
                                 ]}
                                 bottomButtons={[

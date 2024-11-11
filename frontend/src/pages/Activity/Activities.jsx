@@ -266,6 +266,7 @@ const Activities = () => {
                                         width="1.2vw"
                                         height="1.2vw"
                                         styles={{ padding: "0.5vh" }}
+                                        id= {activity.id }
                                     />,
                                 ]}
                                 bottomButtons={[
