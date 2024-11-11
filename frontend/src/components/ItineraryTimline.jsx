@@ -18,7 +18,7 @@ const ItineraryTimeline = ({
 	const pickupTime = formatTime(pickUpTime);
 
 	const handleSeeMoreClick = (Data) => {
-		navigate("/activity-details", { state: { activityData: Data } });
+		navigate(`/activity-details/${Data._id}`, { state: { activityData: Data } });
 	};
 
 	const tempActivities = !activities? [] :activities.map((activityObj) => {

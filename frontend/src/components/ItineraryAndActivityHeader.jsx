@@ -2,7 +2,7 @@ import ShareAndMark from "./ShareAndMark.jsx";
 import "../styles/ItineraryAndActivityHeader.css";
 
 export default function ItineraryAndActivityHeader({
-	title = "Itinerary Title",
+	title ,
 	mode = "activity",
 	isOpen = false,
 	category = "Balabizo",

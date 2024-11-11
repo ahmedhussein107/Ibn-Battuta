@@ -28,8 +28,8 @@ import ItineraryTimeline from "../../components/ItineraryTimline.jsx";
 import "../../styles/ItineraryDetails.css";
 import Cookies from "js-cookie";
 const ItineraryDetails = () => {
-    const navigate = useNavigate();
-    const [userType, setUserType] = useState(null);
+	const navigate = useNavigate();
+	const [userType, setUserType] = useState(null);
 
 	useEffect(() => {
 		// Retrieve the userType from cookies when the component mounts
@@ -51,21 +51,26 @@ const ItineraryDetails = () => {
 	const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
 	const totalPrice = itinerary ? itinerary.price * ticketCount : 0;
 
-    //For mangaing page logic
-    const [BookPopUp, setBookPopUp] = useState(false);
-    const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
+	//For mangaing page logic
+	const [BookPopUp, setBookPopUp] = useState(false);
+	const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
 
-	const fetchFreeSpots = async () => {
-		if (!itinerary) return;
-		try {
-			const response = await axiosInstance.get(
-				`itinerary/getFreeSpots/${itinerary._id}`
-			);
-			setFreeSpots(response.data);
-		} catch (error) {
-			console.error("Error fetching free spots:", error);
-		}
-	};
+	useEffect(() => {
+		const fetchFreeSpots = async () => {
+			if (!itinerary) return;
+			try {
+				const response = await axiosInstance.get(
+					`itinerary/getFreeSpots/${itinerary._id}`
+				);
+				console.log("response data");
+				console.log(response.data);
+				setFreeSpots(response.data);
+			} catch (error) {
+				console.error("Error fetching free spots:", error);
+			}
+		};
+		fetchFreeSpots();
+	}, []);
 
 	useEffect(() => {
 		const fetchItinerary = async () => {
@@ -74,7 +79,6 @@ const ItineraryDetails = () => {
 					`itinerary/getItinerary/${itineraryId}`
 				);
 				setItinerary(itineraryResponse.data);
-				console.log(itineraryResponse.data)
 				setTourGuideName(itineraryResponse.data.tourguideID.name);
 				setTourGuidePicture(itineraryResponse.data.tourguideID.picture);
 			} catch (err) {
@@ -82,7 +86,7 @@ const ItineraryDetails = () => {
 			}
 		};
 		fetchItinerary();
-		fetchFreeSpots();
+	
 	}, [itineraryId]);
 
 	const handleBooking = async () => {
@@ -90,15 +94,15 @@ const ItineraryDetails = () => {
 		try {
 			// TODO: add different ways of payeen
 
-            const bookingResponse = await axiosInstance.post(
-                "booking/createBooking",
-                {
-                    bookingType: "Itinerary",
-                    typeId: itinerary._id,
-                    count: ticketCount,
-                },
-                { withCredentials: true }
-            );
+			const bookingResponse = await axiosInstance.post(
+				"booking/createBooking",
+				{
+					bookingType: "Itinerary",
+					typeId: itinerary._id,
+					count: ticketCount,
+				},
+				{ withCredentials: true }
+			);
 
 			// Check the response status
 			if (bookingResponse.status === 201) {
@@ -131,8 +135,6 @@ const ItineraryDetails = () => {
 		}
 	};
 
-
-
 	//For activities and photos
 	useEffect(() => {
 		if (!itinerary) return;
@@ -162,57 +164,61 @@ const ItineraryDetails = () => {
 							);
 						};
 
-                        const startTimeFormatted = formatTime(activityObj.startTime);
-                        const endTimeFormatted = formatTime(activityObj.endTime);
+						const startTimeFormatted = formatTime(
+							activityObj.startTime
+						);
+						const endTimeFormatted = formatTime(
+							activityObj.endTime
+						);
 
-                        // Calculate duration in minutes
-                        const durationMs =
-                            new Date(activityObj.endTime) -
-                            new Date(activityObj.startTime);
-                        const durationMinutes = Math.floor(durationMs / 60000); // convert ms to minutes
+						// Calculate duration in minutes
+						const durationMs =
+							new Date(activityObj.endTime) -
+							new Date(activityObj.startTime);
+						const durationMinutes = Math.floor(durationMs / 60000); // convert ms to minutes
 
-                        // Construct the activity object with formatted times and duration
-                        return {
-                            activityType: activityObj.activityType,
-                            activityData: activity,
-                            startTime: startTimeFormatted,
-                            endTime: endTimeFormatted,
-                            duration: `${Math.floor(durationMinutes / 60)}h ${
-                                durationMinutes % 60
-                            }m`,
-                        };
-                    })
-                );
+						// Construct the activity object with formatted times and duration
+						return {
+							activityType: activityObj.activityType,
+							activityData: activity,
+							startTime: startTimeFormatted,
+							endTime: endTimeFormatted,
+							duration: `${Math.floor(durationMinutes / 60)}h ${
+								durationMinutes % 60
+							}m`,
+						};
+					})
+				);
 
-                const photosData = activitiesData
-                    .filter(
-                        (activity) =>
-                            activity.activityType === "Activity" &&
-                            activity.activityData.pictures
-                    )
-                    .flatMap((activity) => activity.activityData.pictures);
+				const photosData = activitiesData
+					.filter(
+						(activity) =>
+							activity.activityType === "Activity" &&
+							activity.activityData.pictures
+					)
+					.flatMap((activity) => activity.activityData.pictures);
 
-                photosData.push(itinerary.picture);
+				photosData.push(itinerary.picture);
 
-                setPhotoList(photosData);
-                // Update the state with the reviews data
-                setActivities(activitiesData);
-            } catch (error) {
-                console.error("Error fetching activities: ", error);
-            }
-        };
+				setPhotoList(photosData);
+				// Update the state with the reviews data
+				setActivities(activitiesData);
+			} catch (error) {
+				console.error("Error fetching activities: ", error);
+			}
+		};
 
-        fetchActivites();
-    }, [itinerary]);
+		fetchActivites();
+	}, [itinerary]);
 
-    if (!itinerary) return null;
-    return (
-        <div className="itinerary-details-container">
-            <ItineraryAndActivityHeader
-                mode="itinerary"
-                title={itinerary.itineraryTitle}
-            />
-            <CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
+	if (!itinerary) return null;
+	return (
+		<div className="itinerary-details-container">
+			<ItineraryAndActivityHeader
+				mode="itinerary"
+				title={itinerary.name}
+			/>
+			<CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
 
 			<PopUp
 				isOpen={BookPopUp}
@@ -231,62 +237,62 @@ const ItineraryDetails = () => {
 				/>
 			</PopUp>
 
-            <PopUp
-                isOpen={bookingDonePopUp}
-                setIsOpen={setBookingDonePopUp}
-                headerText={"Booking Successful"}
-                containsActionButton={false}
-                cancelText={"Ok"}
-            >
-                <SuccessfulBooking points={pointsAdded} />
-            </PopUp>
+			<PopUp
+				isOpen={bookingDonePopUp}
+				setIsOpen={setBookingDonePopUp}
+				headerText={"Booking Successful"}
+				containsActionButton={false}
+				cancelText={"Ok"}
+			>
+				<SuccessfulBooking points={pointsAdded} />
+			</PopUp>
 
-            <div className="itinerary-info">
-                <div className="placeholder">
-                    <ItineraryTimeline
-                        pickUpLocation={itinerary.pickup}
-                        pickUpTime={itinerary.pickupTime}
-                        dropOffLocation={itinerary.dropOff}
-                        activities={activities}
-                    />
-                    {/* pickyp location, pickup time, drop off location, and activity details array */}
-                </div>
+			<div className="itinerary-info">
+				<div className="placeholder">
+					<ItineraryTimeline
+						pickUpLocation={itinerary.pickup}
+						pickUpTime={itinerary.pickupTime}
+						dropOffLocation={itinerary.dropOff}
+						activities={activities}
+					/>
+					{/* pickyp location, pickup time, drop off location, and activity details array */}
+				</div>
 
-                <div className="profile-refo-container">
-                    <ProfileAndDescription
-                        name={tourGuideName || "balabizo"}
-                        picture={tourGuidePicture}
-                        description={itinerary.description}
-                        width={"80%"}
-                        // height={"50%"}
-                        fontSize={"1.2em"}
-                    ></ProfileAndDescription>
-                    <div className="refo-container">
-                        <div className="accessiblity-tags-reviewssection">
-                            <div className="language-container">
-                                <div
-                                    className="language-header"
-                                    style={{ fontSize: "0.8em" }}
-                                >
-                                    <img
-                                        src="/languageIcon.png"
-                                        alt=""
-                                        className="language-icon"
-                                    />
-                                    <span>Language: {itinerary.language}</span>
-                                </div>
-                            </div>
-                            <Accessibility
-                                accessibilities={itinerary.accessibility}
-                                fontSize={"0.8em"}
-                            />
-                            <Tags tags={itinerary.tags} fontSize={"0.85em"} />
-                            <ReviewsSection
-                                ratingIds={itinerary.ratings}
-                                width={"100%"}
-                                fontSize={"12px"}
-                            />
-                        </div>
+				<div className="profile-refo-container">
+					<ProfileAndDescription
+						name={tourGuideName || "balabizo"}
+						picture={tourGuidePicture}
+						description={itinerary.description}
+						width={"80%"}
+						// height={"50%"}
+						fontSize={"1.2em"}
+					></ProfileAndDescription>
+					<div className="refo-container">
+						<div className="accessiblity-tags-reviewssection">
+							<div className="language-container">
+								<div
+									className="language-header"
+									style={{ fontSize: "0.8em" }}
+								>
+									<img
+										src="/languageIcon.png"
+										alt=""
+										className="language-icon"
+									/>
+									<span>Language: {itinerary.language}</span>
+								</div>
+							</div>
+							<Accessibility
+								accessibilities={itinerary.accessibility}
+								fontSize={"0.8em"}
+							/>
+							<Tags tags={itinerary.tags} fontSize={"0.85em"} />
+							<ReviewsSection
+								ratingIds={itinerary.ratings}
+								width={"100%"}
+								fontSize={"12px"}
+							/>
+						</div>
 
 						{/* Done */}
 						<div className="book-availabledates">
@@ -307,19 +313,19 @@ const ItineraryDetails = () => {
 								/>
 							)}
 
-                            <AvailableDates
-                                date={itinerary.availableDateAndTime}
-                                width="18vw"
-                                fontSize={"0.8em"}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
+							<AvailableDates
+								date={itinerary.availableDatesAndTimes}
+								width="18vw"
+								fontSize={"0.8em"}
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <Footer />
-        </div>
-    );
+			<Footer />
+		</div>
+	);
 };
 
 export default ItineraryDetails;
