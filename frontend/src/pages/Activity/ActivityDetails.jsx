@@ -41,7 +41,6 @@ export default function ActivityDetails() {
 	const { activityId } = useParams();
 	// console.log(`The activity id ${activityId}`);
 	useEffect(() => {
-		console.log("Here");
 		if (activityData) return;
 
 		const fetchActivityData = async () => {
@@ -203,10 +202,10 @@ export default function ActivityDetails() {
 						</div>
 						<Map
 							setMarkerPosition={(position) => {}}
-							defaultPosition={{
+							defaultPosition={activityData.Latitude ? {
 								lat: activityData.Latitude,
 								lng: activityData.Longitude,
-							}}
+							} : null}
 							customStyles={{ height: "70vh", width: "50vw" }}
 						/>
 					</div>
