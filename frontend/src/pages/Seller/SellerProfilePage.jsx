@@ -39,6 +39,12 @@ const SellerProfilePage = () => {
             .then((response) => {
                 setResponse(response.data);
                 console.log("Seller:", response.data);
+                setFormData({
+                    name: response.data.name || "",
+                    username: response.data.username || "",
+                    email: response.data.email || "",
+                    description: response.data.description || "",
+                });
             })
             .catch((error) => {
                 console.error("Error fetching Seller:", error);

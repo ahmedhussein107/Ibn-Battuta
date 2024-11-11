@@ -143,10 +143,19 @@ export const deleteAdmin = async (req, res) => {
     const adminId = req.user.userId;
     try {
         const admin = await Admin.findByIdAndDelete(adminId);
-        if (!admin) return res.status(404).json("Admin not found");
-        res.status(200).json("Admin deleted successfully!");
-    } catch (err) {
-        res.status(400).json(err.message);
+        if (admin) {
+            // Delete email associated with the governor
+            await Email.findByIdAndDelete(admin.email);
+
+            // Delete username associated with the governor
+            await Username.findByIdAndDelete(admin.username);
+
+            res.json({ message: "Admin deleted successfully" });
+        } else {
+            res.status(404).json({ message: "Admin not found" });
+        }
+    } catch (e) {
+        res.status(500).json({ message: e.message });
     }
 };
 
@@ -167,22 +176,26 @@ export const changeAdminPassword = async (req, res) => {
 
     try {
         if (!oldPassword || !newPassword) {
-            return res.status(400).json("Both old and new passwords are required");
+            return res
+                .status(400)
+                .json({ message: "Both old and new passwords are required" });
         }
         const admin = await Admin.findById(adminId);
         if (!admin) {
-            return res.status(404).json("Admin not found");
+            return res.status(404).json({ message: "Admin not found" });
         }
         const isMatch = await bcrypt.compare(oldPassword, admin.password);
         if (!isMatch) {
-            return res.status(400).json("Incorrect old password");
+            return res.status(400).json({ message: "Incorrect old password" });
         }
         admin.password = await bcrypt.hash(newPassword, 10);
         await admin.save();
-        return res.status(200).json("Password changed successfully!");
+        return res.status(200).json({ message: "Password changed successfully!" });
     } catch (err) {
         console.error("Error changing password:", err);
-        return res.status(400).json("An error occurred while changing the password");
+        return res
+            .status(400)
+            .json({ message: "An error occurred while changing the password" });
     }
 };
 

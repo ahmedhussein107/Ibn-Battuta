@@ -167,19 +167,21 @@ export const changeSellerPassword = async (req, res) => {
 
     try {
         if (!oldPassword || !newPassword) {
-            return res.status(400).json("Both old and new passwords are required");
+            return res
+                .status(400)
+                .json({ message: "Both old and new passwords are required" });
         }
         const seller = await Seller.findById(sellerId);
         if (!seller) {
-            return res.status(404).json("seller not found");
+            return res.status(404).json({ message: "seller not found" });
         }
         const isMatch = await bcrypt.compare(oldPassword, seller.password);
         if (!isMatch) {
-            return res.status(400).json("Incorrect old password");
+            return res.status(400).json({ message: "Incorrect old password" });
         }
         seller.password = await bcrypt.hash(newPassword, 10);
         await seller.save();
-        return res.status(200).json("Password changed successfully!");
+        return res.status(200).json({ message: "Password changed successfully!" });
     } catch (err) {
         console.error("Error changing password:", err);
         return res.status(400).json("An error occurred while changing the password");

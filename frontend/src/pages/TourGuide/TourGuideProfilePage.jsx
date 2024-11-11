@@ -144,6 +144,7 @@ const TourguideProfilePage = () => {
             alert("New passwords do not match!");
             return;
         }
+        console.log(currentPassword, newPassword, confirmNewPassword);
         axiosInstance
             .put(
                 "/tourguide/changeTourguidePassword",
@@ -160,9 +161,8 @@ const TourguideProfilePage = () => {
             })
             .catch((error) => {
                 const errorMessage =
-                    error.response && error.response.data && error.response.data.message
-                        ? error.response.data.message
-                        : "An error occurred. Please try again.";
+                    error?.response?.data?.message ||
+                    "An error occurred. Please try again.";
                 console.error("Error changing password:", error);
                 alert(errorMessage);
             });
