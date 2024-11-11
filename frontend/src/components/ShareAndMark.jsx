@@ -3,22 +3,22 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 export default function ShareAndMark({
-	id,
 	width = "25%",
 	height = "100%",
 	styles = {},
 	onSecondIconClick = () => {
 		console.log("Balabizak"); // Default function for onSecondIconClick
 	},
+	direction = "",
 	mode = "card",
 }) {
 	const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
 	const copyToClipboard = () => {
-		const urlToCopy = `${window.location.href}${id ? `/${id}` : ""}`;
-		navigator.clipboard.writeText(urlToCopy);
+		const baseUri = window.location.origin;
+		const link = direction === "" ? window.location.href : baseUri + direction;
+		navigator.clipboard.writeText(link);
 		setShowCopiedMessage(true);
-
 		// Hide the message after 2 seconds
 		setTimeout(() => {
 			setShowCopiedMessage(false);
@@ -26,10 +26,13 @@ export default function ShareAndMark({
 	};
 
 	const emailFriend = () => {
-        const urlToShare = `${window.location.href}${id ? `/${id}` : ""}`;
-		const mailtoLink = `mailto:?body=${encodeURIComponent(
-			urlToShare
-		)}`;
+		const baseUri = window.location.origin;
+		const link = direction === "" ? window.location.href : baseUri + direction;
+		const subject = "Check out this link!";
+		const body = `Hi,\n\nI wanted to share this link with you: ${link}\n\nBest regards,`;
+		const mailtoLink = `mailto:?subject=${encodeURIComponent(
+			subject
+		)}&body=${encodeURIComponent(body)}`;
 		window.open(mailtoLink, "_blank");
 	};
 
@@ -43,9 +46,7 @@ export default function ShareAndMark({
 				<img
 					src="/markIcon.png"
 					alt="Second Icon"
-					style={
-						mode === "card" ? { width: width, height: height } : {}
-					}
+					style={mode === "card" ? { width: width, height: height } : {}}
 				/>
 			</div>
 
@@ -54,22 +55,15 @@ export default function ShareAndMark({
 				<img
 					src="/shareIcon.png"
 					alt="Dropdown Icon"
-					style={
-						mode === "card" ? { width: width, height: height } : {}
-					}
+					style={mode === "card" ? { width: width, height: height } : {}}
 				/>
 
 				<div className="dropdownlist">
-					<div
-						className="dropdownlist-option"
-						onClick={copyToClipboard}
-					>
+					<div className="dropdownlist-option" onClick={copyToClipboard}>
 						Copy
 						{/* "Copied to clipboard" message */}
 						{showCopiedMessage && (
-							<span className="copied-message">
-								Copied to clipboard
-							</span>
+							<span className="copied-message">Copied to clipboard</span>
 						)}
 					</div>
 					<div className="dropdownlist-option" onClick={emailFriend}>
