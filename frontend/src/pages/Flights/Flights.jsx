@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import FlightSearchPage from "../../components/Flights/FlightSearchPage";
 import FlightDetailsPage from "../../components/Flights/FlightDetailsPage";
+import PopUpSuccess from "../../components/PopUpsGeneric/PopUpSuccess";
+import PopUpError from "../../components/PopUpsGeneric/PopUpError";
 
 const Flights = () => {
     usePageHeader(null, null);
@@ -21,6 +23,9 @@ const Flights = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const [selectedFlightOffer, setSelectedFlightOffer] = useState(null);
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [isBookingLoading, setIsBookingLoading] = useState(false);
 
     const buildQuery = () => {
         const query = {};
@@ -100,13 +105,21 @@ const Flights = () => {
 
     const handleBook = async () => {
         console.log(selectedFlightOffer);
-        await axiosInstance.post(
-            "/amadeus/flights/book",
-            {
-                flightOffer: selectedFlightOffer,
-            },
-            { withCredentials: true }
-        );
+        setIsBookingLoading(true);
+        try {
+            await axiosInstance.post(
+                "/amadeus/flights/book",
+                {
+                    flightOffer: selectedFlightOffer,
+                },
+                { withCredentials: true }
+            );
+            setIsBookingLoading(false);
+            setSuccessOpen(true);
+        } catch (error) {
+            setIsBookingLoading(false);
+            setErrorOpen(true);
+        }
     };
 
     return (
@@ -161,7 +174,29 @@ const Flights = () => {
             )}
 
             {step == 2 && (
-                <FlightDetailsPage handleBack={handleBack} handleBook={handleBook} />
+                <FlightDetailsPage
+                    handleBack={handleBack}
+                    handleBook={handleBook}
+                    isLoading={isBookingLoading}
+                />
+            )}
+
+            {step == 2 && successOpen && (
+                <PopUpSuccess
+                    isOpen={successOpen}
+                    setIsOpen={setSuccessOpen}
+                    headerText="Booking Successful"
+                    bodyText="Flight Booked Successfully"
+                />
+            )}
+
+            {step == 2 && errorOpen && (
+                <PopUpError
+                    isOpen={errorOpen}
+                    setIsOpen={setErrorOpen}
+                    headerText="Booking Failed"
+                    bodyText="An error occurred while booking. Please try again later."
+                />
             )}
 
             {/* Footer */}

@@ -1,5 +1,5 @@
 import Button from "../Button";
-const FlightDetailsPage = ({ handleBack, handleBook }) => {
+const FlightDetailsPage = ({ handleBack, handleBook, isLoading }) => {
     return (
         <div
             style={{
@@ -10,7 +10,12 @@ const FlightDetailsPage = ({ handleBack, handleBook }) => {
             }}
         >
             <Button text="Back" stylingMode="2" handleClick={handleBack} />
-            <Button text="Book" stylingMode="1" handleClick={handleBook} />
+            <Button
+                text="Book"
+                stylingMode="1"
+                handleClick={handleBook}
+                isLoading={isLoading}
+            />
         </div>
     );
 };
