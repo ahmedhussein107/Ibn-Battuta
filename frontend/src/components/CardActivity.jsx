@@ -7,7 +7,8 @@ import GenericCard from "./GenericCard";
 import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
-
+import convert from "../api/convert";
+import Cookies from "js-cookie";
 const CardActivity = ({
     activity,
     width,
@@ -103,7 +104,7 @@ const CardActivity = ({
                 fontSize: "0.8rem",
             }}
         >
-            USD {beforeDiscount}
+            {Cookies.get("currency") || "EGP"} {convert(beforeDiscount)}
         </p>
     );
     const currentPrice = (
@@ -116,7 +117,7 @@ const CardActivity = ({
                 fontSize: "1rem",
             }}
         >
-            USD {afterDiscount}
+            {Cookies.get("currency") || "EGP"} {convert(afterDiscount)}
         </p>
     );
 

@@ -7,7 +7,8 @@ import { useState } from "react";
 import PopUp from "./PopUpsGeneric/PopUp";
 import PopUpSuccess from "./PopUpsGeneric/PopUpSuccess";
 import PopUpError from "./PopUpsGeneric/PopUpError";
-
+import convert from "../api/convert";
+import Cookies from "js-cookie";
 const BookingPopUp = ({
     isOpen,
     setIsOpen,
@@ -64,13 +65,15 @@ const BookingPopUp = ({
                         <p>
                             Price per person:{" "}
                             <span className="price-per-person">
-                                $ {toBeBookedItem.price}
+                                {Cookies.get("currency") || "EGP"}{" "}
+                                {convert(toBeBookedItem.price)}
                             </span>
                         </p>
                         <p>
                             Total price:{" "}
                             <span id="total-price">
-                                $ {toBeBookedItem.price * numberOfTickets}
+                                {Cookies.get("currency") || "EGP"}{" "}
+                                {convert(toBeBookedItem.price * numberOfTickets)}
                             </span>
                         </p>
                     </div>

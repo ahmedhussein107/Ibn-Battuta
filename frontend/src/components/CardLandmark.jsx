@@ -5,7 +5,8 @@ import GenericCard from "./GenericCard";
 import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import LandmarkTimes from "./LandmarkTimes";
-
+import convert from "../api/convert";
+import Cookies from "js-cookie";
 const iconSize = "0.85rem";
 
 const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
@@ -58,7 +59,7 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
             {Object.keys(landmark.ticketPrices).map((key) => (
                 <div key={key}>
                     {key.toString().charAt(0).toUpperCase() + key.toString().slice(1)}:{" "}
-                    {landmark.ticketPrices[key]}
+                    {convert(landmark.ticketPrices[key])}
                 </div>
             ))}
         </div>

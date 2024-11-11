@@ -7,18 +7,12 @@ import BathtubIcon from "@mui/icons-material/Bathtub";
 import PersonIcon from "@mui/icons-material/Person";
 import Button from "../Button";
 import { useNavigate } from "react-router-dom";
-import convertCurrency from "../../api/currency";
+import { convertCurrency } from "../../api/currency";
 import Cookies from "js-cookie";
+import convert from "../../api/convert";
 const HotelCard = ({ offer, isAllOffers = true }) => {
     const navigate = useNavigate();
-    const [price, setPrice] = useState(offer.totalPrice);
-    useEffect(() => {
-        convertCurrency(offer.totalPrice, "EGP", Cookies.get("currency") || "USD").then(
-            (result) => {
-                setPrice(result);
-            }
-        );
-    }, []);
+
     const handleShowMore = () => {
         navigate(`/hotel/offer-details/${offer._id}`, { state: { offer } });
         console.log("Show more clicked");
@@ -100,7 +94,7 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
                     </p>
                     <p>
                         <strong>Total Price:</strong> {Cookies.get("currency") || "EGP"}
-                        {price}
+                        {convert(offer.totalPrice)}
                     </p>
                 </div>
             </div>

@@ -5,6 +5,8 @@ import CategoryIcon from "@mui/icons-material/LocalOffer";
 import TagsIcon from "@mui/icons-material/LocalOffer";
 import DateIcon from "@mui/icons-material/Today";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import convert from "../api/convert";
+import Cookies from "js-cookie";
 const ActivityCard = ({ activity, handleDelete }) => {
     const title = activity.name;
     const location = activity.location;
@@ -214,8 +216,12 @@ const ActivityCard = ({ activity, handleDelete }) => {
                 <div style={styles.seats}>{availableSeats} Available Seats</div>
 
                 <div style={styles.price}>
-                    <span style={styles.originalPrice}>USD {originalPrice}</span>
-                    <span style={styles.discountedPrice}>USD {discountedPrice}</span>
+                    <span style={styles.originalPrice}>
+                        {Cookies.get("currency") || "EGP"} {convert(originalPrice)}
+                    </span>
+                    <span style={styles.discountedPrice}>
+                        {Cookies.get("currency") || "EGP"} {convert(discountedPrice)}
+                    </span>
                 </div>
 
                 <button
