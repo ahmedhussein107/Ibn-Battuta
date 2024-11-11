@@ -25,6 +25,7 @@ const TimelineN = ({ date, time }) => {
     const [timelineActivities, setTimelineActivities] = useState([]);
     const [convertedDate, setConvertedDate] = useState(null);
     const [selectedActivity, setSelectedActivity] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -90,24 +91,79 @@ const TimelineN = ({ date, time }) => {
         fetchCustomActivities();
     }, [convertedDate]);
 
-    const handleDeleteActivity = (activity) => {
-        setTimelineActivities(
-            timelineActivities.filter((act) => act._id !== activity._id)
-        );
-        setActivities([...activities, activity]);
+    const addActivityToTimeline = (activity) => {
+        const deleteActivityFromList = (activity) => {
+            if (activity.activityType === "Activity") {
+                const newActivities = activities.filter(
+                    (act) => act._id !== activity.activity._id
+                );
+                setActivities(newActivities);
+            } else if (activity.activityType === "CustomActivity") {
+                const newActivities = customActivities.filter(
+                    (act) => act._id !== activity.activity._id
+                );
+                setCustomActivities(newActivities);
+            } else {
+                console.log("What is this ??!!");
+            }
+        };
+        let newTimeline = [...timelineActivities];
+        if (newTimeline.length === 0) {
+            setTimelineActivities([activity]);
+            deleteActivityFromList(activity);
+            return true;
+        }
+        if (activity.endTime <= newTimeline[0].startTime) {
+            setTimelineActivities([activity, ...newTimeline]);
+            deleteActivityFromList(activity);
+            return true;
+        }
+        const lastActivity = newTimeline[newTimeline.length - 1];
+        if (activity.startTime >= lastActivity.endTime) {
+            setTimelineActivities([...newTimeline, activity]);
+            deleteActivityFromList(activity);
+            return true;
+        }
+        for (let i = 0; i + 1 < newTimeline.length; i++) {
+            const currentActivity = newTimeline[i];
+            const nextActivity = newTimeline[i + 1];
+            if (
+                activity.startTime >= currentActivity.endTime &&
+                activity.endTime <= nextActivity.startTime
+            ) {
+                const updatedTimeline = [
+                    ...newTimeline.slice(0, i + 1),
+                    activity,
+                    ...newTimeline.slice(i + 1),
+                ];
+                setTimelineActivities(updatedTimeline);
+                deleteActivityFromList(activity);
+                return true;
+            }
+        }
+        return false;
     };
 
-    const handleDeleteCustom = (activity) => {
-        setTimelineActivities(
-            timelineActivities.filter((act) => act._id !== activity._id)
-        );
-        setCustomActivities([...customActivities, activity]);
+    const handleDeleteActivity = (index) => {
+        const curActivity = timelineActivities[index];
+        setTimelineActivities(timelineActivities.filter((_, ind) => ind !== index));
+        if (curActivity.activityType == "Activity") {
+            setActivities((prevActivities) => [...prevActivities, curActivity.activity]);
+        } else if (curActivity.activityType == "CustomActivity") {
+            setCustomActivities((prevActivities) => [
+                ...prevActivities,
+                curActivity.activity,
+            ]);
+        } else {
+            console.log("What is this ??!!");
+        }
     };
 
     const handleShowMore = (index) => {
         const curActivity = timelineActivities[index];
         if (curActivity.activityType == "Activity") {
-            navigate("activity-datails", { state: { activity: curActivity.activity } });
+            // navigate("activity-datails", { state: { activity: curActivity.activity } });
+            window.open(`/activity-details/${curActivity.activity._id}`, "_blank");
         } else if (curActivity.activityType == "CustomActivity") {
             setShowMoreCustomActivity(curActivity.activity);
             setShowMorePopupOpen(true);
@@ -154,33 +210,37 @@ const TimelineN = ({ date, time }) => {
 
         const handleSubmit = () => {
             if (!startTime || !endTime) {
-                a;
                 alert("select the time interval!!!!!");
                 return;
             }
-            console.log("100");
             let startDate = new Date(convertedDate);
-            console.log("100");
-            console.log(startTime);
-            console.log(startTime);
             startDate.setHours(startTime.getHours(), startTime.getMinutes());
-            console.log("100");
             let endDate = new Date(convertedDate);
-            console.log("100");
             endDate.setHours(endTime.getHours(), endTime.getMinutes());
-            console.log("100");
+            if (endDate < startDate) {
+                endDate.setHours(endDate.getHours() + 24); // to handle night events
+            }
             console.log({
                 activityType: activeTab,
                 activity: selectedActivity,
                 startTime: startDate,
                 endTime: endDate,
             });
+            if (activeTab === "Activity") {
+                const activityStartDate = new Date(selectedActivity.startDate);
+                const activityEndDate = new Date(selectedActivity.endDate);
+                if (startDate < activityStartDate || endDate > activityEndDate) {
+                    alert("the selected time interval is not valid for this activity!");
+                    setSelectTimeIntervalOpen(false);
+                    return;
+                }
+            }
             if (
                 !addActivityToTimeline({
                     activityType: activeTab,
                     activity: selectedActivity,
-                    startTime,
-                    endTime,
+                    startTime: startDate,
+                    endTime: endDate,
                 })
             ) {
                 alert("the activity would intersect with another activity!");
@@ -206,8 +266,26 @@ const TimelineN = ({ date, time }) => {
                     {activeTab == "Activity" && (
                         <p>
                             The Activity starts at{" "}
-                            {formatToAMPM(new Date(selectedActivity.startDate))} and ends
-                            at {formatToAMPM(new Date(selectedActivity.endDate))}
+                            {new Date(selectedActivity.startDate).toLocaleString(
+                                "en-US",
+                                {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                    hour: "numeric",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                }
+                            )}{" "}
+                            and ends at{" "}
+                            {new Date(selectedActivity.endDate).toLocaleString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                                hour: "numeric",
+                                minute: "2-digit",
+                                hour12: true,
+                            })}
                         </p>
                     )}
                 </div>
@@ -243,57 +321,6 @@ const TimelineN = ({ date, time }) => {
         );
     };
 
-    function formatToAMPM(date) {
-        let hours = date.getHours();
-        const minutes = date.getMinutes();
-        const seconds = date.getSeconds();
-        const ampm = hours >= 12 ? "PM" : "AM";
-
-        // Convert hours from 24-hour to 12-hour format
-        hours = hours % 12;
-        hours = hours ? hours : 12; // If hour is 0, set it to 12
-
-        // Format minutes and seconds to be two digits
-        const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
-        const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
-
-        return `${hours}:${formattedMinutes}:${formattedSeconds} ${ampm}`;
-    }
-
-    const addActivityToTimeline = (activity) => {
-        let newTimeline = [...timelineActivities];
-        if (newTimeline.length === 0) {
-            setTimelineActivities([activity]);
-            return true;
-        }
-        if (activity.endTime <= newTimeline[0].startTime) {
-            setTimelineActivities([activity, ...newTimeline]);
-            return true;
-        }
-        const lastActivity = newTimeline[newTimeline.length - 1];
-        if (activity.startTime >= lastActivity.endTime) {
-            setTimelineActivities([...newTimeline, activity]);
-            return true;
-        }
-        for (let i = 0; i + 1 < newTimeline.length; i++) {
-            const currentActivity = newTimeline[i];
-            const nextActivity = newTimeline[i + 1];
-            if (
-                activity.startTime >= currentActivity.endTime &&
-                activity.endTime <= nextActivity.startTime
-            ) {
-                const updatedTimeline = [
-                    ...newTimeline.slice(0, i + 1),
-                    activity,
-                    ...newTimeline.slice(i + 1),
-                ];
-                setTimelineActivities(updatedTimeline);
-                return true;
-            }
-        }
-        return false;
-    };
-
     return (
         <>
             <CreateCustomActivityPopup
@@ -313,6 +340,7 @@ const TimelineN = ({ date, time }) => {
                                     <FaMapMarkerAlt className={classes.markerIcon} />
                                 </div>
                                 <div className={classes.timelineContent}>
+                                    {/* TODO: Replace with actual pickup time */}
                                     <h3 className={classes.title}>Pickup</h3>
                                     <p className={classes.details}>
                                         7:00 am - Pickup Location
@@ -344,10 +372,30 @@ const TimelineN = ({ date, time }) => {
                                                     {activity.activity.name}
                                                 </h3>
                                                 <p className={classes.details}>
-                                                    {formatToAMPM(activity.startTime)}
+                                                    {activity.startTime.toLocaleString(
+                                                        "en-US",
+                                                        {
+                                                            month: "short",
+                                                            day: "numeric",
+                                                            year: "numeric",
+                                                            hour: "numeric",
+                                                            minute: "2-digit",
+                                                            hour12: true,
+                                                        }
+                                                    )}
                                                 </p>
                                                 <p className={classes.details}>
-                                                    {formatToAMPM(activity.endTime)}
+                                                    {activity.endTime.toLocaleString(
+                                                        "en-US",
+                                                        {
+                                                            month: "short",
+                                                            day: "numeric",
+                                                            year: "numeric",
+                                                            hour: "numeric",
+                                                            minute: "2-digit",
+                                                            hour12: true,
+                                                        }
+                                                    )}
                                                 </p>
                                                 <p
                                                     className={classes.details}
@@ -361,7 +409,9 @@ const TimelineN = ({ date, time }) => {
                                                 </p>
                                             </div>
                                             <button
-                                                onClick={() => handleDelete(index)}
+                                                onClick={() =>
+                                                    handleDeleteActivity(index)
+                                                }
                                                 className={classes.deleteButton}
                                             >
                                                 <FaTrash />
@@ -374,13 +424,11 @@ const TimelineN = ({ date, time }) => {
                             <div className={classes.timelineItem}>
                                 <div className={classes.dropoffMarker}></div>
                                 <div className={classes.timelineContent}>
-                                    <h3 className={classes.title}>
-                                        7 drop-off locations:
-                                    </h3>
+                                    {/* TODO: Replace with actual drop-off time */}
+                                    <h3 className={classes.title}>drop-off location:</h3>
                                     <p className={classes.details}>
                                         Stratosphere Casino, Hotel & Tower, Park MGM Las
                                     </p>
-                                    <p className={classes.details}>See more</p>
                                 </div>
                             </div>
                         </div>
@@ -497,8 +545,6 @@ const TimelineN = ({ date, time }) => {
                 <div
                     style={{
                         display: "flex",
-                        justifyContent: "space-around",
-                        width: "50%",
                         marginBottom: "2vh",
                     }}
                 >
@@ -508,17 +554,24 @@ const TimelineN = ({ date, time }) => {
                         handleClick={() => {
                             navigate(-1);
                         }}
-                        customStyle={{ width: "10vw" }}
                     />
                     <CustomButton
-                        stylingMode="1"
+                        stylingMode="submit"
                         text="Create Itinerary"
                         handleClick={async () => {
                             let totalPrice = location.state.price;
+                            let picture =
+                                "https://cdn-icons-png.flaticon.com/512/7603/7603006.png";
                             timelineActivities.forEach((activity) => {
-                                if (activity.activityType === "Activity")
+                                if (activity.activityType === "Activity") {
                                     totalPrice += activity.activity.price;
+                                    if (activity.activity.picture) {
+                                        picture = activity.activity.picture;
+                                    }
+                                }
                             });
+                            console.log("picture", picture);
+                            setIsLoading(true);
                             try {
                                 const response = await axiosInstance.post(
                                     "/itinerary/createItinerary",
@@ -527,7 +580,7 @@ const TimelineN = ({ date, time }) => {
                                         ...location.state,
                                         availableDatesAndTimes: [convertedDate],
                                         price: totalPrice,
-                                        picture: timelineActivities[0].activity.picture,
+                                        picture,
                                     },
                                     {
                                         withCredentials: true,
@@ -538,9 +591,11 @@ const TimelineN = ({ date, time }) => {
                             } catch (error) {
                                 console.error(error);
                                 alert("Error creating itinerary");
+                            } finally {
+                                setIsLoading(false);
                             }
                         }}
-                        styles={{ width: "10vw" }}
+                        isLoading={isLoading}
                     />
                 </div>
             </div>
@@ -557,7 +612,7 @@ const useStyles = createUseStyles({
         justifyContent: "space-between",
     },
     leftPanel: {
-        width: "23vw",
+        width: "30vw",
     },
     container: {
         padding: "2vh",
