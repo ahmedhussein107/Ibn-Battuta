@@ -54,7 +54,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
 		try {
 			const response = await axiosInstance.post(
 				`/rating/rateTourGuide/${booking.typeId._id}`,
-				{ rating, comment },
+				{ rating: ratingTourGuide, comment: commentTourGuide },
 				{ withCredentials: true }
 			);
 			if (response.status === 201) {
