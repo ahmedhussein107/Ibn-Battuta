@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 // External libraries or API instance
 import axiosInstance from "../../api/axiosInstance";
 
@@ -26,33 +26,41 @@ import ItineraryTimeline from "../../components/ItineraryTimline.jsx";
 
 // Styles
 import "../../styles/ItineraryDetails.css";
-
+import Cookies from "js-cookie";
 const ItineraryDetails = () => {
+	const navigate = useNavigate();
+	const [userType, setUserType] = useState(null);
+
+	useEffect(() => {
+		// Retrieve the userType from cookies when the component mounts
+		const userTypeFromCookie = Cookies.get("userType");
+		setUserType(userTypeFromCookie);
+	}, []);
 	const location = useLocation();
 	usePageHeader(null, null);
 	//6703f5310ecc1ad25ff95144
-	const {itineraryId} = useParams();
+	const { itineraryId } = useParams();
 	const [itinerary, setItinerary] = useState(null);
 
 	//For mangaing page logic
 	const [BookPopUp, setBookPopUp] = useState(false);
 	const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
 
-	useEffect ( () => {
-
+	useEffect(() => {
 		const fetchItinerary = async () => {
 			try {
-				const itineraryResponse = await axiosInstance.get(`itinerary/getItinerary/${itineraryId}`);
-                setItinerary(itineraryResponse.data);
+				const itineraryResponse = await axiosInstance.get(
+					`itinerary/getItinerary/${itineraryId}`
+				);
+				setItinerary(itineraryResponse.data);
 			} catch (err) {
 				console.error("Error fetching itinerary:", err);
 			}
-
-		}
+		};
 		fetchItinerary();
-	}, [itineraryId])
+	}, [itineraryId]);
 	const handleBooking = async () => {
-		if(!itinerary) return;
+		if (!itinerary) return;
 		try {
 			// TODO: add different ways of payeen
 
@@ -104,13 +112,13 @@ const ItineraryDetails = () => {
 	const [activities, setActivities] = useState([]);
 	const [ticketCount, setTicketCount] = useState(0);
 	const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
-	const totalPrice = (itinerary)? itinerary.price * ticketCount : 0;
+	const totalPrice = itinerary ? itinerary.price * ticketCount : 0;
 
 	//For getting free spots
 
 	//For Tour guide name and photo
 	useEffect(() => {
-		if(!itinerary) return;
+		if (!itinerary) return;
 		const fetchTourGuide = async () => {
 			try {
 				const response = await axiosInstance.get(
@@ -128,7 +136,7 @@ const ItineraryDetails = () => {
 
 	//For activities and photos
 	useEffect(() => {
-		if(!itinerary) return;
+		if (!itinerary) return;
 		const fetchActivites = async () => {
 			try {
 				const activitiesData = await Promise.all(
@@ -210,7 +218,7 @@ const ItineraryDetails = () => {
 		fetchActivites();
 	}, [itinerary]);
 
-	if(!itinerary) return null ;
+	if (!itinerary) return null;
 	return (
 		<div className="itinerary-details-container">
 			<ItineraryAndActivityHeader
@@ -244,8 +252,6 @@ const ItineraryDetails = () => {
 			>
 				<SuccessfulBooking points={pointsAdded} />
 			</PopUp>
-
-		
 
 			<div className="itinerary-info">
 				<div className="placeholder">
@@ -296,14 +302,23 @@ const ItineraryDetails = () => {
 
 						{/* Done */}
 						<div className="book-availabledates">
-							<Book
-								price={itinerary.price}
-								text={"Likely to be out "}
-								onClick={() => {
-									// Open pop up with booking details
-									setBookPopUp(true);
-								}}
-							/>
+							{(!userType ||
+								userType == "Tourist" ||
+								userType == "Guest") && (
+								<Book
+									price={itinerary.price}
+									text={"Likely to be out "}
+									onClick={() => {
+										// Open pop up with booking details
+										if(userType == "Guest" || !userType) {
+											navigate("/signin")
+											return
+										}
+										setBookPopUp(true);
+									}}
+								/>
+							)}
+
 							<AvailableDates
 								date={itinerary.availableDateAndTime}
 								width="18vw"
