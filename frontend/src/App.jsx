@@ -79,7 +79,7 @@ function App() {
                     <Route element={<LayoutWithNav />}>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/test" element={<PopUp />} />
-                        <Route path="/complaints" element={<ComplaintList />} />
+                        <Route path="/admin/complaints" element={<ComplaintList />} />
                         <Route
                             path="/complaint/:complaintId"
                             element={<ViewSingleComplaint />}

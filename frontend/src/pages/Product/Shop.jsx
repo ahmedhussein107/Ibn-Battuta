@@ -73,23 +73,24 @@ const Shop = () => {
         sortProducts(products);
     }, [sortBy]);
 
-    const handleBuyingPopUpOpen = async () => {
-        try {
-            await axiosInstance.post(
-                "/order/createOrder",
-                {
-                    product: selectedProduct._id,
-                    count: selectedQuantity,
-                    price: selectedProduct.price * selectedQuantity,
-                },
-                { withCredentials: true }
-            );
-            setBuyingPopUpOpen(false);
-        } catch (error) {
-            console.error("Error creating order:", error);
-            alert("Error creating order. Please try again.");
-        }
-    };
+	const handleBuyingPopUpOpen = async () => {
+		try {
+			await axiosInstance.post(
+				"/order/createOrder",
+				{
+					product: selectedProduct._id,
+					count: selectedQuantity,
+					price: selectedProduct.price * selectedQuantity,
+				},
+				{ withCredentials: true }
+			);
+			setBuyingPopUpOpen(false);
+			window.location.reload();
+		} catch (error) {
+			console.error("Error creating order:", error);
+			alert("Error creating order. Please try again.");
+		}
+	};
 
     const buildQuery = () => {
         let query = {};
