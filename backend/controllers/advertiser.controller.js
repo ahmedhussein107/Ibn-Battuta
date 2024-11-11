@@ -108,11 +108,6 @@ export const updateAdvertiser = async (req, res) => {
 
 export const deleteAdvertiser = async (req, res) => {
     let advertiserId = req.user.userId;
-    const admin = await Admin.findById(req.user.userId);
-    if (admin) {
-        advertiserId = req.query.userId;
-    }
-
     try {
         const upcomingActivities = await Activity.find({
             advertiserID: advertiserId,
@@ -129,6 +124,10 @@ export const deleteAdvertiser = async (req, res) => {
                 message: "Cannot delete advertiser with upcoming bookings",
             });
         } else {
+            const admin = await Admin.findById(req.user.userId);
+            if (admin) {
+                advertiserId = req.query.userId;
+            }
             const advertiser = await Advertiser.findByIdAndDelete(advertiserId);
             console.log("after find", advertiser);
             if (advertiser) {
