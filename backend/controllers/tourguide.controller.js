@@ -8,7 +8,7 @@ import CustomActivity from "../models/customActivity.model.js";
 import Bookings from "../models/booking.model.js";
 import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
-
+import Admin from "../models/admin.model.js";
 export const createTourGuide = async (req, res) => {
     //console.log(req.body);
     const inputUsername = req.body.username;
@@ -105,7 +105,11 @@ export const updateTourGuide = async (req, res) => {
 };
 
 export const deleteTourGuide = async (req, res) => {
-    const tourguideId = req.user.userId;
+    let tourguideId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        tourguideId = req.query.userId;
+    }
     try {
         const upcomingItineraries = await Itinerary.find({
             tourguideID: tourguideId,
@@ -123,11 +127,11 @@ export const deleteTourGuide = async (req, res) => {
             });
         } else {
             const tourGuide = await TourGuide.findByIdAndDelete(tourguideId);
+            console.log(tourGuide);
             if (tourGuide) {
                 await Username.findByIdAndDelete(tourGuide.username);
                 await Email.findByIdAndDelete(tourGuide.email);
 
-                // If there are notifications, delete each one
                 if (tourGuide.notifications && tourGuide.notifications.length > 0) {
                     await Promise.all(
                         tourGuide.notifications.map(async (notificationId) => {
@@ -136,7 +140,6 @@ export const deleteTourGuide = async (req, res) => {
                     );
                 }
 
-                // If there are ratings, delete each one
                 if (tourGuide.ratings && tourGuide.ratings.length > 0) {
                     await Promise.all(
                         tourGuide.ratings.map(async (ratingId) => {

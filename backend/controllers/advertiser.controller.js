@@ -7,7 +7,7 @@ import Bookings from "../models/booking.model.js";
 import Rating from "../models/rating.model.js";
 import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
-
+import Admin from "../models/admin.model.js";
 export const createAdvertiser = async (req, res) => {
     console.log(req.body);
     const inputUsername = req.body.username;
@@ -105,7 +105,12 @@ export const updateAdvertiser = async (req, res) => {
 };
 
 export const deleteAdvertiser = async (req, res) => {
-    const advertiserId = req.user.userId;
+    let advertiserId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        advertiserId = req.query.userId;
+    }
+
     try {
         const upcomingActivities = await Activity.find({
             advertiserID: advertiserId,
