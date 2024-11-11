@@ -369,76 +369,83 @@ const TourguideProfilePage = () => {
                         {/* Updated Previous Work Section */}
                         <div style={{ marginBottom: "6vw" }}>
                             <h3>Previous Work</h3>
-                            {formData.previousWork.map((work, index) => (
-                                <div
-                                    key={index}
-                                    style={{
-                                        border: "1px solid #ccc",
-                                        padding: "1vw",
-                                        marginBottom: "1vw",
-                                        borderRadius: "8px",
-                                    }}
-                                >
-                                    <p>
-                                        <strong>Title:</strong>{" "}
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                value={work.title}
-                                                onChange={(e) =>
-                                                    handlePreviousWorkChange(
-                                                        index,
-                                                        "title",
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        ) : (
-                                            work.title || "No title provided"
-                                        )}
-                                    </p>
-                                    <p>
-                                        <strong>Duration:</strong>{" "}
-                                        {isEditing ? (
-                                            <input
-                                                type="number"
-                                                value={work.duration}
-                                                onChange={(e) =>
-                                                    handlePreviousWorkChange(
-                                                        index,
-                                                        "duration",
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        ) : (
-                                            `${work.duration} months`
-                                        )}
-                                    </p>
-                                    <p>
-                                        <strong>Description:</strong>{" "}
-                                        {isEditing ? (
-                                            <textarea
-                                                value={work.description}
-                                                onChange={(e) =>
-                                                    handlePreviousWorkChange(
-                                                        index,
-                                                        "description",
-                                                        e.target.value
-                                                    )
-                                                }
-                                                rows={4}
-                                                style={{
-                                                    width: "100%",
-                                                    resize: "vertical",
-                                                }}
-                                            />
-                                        ) : (
-                                            work.description || "No description provided"
-                                        )}
-                                    </p>
-                                </div>
-                            ))}
+
+                            {formData.previousWork.length > 0 ? (
+                                formData.previousWork.map((work, index) => (
+                                    <div
+                                        key={index}
+                                        style={{
+                                            border: "1px solid #ccc",
+                                            padding: "1vw",
+                                            marginBottom: "1vw",
+                                            borderRadius: "8px",
+                                        }}
+                                    >
+                                        <p>
+                                            <strong>Title:</strong>{" "}
+                                            {isEditing ? (
+                                                <input
+                                                    type="text"
+                                                    value={work.title}
+                                                    onChange={(e) =>
+                                                        handlePreviousWorkChange(
+                                                            index,
+                                                            "title",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            ) : (
+                                                work.title || "No title provided"
+                                            )}
+                                        </p>
+                                        <p>
+                                            <strong>Duration:</strong>{" "}
+                                            {isEditing ? (
+                                                <input
+                                                    type="number"
+                                                    value={work.duration}
+                                                    onChange={(e) =>
+                                                        handlePreviousWorkChange(
+                                                            index,
+                                                            "duration",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            ) : (
+                                                `${work.duration || 0} months`
+                                            )}
+                                        </p>
+                                        <p>
+                                            <strong>Description:</strong>{" "}
+                                            {isEditing ? (
+                                                <textarea
+                                                    value={work.description}
+                                                    onChange={(e) =>
+                                                        handlePreviousWorkChange(
+                                                            index,
+                                                            "description",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    rows={4}
+                                                    style={{
+                                                        width: "100%",
+                                                        resize: "vertical",
+                                                    }}
+                                                />
+                                            ) : (
+                                                work.description ||
+                                                "No description provided"
+                                            )}
+                                        </p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No previous work provided</p>
+                            )}
+
                             {isEditing && (
                                 <button
                                     onClick={handleAddNewExperience}
@@ -449,8 +456,8 @@ const TourguideProfilePage = () => {
                                         border: "1px solid black",
                                         borderRadius: "40px",
                                         cursor: "pointer",
-                                        marginBottom: "2vw", // Some margin for spacing
-                                        marginLeft: "auto", // Center align the button
+                                        marginBottom: "2vw",
+                                        marginLeft: "auto",
                                     }}
                                 >
                                     Add New Experience

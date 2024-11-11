@@ -8,6 +8,7 @@ import ProfileButton from "../../components/ProfileButtons";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
+import { uploadFile } from "../../api/firebase.js";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import axios from "axios";
 
@@ -16,16 +17,12 @@ const AdminProfilePage = () => {
     const [userType, setUserType] = useState("Admin");
     const [isEditing, setIsEditing] = useState(false);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
-        useState(false);
-    const [formData, setFormData] = useState({
-        name: "",
-        username: "",
-        email: "",
-    });
-    const [image, setImage] = useState(
-        "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
-    );
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+    const [formData, setFormData] = useState({ name: "", username: "", email: "" });
+    const defaultImage =
+        "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg";
+    const [image, setImage] = useState(defaultImage);
+    const [imageFile, setImageFile] = useState(null);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -43,6 +40,7 @@ const AdminProfilePage = () => {
                     username: response.data.username,
                     email: response.data.email,
                 });
+                setImage(response.data.picture || defaultImage);
             })
             .catch((error) => {
                 console.error("Error fetching Admin:", error);
@@ -98,9 +96,7 @@ const AdminProfilePage = () => {
             })
             .catch((error) => {
                 const errorMessage =
-                    error.response &&
-                    error.response.data &&
-                    error.response.data.message
+                    error.response && error.response.data && error.response.data.message
                         ? error.response.data.message
                         : "An error occurred while deleting the account. Please try again.";
 
@@ -113,11 +109,9 @@ const AdminProfilePage = () => {
         setIsPopUpOpen(true);
     };
 
-    const handleCurrentPasswordChange = (e) =>
-        setCurrentPassword(e.target.value);
+    const handleCurrentPasswordChange = (e) => setCurrentPassword(e.target.value);
     const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
-    const handleConfirmNewPasswordChange = (e) =>
-        setConfirmNewPassword(e.target.value);
+    const handleConfirmNewPasswordChange = (e) => setConfirmNewPassword(e.target.value);
 
     const PopUpAction = () => {
         if (newPassword !== confirmNewPassword) {
@@ -140,9 +134,7 @@ const AdminProfilePage = () => {
             })
             .catch((error) => {
                 const errorMessage =
-                    error.response &&
-                    error.response.data &&
-                    error.response.data.message
+                    error.response && error.response.data && error.response.data.message
                         ? error.response.data.message
                         : "An error occurred. Please try again.";
                 console.error("Error changing password:", error);
@@ -154,7 +146,7 @@ const AdminProfilePage = () => {
         fileInputRef.current.click(); // Triggers the file input click
     };
 
-    // Function to handle file input change
+    //Function to handle file input change
     const handleImageChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -162,21 +154,16 @@ const AdminProfilePage = () => {
             formData.append("picture", file);
 
             try {
-                // Send the image to the server
-                const response = await axiosInstance.put(
-                    "/admin/updateAdmin",
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                        withCredentials: true,
-                    }
-                );
+                const response = await axiosInstance.put("/admin/updateAdmin", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    withCredentials: true,
+                });
+                const picture = await uploadFile(imageFile, "profilePictures");
 
-                // Update state with new image URL from the response
-                setImage(response.data.picture); // Assuming the response returns the new image URL
-
+                // Update the image state with the new image URL or fallback to default
+                setImage(response.data.picture || defaultImage);
                 alert("Profile picture updated successfully");
             } catch (error) {
                 console.error("Error updating profile picture:", error);
@@ -187,18 +174,11 @@ const AdminProfilePage = () => {
 
     return (
         <>
-            <div
-                style={{
-                    width: "100vw",
-                    position: "absolute",
-                    top: "0",
-                    left: "0",
-                }}
-            >
+            <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
                 <div
                     style={{
                         width: "100vw",
-                        height: "0vh",
+                        height: "30vh",
                         backgroundImage: `url(${bg})`,
                         backgroundSize: "100% 100%",
                         backgroundPosition: "center",
@@ -370,9 +350,7 @@ const AdminProfilePage = () => {
                     <PopUp
                         isOpen={isDeleteConfirmationOpen}
                         setIsOpen={setIsDeleteConfirmationOpen}
-                        headerText={
-                            "Are you sure you want to delete your account?"
-                        }
+                        headerText={"Are you sure you want to delete your account?"}
                         actionText={"Confirm"}
                         handleSubmit={handleDeleteAccountConfirm}
                     ></PopUp>
@@ -392,14 +370,7 @@ const AdminProfilePage = () => {
             <div style={{ position: "fixed", top: 0, left: "9vw" }}>
                 <Navbar />
             </div>
-            <div
-                style={{
-                    position: "fixed",
-                    bottom: 0,
-                    width: "100vw",
-                    left: 0,
-                }}
-            >
+            <div style={{ position: "fixed", bottom: 0, width: "100vw", left: 0 }}>
                 <Footer />
             </div>
         </>
