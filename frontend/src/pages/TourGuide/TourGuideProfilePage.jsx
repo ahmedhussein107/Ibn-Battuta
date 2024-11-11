@@ -91,7 +91,9 @@ const TourguideProfilePage = () => {
 
         if (hasChanges) {
             axiosInstance
-                .put("/tourguide/updateTourGuide", formData, { withCredentials: true })
+                .put("/tourguide/updateTourGuide", formData, {
+                    withCredentials: true,
+                })
                 .then((response) => {
                     setResponse(response.data);
                     setIsEditing(false);
@@ -161,8 +163,9 @@ const TourguideProfilePage = () => {
             })
             .catch((error) => {
                 const errorMessage =
-                    error?.response?.data?.message ||
-                    "An error occurred. Please try again.";
+                    error.response && error.response.data && error.response.data.message
+                        ? error.response.data.message
+                        : "An error occurred. Please try again.";
                 console.error("Error changing password:", error);
                 alert(errorMessage);
             });
@@ -215,7 +218,14 @@ const TourguideProfilePage = () => {
 
     return (
         <>
-            <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+            <div
+                style={{
+                    width: "100vw",
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                }}
+            >
                 <div
                     style={{
                         width: "100vw",
@@ -536,7 +546,14 @@ const TourguideProfilePage = () => {
             <div style={{ position: "fixed", top: 0, left: "9%" }}>
                 <Navbar />
             </div>
-            <div style={{ position: "fixed", bottom: 0, width: "100vw", left: 0 }}>
+            <div
+                style={{
+                    position: "fixed",
+                    bottom: 0,
+                    width: "100vw",
+                    left: 0,
+                }}
+            >
                 <Footer />
             </div>
         </>

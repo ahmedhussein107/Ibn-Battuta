@@ -16,8 +16,13 @@ const AdminProfilePage = () => {
     const [userType, setUserType] = useState("Admin");
     const [isEditing, setIsEditing] = useState(false);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
-    const [formData, setFormData] = useState({ name: "", username: "", email: "" });
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+        useState(false);
+    const [formData, setFormData] = useState({
+        name: "",
+        username: "",
+        email: "",
+    });
     const [image, setImage] = useState(
         "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
     );
@@ -93,7 +98,9 @@ const AdminProfilePage = () => {
             })
             .catch((error) => {
                 const errorMessage =
-                    error.response && error.response.data && error.response.data.message
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.message
                         ? error.response.data.message
                         : "An error occurred while deleting the account. Please try again.";
 
@@ -106,9 +113,11 @@ const AdminProfilePage = () => {
         setIsPopUpOpen(true);
     };
 
-    const handleCurrentPasswordChange = (e) => setCurrentPassword(e.target.value);
+    const handleCurrentPasswordChange = (e) =>
+        setCurrentPassword(e.target.value);
     const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
-    const handleConfirmNewPasswordChange = (e) => setConfirmNewPassword(e.target.value);
+    const handleConfirmNewPasswordChange = (e) =>
+        setConfirmNewPassword(e.target.value);
 
     const PopUpAction = () => {
         if (newPassword !== confirmNewPassword) {
@@ -131,7 +140,9 @@ const AdminProfilePage = () => {
             })
             .catch((error) => {
                 const errorMessage =
-                    error.response && error.response.data && error.response.data.message
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.message
                         ? error.response.data.message
                         : "An error occurred. Please try again.";
                 console.error("Error changing password:", error);
@@ -152,12 +163,16 @@ const AdminProfilePage = () => {
 
             try {
                 // Send the image to the server
-                const response = await axiosInstance.put("/admin/updateAdmin", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                    withCredentials: true,
-                });
+                const response = await axiosInstance.put(
+                    "/admin/updateAdmin",
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                        withCredentials: true,
+                    }
+                );
 
                 // Update state with new image URL from the response
                 setImage(response.data.picture); // Assuming the response returns the new image URL
@@ -172,11 +187,18 @@ const AdminProfilePage = () => {
 
     return (
         <>
-            <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+            <div
+                style={{
+                    width: "100vw",
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                }}
+            >
                 <div
                     style={{
                         width: "100vw",
-                        height: "30vh",
+                        height: "0vh",
                         backgroundImage: `url(${bg})`,
                         backgroundSize: "100% 100%",
                         backgroundPosition: "center",
@@ -348,7 +370,9 @@ const AdminProfilePage = () => {
                     <PopUp
                         isOpen={isDeleteConfirmationOpen}
                         setIsOpen={setIsDeleteConfirmationOpen}
-                        headerText={"Are you sure you want to delete your account?"}
+                        headerText={
+                            "Are you sure you want to delete your account?"
+                        }
                         actionText={"Confirm"}
                         handleSubmit={handleDeleteAccountConfirm}
                     ></PopUp>
@@ -368,7 +392,14 @@ const AdminProfilePage = () => {
             <div style={{ position: "fixed", top: 0, left: "9vw" }}>
                 <Navbar />
             </div>
-            <div style={{ position: "fixed", bottom: 0, width: "100vw", left: 0 }}>
+            <div
+                style={{
+                    position: "fixed",
+                    bottom: 0,
+                    width: "100vw",
+                    left: 0,
+                }}
+            >
                 <Footer />
             </div>
         </>

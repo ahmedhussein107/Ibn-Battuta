@@ -30,7 +30,7 @@ export const getTouristById = async (req, res) => {
 
         const age = tourist.age;
         const {
-            cart, 
+            cart,
             preferences,
             wishlist,
             deliveryAddresses,
@@ -42,7 +42,7 @@ export const getTouristById = async (req, res) => {
         } = tourist._doc;
 
         console.log(other);
-        res.status(200).json({ ...other, age });
+        res.status(200).json({ ...other, age, preferences });
     } catch (e) {
         console.error(e.message); // Log the error for debugging
         res.status(400).json({ e: e.message });
@@ -89,23 +89,38 @@ export const createTourist = async (req, res) => {
 
 export const updateTourist = async (req, res) => {
     try {
+        const tourist = await Tourist.findById(req.user.userId);
+        if (!tourist) {
+            return res.status(404).json({ e: "Tourist not found" });
+        }
+        if (req.body.email) {
+            await Email.findByIdAndDelete(tourist.email);
+            await Email.create({
+                _id: req.body.email,
+            });
+        }
+        // Hash the password if it is present in the request body
         if (req.body.password) {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
-        const tourist = await Tourist.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        });
+
+        const touristUpdated = await Tourist.findByIdAndUpdate(
+            req.user.userId,
+            req.body,
+            {
+                new: true,
+            }
+        );
+
         res.json(tourist);
     } catch (e) {
         res.status(400).json({ e: e.message });
     }
 };
 
-
-
 export const deleteTourist = async (req, res) => {
     try {
-        const tourist = await Tourist.findByIdAndDelete(req.params.id);
+        const tourist = await Tourist.findByIdAndDelete(req.user.userId);
         if (tourist) {
             await Username.findByIdAndDelete(tourist.username);
             await Email.findByIdAndDelete(tourist.email);
@@ -120,7 +135,9 @@ export const deleteTourist = async (req, res) => {
             }
 
             // Delete Entries in TouristActivityNotification related to this tourist
-            await TouristActivityNotification.deleteMany({ touristID: tourist._id });
+            await TouristActivityNotification.deleteMany({
+                touristID: tourist._id,
+            });
 
             res.status(200).json({ message: "Tourist deleted successfully" });
         } else {
@@ -133,18 +150,105 @@ export const deleteTourist = async (req, res) => {
 
 export const redeemPoints = async (req, res) => {
     try {
-        const tourist = await Tourist.findById(req.params.id);
+        const tourist = await Tourist.findById(req.user.userId);
         if (!tourist) {
-            return res.status(404).json({ message: "tourist not found" });
+            return res.status(404).json({ e: "Tourist not found" });
         }
-        if (tourist.loyalityPoints === 0) {
-            return res.status(400).json({ message: "you don't have any points" });
+        const { points } = req.body;
+        if (points > tourist.loyalityPoints) {
+            return res.status(400).json({ e: "Not enough points" });
         }
-        tourist.wallet += tourist.loyalityPoints / 100.0;
-        tourist.loyalityPoints = 0;
+
+        // Assuming the conversion is 10000 points = $100
+        const cashValue = (loyalityPoints / 10000) * 100;
+
+        tourist.loyalityPoints -= points; // Deducting points
+        tourist.wallet += cashValue; // Adding cash value to the wallet
+        await tourist.save(); // Save the updated tourist details
+
+        res.status(200).json({
+            message: "Points redeemed successfully",
+            cashValue,
+        });
+    } catch (e) {
+        res.status(400).json({ e: e.message });
+    }
+};
+
+export const addPreference = async (req, res) => {
+    try {
+        const tourist = await Tourist.findById(req.user.userId);
+        if (!tourist) {
+            return res.status(404).json({ e: "Tourist not found" });
+        }
+        const { preference } = req.body;
+        if (!preference) {
+            return res.status(400).json({ e: "Preference is required" }); // Check for missing preference
+        }
+        if (tourist.preferences.includes(preference)) {
+            return res.status(400).json({ e: "Preference already exists" });
+        }
+        tourist.preferences.push(preference);
         await tourist.save();
-        res.status(200).json({ message: "points redeemed successfully" });
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(200).json({ message: "Preference added successfully" });
+    } catch (e) {
+        res.status(400).json({ e: e.message });
+    }
+};
+
+export const removePreference = async (req, res) => {
+    try {
+        const tourist = await Tourist.findById(req.user.userId);
+        if (!tourist) {
+            return res.status(404).json({ e: "Tourist not found" });
+        }
+        const { preference } = req.body;
+        const index = tourist.preferences.indexOf(preference);
+        if (index === -1) {
+            return res.status(400).json({ e: "Preference does not exist" });
+        }
+        tourist.preferences.splice(index, 1);
+        await tourist.save();
+        res.status(200).json({ message: "Preference removed successfully" });
+    } catch (e) {
+        res.status(400).json({ e: e.message });
+    }
+};
+
+export const changeTouristPassword = async (req, res) => {
+    const touristId = req.user.userId; // Assuming userId is stored in the req.user object after authentication
+    const { oldPassword, newPassword } = req.body;
+
+    try {
+        // Validate the input fields
+        if (!oldPassword || !newPassword) {
+            return res
+                .status(400)
+                .json("Both old and new passwords are required");
+        }
+
+        // Find the tourist by ID
+        const tourist = await Tourist.findById(touristId);
+        if (!tourist) {
+            return res.status(404).json("Tourist not found");
+        }
+
+        // Check if the old password matches
+        const isMatch = await bcrypt.compare(oldPassword, tourist.password);
+        if (!isMatch) {
+            return res.status(400).json("Incorrect old password");
+        }
+
+        // Update the password
+        tourist.password = await bcrypt.hash(newPassword, 10);
+        await tourist.save();
+
+        // Return success response
+        return res.status(200).json("Password changed successfully!");
+    } catch (err) {
+        console.error("Error changing password:", err);
+        return res
+            .status(500)
+            .json("An error occurred while changing the password");
     }
 };
