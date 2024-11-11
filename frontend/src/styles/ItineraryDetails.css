@@ -7,6 +7,7 @@
 .refo-container {
 	display: flex;
 	gap: 30px;
+	
 }
 
 .book-availabledates {
@@ -27,6 +28,7 @@
 .itinerary-info {
 	display: flex;
 	margin-top: 2vh;
+	min-width: 100%
 }
 .placeholder {
 	margin-left: 2%;
@@ -42,6 +44,7 @@
 
 .profile-refo-container {
 	padding-left: 2vw;
+	flex: 1;
 }
 
 .language-container {

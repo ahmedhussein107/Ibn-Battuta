@@ -1,7 +1,7 @@
 import React, { useState, useEffect, act } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-// External libraries or API instance 
+// External libraries or API instance
 import axiosInstance from "../../api/axiosInstance";
 
 // Top-level components
@@ -23,37 +23,44 @@ import Book from "../../components/ItineraryDetails/Book.jsx";
 
 // Other components
 import Map from "../map.jsx";
+import Cookies from "js-cookie";
 
 // Styles
 import "../../styles/ActivityDetails.css";
 
 export default function ActivityDetails() {
+	const navigate = useNavigate();
+	const [userType, setUserType] = useState(null);
 
-	const [activityData, setActivityData] = useState (null);
-	const {activityId} = useParams();
+	useEffect(() => {
+		// Retrieve the userType from cookies when the component mounts
+		const userTypeFromCookie = Cookies.get("userType");
+		setUserType(userTypeFromCookie);
+	}, []);
+	const [activityData, setActivityData] = useState(null);
+	const { activityId } = useParams();
 	// console.log(`The activity id ${activityId}`);
-	useEffect( () => {
+	useEffect(() => {
 		console.log("Here");
-		if(activityData) return ;
+		if (activityData) return;
 
 		const fetchActivityData = async () => {
 			try {
-				console.log(`Fetching activity data`)
-				const activityResponse = await axiosInstance.get (
+				console.log(`Fetching activity data`);
+				const activityResponse = await axiosInstance.get(
 					`activity/getActivity/${activityId}`
-				)
-				
+				);
+
 				setActivityData(activityResponse.data);
-			}catch (error) {
+			} catch (error) {
 				console.error("Error fetching activity data:", error);
 			}
 		};
 
-		if(activityId) {
+		if (activityId) {
 			fetchActivityData();
 		}
-		
-	}, [activityId])
+	}, [activityId]);
 	//For mangaing page logic
 	const [BookPopUp, setBookPopUp] = useState(false);
 	const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
@@ -113,9 +120,9 @@ export default function ActivityDetails() {
 	//For advertiser name
 	useEffect(() => {
 		const fetchAdvertiser = async () => {
-			if(!activityData) return
+			if (!activityData) return;
 			try {
-				console.log ('Im here')
+				console.log("Im here");
 				const response = await axiosInstance.get(
 					`advertiser/advertiser/${activityData.advertiserID}`
 				);
@@ -153,7 +160,6 @@ export default function ActivityDetails() {
 					setCount={setTicketCount}
 				/>
 			</PopUp>
-			
 
 			<PopUp
 				isOpen={bookingDonePopUp}
@@ -162,7 +168,7 @@ export default function ActivityDetails() {
 				containsActionButton={false}
 				cancelText={"Ok"}
 			>
-				<SuccessfulBooking  points={pointsAdded}/>
+				<SuccessfulBooking points={pointsAdded} />
 			</PopUp>
 
 			<ItineraryAndActivityHeader
@@ -198,8 +204,8 @@ export default function ActivityDetails() {
 						<Map
 							setMarkerPosition={(position) => {}}
 							defaultPosition={{
-								lat: 29.9792,
-								lng: 31.1342,
+								lat: activityData.Latitude,
+								lng: activityData.Longitude,
 							}}
 							customStyles={{ height: "70vh", width: "50vw" }}
 						/>
@@ -218,17 +224,26 @@ export default function ActivityDetails() {
 						height="10%"
 					/>
 
-					<DiscountCard
-						availableSeats={activityData.freeSpots}
-						price={activityData.price}
-						discountPercentage={activityData.specialDiscount}
-						width="65%"
-						height="25%"
-						onClick={() => {
-							// Open pop up with booking details
-							setBookPopUp(true);
-						}}
-					/>
+					{(!userType ||
+						userType == "Tourist" ||
+						userType == "Guest") && (
+						<DiscountCard
+							availableSeats={activityData.freeSpots}
+							price={activityData.price}
+							discountPercentage={activityData.specialDiscount}
+							width="65%"
+							height="25%"
+							onClick={() => {
+								// Open pop up with booking details
+								if(userType == "Guest" || !userType) {
+									navigate("/signin")
+									return
+								}
+								
+								setBookPopUp(true);
+							}}
+						/>
+					)}
 
 					<ReviewsSection
 						ratingIds={activityData.ratings}

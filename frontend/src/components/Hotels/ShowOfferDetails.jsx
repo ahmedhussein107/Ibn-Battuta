@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./ShowOfferDetails.css";
 import "./HotelCard.css";
 import MapComponent from "../MapComponent";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PersonIcon from "@mui/icons-material/Person";
 import BedIcon from "@mui/icons-material/Bed";
@@ -10,13 +10,22 @@ import BathtubIcon from "@mui/icons-material/Bathtub";
 import Button from "../Button";
 import { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
-
+import convertCurrency from "../../api/currency";
+import Cookies from "js-cookie";
 const ShowOfferDetails = () => {
+    const navigate = useNavigate();
     const { state } = useLocation();
     const { offer } = state || {};
     const [isLoading, setIsLoading] = useState(false);
-
     const [bookingId, setBookingId] = useState(offer.bookingId);
+    const [price, setPrice] = useState(offer.totalPrice);
+    useEffect(() => {
+        convertCurrency(offer.totalPrice, "EGP", Cookies.get("currency") || "EGP").then(
+            (result) => {
+                setPrice(result);
+            }
+        );
+    }, []);
     console.log("offer in detail page", offer);
     const handleOnAction = async () => {
         setIsLoading(true);
@@ -35,6 +44,7 @@ const ShowOfferDetails = () => {
         } catch (err) {
         } finally {
             setIsLoading(false);
+            setTimeout(() => navigate("/bookings"), 1000);
         }
     };
     return (
@@ -123,7 +133,9 @@ const ShowOfferDetails = () => {
                                 <strong>Payment:</strong> {offer.paymentMethod}
                             </p>
                             <p>
-                                <strong>Total Price:</strong> ${offer.totalPrice}
+                                <strong>Total Price:</strong>{" "}
+                                {Cookies.get("currency") || "EGP"}
+                                {price}
                             </p>
                         </div>
                     </div>
