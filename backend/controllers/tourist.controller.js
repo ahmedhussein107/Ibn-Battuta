@@ -126,7 +126,11 @@ export const updateTourist = async (req, res) => {
 
 export const deleteTourist = async (req, res) => {
     try {
-        const touristID = req.user.userId;
+        let touristID = req.user.userId;
+        const admin = await Admin.findById(req.user.userId);
+        if (admin) {
+            touristID = req.query.userId;
+        }
         const currentTourist = await Tourist.findById(touristID);
 
         // Check for bookings first
@@ -143,11 +147,7 @@ export const deleteTourist = async (req, res) => {
         }
 
         // If current tourist doesn't exist, check if the user is an admin
-        let ID = touristID;
-        const admin = await Admin.findById(touristID);
-        if (admin) {
-            ID = req.query.userId;
-        }
+        const ID = touristID;
 
         const tourist = await Tourist.findByIdAndDelete(ID);
         if (tourist) {

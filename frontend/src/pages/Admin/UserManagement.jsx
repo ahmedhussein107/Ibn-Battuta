@@ -209,8 +209,8 @@ const UserManagement = ({ isAll = true }) => {
                                         <>
                                             <TableCell>
                                                 <a
-                                                    href={user.documents[0]}
-                                                    target={user.documents[0]}
+                                                    href={user.documents?.[0]}
+                                                    target={user.documents?.[0]}
                                                     // rel="noopener noreferrer"
                                                 >
                                                     id

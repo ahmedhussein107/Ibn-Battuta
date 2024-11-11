@@ -127,6 +127,11 @@ export const updateTourGuide = async (req, res) => {
 
 export const deleteTourGuide = async (req, res) => {
     let tourguideId = req.user.userId;
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        tourguideId = req.query.userId;
+    }
+
     try {
         const upcomingItineraries = await Itinerary.find({
             tourguideID: tourguideId,

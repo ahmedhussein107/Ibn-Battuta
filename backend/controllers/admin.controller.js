@@ -140,7 +140,7 @@ export const updateAdmin = async (req, res) => {
 
 // Deleting an admin
 export const deleteAdmin = async (req, res) => {
-    const adminId = req.user.userId;
+    const adminId = req.query.userId;
     try {
         const admin = await Admin.findByIdAndDelete(adminId);
         if (admin) {

@@ -102,7 +102,10 @@ export const updateSeller = async (req, res) => {
 
 export const deleteSeller = async (req, res) => {
     let sellerId = req.user.userId;
-
+    const admin = await Admin.findById(req.user.userId);
+    if (admin) {
+        sellerId = req.query.userId;
+    }
     try {
         const products = await Product.find({
             ownerID: sellerId,
@@ -118,10 +121,6 @@ export const deleteSeller = async (req, res) => {
                 .status(400)
                 .json({ e: "Cannot delete seller with pending orders" });
         } else {
-            const admin = await Admin.findById(req.user.userId);
-            if (admin) {
-                sellerId = req.query.userId;
-            }
             const seller = await Seller.findByIdAndDelete(sellerId);
             if (seller) {
                 await Username.findByIdAndDelete(seller.username);
