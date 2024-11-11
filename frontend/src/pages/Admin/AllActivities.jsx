@@ -20,8 +20,6 @@ const AllActivities = () => {
     const [activities, setActivities] = useState([]);
     const [searchedTerm, setSearchedTerm] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
-    const { curruncyRates } = useHeader();
-    console.log(curruncyRates);
     const sortActivities = (activities) => {
         console.log("Sort By", sortBy);
         let sortedActivities = [...activities]; // Create a shallow copy
