@@ -95,9 +95,8 @@ const UserManagement = ({ isAll = true }) => {
 				wallet: 1000000,
 			});
 			setMessage("Points added successfully!");
-			fetchUsers();
 		} catch (error) {
-			console.error("Error adding point  user:", error);
+			console.error("Error adding point  user:", touristID, error);
 			setMessage("Error adding points. Please try again.");
 		} finally {
 			setIsDialogOpen(false);
