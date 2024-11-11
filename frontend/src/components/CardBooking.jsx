@@ -37,21 +37,23 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
         }
     }, [open]);
 
-    const Picture = booking.typeId.picture || "";
+    console.log(booking);
+    console.log(booking.typeId);
+    const Picture = booking.typeId?.picture || "";
     const profilePicture =
         booking.bookingType == "Itinerary"
-            ? booking.typeId.tourguideID.picture
-            : booking.typeId.advertiserID.picture || "";
+            ? booking.typeId?.tourguideID.picture
+            : booking.typeId?.advertiserID.picture || "";
     const name =
         booking.bookingType == "Itinerary"
-            ? booking.typeId.tourguideID.name
-            : booking.typeId.advertiserID.name || "";
+            ? booking.typeId?.tourguideID.name
+            : booking.typeId?.advertiserID.name || "";
 
     const currentDate = new Date(Date.now());
     const date =
         booking.bookingType == "Itinerary"
-            ? booking.typeId.availableDatesAndTimes[0]
-            : booking.typeId.startDate;
+            ? booking.typeId?.availableDatesAndTimes[0]
+            : booking.typeId?.startDate;
     const givenDate = new Date(date);
     const differenceInMilliseconds = givenDate - currentDate;
     const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24.0);
@@ -95,7 +97,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                     gap: "0.2rem",
                 }}
             >
-                <h2 style={{ fontSize: fontSize, margin: 0 }}>{booking.typeId.name}</h2>
+                <h2 style={{ fontSize: fontSize, margin: 0 }}>{booking.typeId?.name}</h2>
                 <div
                     style={{
                         display: "flex",
@@ -127,7 +129,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
             >
                 <div style={{ display: "flex", alignItems: "center" }}>
                     <LocationIcon sx={{ marginRight: "0.5rem", fontSize: "1.1em" }} />
-                    {booking.typeId.location}
+                    {booking.typeId?.location}
                 </div>
                 <div style={{ display: "flex", alignItems: "center" }}>
                     {booking.bookingType == "Itinerary" ? (
@@ -138,8 +140,8 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                         <TagsIcon style={{ marginRight: "0.5rem", fontSize: "1.1em" }} />
                     )}
                     {booking.bookingType == "Itinerary"
-                        ? booking.typeId.language
-                        : booking.typeId.category}
+                        ? booking.typeId?.language
+                        : booking.typeId?.category}
                 </div>
                 <div
                     style={{
@@ -148,7 +150,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                     }}
                 >
                     <TagsIcon sx={{ marginRight: "0.5rem", fontSize: "1.1em" }} />
-                    {booking.typeId.tags.join(", ")}
+                    {booking.typeId?.tags.join(", ")}
                 </div>
             </div>
             <div
