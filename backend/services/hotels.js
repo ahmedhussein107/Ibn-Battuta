@@ -132,92 +132,92 @@ import http from "https";
 
 const api_key = "13f30476a7msh7c7b0bf653e92d8p1ad710jsn75d88c3a6625";
 
-function getHotelRoomList(query, callback) {
-    const options = {
-        method: "GET",
-        hostname: "booking-com.p.rapidapi.com",
-        port: null,
-        path: `/v1/hotels/room-list?checkin_date=${query.checkIn}&children_ages=5%2C0%2C9&adults_number_by_rooms=${query.guests}%2C1&currency=AED&units=metric&children_number_by_rooms=2%2C1&checkout_date=${checkOut}&hotel_id=${hotelId}&locale=en-gb`,
-        headers: {
-            "x-rapidapi-key": api_key, // Use your actual API key here
-            "x-rapidapi-host": "booking-com.p.rapidapi.com",
-        },
-    };
+// function getHotelRoomList(query, callback) {
+//     const options = {
+//         method: "GET",
+//         hostname: "booking-com.p.rapidapi.com",
+//         port: null,
+//         path: `/v1/hotels/room-list?checkin_date=${query.checkIn}&children_ages=5%2C0%2C9&adults_number_by_rooms=${query.guests}%2C1&currency=AED&units=metric&children_number_by_rooms=2%2C1&checkout_date=${checkOut}&hotel_id=${hotelId}&locale=en-gb`,
+//         headers: {
+//             "x-rapidapi-key": api_key, // Use your actual API key here
+//             "x-rapidapi-host": "booking-com.p.rapidapi.com",
+//         },
+//     };
 
-    const req = http.request(options, function (res) {
-        const chunks = [];
+//     const req = http.request(options, function (res) {
+//         const chunks = [];
 
-        res.on("data", function (chunk) {
-            chunks.push(chunk);
-        });
+//         res.on("data", function (chunk) {
+//             chunks.push(chunk);
+//         });
 
-        res.on("end", function () {
-            const body = Buffer.concat(chunks).toString();
-            try {
-                const parsedData = JSON.parse(body);
+//         res.on("end", function () {
+//             const body = Buffer.concat(chunks).toString();
+//             try {
+//                 const parsedData = JSON.parse(body);
 
-                if (parsedData && parsedData.result) {
-                    // do the work;
-                    const offers = parsedData.result.rooms.map((room) => ({
-                        roomType: room.room_type,
-                        price: room.price.total_price,
-                        amenities: room.amenities,
-                        currency: room.price.currency,
-                    }));
+//                 if (parsedData && parsedData.result) {
+//                     // do the work;
+//                     const offers = parsedData.result.rooms.map((room) => ({
+//                         roomType: room.room_type,
+//                         price: room.price.total_price,
+//                         amenities: room.amenities,
+//                         currency: room.price.currency,
+//                     }));
 
-                    // Call the callback function with the rooms data
-                    callback(null, offers);
-                } else {
-                    callback(new Error("No rooms found or invalid data"));
-                }
-            } catch (err) {
-                callback(new Error("Error parsing API response: " + err.message));
-            }
-        });
-    });
+//                     // Call the callback function with the rooms data
+//                     callback(null, offers);
+//                 } else {
+//                     callback(new Error("No rooms found or invalid data"));
+//                 }
+//             } catch (err) {
+//                 callback(new Error("Error parsing API response: " + err.message));
+//             }
+//         });
+//     });
 
-    req.on("error", function (err) {
-        callback(new Error("API request failed: " + err.message));
-    });
+//     req.on("error", function (err) {
+//         callback(new Error("API request failed: " + err.message));
+//     });
 
-    req.end();
-}
+//     req.end();
+// }
 
-app.get("/api/hotel/rooms", async (req, res) => {
-    const { hotelIds } = req.query;
-    const query = {};
-    query.checkIn = req.query.checkIn;
-    query.checkOut = req.query.checkOut;
-    query.guests = req.query.guests;
+// app.get("/api/hotel/rooms", async (req, res) => {
+//     const { hotelIds } = req.query;
+//     const query = {};
+//     query.checkIn = req.query.checkIn;
+//     query.checkOut = req.query.checkOut;
+//     query.guests = req.query.guests;
 
-    if (!hotelIds) {
-        return res.status(400).json({ error: "Hotel IDs are required" });
-    }
+//     if (!hotelIds) {
+//         return res.status(400).json({ error: "Hotel IDs are required" });
+//     }
 
-    const hotelIdList = hotelIds.split(",");
+//     const hotelIdList = hotelIds.split(",");
 
-    try {
-        const roomLists = [];
+//     try {
+//         const roomLists = [];
 
-        for (let hotelId of hotelIdList) {
-            query.hotelId = hotelId;
-            const rooms = await new Promise((resolve, reject) => {
-                getHotelRoomList(hotelId, (err, rooms) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(rooms);
-                });
-            });
-            roomLists.push({ query, rooms });
-        }
+//         for (let hotelId of hotelIdList) {
+//             query.hotelId = hotelId;
+//             const rooms = await new Promise((resolve, reject) => {
+//                 getHotelRoomList(hotelId, (err, rooms) => {
+//                     if (err) {
+//                         return reject(err);
+//                     }
+//                     resolve(rooms);
+//                 });
+//             });
+//             roomLists.push({ query, rooms });
+//         }
 
-        // Return the combined result
-        res.json({ roomLists });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+//         // Return the combined result
+//         res.json({ roomLists });
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// });
 
 const getHotelsByCoordinates = (query, callback) => {
     const options = {
@@ -251,7 +251,7 @@ const getHotelsByCoordinates = (query, callback) => {
     req.end();
 };
 
-app.get("/api/hotel/search", (req, res) => {
+const getHotelsByCoordinatesHandler = (req, res) => {
     const lat = req.query.lat || 25.2048;
     const lng = req.query.lng || 55.2708;
     const checkIn = req.query.checkIn || new Date().toISOString().split("T")[0];
@@ -259,20 +259,15 @@ app.get("/api/hotel/search", (req, res) => {
         req.query.checkOut ||
         new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split("T")[0];
 
-    if (!latitude || !longitude || !checkin_date || !checkout_date) {
-        return res.status(400).json({
-            error: "Latitude, longitude, check-in date, and check-out date are required",
-        });
-    }
+    const query = { lat, lng, checkIn, checkOut };
 
     getHotelsByCoordinates(query, (err, hotels) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
 
-        // Return the hotels data as the response
         res.json({ hotels });
     });
-});
+};
 
 export default amadeusHotelsRouter;
