@@ -6,6 +6,7 @@ import TouristActivityNotification from "../models/touristActivityNotification.m
 import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
 import Admin from "../models/admin.model.js";
+import Complaint from "../models/complaint.model.js";
 export const getTourists = async (req, res) => {
     try {
         const tourguides = await Tourist.find();
@@ -71,7 +72,7 @@ export const createTourist = async (req, res) => {
             req.body.password = hashedPassword;
             const { address, ...body } = req.body;
             const newTourist = await Tourist.create(body);
-            assignCookies(res, "Tourist", newTourist._id)
+            assignCookies(res, "Tourist", newTourist._id, newTourist.currency)
                 .status(201)
                 .json({ message: "Sign up successful" });
         } else {
@@ -112,8 +113,10 @@ export const updateTourist = async (req, res) => {
                 new: true,
             }
         );
-
-        res.json(tourist);
+        res.cookie("currency", touristUpdated.currency, { maxAge: 60 * 60 * 24 * 1000 })
+            .status(200)
+            .json({ message: "Tourist updated" })
+            .json(tourist);
     } catch (e) {
         res.status(400).json({ e: e.message });
     }
@@ -136,6 +139,13 @@ export const deleteTourist = async (req, res) => {
                 await Promise.all(
                     tourist.notifications.map(async (notificationId) => {
                         await Notification.findByIdAndDelete(notificationId);
+                    })
+                );
+            }
+            if (tourist.complaints && tourist.complaints.length > 0) {
+                await Promise.all(
+                    tourist.complaints.map(async (complaintId) => {
+                        await Complaint.findByIdAndDelete(complaintId);
                     })
                 );
             }

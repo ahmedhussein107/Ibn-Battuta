@@ -10,8 +10,10 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
     const navigate = useNavigate();
-
-    const { title, createdAt, body, status, touristID, ...moree } = complaint;
+    console.log("1");
+    console.log("complaint", complaint);
+    const { title, createdAt, body, status, touristID, ...more } = complaint;
+    console.log("complaint", complaint);
     const userType = Cookies.get("userType") || "Admin";
     const formatDate = (date) => {
         const d = new Date(date);
@@ -62,11 +64,7 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
             {/* Complaint Title and Status */}
             <div className="complaint-header">
                 <div className="title-and-date">
-                    <span className="complaint-title">
-                        {title.length > 16 && !isExpanded
-                            ? `${title.slice(0, 16)}...`
-                            : title}
-                    </span>
+                    <span className="complaint-title">{title}</span>
                     <span className="complaint-date">{formattedDate}</span>
                 </div>
                 <div className="status-and-actions">
@@ -99,18 +97,17 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
                     )}
                 </div>
             </div>
-
             <div className="complaint-user">
                 <img
                     src={
                         touristID?.picture ||
                         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                     }
-                    alt={touristID.name}
+                    alt={touristID?.name || "Anonymous"}
                     className="user-image"
                 />
                 <span className="user-name" onClick={() => handleViewProfile()}>
-                    {touristID.name}
+                    {touristID?.name || "Anonymous"}
                 </span>
             </div>
 

@@ -4,7 +4,8 @@ import axiosInstance from "../../api/axiosInstance";
 import { Carousel } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-
+import convert from "../api/convert";
+import Cookies from "js-cookie";
 const ViewProductPage = () => {
     const { productId } = useParams(); // Get product ID from the URL
     const [product, setProduct] = useState(null);
@@ -56,7 +57,8 @@ const ViewProductPage = () => {
 
                 <Card.Body>
                     <Card.Text>
-                        <strong>Price:</strong> ${product.price}
+                        <strong>Price:</strong> {Cookies.get("currency") || "EGP"}
+                        {convert(product.price)}
                     </Card.Text>
                     <Card.Text>
                         <strong>Description:</strong> {product.description}

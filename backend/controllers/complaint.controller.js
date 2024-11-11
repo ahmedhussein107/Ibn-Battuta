@@ -4,7 +4,7 @@ import { populateReplies } from "./comment.controller.js";
 export const createComplaint = async (req, res) => {
 	req.body.touristID = req.user?.userId;
 	try {
-		const newComplaint = new Complaint(req.body);
+		const newComplaint = await Complaint.create(req.body);
 		res.status(201).json(newComplaint);
 	} catch (error) {
 		res.status(400).json({ message: error.message });

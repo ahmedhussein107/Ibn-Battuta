@@ -5,7 +5,8 @@ import TagsIcon from "@mui/icons-material/LocalOffer";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DateIcon from "@mui/icons-material/Today";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
-
+import convert from "../api/convert";
+import Cookies from "js-cookie";
 const InventoryCard = ({ product, handleDelete }) => {
     const title = product.name;
     const date = new Date(product.createdAt).toLocaleDateString();
@@ -202,7 +203,9 @@ const InventoryCard = ({ product, handleDelete }) => {
                 <div style={styles.stock}>{stock} in stock</div>
 
                 <div style={styles.price}>
-                    <span style={{ fontWeight: "bold" }}>USD {originalPrice}</span>
+                    <span style={{ fontWeight: "bold" }}>
+                        {Cookies.get("currency") || "EGP"} {convert(originalPrice)}
+                    </span>
                 </div>
 
                 <button

@@ -282,7 +282,8 @@ const getHotelsByCoordinates = (query, callback) => {
                     name: hotel?.hotel_name || room.name,
                     image: hotel?.main_image_url || room.image,
                     totalPrice:
-                        hotel?.price_breakdown?.all_inclusive_price || room.totalPrice,
+                        (hotel?.price_breakdown?.all_inclusive_price || room.totalPrice) *
+                        50,
                     currency: hotel?.price_breakdown?.currency || "USD",
                     checkIn: hotel?.checkin?.from || room.checkIn,
                     checkOut: hotel?.checkout?.from || room.checkOut,
