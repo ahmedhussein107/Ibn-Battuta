@@ -17,6 +17,10 @@ import { useNavigate } from "react-router-dom";
 const minPrice = 0;
 const maxPrice = 1000;
 
+import convert from "../../api/convert.js";
+import convertBack from "../../api/convertBack.js";
+import Cookies from "js-cookie";
+
 const Activities = () => {
     const [activities, setActivities] = useState([]);
     const [tags, setTags] = useState([""]);
@@ -124,7 +128,7 @@ const Activities = () => {
         }
 
         if (priceRange[0] || priceRange[1]) {
-            query.price = priceRange[0] + "-" + priceRange[1];
+            query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
         } else {
             delete query.price;
         }

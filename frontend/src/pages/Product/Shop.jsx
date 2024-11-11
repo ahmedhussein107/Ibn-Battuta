@@ -14,7 +14,9 @@ import CardProduct from "../../components/CardProduct.jsx";
 import CustomButton from "../../components/Button.jsx";
 import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
 import QuantityControls from "../../components/QuantityControls.jsx";
-
+import convert from "../../api/convert.js";
+import convertBack from "../../api/convertBack.js";
+import Cookies from "js-cookie";
 const minPrice = 0;
 const maxPrice = 1000;
 
@@ -93,7 +95,7 @@ const Shop = () => {
         let query = {};
 
         if (priceRange[0] || priceRange[1]) {
-            query.price = priceRange[0] + "-" + priceRange[1];
+            query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
         } else {
             delete query.price;
         }
@@ -185,10 +187,13 @@ const Shop = () => {
                     }}
                 >
                     <p>{selectedProduct.name}</p>
-                    <p>Price: ${selectedProduct.price}</p>
                     <p>
-                        Total Price: $
-                        {(selectedProduct.price * selectedQuantity).toFixed(2)}
+                        Price: {Cookies.get("currency") || "EGP"}
+                        {convert(selectedProduct.price)}
+                    </p>
+                    <p>
+                        Total Price: {Cookies.get("currency") || "EGP"}{" "}
+                        {convert(selectedProduct.price * selectedQuantity).toFixed(2)}
                     </p>
 
                     <QuantityControls

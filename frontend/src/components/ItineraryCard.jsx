@@ -4,6 +4,8 @@ import LanguageIcon from "@mui/icons-material/Language";
 import TagsIcon from "@mui/icons-material/LocalOffer";
 import DateIcon from "@mui/icons-material/Today";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import convert from "../api/convert";
+import Cookies from "js-cookie";
 const ItineraryCard = ({ itinerary, handleDelete }) => {
     const title = itinerary.name;
     const location = itinerary.location;
@@ -221,7 +223,9 @@ const ItineraryCard = ({ itinerary, handleDelete }) => {
                 </div>
 
                 <div style={styles.price}>
-                    <span style={{ fontWeight: "bold" }}>USD {originalPrice}</span>
+                    <span style={{ fontWeight: "bold" }}>
+                        {Cookies.get("currency") || "EGP"} {convert(originalPrice)}
+                    </span>
                 </div>
 
                 <button

@@ -60,6 +60,7 @@ const HotelList = () => {
                 withCredentials: true,
             });
             console.log("Fetched data:", response);
+
             setRooms(response.data.hotels || []);
         } catch (err) {
             console.error("Error fetching rooms:", err);
