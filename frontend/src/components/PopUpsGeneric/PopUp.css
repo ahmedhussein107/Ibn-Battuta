@@ -13,12 +13,9 @@
 
 .popup {
     background: white;
-
-    min-width: 400px;
-
     padding: 4vmin;
-    width: 60%;
-    height: 90%;
+    width: 30vw;
+    height: auto;
     border-radius: 3vmin;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;

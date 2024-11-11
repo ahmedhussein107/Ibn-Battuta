@@ -34,20 +34,60 @@
     justify-content: center;
 }
 
-.complaint-status {
+/* .complaint-status {
     text-align: center;
-    padding: 0.25em 0.5em; /* 4px 8px */
-    border-radius: 0.25rem; /* 4px */
+    border-radius: 0.5rem;
     color: #fff;
     font-size: var(--font-size-small);
 }
 
 .resolved {
     background-color: green;
+    padding:1em;
+
 }
 
 .pending {
     background-color: red;
+    padding-left:.1em;
+    padding-right:.1em;
+} */
+.complaint-status {
+
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-block;
+    color: #fff;
+    animation: fadeIn 0.3s ease-in-out;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: default;
+}
+
+.complaint-status.pending {
+    background-color: #ffb347; /* Warm orange for "pending" */
+    box-shadow: 0 2px 8px rgba(255, 179, 71, 0.4);
+}
+
+.complaint-status.resolved {
+    background-color: #4caf50; /* Green for "solved" */
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+}
+
+.complaint-status:hover {
+    transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .complaint-date {

@@ -59,9 +59,7 @@ import FlightBookingDetails from "./pages/Flights/FlightBookingDetails";
 const LayoutWithNav = () => (
     <>
         <NavBar />
-        <main>
-            <Outlet /> {/* This renders the nested routes */}
-        </main>
+        <Outlet /> {/* This renders the nested routes */}
     </>
 );
 

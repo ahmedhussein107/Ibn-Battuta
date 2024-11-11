@@ -61,7 +61,7 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
         }
     };
     return (
-        <div className="complaint-card">
+        <article className="complaint-card">
             {/* Complaint Title and Status */}
             <div className="complaint-header">
                 <div className="title-and-date">
@@ -69,7 +69,7 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
                     <span className="complaint-date">{formattedDate}</span>
                 </div>
                 <div className="status-and-actions">
-                    <span className={`complaint-status-${status}`}>
+                    <span className={`complaint-status ${status}`}>
                         {status.toUpperCase()}
                     </span>
                     {userType === "Admin" && isExpanded && (
@@ -120,14 +120,11 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
                         text={"View"}
                         handleClick={handleViewComplaint}
                         isLoading={false}
-                        width={"40px"}
                         customStyle={{
                             marginLeft: "20px",
-                            width: "40px",
-                            height: "55px",
+                            height: "5vh",
                             minHieght: "70px",
                             borderRadius: "60px",
-                            maxWidth: "100px",
                         }}
                     />
                 ) : (
@@ -139,7 +136,7 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
                     </div>
                 )}
             </div>
-        </div>
+        </article>
     );
 };
 

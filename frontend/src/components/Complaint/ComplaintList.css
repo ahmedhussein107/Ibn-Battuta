@@ -4,7 +4,7 @@
     align-items: center; /* Center items horizontally */
     justify-content: center; /* Center items vertically */
     margin: 20px; /* Optional spacing around the container */
-    margin-top: 60%;
+    margin-top: 40vh;
     width: 80%;
 }
 
@@ -20,5 +20,11 @@
     margin-bottom: calc(2 * var(--spacing-large));
     background-color: var(--background-color);
     color: black;
+    border: 1px solid black;
+}
+
+.create-complaint-button:hover {
+    background-color: var(--secondary-color);
+    color: white;
     border: 1px solid black;
 }
