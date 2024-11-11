@@ -20,7 +20,7 @@ touristRouter.post("/createTourist", createTourist);
 
 touristRouter.get("/tourist", isAuthenticated, getTouristById);
 
-touristRouter.patch("/updateTourist", isAuthenticated, updateTourist);
+touristRouter.put("/updateTourist", isAuthenticated, updateTourist);
 
 touristRouter.delete("/deleteTourist", isAuthenticated, deleteTourist);
 

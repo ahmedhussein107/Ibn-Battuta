@@ -8,26 +8,25 @@ import bg from "../../assets/images/bg.jpg";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
-
 const PageWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #fff;
-    min-height: 10vh;
-    padding: 0px;
-    position: absolute;
-    width: "100vw", position: "absolute", top: "0", left: "0" 
+    min-height: 100vh; /* Full viewport height */
+    padding: 0;
+    position: relative;
+    width: 100vw; /* Full viewport width */
+    top: 0;
+    left: 0;
 `;
 
 const ButtonContainer = styled.div`
     display: flex;
-    gap: 2vh; /* Increased space between buttons */
-    margin-top: 6vh; /* Adjusted space from the header image */
+    gap: 2vh; /* Space between buttons */
+    margin-top: 3vh; /* Adjusted to create space below the header */
     position: relative;
-    z-index: 2;
-    margin-top: -5vh; /* Adjusted space from the header image */
-    margin-left: auto; /* Automatically takes up remaining space on the left */
+    margin-left: 70vw; /* Pushes the container to the left */
 `;
 
 const Button = styled.button`
@@ -82,7 +81,6 @@ const EditProfile = styled.button`
     border-radius: 100px;
     border: 0.1vh solid black;
     color: black;
-    z-index: 2;
     margin-left: 75%; /* This pushes the button to the right within its flex container */
 `;
 
@@ -92,16 +90,9 @@ const MainContent = styled.div`
     align-items: center;
     width: 80%;
     margin-top: 10px; /* Pushes content below the overlapping profile image */
-    z-index: 2;
 `;
 
 const ProfileDetailsBox = styled.div`
-    width: 831px;
-    background: white;
-    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
-    border-radius: 20px;
-    padding: 20px;
-    position: relative;
     width: 831px;
     background: white;
     box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
@@ -130,16 +121,6 @@ const WalletBox = styled.div`
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-    width: 378px;
-    background: white;
-    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
-    border-radius: 20px;
-    padding: 20px;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
 `;
 
 const WalletHeader = styled.div`
@@ -153,13 +134,6 @@ const WalletIcon = styled.img`
     width: 100px; // New size for the icon
     height: 100px; // New size for the icon
 `;
-const WalletIconContainer = styled.div`
-    display: flex;
-    flex-direction: column; /* Stack wallet icon and level vertically */
-    align-items: center; /* Center items horizontally */
-    gap: 5px; /* Space between icon and level text */
-`;
-
 const LevelContainer = styled.div`
     font-size: 16px;
     color: black; /* Optional color change */
@@ -184,21 +158,9 @@ const RedeemBox = styled.div`
     border-radius: 20px;
     padding: 20px;
     text-align: center;
-    width: 378px;
-    background: white;
-    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
-    border-radius: 20px;
-    padding: 20px;
-    text-align: center;
 `;
 
 const InputBox = styled.input`
-    width: 100px;
-    height: 40px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-align: center;
-    margin: 5px;
     width: 100px;
     height: 40px;
     border: 1px solid #ccc;
@@ -224,13 +186,6 @@ const RedeemButton = styled.button`
     border-radius: 20px;
     cursor: pointer;
     margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #f86624;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    margin-top: 10px;
 `;
 
 const PreferenceTagsBox = styled.div`
@@ -241,24 +196,9 @@ const PreferenceTagsBox = styled.div`
     padding: 20px;
     text-align: center;
     margin-top: 20px;
-    width: 831px;
-    background: white;
-    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
-    border-radius: 20px;
-    padding: 20px;
-    text-align: center;
-    margin-top: 20px;
 `;
 
 const TagBubble = styled.span`
-    display: inline-flex;
-    align-items: center;
-    background-color: #ffe0cc;
-    color: black;
-    border-radius: 15px;
-    padding: 5px 10px;
-    margin: 5px;
-    font-size: 14px;
     display: inline-flex;
     align-items: center;
     background-color: #ffe0cc;
@@ -406,7 +346,7 @@ export default function TouristProfilePage() {
         if (
             pointsToRedeem > 0 &&
             tourist &&
-            tourist.points >= pointsToRedeem &&
+            tourist.loyalityPoints >= pointsToRedeem &&
             pointsToRedeem % 10000 === 0
         ) {
             axiosInstance
@@ -419,7 +359,7 @@ export default function TouristProfilePage() {
                     alert(response.data.message);
                     const updatedTourist = {
                         ...tourist,
-                        points: tourist.points - pointsToRedeem,
+                        loyalityPoints: tourist.loyalityPoints - pointsToRedeem,
                         wallet: tourist.wallet + redeemValue,
                     };
                     setTourist(updatedTourist);
@@ -435,7 +375,7 @@ export default function TouristProfilePage() {
                 });
         } else if (pointsToRedeem === 0) {
             alert("Please enter a valid amount of points to redeem.");
-        } else if (tourist?.points < pointsToRedeem) {
+        } else if (tourist?.loyalityPoints < pointsToRedeem) {
             alert("Insufficient points for redemption.");
         } else if (pointsToRedeem % 10000 !== 0) {
             alert("Please enter a multiple of 10000.");
@@ -461,23 +401,28 @@ export default function TouristProfilePage() {
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
     };
-
     const handleSaveChanges = () => {
-        // Validate formData before making the API call
-        if (!formData.name || !formData.email || !formData.mobile) {
+        if (!formData.name || !formData.email) {
             alert("Please fill out all fields.");
             return;
         }
 
         axiosInstance
-            .patch("/tourist/updateTourist", formData, {
+            .put("/tourist/updateTourist", formData, {
                 withCredentials: true,
             })
-            .then((response) => {
-                // Update tourist state with the new data from the server
-                setTourist(response.data);
-                alert("Profile updated successfully");
-                setIsEditing(false); // Reset editing state after saving
+            .then(() => {
+                // Re-fetch the tourist data to ensure it's updated
+                axiosInstance
+                    .get("/tourist/tourist", { withCredentials: true })
+                    .then((response) => {
+                        setTourist(response.data); // Update tourist state with the fresh data
+                        alert("Profile updated successfully");
+                        setIsEditing(false); // Switch back to non-editing mode
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching updated tourist:", error);
+                    });
             })
             .catch((error) => {
                 console.error("Error updating profile:", error);
@@ -605,11 +550,11 @@ export default function TouristProfilePage() {
                     overflow: "hidden",
                     border: "4px solid white",
                     marginTop: "-6vh",
-
-                    backgroundImage:
-                        "url(https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg)" ||
-                        tourist?.profilePicture ||
-                        "url(https://img.freepik.com/free-vector/businessman-character-avatar-profile-icon-male-person-vector-illustration_1857-1017.jpg)",
+                    backgroundImage: `url(${
+                        tourist?.picture
+                            ? tourist.picture
+                            : "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
+                    })`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                 }}
@@ -859,8 +804,8 @@ export default function TouristProfilePage() {
                             <WalletIcon src="image 55.png" alt="Wallet Icon" />
                         </WalletHeader>
 
-                        <p>Balance: {tourist?.wallet || 0}</p>
                         <PointsSection>
+                            <p>Balance: {tourist?.wallet || 0}</p>
                             <h3>My Points</h3>
                             <p>Points: {tourist?.loyalityPoints || 0}</p>
                             Level: {currentLevel}

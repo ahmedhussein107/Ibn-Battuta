@@ -155,12 +155,12 @@ export const redeemPoints = async (req, res) => {
             return res.status(404).json({ e: "Tourist not found" });
         }
         const { points } = req.body;
-        if (points > tourist.loyalityPoints) {
+        if (points < 0 || points > (tourist.loyalityPoints || 0)) {
             return res.status(400).json({ e: "Not enough points" });
         }
 
         // Assuming the conversion is 10000 points = $100
-        const cashValue = (loyalityPoints / 10000) * 100;
+        const cashValue = (points / 10000) * 100;
 
         tourist.loyalityPoints -= points; // Deducting points
         tourist.wallet += cashValue; // Adding cash value to the wallet
