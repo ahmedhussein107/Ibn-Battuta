@@ -46,9 +46,7 @@ const Activities = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await axiosInstance.get(
-                `/category/allCategories/`
-            );
+            const response = await axiosInstance.get(`/category/allCategories/`);
             let categs = [];
             for (let category of response.data) {
                 categs.push(category._id);
@@ -77,12 +75,9 @@ const Activities = () => {
     const fetchActivities = async (query) => {
         try {
             console.log("query", query);
-            const response = await axiosInstance.get(
-                `/activity/getUpcomingActivities/`,
-                {
-                    params: query,
-                }
-            );
+            const response = await axiosInstance.get(`/activity/getUpcomingActivities/`, {
+                params: query,
+            });
             console.log("response", response.data);
             sortActivities(response.data);
         } catch (error) {
@@ -204,10 +199,7 @@ const Activities = () => {
             min={minPrice}
             max={maxPrice}
         />,
-        <RatingRange
-            ratingRange={ratingRange}
-            setRatingRange={setRatingRange}
-        />,
+        <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
         <div style={{ display: "flex", flexDirection: "column" }}>
             <DatePicker label="Start Date" setValue={setStartDate} />
             <DatePicker label="End Date" setValue={setEndDate} />
@@ -246,67 +238,68 @@ const Activities = () => {
                 <NavBar />
             </div> */}
 
-			<div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
-				<div
-					style={{
-						width: "40vw",
-						borderRadius: "3vh",
-						marginTop: "1%",
-						marginBottom: "1%",
-					}}
-				>
-					<SideBar
-						collapsibleItems={collapsibleItems}
-						nonCollapsibleItems={nonCollapsibleItems}
-						titles={titles}
-					/>
-				</div>
-				<div
-					style={{
-						minHeight: "50vh",
-						width: "100vw",
-						display: "flex",
-						flexDirection: "column",
-						flexWrap: "wrap",
-						justifyContent: "space-evenly",
-					}}
-				>
-					{activities.map((activity, index) => (
-						<div key={index} style={{ padding: "1.5vh" }}>
-							<CardActivity
-								activity={activity}
-								width={"60vw"}
-								height={"34vh"}
-								firstLineButtons={[
-									<ShareAndMark
-										width="1.2vw"
-										height="1.2vw"
-										styles={{ padding: "0.5vh" }}
-										direction={`/activity-details/${activity.id}`}
-									/>,
-								]}
-								bottomButtons={[
-									{
-										text: "Book Now",
-										onClick: () => navigate(`/activity-details/${activity.id}`),
-										type: "1",
-										width: "50%",
-										styles: {
-											display: "flex",
-											justifyContent: "center",
-											alignItems: "center",
-											padding: "0.5em",
-										},
-									},
-								]}
-							/>
-						</div>
-					))}
-				</div>
-			</div>
-			<Footer />
-		</div>
-	);
+            <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
+                <div
+                    style={{
+                        width: "40vw",
+                        borderRadius: "3vh",
+                        marginTop: "1%",
+                        marginBottom: "1%",
+                    }}
+                >
+                    <SideBar
+                        collapsibleItems={collapsibleItems}
+                        nonCollapsibleItems={nonCollapsibleItems}
+                        titles={titles}
+                    />
+                </div>
+                <div
+                    style={{
+                        minHeight: "50vh",
+                        width: "100vw",
+                        display: "flex",
+                        flexDirection: "column",
+                        flexWrap: "wrap",
+                        justifyContent: "space-evenly",
+                    }}
+                >
+                    {activities.map((activity, index) => (
+                        <div key={index} style={{ padding: "1.5vh" }}>
+                            <CardActivity
+                                activity={activity}
+                                width={"60vw"}
+                                height={"34vh"}
+                                firstLineButtons={[
+                                    <ShareAndMark
+                                        width="1.2vw"
+                                        height="1.2vw"
+                                        styles={{ padding: "0.5vh" }}
+                                        direction={`/activity-details/${activity.id}`}
+                                    />,
+                                ]}
+                                bottomButtons={[
+                                    {
+                                        text: "Book Now",
+                                        onClick: () =>
+                                            navigate(`/activity-details/${activity.id}`),
+                                        type: "1",
+                                        width: "50%",
+                                        styles: {
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            padding: "0.5em",
+                                        },
+                                    },
+                                ]}
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <Footer />
+        </div>
+    );
 };
 
 export default Activities;
