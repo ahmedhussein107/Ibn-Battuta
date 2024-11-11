@@ -19,16 +19,13 @@ const ReviewsSection = ({ ratingIds, width, height, fontSize }) => {
                         );
                         const rating = ratingResponse.data;
 
-                        // Fetch tourist details
-                        const touristResponse = await axiosInstance.get(
-                            `tourist/tourist/${rating.touristID}`
-                        );
-                        const tourist = touristResponse.data;
-
+                       if(rating === undefined) return
+                        const tourist = rating.touristID;
+                       
                         // Construct review object
                         return {
-                            reviewer: tourist.name || "Anonymous User",
-                            profilePic: tourist.profilePic || null,
+                            reviewer: (tourist &&tourist.name) || "Anonymous User",
+                            profilePic: (tourist && tourist.profilePic) || null,
                             rating: rating.rating,
                             comment: rating.comment,
                             createdAt: rating.createdAt,
