@@ -86,6 +86,7 @@ const UserManagement = ({ isAll = true }) => {
         } catch (error) {
             console.error("Error deleting user:", error);
             setMessage("Error deleting user. Please try again.");
+            alert(error.response.data.message);
         } finally {
             setSelectedUser(null);
             setIsDialogOpen(false);
