@@ -41,8 +41,9 @@
     "react-phone-number-input": "^3.4.9",
     "react-router-dom": "^6.26.2",
     "react-slick": "^0.30.2",
-    "slick-carousel": "^1.8.1",
     "react-time-picker": "^7.0.0",
+    "rollup": "^4.25.0",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.13"
   },
   "devDependencies": {
