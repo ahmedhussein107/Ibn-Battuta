@@ -25,7 +25,7 @@ export const getRatings = async (req, res) => {
 
 export const getRatingById = async (req, res) => {
 	try {
-		const rating = await Rating.findById(req.params.id);
+		const rating = await Rating.findById(req.params.id).populate("touristID");
 		if (rating) {
 			res.status(200).json(rating);
 		} else {

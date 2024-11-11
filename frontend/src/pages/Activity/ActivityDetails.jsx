@@ -31,15 +31,22 @@ import "../../styles/ActivityDetails.css";
 export default function ActivityDetails() {
 	const navigate = useNavigate();
 	const [userType, setUserType] = useState(null);
+	const [activityData, setActivityData] = useState(null);
+	const { activityId } = useParams();
+	const [BookPopUp, setBookPopUp] = useState(false);
+	const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
+	const [pointsAdded, setPointsAdded] = useState(0);
+	const [advertiserName, setAdvertiserName] = useState("");
+	const [ticketCount, setTicketCount] = useState(0);
 
+	//To retrieve user type from browser
 	useEffect(() => {
 		// Retrieve the userType from cookies when the component mounts
 		const userTypeFromCookie = Cookies.get("userType");
 		setUserType(userTypeFromCookie);
 	}, []);
-	const [activityData, setActivityData] = useState(null);
-	const { activityId } = useParams();
-	// console.log(`The activity id ${activityId}`);
+
+	//To retrieve activity data from the server
 	useEffect(() => {
 		if (activityData) return;
 
@@ -62,16 +69,6 @@ export default function ActivityDetails() {
 		}
 	}, [activityId]);
 	//For mangaing page logic
-	const [BookPopUp, setBookPopUp] = useState(false);
-	const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
-	const [pointsAdded, setPointsAdded] = useState(0);
-
-	const [advertiserName, setAdvertiserName] = useState("");
-	const [ticketCount, setTicketCount] = useState(0);
-	const photos = [
-		"https://media.istockphoto.com/id/925293368/photo/paradise-tropical-beach-with-rocks-palm-trees-and-turquoise-water-in-sunshine-seychelles-30.webp?s=2048x2048&w=is&k=20&c=zoG4berF7XNOnuex9vx7MFEpYHy48FCyqj9TTOu51CE=",
-		"https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?cs=srgb&dl=pexels-fabianwiktor-994605.jpg&fm=jpg",
-	];
 
 	const handleBooking = async () => {
 		try {
@@ -93,6 +90,8 @@ export default function ActivityDetails() {
 				setPointsAdded(bookingResponse.data.pointsAdded);
 				setBookPopUp(false);
 				setBookingDonePopUp(true);
+				activityData.freeSpots -= ticketCount;
+				setTicketCount(0);
 			} else {
 				console.log(
 					"Booking response received, but status is not 201:",
@@ -130,6 +129,7 @@ export default function ActivityDetails() {
 				headerText={
 					"Please fill in the following to complete your booking"
 				}
+				containsActionButton={ticketCount > 0}
 				handleSubmit={handleBooking}
 			>
 				<TicketCounter
@@ -163,7 +163,7 @@ export default function ActivityDetails() {
 				width="100%"
 				height={"70vh"}
 				interval={5000}
-				photos={photos}
+				photos={activityData.pictures}
 			/>
 			<div className="activity-info">
 				<div className="activity-info-left">

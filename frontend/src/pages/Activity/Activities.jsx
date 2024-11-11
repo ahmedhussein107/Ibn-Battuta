@@ -57,12 +57,14 @@ const Activities = () => {
         }
     };
 
+    
     const sortActivities = (activities) => {
+       
         let sortedActivities = [...activities]; // Create a shallow copy
         if (sortBy === "priceAsc") {
-            sortedActivities.sort((a, b) => a.price - b.price);
+            sortedActivities.sort((a, b) => a.price * (1 - (a.specialDiscount/100))  - (b.price * (1 - (b.specialDiscount/100))));
         } else if (sortBy === "priceDesc") {
-            sortedActivities.sort((a, b) => b.price - a.price);
+            sortedActivities.sort((a, b) => b.price * (1 - (b.specialDiscount/100)) - (a.price * (1 - (a.specialDiscount/100))));
         } else if (sortBy === "ratingAsc") {
             sortedActivities.sort((a, b) => a.rating - b.rating);
         } else if (sortBy === "ratingDesc") {

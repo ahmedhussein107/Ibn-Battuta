@@ -25,7 +25,7 @@ export const createActivity = async (req, res) => {
 
 export const getActivityById = async (req, res) => {
     try {
-        const activity = await Activity.findById(req.params.id);
+        const activity = await Activity.findById(req.params.id).populate("advertiserID");
         if (activity) {
             const { toBeNotifiedTourists, createdAt, updatedAt, __v, ...others } =
                 activity._doc;

@@ -41,10 +41,31 @@ const ItineraryDetails = () => {
 	//6703f5310ecc1ad25ff95144
 	const { itineraryId } = useParams();
 	const [itinerary, setItinerary] = useState(null);
+	//For managing itinerary data
+	const [photoList, setPhotoList] = useState([]);
+	const [pointsAdded, setPointsAdded] = useState(0);
+	const [tourGuideName, setTourGuideName] = useState(null);
+	const [tourGuidePicture, setTourGuidePicture] = useState(null);
+	const [activities, setActivities] = useState([]);
+	const [ticketCount, setTicketCount] = useState(0);
+	const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
+	const totalPrice = itinerary ? itinerary.price * ticketCount : 0;
 
 	//For mangaing page logic
 	const [BookPopUp, setBookPopUp] = useState(false);
 	const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
+
+	const fetchFreeSpots = async () => {
+		if (!itinerary) return;
+		try {
+			const response = await axiosInstance.get(
+				`itinerary/getFreeSpots/${itinerary._id}`
+			);
+			setFreeSpots(response.data);
+		} catch (error) {
+			console.error("Error fetching free spots:", error);
+		}
+	};
 
 	useEffect(() => {
 		const fetchItinerary = async () => {
@@ -53,12 +74,17 @@ const ItineraryDetails = () => {
 					`itinerary/getItinerary/${itineraryId}`
 				);
 				setItinerary(itineraryResponse.data);
+				console.log(itineraryResponse.data)
+				setTourGuideName(itineraryResponse.data.tourguideID.name);
+				setTourGuidePicture(itineraryResponse.data.tourguideID.picture);
 			} catch (err) {
 				console.error("Error fetching itinerary:", err);
 			}
 		};
 		fetchItinerary();
+		fetchFreeSpots();
 	}, [itineraryId]);
+
 	const handleBooking = async () => {
 		if (!itinerary) return;
 		try {
@@ -80,6 +106,7 @@ const ItineraryDetails = () => {
 				setPointsAdded(bookingResponse.data.pointsAdded);
 				setBookPopUp(false);
 				setBookingDonePopUp(true);
+				fetchFreeSpots();
 			} else {
 				console.log(
 					"Booking response received, but status is not 201:",
@@ -104,35 +131,7 @@ const ItineraryDetails = () => {
 		}
 	};
 
-	//For managing itinerary data
-	const [photoList, setPhotoList] = useState([]);
-	const [pointsAdded, setPointsAdded] = useState(0);
-	const [tourGuideName, setTourGuideName] = useState(null);
-	const [tourGuidePicture, setTourGuidePicture] = useState(null);
-	const [activities, setActivities] = useState([]);
-	const [ticketCount, setTicketCount] = useState(0);
-	const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
-	const totalPrice = itinerary ? itinerary.price * ticketCount : 0;
 
-	//For getting free spots
-
-	//For Tour guide name and photo
-	useEffect(() => {
-		if (!itinerary) return;
-		const fetchTourGuide = async () => {
-			try {
-				const response = await axiosInstance.get(
-					`tourguide/tourGuide/${itinerary.tourguideID}`
-				);
-				const tourguide = response.data;
-				setTourGuideName(tourguide.name);
-				setTourGuidePicture(tourguide.picture);
-			} catch (error) {
-				console.error("Error fetching Tour guid	: ", error);
-			}
-		};
-		fetchTourGuide();
-	}, [itinerary]);
 
 	//For activities and photos
 	useEffect(() => {
@@ -149,15 +148,7 @@ const ItineraryDetails = () => {
 								: `customActivity/getCustomActivity/${activityObj.activity}`
 						);
 						const activity = activityResponse.data;
-						if (
-							!isCustom &&
-							activity &&
-							activity.freeSpots !== undefined
-						) {
-							setFreeSpots((prevFreeSpots) =>
-								Math.min(prevFreeSpots, activity.freeSpots)
-							);
-						}
+
 						// Extract and format start and end times
 						const formatTime = (date) => {
 							const options = {
@@ -234,6 +225,7 @@ const ItineraryDetails = () => {
 					"Please fill in the following to complete your booking"
 				}
 				handleSubmit={handleBooking}
+				containsActionButton={ticketCount > 0}
 			>
 				<TicketCounter
 					pricePerPerson={itinerary.price}
@@ -310,9 +302,9 @@ const ItineraryDetails = () => {
 									text={"Likely to be out "}
 									onClick={() => {
 										// Open pop up with booking details
-										if(userType == "Guest" || !userType) {
-											navigate("/signin")
-											return
+										if (userType == "Guest" || !userType) {
+											navigate("/signin");
+											return;
 										}
 										setBookPopUp(true);
 									}}
