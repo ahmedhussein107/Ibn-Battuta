@@ -128,7 +128,7 @@ const ItineraryDetails = () => {
                 setTourGuideName(tourguide.name);
                 setTourGuidePicture(tourguide.picture);
             } catch (error) {
-                console.error("Error fetching Tour guid	: ", error);
+                console.error("Error fetching Tour guide	: ", error);
             }
         };
         fetchTourGuide();
