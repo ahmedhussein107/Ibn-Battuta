@@ -83,6 +83,7 @@ const Shop = () => {
 				{ withCredentials: true }
 			);
 			setBuyingPopUpOpen(false);
+			window.location.reload();
 		} catch (error) {
 			console.error("Error creating order:", error);
 			alert("Error creating order. Please try again.");
