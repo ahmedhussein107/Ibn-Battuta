@@ -106,21 +106,16 @@ export const updateTourist = async (req, res) => {
                 _id: req.body.email,
             });
         }
-        // Hash the password if it is present in the request body
         if (req.body.password) {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
-
         const touristUpdated = await Tourist.findByIdAndUpdate(ID, req.body, {
             new: true,
         });
-        console.log(1);
-        console.log(touristUpdated);
 
         res.cookie("currency", touristUpdated.currency, { maxAge: 60 * 60 * 24 * 1000 })
             .status(200)
-            .json({ message: "Tourist updated" })
-            .json(tourist);
+            .json({ message: "Tourist updated", tourist: touristUpdated });
     } catch (e) {
         res.status(400).json({ e: e.message });
     }
