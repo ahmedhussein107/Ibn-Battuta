@@ -43,8 +43,9 @@ const ComplaintList = () => {
 		try {
 			const response = await axiosInstance.get(
 				`complaint/getSomeComplaints?page=${page}&limit=${itemsPerPage}&isSorted=${isSorted}&status=${selectedFilter}`,
-				{ withCredientials: true }
+				{ withCredentials: true }
 			);
+			console.log("response", response.data);
 			setComplaints(response.data.complaints);
 			setTotalPages(response.data.totalPages);
 		} catch (error) {
