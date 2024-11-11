@@ -73,33 +73,33 @@ const Shop = () => {
         sortProducts(products);
     }, [sortBy]);
 
-	const handleBuyingPopUpOpen = async () => {
-		try {
-			await axiosInstance.post(
-				"/order/createOrder",
-				{
-					product: selectedProduct._id,
-					count: selectedQuantity,
-					price: selectedProduct.price * selectedQuantity,
-				},
-				{ withCredentials: true }
-			);
-			setBuyingPopUpOpen(false);
-			window.location.reload();
-		} catch (error) {
-			console.error("Error creating order:", error);
-			alert("Error creating order. Please try again.");
-		}
-	};
+    const handleBuyingPopUpOpen = async () => {
+        try {
+            await axiosInstance.post(
+                "/order/createOrder",
+                {
+                    product: selectedProduct._id,
+                    count: selectedQuantity,
+                    price: selectedProduct.price * selectedQuantity,
+                },
+                { withCredentials: true }
+            );
+            setBuyingPopUpOpen(false);
+            window.location.reload();
+        } catch (error) {
+            console.error("Error creating order:", error);
+            alert("Error creating order. Please try again.");
+        }
+    };
 
     const buildQuery = () => {
         let query = {};
 
-        if (priceRange[0] || priceRange[1]) {
-            query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
-        } else {
-            delete query.price;
-        }
+        // if (priceRange[0] || priceRange[1]) {
+        //     query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
+        // } else {
+        //     delete query.price;
+        // }
 
         if (ratingRange[0] || ratingRange[1]) {
             if (!ratingRange[0]) {

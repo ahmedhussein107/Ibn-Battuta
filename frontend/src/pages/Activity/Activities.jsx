@@ -127,11 +127,11 @@ const Activities = () => {
             delete query.category;
         }
 
-        if (priceRange[0] || priceRange[1]) {
-            query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
-        } else {
-            delete query.price;
-        }
+        // if (priceRange[0] || priceRange[1]) {
+        //     query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
+        // } else {
+        //     delete query.price;
+        // }
 
         if (ratingRange[0] || ratingRange[1]) {
             if (!ratingRange[0]) {
