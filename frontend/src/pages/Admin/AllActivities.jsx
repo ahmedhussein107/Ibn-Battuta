@@ -13,13 +13,15 @@ import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import CardActivity from "../../components/CardActivity";
+import { useHeader } from "../../components/Header/HeaderContext";
 const AllActivities = () => {
     const navigate = useNavigate();
 
     const [activities, setActivities] = useState([]);
     const [searchedTerm, setSearchedTerm] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
-
+    const { curruncyRates } = useHeader();
+    console.log(curruncyRates);
     const sortActivities = (activities) => {
         console.log("Sort By", sortBy);
         let sortedActivities = [...activities]; // Create a shallow copy
