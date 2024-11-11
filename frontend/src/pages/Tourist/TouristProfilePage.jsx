@@ -785,12 +785,52 @@ export default function TouristProfilePage() {
                                 </p>
                                 <p>
                                     <strong>Preferred Currency:</strong>{" "}
-                                    <input
-                                        type="text"
+                                    <select
                                         name="currency"
                                         value={formData.currency}
                                         onChange={handleChange}
-                                    />
+                                        style={{ width: "30%" }} // Optional styling for the dropdown
+                                    >
+                                        <option value="">
+                                            Select Currency
+                                        </option>{" "}
+                                        {/* Default option */}
+                                        <option value="AED">
+                                            AED - United Arab Emirates Dirham
+                                        </option>
+                                        <option value="AUD">
+                                            AUD - Australian Dollar
+                                        </option>
+                                        <option value="EGP">
+                                            EGP - Egyptian Pound
+                                        </option>
+                                        <option value="EUR">EUR - Euro</option>
+                                        <option value="GBP">
+                                            GBP - British Pound
+                                        </option>
+                                        <option value="GTQ">
+                                            GTQ - Guatemalan Quetzal
+                                        </option>
+                                        <option value="IDR">
+                                            IDR - Indonesian Rupiah
+                                        </option>
+                                        <option value="KWD">
+                                            KWD - Kuwaiti Dinar
+                                        </option>
+                                        <option value="USD">
+                                            USD - United States Dollar
+                                        </option>
+                                        <option value="WST">
+                                            WST - Samoan Tala
+                                        </option>
+                                        <option value="XAF">
+                                            XAF - Central African CFA Franc
+                                        </option>
+                                        <option value="ZWL">
+                                            ZWL - Zimbabwean Dollar
+                                        </option>
+                                        {/* Add more currencies as needed */}
+                                    </select>
                                 </p>
                                 <p>
                                     <button onClick={handleSaveChanges}>
