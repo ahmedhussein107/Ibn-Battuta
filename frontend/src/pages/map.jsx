@@ -9,7 +9,7 @@ const map = ({ setMarkerPosition, defaultPosition, customStyles }) => {
         setMarker(position);
         setMarkerPosition(position);
     };
-    console.log(defaultPosition);
+
     return (
         <div>
             <MapWrapper>
