@@ -321,23 +321,6 @@ const TimelineN = ({ date, time }) => {
         );
     };
 
-    function formatToAMPM(date) {
-        let hours = date.getHours();
-        const minutes = date.getMinutes();
-        const seconds = date.getSeconds();
-        const ampm = hours >= 12 ? "PM" : "AM";
-
-        // Convert hours from 24-hour to 12-hour format
-        hours = hours % 12;
-        hours = hours ? hours : 12; // If hour is 0, set it to 12
-
-        // Format minutes and seconds to be two digits
-        const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
-        const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
-
-        return `${hours}:${formattedMinutes}:${formattedSeconds} ${ampm}`;
-    }
-
     return (
         <>
             <CreateCustomActivityPopup
@@ -357,6 +340,7 @@ const TimelineN = ({ date, time }) => {
                                     <FaMapMarkerAlt className={classes.markerIcon} />
                                 </div>
                                 <div className={classes.timelineContent}>
+                                    {/* TODO: Replace with actual pickup time */}
                                     <h3 className={classes.title}>Pickup</h3>
                                     <p className={classes.details}>
                                         7:00 am - Pickup Location
@@ -388,10 +372,30 @@ const TimelineN = ({ date, time }) => {
                                                     {activity.activity.name}
                                                 </h3>
                                                 <p className={classes.details}>
-                                                    {formatToAMPM(activity.startTime)}
+                                                    {activity.startTime.toLocaleString(
+                                                        "en-US",
+                                                        {
+                                                            month: "short",
+                                                            day: "numeric",
+                                                            year: "numeric",
+                                                            hour: "numeric",
+                                                            minute: "2-digit",
+                                                            hour12: true,
+                                                        }
+                                                    )}
                                                 </p>
                                                 <p className={classes.details}>
-                                                    {formatToAMPM(activity.endTime)}
+                                                    {activity.endTime.toLocaleString(
+                                                        "en-US",
+                                                        {
+                                                            month: "short",
+                                                            day: "numeric",
+                                                            year: "numeric",
+                                                            hour: "numeric",
+                                                            minute: "2-digit",
+                                                            hour12: true,
+                                                        }
+                                                    )}
                                                 </p>
                                                 <p
                                                     className={classes.details}
@@ -420,13 +424,11 @@ const TimelineN = ({ date, time }) => {
                             <div className={classes.timelineItem}>
                                 <div className={classes.dropoffMarker}></div>
                                 <div className={classes.timelineContent}>
-                                    <h3 className={classes.title}>
-                                        7 drop-off locations:
-                                    </h3>
+                                    {/* TODO: Replace with actual drop-off time */}
+                                    <h3 className={classes.title}>drop-off location:</h3>
                                     <p className={classes.details}>
                                         Stratosphere Casino, Hotel & Tower, Park MGM Las
                                     </p>
-                                    <p className={classes.details}>See more</p>
                                 </div>
                             </div>
                         </div>
@@ -610,7 +612,7 @@ const useStyles = createUseStyles({
         justifyContent: "space-between",
     },
     leftPanel: {
-        width: "23vw",
+        width: "30vw",
     },
     container: {
         padding: "2vh",
