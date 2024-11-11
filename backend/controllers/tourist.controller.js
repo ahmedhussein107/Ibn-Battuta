@@ -262,9 +262,7 @@ export const changeTouristPassword = async (req, res) => {
     try {
         // Validate the input fields
         if (!oldPassword || !newPassword) {
-            return res
-                .status(400)
-                .json("Both old and new passwords are required");
+            return res.status(400).json("Both old and new passwords are required");
         }
 
         // Find the tourist by ID
@@ -287,8 +285,6 @@ export const changeTouristPassword = async (req, res) => {
         return res.status(200).json("Password changed successfully!");
     } catch (err) {
         console.error("Error changing password:", err);
-        return res
-            .status(500)
-            .json("An error occurred while changing the password");
+        return res.status(500).json("An error occurred while changing the password");
     }
 };

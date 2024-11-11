@@ -4,7 +4,7 @@ import MapComponent from "../components/MapComponent";
 import { MapWrapper } from "../components/MapWrapper";
 const map = ({ setMarkerPosition, defaultPosition, customStyles }) => {
     const [marker, setMarker] = useState(null);
-    
+
     const handleMapClick = (position) => {
         setMarker(position);
         setMarkerPosition(position);
@@ -13,7 +13,11 @@ const map = ({ setMarkerPosition, defaultPosition, customStyles }) => {
     return (
         <div>
             <MapWrapper>
-                <MapComponent markerPosition={defaultPosition || marker} onMapClick={handleMapClick} customStyles={customStyles} />
+                <MapComponent
+                    markerPosition={defaultPosition || marker}
+                    onMapClick={handleMapClick}
+                    customStyles={customStyles}
+                />
             </MapWrapper>
         </div>
     );
