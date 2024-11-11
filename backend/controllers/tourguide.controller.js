@@ -192,22 +192,26 @@ export const changeTourguidePassword = async (req, res) => {
 
     try {
         if (!oldPassword || !newPassword) {
-            return res.status(400).json("Both old and new passwords are required");
+            return res
+                .status(400)
+                .json({ message: "Both old and new passwords are required" });
         }
         const tourguide = await TourGuide.findById(tourguideId);
         if (!tourguide) {
-            return res.status(404).json("tourguide not found");
+            return res.status(404).json({ message: "tourguide not found" });
         }
         const isMatch = await bcrypt.compare(oldPassword, tourguide.password);
         if (!isMatch) {
-            return res.status(400).json("Incorrect old password");
+            return res.status(400).json({ message: "Incorrect old password" });
         }
         tourguide.password = await bcrypt.hash(newPassword, 10);
         await tourguide.save();
-        return res.status(200).json("Password changed successfully!");
+        return res.status(200).json({ message: "Password changed successfully!" });
     } catch (err) {
         console.error("Error changing password:", err);
-        return res.status(400).json("An error occurred while changing the password");
+        return res
+            .status(400)
+            .json({ message: "An error occurred while changing the password" });
     }
 };
 

@@ -229,6 +229,7 @@ const Dropdown = styled.select`
 
 export default function TouristProfilePage() {
     const [tourist, setTourist] = useState(null);
+    const [userType, setUserType] = useState("Tourist");
     const [tag, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
@@ -535,10 +536,10 @@ export default function TouristProfilePage() {
                     height: "70vh",
                     backgroundImage: `url(${bg})`,
                     backgroundSize: "100% 100%",
-                    backgroundPosition: "center",
+                    // backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
-                    marginTop: "50vh",
-                    paddingtop: "10vh",
+                    Top: "0vh",
+                    //paddingtop: "10vh",
                 }}
             ></div>
             <Navbar />
