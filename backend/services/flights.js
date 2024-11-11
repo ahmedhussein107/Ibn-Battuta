@@ -135,9 +135,11 @@ amadeusFlightsRouter.post("/book", isAuthenticated, async (req, res) => {
         });
 
         const tourist = await Tourist.findById(touristID);
-
+        console.log(tourist);
+        console.log(touristID);
         if (tourist) {
             if (!tourist.flightBookings) tourist.flightBookings = [];
+            bookingResponse.data.flightOffers = [flightOffer];
             tourist.flightBookings.push(bookingResponse.data);
             await tourist.save();
         } else {
