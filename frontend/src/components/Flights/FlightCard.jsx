@@ -1,6 +1,9 @@
 import Button from "../Button";
 import TripDetails from "./TripDetails";
 
+import Cookies from "js-cookie";
+import convert from "../../api/convert";
+
 const FlightCard = ({ trip, airlines, handleClick, mode = 1, bookingNumber }) => {
     const styles = {
         card: {
@@ -79,7 +82,9 @@ const FlightCard = ({ trip, airlines, handleClick, mode = 1, bookingNumber }) =>
             </div>
 
             <div style={styles.cardRight}>
-                <h4>{`${trip.price.total} ${trip.price.currency}`}</h4>
+                <h4>{`${convert(trip.price.total)} ${
+                    Cookies.get("currency") || "EGP"
+                }`}</h4>
                 <Button stylingMode="1" text="View" handleClick={handleClick}></Button>
             </div>
         </div>

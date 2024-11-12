@@ -2,6 +2,8 @@ import Governor from "../models/governor.model.js";
 import Email from "../models/email.model.js";
 import Username from "../models/username.model.js";
 import Admin from "../models/admin.model.js";
+
+import bcrypt from "bcrypt";
 export const deleteGovernor = async (req, res) => {
     let governorId = req.user.userId;
     const admin = await Admin.findById(req.user.userId);
@@ -60,10 +62,15 @@ export const createGovernor = async (req, res) => {
             });
         }
 
+        // hashing password 10 times
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        req.body.password = hashedPassword;
+
         const newGovernor = await Governor.create(req.body);
         res.status(201).json(newGovernor);
         console.log("Governor created successfully");
     } catch (e) {
+        await Username.findByIdAndDelete(inputUsername);
         return res.status(500).json({ error: e.message });
     }
 };
