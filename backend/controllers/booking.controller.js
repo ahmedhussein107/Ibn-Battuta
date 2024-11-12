@@ -106,7 +106,6 @@ export const createBooking = async (req, res) => {
             pointsAdded = totprice;
         } else {
             pointsAdded = totprice * 1.5;
-            ي;
         }
         tourist.loyalityPoints += pointsAdded;
         tourist.points += pointsAdded;

@@ -1,7 +1,7 @@
 import Itinerary from "../models/itinerary.model.js";
 import Activity from "../models/activity.model.js";
 import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
-
+import mongoose from "mongoose";
 export const createItinerary = async (req, res) => {
     req.body.tourguideID = req.user.userId;
     try {
@@ -35,7 +35,7 @@ export const deleteItineraries = async (req, res) => {
 export const getItineraryById = async (req, res) => {
     try {
         console.log("I am here");
-        const itinerary = await Itinerary.findById(req.params.id).populate("tourguideID");
+        const itinerary = await Itinerary.findById(req.params.id);
         if (itinerary) {
             res.status(200).json(itinerary);
         } else {
@@ -48,6 +48,11 @@ export const getItineraryById = async (req, res) => {
 // I want to make a function that returns the minimum no of free spot for an Itinrary by taking minimum of free spots of all its activities
 export const getFreeSpots = async (id) => {
     try {
+        console.log("I am here", id);
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            console.log("hahaha");
+            return 1e9 + 7;
+        }
         const itinerary = await Itinerary.findById(id);
         if (!itinerary) {
             throw new Error("Itinerary not found");
@@ -65,7 +70,7 @@ export const getFreeSpots = async (id) => {
             }
         }
 
-        return mn == 1e9 + 7 ? 0 : mn;
+        return mn;
     } catch (error) {
         throw new Error(error.message); // Return error to the caller
     }
