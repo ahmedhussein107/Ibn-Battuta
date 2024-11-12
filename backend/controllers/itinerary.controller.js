@@ -46,7 +46,7 @@ export const getItineraryById = async (req, res) => {
     }
 };
 // I want to make a function that returns the minimum no of free spot for an Itinrary by taking minimum of free spots of all its activities
-export const getFreeSpots = async (id) => {
+export const getFreeSpotsHelper = async (id) => {
     try {
         console.log("I am here", id);
         if (!id || !mongoose.Types.ObjectId.isValid(id)) {
@@ -73,6 +73,15 @@ export const getFreeSpots = async (id) => {
         return mn;
     } catch (error) {
         throw new Error(error.message); // Return error to the caller
+    }
+};
+
+export const getFreeSpots = async (req, res) => {
+    try {
+        const mn = await getFreeSpotsHelper(req.params.id);
+        res.status(200).json(mn);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
 };
 

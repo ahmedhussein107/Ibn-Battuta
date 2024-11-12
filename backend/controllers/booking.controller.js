@@ -2,7 +2,7 @@ import Booking from "../models/booking.model.js";
 import Activity from "../models/activity.model.js";
 import Itinary from "../models/itinerary.model.js";
 import Tourist from "../models/tourist.model.js";
-import { getFreeSpots } from "./itinerary.controller.js";
+import { getFreeSpotsHelper } from "./itinerary.controller.js";
 export const getBookings = async (req, res) => {
     try {
         const bookings = await Booking.find();
@@ -55,7 +55,7 @@ export const createBooking = async (req, res) => {
                     .json({ message: "The itinerary is not open for booking" });
             }
             // loop over activities in this itinerary
-            const mn = await getFreeSpots(itinerary._id);
+            const mn = await getFreeSpotsHelper(itinerary._id);
             console.log(mn);
             if (mn < req.body.count) {
                 return res.status(400).json({ message: "Not enough free spots" });
