@@ -94,13 +94,12 @@ const HotelList = () => {
 			end: searchParams.get("end") || "",
 			guests: getGuestCount(),
 		};
-
+		console.log("newParams", newParams);
 		setLat(newParams.lat);
 		setLng(newParams.lng);
 		setStart(newParams.start);
 		setEnd(newParams.end);
 		setGuests(newParams.guests);
-
 		fetchRooms(newParams);
 	}, [searchParams]);
 

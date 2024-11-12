@@ -42,7 +42,7 @@ const Bookings = () => {
 			const response = await axiosInstance.get(URI[selected], {
 				params: {
 					page: currentPage,
-					limit: itemsPerPage,
+					limit: selected == "Hotels" ? 6 : itemsPerPage,
 				},
 				withCredentials: true,
 			});

@@ -2,16 +2,18 @@ import express from "express";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 const bookingRouter = express.Router();
 import {
-    getBookings,
-    getBooking,
-    updateBooking,
-    createBooking,
-    redeemPoints,
-    deleteBooking,
-    getitineraryBookings,
-    getActivityBookings,
-    getHotelBookings,
-    getFlightBookings,
+	getBookings,
+	getBooking,
+	updateBooking,
+	createBooking,
+	redeemPoints,
+	deleteBooking,
+	getitineraryBookings,
+	getActivityBookings,
+	getHotelBookings,
+	getFlightBookings,
+	checkPossiblePackageFlight,
+	checkPossiblePackageHotel,
 } from "../controllers/booking.controller.js";
 
 bookingRouter.get("/getBookings", getBookings);
@@ -33,5 +35,9 @@ bookingRouter.get("/getActivityBookings", isAuthenticated, getActivityBookings);
 bookingRouter.get("/getHotelBookings", isAuthenticated, getHotelBookings);
 
 bookingRouter.get("/getFlightBookings", isAuthenticated, getFlightBookings);
+
+bookingRouter.get("/checkPossiblePackageFlight", isAuthenticated, checkPossiblePackageFlight);
+
+bookingRouter.get("/checkPossiblePackageHotel", isAuthenticated, checkPossiblePackageHotel);
 
 export default bookingRouter;
