@@ -128,7 +128,7 @@ export const getComplaintAlongWithReplies = async (req, res) => {
             console.log(complaint);
             console.log("full comment is:", comment);
             res.json({ data: { complaint, comment } });
-        } else res.status(200).json(complaint);
+        } else res.status(200).json({ data: { complaint, comment: null } });
     } catch (error) {
         console.error("Failed to fetch complaints:", error);
         res.status(500).json({ message: "Server Error" });
