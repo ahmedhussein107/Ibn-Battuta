@@ -46,7 +46,7 @@ export const getItineraryById = async (req, res) => {
     }
 };
 // I want to make a function that returns the minimum no of free spot for an Itinrary by taking minimum of free spots of all its activities
-export const getFreeSpots = async (id) => {
+export const getFreeSpotsHelper = async (id) => {
     try {
         const itinerary = await Itinerary.findById(id);
         if (!itinerary) {
@@ -70,6 +70,17 @@ export const getFreeSpots = async (id) => {
         throw new Error(error.message); // Return error to the caller
     }
 };
+
+export const getFreeSpots = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const freeSpots = await getFreeSpotsHelper(id);
+        res.status(200).json(freeSpots );
+    } catch (error) {
+        console.error("Error fetching free spots:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
 
 export const updateItinerary = async (req, res) => {
     try {
