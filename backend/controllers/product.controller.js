@@ -78,7 +78,11 @@ export const deleteProduct = async (req, res) => {
 export const searchProducts = async (req, res) => {
     try {
         const { rating, ...rest } = req.query;
-        const products = await Product.find(buildFilter(rest));
+        const query = buildFilter(rest);
+        const products = await Product.find({
+            ...query,
+            isArchived: false,
+        });
         if (rating) {
             const bounds = rating.split("-");
             const minRating = bounds[0] ? parseInt(bounds[0]) : -1;

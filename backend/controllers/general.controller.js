@@ -71,7 +71,7 @@ export const login = async (req, res) => {
             }
         }
 
-        assignCookies(res, userRecord.userType, user._id.toString())
+        assignCookies(res, userRecord.userType, user._id.toString(), user.currency)
             .status(200)
             .json({ message: "Login successful", user });
     } catch (err) {
@@ -88,8 +88,8 @@ export const assignCookies = (res, userType, userId, currency = "EGP") => {
 
     res.cookie("jwt", token, { maxAge });
     res.cookie("userType", userType, { maxAge });
-    if (userType === "tourist") {
-        res.cookie("currency", currency, { maxAge });
+    if (userType === "Tourist") {
+        res.cookie("currency", currency || "EGP", { maxAge });
     }
 
     return res;
