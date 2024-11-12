@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
 import { uploadFile } from "../../api/firebase";
+import convert from "../../api/convert";
 const PageWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -275,9 +276,7 @@ export default function TouristProfilePage() {
             tourist.preferences.map((tag, index) => (
                 <TagBubble key={index}>
                     {tag}
-                    <CloseButton onClick={() => handleTagRemove(tag)}>
-                        ×
-                    </CloseButton>
+                    <CloseButton onClick={() => handleTagRemove(tag)}>×</CloseButton>
                 </TagBubble>
             ))
         ) : (
@@ -300,10 +299,7 @@ export default function TouristProfilePage() {
                 })
                 .then((response) => {
                     alert("Profile picture updated successfully!");
-                    console.log(
-                        "Updated Tourist Picture:",
-                        response.data.picture
-                    );
+                    console.log("Updated Tourist Picture:", response.data.picture);
 
                     // Ensure response.data contains the full URL of the picture
                     setTourist((prev) => ({
@@ -312,10 +308,7 @@ export default function TouristProfilePage() {
                     }));
 
                     // Log the updated tourist picture to the console
-                    console.log(
-                        "Updated Tourist Picture:",
-                        response.data.picture
-                    );
+                    console.log("Updated Tourist Picture:", response.data.picture);
                     window.location.reload();
                 })
                 .catch((error) => {
@@ -350,9 +343,7 @@ export default function TouristProfilePage() {
     };
 
     const handleTagRemove = (tagToRemove) => {
-        const updatedSelectedTags = selectedTags.filter(
-            (tag) => tag !== tagToRemove
-        );
+        const updatedSelectedTags = selectedTags.filter((tag) => tag !== tagToRemove);
         setSelectedTags(updatedSelectedTags);
 
         if (tourist?.preferences.includes(tagToRemove)) {
@@ -470,8 +461,7 @@ export default function TouristProfilePage() {
             .catch((error) => {
                 console.error("Error updating profile:", error);
                 alert(
-                    error.response?.data?.e ||
-                        "An error occurred while updating profile."
+                    error.response?.data?.e || "An error occurred while updating profile."
                 );
             });
     };
@@ -479,8 +469,7 @@ export default function TouristProfilePage() {
     const [newAddressName, setNewAddressName] = useState("");
     const [newAddressLocation, setNewAddressLocation] = useState("");
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
-        useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -532,9 +521,7 @@ export default function TouristProfilePage() {
             })
             .catch((error) => {
                 const errorMessage =
-                    error.response &&
-                    error.response.data &&
-                    error.response.data.message
+                    error.response && error.response.data && error.response.data.message
                         ? error.response.data.message
                         : "An error occurred while deleting the account. Please try again.";
 
@@ -547,11 +534,9 @@ export default function TouristProfilePage() {
         setIsPopUpOpen(true);
     };
 
-    const handleCurrentPasswordChange = (e) =>
-        setCurrentPassword(e.target.value);
+    const handleCurrentPasswordChange = (e) => setCurrentPassword(e.target.value);
     const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
-    const handleConfirmNewPasswordChange = (e) =>
-        setConfirmNewPassword(e.target.value);
+    const handleConfirmNewPasswordChange = (e) => setConfirmNewPassword(e.target.value);
 
     const PopUpAction = () => {
         if (newPassword !== confirmNewPassword) {
@@ -754,13 +739,10 @@ export default function TouristProfilePage() {
                                     {formData.address.map((address, index) => (
                                         <div key={index}>
                                             <span>
-                                                {address.name} -{" "}
-                                                {address.location}
+                                                {address.name} - {address.location}
                                             </span>
                                             <button
-                                                onClick={() =>
-                                                    handleRemoveAddress(index)
-                                                }
+                                                onClick={() => handleRemoveAddress(index)}
                                             >
                                                 Remove
                                             </button>
@@ -773,9 +755,7 @@ export default function TouristProfilePage() {
                                             placeholder="Address Name"
                                             value={newAddressName}
                                             onChange={(e) =>
-                                                setNewAddressName(
-                                                    e.target.value
-                                                )
+                                                setNewAddressName(e.target.value)
                                             }
                                         />
                                         <input
@@ -783,9 +763,7 @@ export default function TouristProfilePage() {
                                             placeholder="Address Location"
                                             value={newAddressLocation}
                                             onChange={(e) =>
-                                                setNewAddressLocation(
-                                                    e.target.value
-                                                )
+                                                setNewAddressLocation(e.target.value)
                                             }
                                         />
                                         <button onClick={handleAddAddress}>
@@ -801,9 +779,7 @@ export default function TouristProfilePage() {
                                         onChange={handleChange}
                                         style={{ width: "30%" }} // Optional styling for the dropdown
                                     >
-                                        <option value="">
-                                            Select Currency
-                                        </option>{" "}
+                                        <option value="">Select Currency</option>{" "}
                                         {/* Default option */}
                                         <option value="AED">
                                             AED - United Arab Emirates Dirham
@@ -811,28 +787,20 @@ export default function TouristProfilePage() {
                                         <option value="AUD">
                                             AUD - Australian Dollar
                                         </option>
-                                        <option value="EGP">
-                                            EGP - Egyptian Pound
-                                        </option>
+                                        <option value="EGP">EGP - Egyptian Pound</option>
                                         <option value="EUR">EUR - Euro</option>
-                                        <option value="GBP">
-                                            GBP - British Pound
-                                        </option>
+                                        <option value="GBP">GBP - British Pound</option>
                                         <option value="GTQ">
                                             GTQ - Guatemalan Quetzal
                                         </option>
                                         <option value="IDR">
                                             IDR - Indonesian Rupiah
                                         </option>
-                                        <option value="KWD">
-                                            KWD - Kuwaiti Dinar
-                                        </option>
+                                        <option value="KWD">KWD - Kuwaiti Dinar</option>
                                         <option value="USD">
                                             USD - United States Dollar
                                         </option>
-                                        <option value="WST">
-                                            WST - Samoan Tala
-                                        </option>
+                                        <option value="WST">WST - Samoan Tala</option>
                                         <option value="XAF">
                                             XAF - Central African CFA Franc
                                         </option>
@@ -867,19 +835,16 @@ export default function TouristProfilePage() {
                                     {tourist?.nationality || "Not Provided"}
                                 </p>
                                 <p>
-                                    <strong>Job:</strong>{" "}
-                                    {tourist?.job || "Not Provided"}
+                                    <strong>Job:</strong> {tourist?.job || "Not Provided"}
                                 </p>
                                 <p>
                                     <strong>Addresses:</strong>{" "}
-                                    {tourist?.address &&
-                                    tourist.address.length > 0
+                                    {tourist?.address && tourist.address.length > 0
                                         ? tourist.address.map((addr, index) => (
                                               <span key={index}>
                                                   {addr.name} - {addr.location}
-                                                  {index <
-                                                      tourist.address.length -
-                                                          1 && ", "}{" "}
+                                                  {index < tourist.address.length - 1 &&
+                                                      ", "}{" "}
                                                   {/* Add a comma except after the last address */}
                                               </span>
                                           ))
@@ -903,7 +868,7 @@ export default function TouristProfilePage() {
                         </WalletHeader>
 
                         <PointsSection>
-                            <p>Balance: {tourist?.wallet || 0}</p>
+                            <p>Balance: {convert(tourist?.wallet || 0)}</p>
                             <h3>My Points</h3>
                             <p>Points: {tourist?.loyalityPoints || 0}</p>
                             Level: {currentLevel}
@@ -939,9 +904,7 @@ export default function TouristProfilePage() {
                             ].map((tag, index) => (
                                 <TagBubble key={index}>
                                     {tag}
-                                    <CloseButton
-                                        onClick={() => handleTagRemove(tag)}
-                                    >
+                                    <CloseButton onClick={() => handleTagRemove(tag)}>
                                         ×
                                     </CloseButton>
                                 </TagBubble>
@@ -965,9 +928,7 @@ export default function TouristProfilePage() {
                             value={redeemValue.toFixed(2)}
                             readOnly
                         />
-                        <RedeemButton onClick={handleRedeemPoints}>
-                            Redeem
-                        </RedeemButton>
+                        <RedeemButton onClick={handleRedeemPoints}>Redeem</RedeemButton>
                     </RedeemBox>
                 </InfoBoxesContainer>
             </MainContent>

@@ -56,6 +56,22 @@ const ItineraryDetails = () => {
 	const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
 
 	useEffect(() => {
+		const fetchItinerary = async () => {
+			try {
+				const itineraryResponse = await axiosInstance.get(
+					`itinerary/getItinerary/${itineraryId}`
+				);
+				setItinerary(itineraryResponse.data);
+				console.log(itineraryResponse.data);
+				setTourGuideName(itineraryResponse.data.tourguideID.name);
+				setTourGuidePicture(itineraryResponse.data.tourguideID.picture);
+			} catch (err) {
+				console.error("Error fetching itinerary:", err);
+			}
+		};
+		fetchItinerary();
+	}, [itineraryId]);
+	useEffect(() => {
 		const fetchFreeSpots = async () => {
 			if (!itinerary) return;
 			try {
@@ -70,24 +86,7 @@ const ItineraryDetails = () => {
 			}
 		};
 		fetchFreeSpots();
-	}, []);
-
-	useEffect(() => {
-		const fetchItinerary = async () => {
-			try {
-				const itineraryResponse = await axiosInstance.get(
-					`itinerary/getItinerary/${itineraryId}`
-				);
-				setItinerary(itineraryResponse.data);
-				setTourGuideName(itineraryResponse.data.tourguideID.name);
-				setTourGuidePicture(itineraryResponse.data.tourguideID.picture);
-			} catch (err) {
-				console.error("Error fetching itinerary:", err);
-			}
-		};
-		fetchItinerary();
-	
-	}, [itineraryId]);
+	},[itinerary,BookPopUp ]);
 
 	const handleBooking = async () => {
 		if (!itinerary) return;
@@ -110,7 +109,7 @@ const ItineraryDetails = () => {
 				setPointsAdded(bookingResponse.data.pointsAdded);
 				setBookPopUp(false);
 				setBookingDonePopUp(true);
-				fetchFreeSpots();
+				setTicketCount(0);
 			} else {
 				console.log(
 					"Booking response received, but status is not 201:",

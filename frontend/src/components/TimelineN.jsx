@@ -559,12 +559,12 @@ const TimelineN = ({ date, time }) => {
                         stylingMode="submit"
                         text="Create Itinerary"
                         handleClick={async () => {
-                            let totalPrice = location.state.price;
+                            let totalPrice = Number(location.state.price);
                             let picture =
                                 "https://cdn-icons-png.flaticon.com/512/7603/7603006.png";
                             timelineActivities.forEach((activity) => {
                                 if (activity.activityType === "Activity") {
-                                    totalPrice += activity.activity.price;
+                                    totalPrice += Number(activity.activity.price);
                                     if (activity.activity.picture) {
                                         picture = activity.activity.picture;
                                     }
