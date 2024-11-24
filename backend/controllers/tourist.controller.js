@@ -73,13 +73,7 @@ export const createTourist = async (req, res) => {
             req.body.password = hashedPassword;
             const { address, ...body } = req.body;
             const newTourist = await Tourist.create(body);
-            assignCookies(
-                res,
-                "Tourist",
-                newTourist._id,
-                newTourist.currency,
-                newTourist.email
-            )
+            assignCookies(res, "Tourist", newTourist._id, newTourist.currency)
                 .status(201)
                 .json({ message: "Sign up successful" });
         } else {
@@ -109,16 +103,9 @@ export const updateTourist = async (req, res) => {
         }
         if (req.body.email) {
             await Email.findByIdAndDelete(tourist.email);
-            try {
-                await Email.create({
-                    _id: req.body.email,
-                });
-            } catch (e) {
-                await Email.create({
-                    _id: tourist.email,
-                });
-                res.status(400).json({ e: e.message });
-            }
+            await Email.create({
+                _id: req.body.email,
+            });
         }
         if (req.body.password) {
             req.body.password = await bcrypt.hash(req.body.password, 10);
@@ -130,9 +117,6 @@ export const updateTourist = async (req, res) => {
         res.cookie("currency", touristUpdated.currency, {
             maxAge: 60 * 60 * 24 * 1000,
         })
-            .cookie("email", touristUpdated.email, {
-                maxAge: 60 * 60 * 24 * 1000,
-            })
             .status(200)
             .json({ message: "Tourist updated", tourist: touristUpdated });
     } catch (e) {

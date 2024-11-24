@@ -38,7 +38,8 @@ const touristSchema = new mongoose.Schema(
 
 touristSchema.pre("save", async function (next) {
     try {
-        const { username, email, notifications, cart, preferences, wishlist } = this;
+        const { username, email, notifications, cart, preferences, wishlist } =
+            this;
 
         await validateReference(username, "Username", next);
 
@@ -70,7 +71,8 @@ const validateUpdateReferences = async function (next) {
         const update = this.getUpdate();
         const username = update.username || update["$set.username"];
         const email = update.email || update["$set.email"];
-        const notifications = update.notifications || update["$set.notifications"];
+        const notifications =
+            update.notifications || update["$set.notifications"];
         const cart = update.cart || update["$set.cart"];
         const preferences = update.preferences || update["$set.preferences"];
         const wishlist = update.wishlist || update["$set.wishlist"];
