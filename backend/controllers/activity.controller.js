@@ -1,4 +1,8 @@
 import Activity from "../models/activity.model.js";
+import Advertiser from "../models/advertiser.model.js";
+import Notification from "../models/notification.model.js";
+import sendEmail from "../utilities/emailUtils.js";
+import { incrementnotificationCount } from "../routes/ws.router.js";
 import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 
 export const getAllActivities = async (req, res) => {
@@ -43,7 +47,7 @@ export const updateActivity = async (req, res) => {
         const activity = await Activity.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
         });
-
+        console.log("i am in activity update");
         if (activity) {
             res.status(200).json(activity);
         } else {
@@ -118,6 +122,32 @@ export const toggleFlaggedActivities = async (req, res) => {
         }
         activity.isFlagged = !activity.isFlagged;
         await activity.save();
+        // let keys = Object.keys(req.body);
+        // if (keys.includes("isFlagged")) {
+        console.log("making notification");
+        const notification = new Notification({
+            message: `Your activity ${activity.name} has been flagged as ${
+                req.body.isFlagged ? "not " : ""
+            }appropriate`,
+            type: "warning",
+            relatedType: "Activity",
+            relatedId: activity._id,
+        });
+        await notification.save();
+
+        const advertiser = await Advertiser.findByIdAndUpdate(
+            activity.advertiserID,
+            {
+                $push: { notifications: notification._id },
+            },
+            { new: true }
+        );
+        console.log("advertiser is: ", advertiser);
+
+        incrementnotificationCount(activity.advertiserID, "Advertiser");
+        sendEmail(advertiser.email, "Activity Flagged", notification.message);
+        console.log("email sent ");
+
         res.status(200).json({
             message: "Activity flagged status changed successfully",
             activity,

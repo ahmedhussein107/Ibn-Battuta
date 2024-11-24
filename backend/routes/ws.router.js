@@ -2,7 +2,7 @@ import expressWs from "express-ws";
 import Notification from "../models/notification.model.js";
 import { wsIsAuthenticate } from "../routers.middleware/authentication.js";
 const activeUsers = {};
-
+import mongoose from "mongoose";
 function setupWebSocketRoutes(app) {
     expressWs(app);
     app.ws("/notifications", (ws, req) => {
@@ -16,8 +16,7 @@ function setupWebSocketRoutes(app) {
                 activeUsers[userKey] = ws;
 
                 console.log(`User ${userKey} connected via WebSocket`);
-                // next line for testing
-                //sendNotificationCountToUser("6724dffdcebc91210f7074b3", "Admin");
+                sendNotificationCountToUser(userId, userType);
 
                 ws.on("close", () => {
                     delete activeUsers[userKey];
@@ -30,14 +29,34 @@ function setupWebSocketRoutes(app) {
     });
 }
 
-function sendNotificationCountToUser(userId, userType) {
+async function sendNotificationCountToUser(userId, userType) {
     const userKey = `${userId}_${userType}`;
     const ws = activeUsers[userKey];
     console.log("Sending notification count to user:", userKey);
     if (ws && ws.readyState === ws.OPEN) {
-        // TODO logic of counting unread notifications is to be updated
-        ws.send(JSON.stringify({ type: "notificationCount", count: 4 }));
+        console.log(2);
+        const user = await mongoose
+            .model(userType)
+            .findById(userId)
+            .populate("notifications");
+        if (user) {
+            console.log("User found:", user.notifications);
+            const unreadCount = user.notifications.filter(
+                (notification) => !notification.isRead
+            ).length;
+            console.log("Unread count:", unreadCount);
+            ws.send(JSON.stringify({ type: "notificationCount", count: unreadCount }));
+            console.log("done");
+        }
+    }
+}
+function incrementnotificationCount(userId, userType) {
+    const userKey = `${userId}_${userType}`;
+    const ws = activeUsers[userKey];
+    console.log("Incrementing notification count for user:", userKey);
+    if (ws && ws.readyState === ws.OPEN) {
+        ws.send(JSON.stringify({ type: "incrementNotificationCount" }));
     }
 }
 
-export { setupWebSocketRoutes, sendNotificationCountToUser };
+export { setupWebSocketRoutes, sendNotificationCountToUser, incrementnotificationCount };
