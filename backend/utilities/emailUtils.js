@@ -16,6 +16,9 @@ sendEmail("abdelrahim@gmail.com", "Testing", "this is me testing");
 */
 export const sendEmail = async (toEmail, subject, body) => {
     try {
+        if (!toEmail || !subject || !body) {
+            throw new Error("Email parameters are missing");
+        }
         const mailOptions = {
             from: WEBSITE_EMAIL,
             to: toEmail,
@@ -25,5 +28,6 @@ export const sendEmail = async (toEmail, subject, body) => {
         await transporter.sendMail(mailOptions);
     } catch (err) {
         console.log("error sending email", err);
+        throw err;
     }
 };

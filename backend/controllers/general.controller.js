@@ -2,35 +2,101 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+import { sendEmail } from "../utilities/emailUtils.js";
+
 const secretKey =
     process.env.JWT_SECRET || "any key to cipher the password and decipher ";
 
-export const updatePassword = async (req, res) => {
+export const changePassword = async (req, res) => {
     try {
-        const { userType, userId, oldPassword, newPassword } = req.body;
+        const { username, newPassword } = req.body;
+
+        const userName = await mongoose.model("Username").findById(username);
+        if (!userName) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const userType = userName.userType;
 
         const UserModel = mongoose.model(userType);
         if (!UserModel) {
             return res.status(400).json({ message: "Invalid user type" });
         }
-        const user = await UserModel.findById(userId);
+        const user = await UserModel.findOne({ username });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
-        if (!isPasswordValid) {
-            return res.status(401).json({ message: "Invalid credentials" });
-        }
-
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-
         user.password = hashedNewPassword;
         await user.save();
 
         res.status(200).json({ message: "Password updated successfully" });
     } catch (err) {
         res.status(500).json({ error: err.message });
+    }
+};
+
+export const createOTPandSendEmail = async (req, res) => {
+    try {
+        const { username } = req.body;
+
+        const userName = await mongoose.model("Username").findById(username);
+        if (!userName) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const userType = userName.userType;
+        const UserModel = mongoose.model(userType);
+        if (!UserModel) {
+            return res.status(400).json({ message: "Invalid user type" });
+        }
+        const user = await UserModel.findOne({ username });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        const hashedOTP = await bcrypt.hash(otp.toString(), 10);
+
+        await mongoose.model("Username").findByIdAndUpdate(username, {
+            otp: hashedOTP,
+        });
+
+        const email = user.email;
+        const subject = "OTP for password reset";
+        const message = `Your OTP for password reset is: ${otp}`;
+        await sendEmail(email, subject, message);
+
+        res.status(200).json({ message: "OTP created successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+export const verifyOTP = async (req, res) => {
+    const { username, otp } = req.body;
+
+    const userName = await mongoose.model("Username").findById(username);
+    if (!userName) {
+        return res.status(404).json({ message: "User not found" });
+    }
+    try {
+        const fiveMinutesInMs = 5 * 60 * 1000;
+        if (Date.now() - new Date(userName.updatedAt).getTime() > fiveMinutesInMs) {
+            return res.status(400).json({ message: "OTP has expired" });
+        }
+
+        if (!bcrypt.compare(userName.otp, otp)) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+
+        res.status(200).json({ message: "OTP verified successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    } finally {
+        userName.otp = null;
+        await userName.save();
     }
 };
 
@@ -71,7 +137,13 @@ export const login = async (req, res) => {
             }
         }
 
-        assignCookies(res, userRecord.userType, user._id.toString(), user.currency)
+        assignCookies(
+            res,
+            userRecord.userType,
+            user._id.toString(),
+            user.currency,
+            user.email
+        )
             .status(200)
             .json({ message: "Login successful", user });
     } catch (err) {
@@ -80,7 +152,7 @@ export const login = async (req, res) => {
     }
 };
 
-export const assignCookies = (res, userType, userId, currency = "EGP") => {
+export const assignCookies = (res, userType, userId, currency = "EGP", email = "") => {
     const maxAge = 5 * 60 * 60 * 1000; // 5 hours
     const token = jwt.sign({ userId, userType }, secretKey, {
         expiresIn: "5h",
@@ -90,6 +162,7 @@ export const assignCookies = (res, userType, userId, currency = "EGP") => {
     res.cookie("userType", userType, { maxAge });
     if (userType === "Tourist") {
         res.cookie("currency", currency || "EGP", { maxAge });
+        res.cookie("email", email, { maxAge });
     }
 
     return res;
