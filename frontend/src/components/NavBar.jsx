@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import "../styles/NavBar.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Button from "./Button";
 
 import {
@@ -37,12 +37,44 @@ const touristProfileDropdonw = [
     { "My Complaints": "/complaints" },
 ];
 
+const useClickOutside = (callback) => {
+    const ref = useRef();
+    const notificationIconRef = useRef();
+
+    useEffect(() => {
+        const handleClick = (event) => {
+            if (
+                notificationIconRef.current &&
+                notificationIconRef.current.contains(event.target)
+            ) {
+                return;
+            }
+            if (ref.current && !ref.current.contains(event.target)) {
+                callback();
+            }
+        };
+
+        document.addEventListener("mousedown", handleClick);
+        document.addEventListener("touchstart", handleClick);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClick);
+            document.removeEventListener("touchstart", handleClick);
+        };
+    }, [callback]);
+
+    return [ref, notificationIconRef];
+};
+
 const NavBar = () => {
     const [userType, setUserType] = useState("Guest");
     const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
     const [notifications, setNotifications] = useState([]);
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
     const navigate = useNavigate();
-
+    const [dropdownRef, notificationIconRef] = useClickOutside(() => {
+        setIsNotificationOpen(false);
+    });
     useEffect(() => {
         const cookieUserType = Cookies.get("userType") || "Guest";
         console.log("User type from cookie:", cookieUserType);
@@ -69,6 +101,7 @@ const NavBar = () => {
                 const data = JSON.parse(event.data);
                 console.log("Message received:", data); // Log received data
                 if (data.type === "initialNotifications") {
+                    console.log("notifications are", data.notifications[0]);
                     setUnreadNotificationCount(data.count);
                     setNotifications(data.notifications);
                 } else if (data.type === "onlineNotification") {
@@ -96,9 +129,18 @@ const NavBar = () => {
 
     const navbarItems = navbarUserItems[userType];
 
-    const handleNotificationClick = () => {
-        // TODO: notification logic is not implemented
+    const handleNotificationDropdownClick = () => {
+        setIsNotificationOpen(!isNotificationOpen);
         console.log("Notification clicked");
+    };
+    const handleNotificationClick = (notification) => {
+        // TODO: navigate to the appropriate page;
+        let prefix = notification.relatedType.toLowerCase();
+        if (prefix.endsWith("s")) {
+            prefix = prefix.slice(0, -1);
+        }
+        const link = `${prefix}/${notification.relatedId}`;
+        navigate(link);
     };
     const handleLogout = () => {
         // TODO: log out logic is not implemented
@@ -180,8 +222,9 @@ const NavBar = () => {
                 ) : (
                     <div className="notifications-profile">
                         <div
+                            ref={notificationIconRef}
                             className="notification-icon"
-                            onClick={handleNotificationClick}
+                            onClick={handleNotificationDropdownClick}
                         >
                             <FontAwesomeIcon
                                 icon={faBell}
@@ -193,6 +236,39 @@ const NavBar = () => {
                                 </span>
                             )}
                         </div>
+                        {isNotificationOpen && (
+                            <div ref={dropdownRef} className="notification-dropdown">
+                                <h4>Notifications</h4>
+                                {notifications.length > 0 ? (
+                                    notifications.map((notification, index) => (
+                                        <div
+                                            key={index}
+                                            className={`notification-item ${
+                                                notification.isRead
+                                                    ? "read"
+                                                    : notification.type
+                                            }`}
+                                            onClick={() =>
+                                                handleNotificationClick(notification)
+                                            }
+                                        >
+                                            <p className="notification-message">
+                                                {notification.message}
+                                            </p>
+                                            <span className="notification-date">
+                                                {new Date(
+                                                    notification.createdAt
+                                                ).toLocaleString()}
+                                            </span>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="no-notifications">
+                                        No new notifications
+                                    </p>
+                                )}
+                            </div>
+                        )}
                         <div className="profile-dropdown">
                             <img
                                 src="https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"

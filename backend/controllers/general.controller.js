@@ -131,6 +131,25 @@ export const sendNotificationToEmailAndSystem = async (
     console.log("email sent ");
 };
 
+export const notifyAdminsAboutComplaint = async (
+    complaintTitle,
+    complaintId,
+    isComment = false
+) => {
+    const admins = await mongoose.model("Admin").find();
+    for (const admin of admins) {
+        sendNotificationToEmailAndSystem(
+            "New Complaint",
+            isComment
+                ? `Tourist posted a new comment under Complaint ${complaintTitle}`
+                : `A tourist has a complaint about ${complaintTitle}.\nPlease review it.`,
+            admin._id,
+            "Admin",
+            complaintId,
+            "Complaint"
+        );
+    }
+};
 // scheduling notification about upcoming events, taks runs every 1 hour
 // minute hour day month weekday(1-7)
 cron.schedule("0 * * * *", async () => {
