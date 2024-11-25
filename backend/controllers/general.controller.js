@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import cron from "node-cron";
 import Notification from "../models/notification.model.js";
+import Booking from "../models/booking.model.js";
 import sendEmail from "../utilities/emailUtils.js";
 import { incrementnotificationCount } from "../routes/ws.router.js";
+
 const secretKey =
     process.env.JWT_SECRET || "any key to cipher the password and decipher ";
 
@@ -127,3 +130,27 @@ export const sendNotificationToEmailAndSystem = async (
     sendEmail(user.email, subject, notification.message);
     console.log("email sent ");
 };
+
+// scheduling notification about upcoming events, taks runs every 1 hour
+// minute hour day month weekday(1-7)
+cron.schedule("0 * * * *", async () => {
+    // starting next day
+    const startWindow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+    const upcomingBookings = await Booking.find({
+        eventStartDate: {
+            $gte: startWindow,
+            $lte: new Date(startWindow.getTime() + 60 * 60 * 1000),
+        }, // 1 hour window
+    });
+
+    for (const booking of upcomingBookings) {
+        sendNotificationToEmailAndSystem(
+            `Reminder: Upcoming ${booking.bookingType}`,
+            `This is a reminder about the upcoming ${booking.bookingType}.\nIt will start in ${booking.eventStartDate}, looking forward to seeing you there!\nFor more details visit our website at https://ibn-battuta.com`,
+            booking.touristID,
+            "Tourist",
+            booking.typeId,
+            booking.bookingType
+        );
+    }
+});
