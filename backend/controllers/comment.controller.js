@@ -1,6 +1,10 @@
 import { ProfilingLevel } from "mongodb";
 import Comment from "../models/comment.model.js";
 import Complaint from "../models/complaint.model.js";
+import {
+    notifyAdminsAboutComplaint,
+    sendNotificationToEmailAndSystem,
+} from "./general.controller.js";
 export const createComment = async (req, res) => {
     try {
         console.log("req.body", req.body);
@@ -8,17 +12,36 @@ export const createComment = async (req, res) => {
         const parentComment = req.body.parentComment;
         data = { ...data, authorType: req.user.userType, author: req.user.userId };
         const comment = new Comment(data);
+        await comment.save();
+
+        console.log("1");
+        const complaint = await Complaint.findById(req.body.complaintID);
         if (parentComment) {
+            console.log("2");
             await Comment.findByIdAndUpdate(parentComment, {
                 $push: { replies: comment._id },
             });
         } else {
-            await Complaint.findByIdAndUpdate(req.body.complaintID, {
-                $push: { replies: comment._id },
-            });
+            console.log("3");
+            complaint.replies.push(comment._id);
+            await complaint.save();
         }
+        console.log("4");
 
-        await comment.save();
+        // notifying part
+
+        if (req.user.userType === "Admin") {
+            sendNotificationToEmailAndSystem(
+                `A Reply to your complaint`,
+                `A reply to your complaint ${complaint.title} has been posted by an admin.`,
+                complaint.touristID,
+                "Tourist",
+                complaint._id,
+                "Complaint"
+            );
+        } else if (req.user.userType === "Tourist") {
+            notifyAdminsAboutComplaint(complaint.title, complaint._id, true);
+        }
 
         res.status(201).json(comment);
     } catch (error) {
