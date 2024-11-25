@@ -39,8 +39,8 @@ const touristProfileDropdonw = [
 
 const NavBar = () => {
     const [userType, setUserType] = useState("Guest");
-    const [notificationCount, setNotificationCount] = useState(0);
-
+    const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
+    const [notifications, setNotifications] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -68,10 +68,15 @@ const NavBar = () => {
                 console.log("WebSocket message received:", event.data);
                 const data = JSON.parse(event.data);
                 console.log("Message received:", data); // Log received data
-                if (data.type === "notificationCount") {
-                    setNotificationCount(data.count);
-                } else if (data.type === "increaseNotificationCount") {
-                    setNotificationCount((prevCount) => prevCount + 1);
+                if (data.type === "initialNotifications") {
+                    setUnreadNotificationCount(data.count);
+                    setNotifications(data.notifications);
+                } else if (data.type === "onlineNotification") {
+                    setUnreadNotificationCount((prevCount) => prevCount + 1);
+                    setNotifications((prevNotifications) => [
+                        ...prevNotifications,
+                        data.notification,
+                    ]);
                 }
             };
 
@@ -182,9 +187,9 @@ const NavBar = () => {
                                 icon={faBell}
                                 className="notification-image"
                             />
-                            {notificationCount > 0 && (
+                            {unreadNotificationCount > 0 && (
                                 <span className="notification-badge">
-                                    {notificationCount}
+                                    {unreadNotificationCount}
                                 </span>
                             )}
                         </div>

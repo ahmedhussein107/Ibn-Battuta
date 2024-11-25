@@ -45,17 +45,28 @@ async function sendNotificationCountToUser(userId, userType) {
                 (notification) => !notification.isRead
             ).length;
             console.log("Unread count:", unreadCount);
-            ws.send(JSON.stringify({ type: "notificationCount", count: unreadCount }));
+            ws.send(
+                JSON.stringify({
+                    type: "initialNotifications",
+                    count: unreadCount,
+                    notifications: user.notifications,
+                })
+            );
             console.log("done");
         }
     }
 }
-function incrementnotificationCount(userId, userType) {
+function incrementnotificationCount(userId, userType, notification) {
     const userKey = `${userId}_${userType}`;
     const ws = activeUsers[userKey];
     console.log("Incrementing notification count for user:", userKey);
     if (ws && ws.readyState === ws.OPEN) {
-        ws.send(JSON.stringify({ type: "incrementNotificationCount" }));
+        ws.send(
+            JSON.stringify({
+                type: "onlineNotification",
+                notification: notification,
+            })
+        );
     }
 }
 

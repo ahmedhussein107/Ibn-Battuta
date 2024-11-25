@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
+import Notification from "../models/notification.model.js";
+import sendEmail from "../utilities/emailUtils.js";
+import { incrementnotificationCount } from "../routes/ws.router.js";
 const secretKey =
     process.env.JWT_SECRET || "any key to cipher the password and decipher ";
 
@@ -93,4 +95,35 @@ export const assignCookies = (res, userType, userId, currency = "EGP") => {
     }
 
     return res;
+};
+
+export const sendNotificationToEmailAndSystem = async (
+    subject,
+    message,
+    userId,
+    userType,
+    relatedId,
+    relatedType,
+    type = "info"
+) => {
+    console.log("making notification");
+    const notification = new Notification({
+        message: message,
+        type: type,
+        relatedType: relatedType,
+        relatedId: relatedId,
+    });
+    await notification.save();
+
+    const user = await mongoose.model(userType).findByIdAndUpdate(
+        userId,
+        {
+            $push: { notifications: notification._id },
+        },
+        { new: true }
+    );
+
+    incrementnotificationCount(userId, userType, notification);
+    sendEmail(user.email, subject, notification.message);
+    console.log("email sent ");
 };
