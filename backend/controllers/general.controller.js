@@ -142,7 +142,7 @@ cron.schedule("0 * * * *", async () => {
             $lte: new Date(startWindow.getTime() + 60 * 60 * 1000),
         }, // 1 hour window
     });
-
+    console.log("upcomingBookings", upcomingBookings);
     for (const booking of upcomingBookings) {
         sendNotificationToEmailAndSystem(
             `Reminder: Upcoming ${booking.bookingType}`,

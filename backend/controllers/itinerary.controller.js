@@ -193,8 +193,8 @@ export const toggleFlaggedItineraries = async (req, res) => {
             }appropriate`,
             itinerary.advertiserID,
             "Advertiser",
-            "Activity",
             itinerary._id,
+            "Activity",
             "warning"
         );
         res.status(200).json({

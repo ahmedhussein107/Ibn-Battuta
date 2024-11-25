@@ -125,8 +125,8 @@ export const toggleFlaggedActivities = async (req, res) => {
             }appropriate`,
             activity.advertiserID,
             "Advertiser",
-            "Activity",
             activity._id,
+            "Activity",
             "warning"
         );
 
@@ -135,6 +135,7 @@ export const toggleFlaggedActivities = async (req, res) => {
             activity,
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 };
