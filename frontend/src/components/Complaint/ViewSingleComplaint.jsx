@@ -18,7 +18,7 @@ const ViewSingleComplaint = () => {
         replies: [],
         createdAt: "2023-09-10T12:34:56Z",
     });
-    const [comment, setComment] = useState(null);
+    const [comments, setComments] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [parentComment, setParentComment] = useState(null);
     useEffect(() => {
@@ -31,7 +31,7 @@ const ViewSingleComplaint = () => {
                 console.log("res:", res);
 
                 setComplaint(res.data.data.complaint);
-                setComment(res.data.data.comment);
+                setComments(res.data.data.comments);
             })
             .catch((err) => {
                 console.log("error i caught is:", err);
@@ -59,13 +59,19 @@ const ViewSingleComplaint = () => {
                     parentComment={parentComment}
                 />
             </div>
-            {!!comment && (
+            {!!comments && (
                 <>
                     <div className="comment-list">
-                        <Comment key={comment._id} comment={comment} onReply={onReply} />
+                        {comments.map((comment) => (
+                            <Comment
+                                key={comment._id}
+                                comment={comment}
+                                onReply={onReply}
+                            />
+                        ))}
                     </div>
                     <CommentPopUp
-                        key={comment._id}
+                        key={123}
                         isOpen={isOpen}
                         setIsOpen={setIsOpen}
                         complaintId={complaintId}

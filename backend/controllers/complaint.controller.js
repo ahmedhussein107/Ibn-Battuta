@@ -125,13 +125,15 @@ export const getComplaintAlongWithReplies = async (req, res) => {
             "touristID",
             "name picture"
         );
-        if (complaint.reply) {
-            let comment = await Comment.findById(complaint.reply);
-            comment = await populateReplies(comment);
-            console.log(complaint);
-            console.log("full comment is:", comment);
-            res.json({ data: { complaint, comment } });
-        } else res.status(200).json({ data: { complaint, comment: null } });
+        if (complaint.replies) {
+            let comments = [];
+            for (let i = 0; i < complaint.replies.length; i++) {
+                let comment = await Comment.findById(complaint.replies[i]);
+                comment = await populateReplies(comment);
+                comments.push(comment);
+            }
+            res.json({ data: { complaint, comments } });
+        } else res.status(200).json({ data: { complaint, comments: [] } });
     } catch (error) {
         console.error("Failed to fetch complaints:", error);
         res.status(500).json({ message: "Server Error" });

@@ -1,15 +1,10 @@
 import { ProfilingLevel } from "mongodb";
 import Comment from "../models/comment.model.js";
 import Complaint from "../models/complaint.model.js";
-import {
-    notifyAdminsAboutComplaint,
-    sendNotificationToEmailAndSystem,
-} from "./general.controller.js";
 export const createComment = async (req, res) => {
     try {
         console.log("req.body", req.body);
         let data = { body: req.body.body, complaintID: req.body.complaintID };
-        const complaint = await Complaint.findById(req.body.complaintID);
         const parentComment = req.body.parentComment;
         data = { ...data, authorType: req.user.userType, author: req.user.userId };
         const comment = new Comment(data);
@@ -19,15 +14,11 @@ export const createComment = async (req, res) => {
             });
         } else {
             await Complaint.findByIdAndUpdate(req.body.complaintID, {
-                $set: { reply: comment._id },
+                $push: { replies: comment._id },
             });
         }
+
         await comment.save();
-        if (req.user.userType === "Tourist") {
-            notifyAdminsAboutComplaint(complain);
-        } else if (req.user.userType === "Admin") {
-            no();
-        }
 
         res.status(201).json(comment);
     } catch (error) {
