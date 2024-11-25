@@ -71,7 +71,13 @@ export const login = async (req, res) => {
             }
         }
 
-        assignCookies(res, userRecord.userType, user._id.toString(), user.currency)
+        assignCookies(
+            res,
+            userRecord.userType,
+            user._id.toString(),
+            user.picture,
+            user.currency
+        )
             .status(200)
             .json({ message: "Login successful", user });
     } catch (err) {
@@ -80,7 +86,7 @@ export const login = async (req, res) => {
     }
 };
 
-export const assignCookies = (res, userType, userId, currency = "EGP") => {
+export const assignCookies = (res, userType, userId, profileImage, currency = "EGP") => {
     const maxAge = 5 * 60 * 60 * 1000; // 5 hours
     const token = jwt.sign({ userId, userType }, secretKey, {
         expiresIn: "5h",
@@ -88,9 +94,8 @@ export const assignCookies = (res, userType, userId, currency = "EGP") => {
 
     res.cookie("jwt", token, { maxAge });
     res.cookie("userType", userType, { maxAge });
-    if (userType === "Tourist") {
-        res.cookie("currency", currency || "EGP", { maxAge });
-    }
+    if (profileImage) res.cookie("profileImage", profileImage, { maxAge });
+    if (userType === "Tourist") res.cookie("currency", currency || "EGP", { maxAge });
 
     return res;
 };
