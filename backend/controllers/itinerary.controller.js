@@ -195,7 +195,7 @@ export const toggleFlaggedItineraries = async (req, res) => {
             "Advertiser",
             itinerary._id,
             "Activity",
-            "warning"
+            itinerary.isFlagged ? "warning" : "info"
         );
         res.status(200).json({
             message: "Itinerary flagged status changed successfully",

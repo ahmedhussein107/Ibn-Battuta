@@ -127,7 +127,7 @@ export const toggleFlaggedActivities = async (req, res) => {
             "Advertiser",
             activity._id,
             "Activity",
-            "warning"
+            activity.isFlagged ? "warning" : "info"
         );
 
         res.status(200).json({
