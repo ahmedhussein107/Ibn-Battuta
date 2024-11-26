@@ -30,6 +30,7 @@ const Bookings = () => {
 
     const handleChooseType = (page) => {
         setSelected(page);
+        setFilter("All");
     };
 
     const handleFilter = (filter) => {
