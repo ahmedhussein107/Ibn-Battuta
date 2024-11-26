@@ -3,6 +3,7 @@ import Activity from "../models/activity.model.js";
 import Itinary from "../models/itinerary.model.js";
 import Tourist from "../models/tourist.model.js";
 import { getFreeSpotsHelper } from "./itinerary.controller.js";
+import { Query } from "mongoose";
 export const getBookings = async (req, res) => {
     try {
         const bookings = await Booking.find();
@@ -221,14 +222,22 @@ export const getitineraryBookings = async (req, res) => {
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 10);
         const toSkip = (page - 1) * limit;
-        const count = await Booking.countDocuments({
+        // const count = await Booking.countDocuments({
+        //     touristID: id,
+        //     bookingType: "Itinerary",
+        // });
+        const filter = req.query.filter;
+        let query = {
             touristID: id,
             bookingType: "Itinerary",
-        });
-        const bookings = await Booking.find({
-            touristID: id,
-            bookingType: "Itinerary",
-        })
+        };
+        if (filter === "Upcoming") {
+            query.eventStartDate = { $gte: new Date() };
+        } else if (filter === "Past") {
+            query.eventStartDate = { $lt: new Date() };
+        }
+        const count = await Booking.countDocuments(query);
+        const bookings = await Booking.find(query)
             .skip(toSkip)
             .limit(limit)
             .populate({
@@ -242,6 +251,7 @@ export const getitineraryBookings = async (req, res) => {
                 path: "ratingID",
                 model: "Rating",
             });
+        console.log(bookings, "BOOKINGS");
         res.status(200).json({
             result: bookings,
             totalPages: count > 0 ? Math.ceil(count / limit) : 1,
@@ -257,16 +267,19 @@ export const getActivityBookings = async (req, res) => {
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 10);
         const toSkip = (page - 1) * limit;
-        const count = await Booking.countDocuments({
+        const filter = req.query.filter;
+        let query = {
             touristID: id,
             bookingType: "Activity",
             isInItinerary: false,
-        });
-        const bookings = await Booking.find({
-            touristID: id,
-            bookingType: "Activity",
-            isInItinerary: false,
-        })
+        };
+        if (filter === "Upcoming") {
+            query.eventStartDate = { $gte: new Date() };
+        } else if (filter === "Past") {
+            query.eventStartDate = { $lt: new Date() };
+        }
+        const count = await Booking.countDocuments(query);
+        const bookings = await Booking.find(query)
             .skip(toSkip)
             .limit(limit)
             .populate({
