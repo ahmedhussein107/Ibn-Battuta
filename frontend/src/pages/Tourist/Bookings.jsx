@@ -50,6 +50,7 @@ const Bookings = () => {
                 params: {
                     page: currentPage,
                     limit: selected == "Hotels" ? 6 : itemsPerPage,
+                    filter: filter,
                 },
                 withCredentials: true,
             });
@@ -58,59 +59,61 @@ const Bookings = () => {
             today.setHours(0, 0, 0, 0);
             switch (selected) {
                 case "Itineraries": {
-                    if (filter === "All") {
-                        setItineraries(response.data.result);
-                        console.log("HERE in ALLLL", response.data.result);
-                    } else if (filter === "Past") {
-                        setItineraries(
-                            response.data.result.filter((booking) => {
-                                const eventDate = new Date(booking.eventStartDate);
-                                return (
-                                    eventDate < today.setHours(0, 0, 0, 0) &&
-                                    !isNaN(eventDate)
-                                );
-                            })
-                        );
-                        console.log("HEREEEEEEEEEEEEEEEEEE");
-                    } else if (filter === "Upcoming") {
-                        setItineraries(
-                            response.data.result.filter((booking) => {
-                                const eventDate = new Date(booking.eventStartDate);
-                                return (
-                                    eventDate >= today.setHours(0, 0, 0, 0) &&
-                                    !isNaN(eventDate)
-                                );
-                            })
-                        );
+                    // if (filter === "All") {
+                    //     setItineraries(response.data.result);
+                    //     console.log("HERE in ALLLL", response.data.result);
+                    // } else if (filter === "Past") {
+                    //     setItineraries(
+                    //         response.data.result.filter((booking) => {
+                    //             const eventDate = new Date(booking.eventStartDate);
+                    //             return (
+                    //                 eventDate < today.setHours(0, 0, 0, 0) &&
+                    //                 !isNaN(eventDate)
+                    //             );
+                    //         })
+                    //     );
+                    //     console.log("HEREEEEEEEEEEEEEEEEEE");
+                    // } else if (filter === "Upcoming") {
+                    //     setItineraries(
+                    //         response.data.result.filter((booking) => {
+                    //             const eventDate = new Date(booking.eventStartDate);
+                    //             return (
+                    //                 eventDate >= today.setHours(0, 0, 0, 0) &&
+                    //                 !isNaN(eventDate)
+                    //             );
+                    //         })
+                    //     );
 
-                        console.log("HEREEEEEEEEEEEE", response.data.result);
-                    }
+                    //     console.log("HEREEEEEEEEEEEE", response.data.result);
+                    // }
+                    setItineraries(response.data.result);
                     break;
                 }
                 case "Activities":
-                    if (filter === "All") {
-                        setActivities(response.data.result);
-                    } else if (filter === "Past") {
-                        setActivities(
-                            response.data.result.filter((booking) => {
-                                const eventDate = new Date(booking.eventStartDate);
-                                return (
-                                    eventDate < today.setHours(0, 0, 0, 0) &&
-                                    !isNaN(eventDate)
-                                );
-                            })
-                        );
-                    } else if (filter === "Upcoming") {
-                        setActivities(
-                            response.data.result.filter((booking) => {
-                                const eventDate = new Date(booking.eventStartDate);
-                                return (
-                                    eventDate >= today.setHours(0, 0, 0, 0) &&
-                                    !isNaN(eventDate)
-                                );
-                            })
-                        );
-                    }
+                    // if (filter === "All") {
+                    //     setActivities(response.data.result);
+                    // } else if (filter === "Past") {
+                    //     setActivities(
+                    //         response.data.result.filter((booking) => {
+                    //             const eventDate = new Date(booking.eventStartDate);
+                    //             return (
+                    //                 eventDate < today.setHours(0, 0, 0, 0) &&
+                    //                 !isNaN(eventDate)
+                    //             );
+                    //         })
+                    //     );
+                    // } else if (filter === "Upcoming") {
+                    //     setActivities(
+                    //         response.data.result.filter((booking) => {
+                    //             const eventDate = new Date(booking.eventStartDate);
+                    //             return (
+                    //                 eventDate >= today.setHours(0, 0, 0, 0) &&
+                    //                 !isNaN(eventDate)
+                    //             );
+                    //         })
+                    //     );
+                    // }
+                    setActivities(response.data.result);
                     break;
                 case "Flights":
                     setFlights(response.data.result);
