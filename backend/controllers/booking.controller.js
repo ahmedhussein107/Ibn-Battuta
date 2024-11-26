@@ -51,7 +51,7 @@ export const createBooking = async (req, res) => {
         let date = 0;
         if (bookingType === "Itinerary") {
             const itinerary = await Itinary.findById(typeId);
-            date = itinerary.availableDatesAndTimes; //added r
+            date = itinerary.startDate; //added r
             if (itinerary.isActivated === false) {
                 return res
                     .status(400)
