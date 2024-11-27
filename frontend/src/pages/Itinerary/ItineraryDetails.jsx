@@ -50,6 +50,7 @@ const ItineraryDetails = () => {
     const [activities, setActivities] = useState([]);
     const [ticketCount, setTicketCount] = useState(0);
     const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
+    const [isBookmarked, setIsBookmarked] = useState(false);
     const totalPrice = itinerary ? itinerary.price * ticketCount : 0;
 
     //For mangaing page logic
@@ -72,6 +73,24 @@ const ItineraryDetails = () => {
         };
         fetchItinerary();
     }, [itineraryId]);
+
+    useEffect(() => {
+        const fetchIsBookmarked = async () => {
+            if (!itinerary) return;
+            try {
+                const response = await axiosInstance.get(
+                    `tourist/isBookmarked/${itinerary._id}`,
+                    { withCredentials: true }
+                );
+                console.log("is bookmarked data", response.data);
+                setIsBookmarked(response.data.isBookmarked);
+            } catch (error) {
+                console.error("Error fetching is bookmarked:", error);
+            }
+        };
+        fetchIsBookmarked();
+    }, [itinerary]);
+
     useEffect(() => {
         const fetchFreeSpots = async () => {
             if (!itinerary) return;
@@ -90,6 +109,25 @@ const ItineraryDetails = () => {
     useEffect(() => {
         console.log("freeSpots", freeSpots);
     }, [freeSpots]);
+
+    const handleBookmark = async () => {
+        if (!itinerary) return;
+        try {
+            const response = await axiosInstance.post(
+                `tourist/bookmark`,
+                {
+                    bookmarkType: "Itinerary",
+                    bookmarkID: itinerary._id,
+                    isBookmarked,
+                },
+                { withCredentials: true }
+            );
+            console.log("Bookmark response:", response.data);
+            setIsBookmarked(!isBookmarked);
+        } catch (error) {
+            console.error("Error bookmarking itinerary:", error);
+        }
+    };
 
     const handleBooking = async () => {
         if (!itinerary) return;
@@ -209,7 +247,12 @@ const ItineraryDetails = () => {
     if (!itinerary) return null;
     return (
         <div className="itinerary-details-container">
-            <ItineraryAndActivityHeader mode="itinerary" title={itinerary.name} />
+            <ItineraryAndActivityHeader
+                mode="itinerary"
+                title={itinerary.name}
+                bookmark={handleBookmark}
+                isBookmarked={isBookmarked}
+            />
             <CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
 
             <PopUp

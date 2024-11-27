@@ -9,6 +9,8 @@ import {
     addPreference,
     removePreference,
     changeTouristPassword,
+    addBookmark,
+    isBookmarked,
 } from "../controllers/tourist.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 
@@ -31,5 +33,9 @@ touristRouter.post("/addPreference", isAuthenticated, addPreference);
 touristRouter.delete("/removePreference", isAuthenticated, removePreference);
 
 touristRouter.patch("/updatePassword", isAuthenticated, changeTouristPassword);
+
+touristRouter.post("/bookmark", isAuthenticated, addBookmark);
+
+touristRouter.get("/isBookmarked/:id", isAuthenticated, isBookmarked);
 
 export default touristRouter;

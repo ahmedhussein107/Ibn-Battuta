@@ -8,6 +8,8 @@ import { assignCookies } from "./general.controller.js";
 import Admin from "../models/admin.model.js";
 import Complaint from "../models/complaint.model.js";
 import Booking from "../models/booking.model.js";
+import TouristBookmark from "../models/touristBookmark.model.js";
+
 export const getTourists = async (req, res) => {
     try {
         const tourguides = await Tourist.find();
@@ -292,5 +294,57 @@ export const changeTouristPassword = async (req, res) => {
     } catch (err) {
         console.error("Error changing password:", err);
         return res.status(500).json("An error occurred while changing the password");
+    }
+};
+
+export const addBookmark = async (req, res) => {
+    const touristID = req.user.userId;
+    const { bookmarkID, bookmarkType, isBookmarked } = req.body;
+
+    try {
+        if (isBookmarked) {
+            const bookmark = await TouristBookmark.deleteOne({
+                touristID,
+                bookmarkType,
+                bookmarkID,
+            });
+            res.status(200).json({ message: "Bookmark deleted successfully", bookmark });
+        } else {
+            const bookmark = await TouristBookmark.create({
+                touristID,
+                bookmarkType,
+                bookmarkID,
+            });
+            res.status(200).json({ message: "Bookmark added successfully", bookmark });
+        }
+    } catch (e) {
+        res.status(400).json({ e: e.message });
+    }
+};
+
+export const isBookmarked = async (req, res) => {
+    const touristID = req.user.userId;
+    const bookmarkID = req.params.id;
+    try {
+        const bookmark = await TouristBookmark.findOne({
+            touristID,
+            bookmarkID,
+        });
+        console.log(bookmarkID);
+        console.log(bookmark);
+        if (bookmark) {
+            res.status(200).json({
+                message: "Bookmark exists",
+                bookmark,
+                isBookmarked: true,
+            });
+        } else {
+            res.status(200).json({
+                message: "Bookmark does not exist",
+                isBookmarked: false,
+            });
+        }
+    } catch (e) {
+        res.status(400).json({ e: e.message });
     }
 };
