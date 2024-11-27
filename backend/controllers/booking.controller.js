@@ -51,7 +51,7 @@ export const createBooking = async (req, res) => {
         let date = 0;
         if (bookingType === "Itinerary") {
             const itinerary = await Itinary.findById(typeId);
-            date = itinerary.startDate; //added r
+            date = itinerary.s; //added r
             if (itinerary.isActivated === false) {
                 return res
                     .status(400)
@@ -307,6 +307,7 @@ export const getHotelBookings = async (req, res) => {
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 10);
         const toSkip = (page - 1) * limit;
+        const filter = req.query.filter;
 
         const touristId = req.user.userId;
         const tourist = await Tourist.findById(touristId);
@@ -314,8 +315,19 @@ export const getHotelBookings = async (req, res) => {
             return res.status(404).json({ error: "Tourist not found" });
         }
         const total = tourist.hotelBookings.length;
-        const bookingsSlice =
-            total > 0 ? tourist.hotelBookings.slice(toSkip, toSkip + limit) : [];
+        let bookings = [];
+        if (filter === "Past") {
+            bookings = tourist.hotelBookings.filter(
+                (booking) => new Date(booking.checkInDate) < new Date()
+            );
+        } else if (filter === "Upcoming") {
+            bookings = tourist.hotelBookings.filter(
+                (booking) => new Date(booking.checkInDate) >= new Date()
+            );
+        } else {
+            bookings = tourist.hotelBookings;
+        }
+        const bookingsSlice = total > 0 ? bookings.slice(toSkip, toSkip + limit) : [];
 
         res.status(200).json({
             result: bookingsSlice,

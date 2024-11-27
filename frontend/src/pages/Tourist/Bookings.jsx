@@ -108,7 +108,9 @@ const Bookings = () => {
                     ))}
                 </div>
                 <div style={filterButtonsGroupStyle}>
-                    {(selected === "Itineraries" || selected === "Activities") &&
+                    {(selected === "Itineraries" ||
+                        selected === "Activities" ||
+                        selected === "Hotels") &&
                         filterButtons.map((button) => (
                             <button
                                 key={button}
