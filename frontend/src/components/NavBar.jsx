@@ -31,10 +31,10 @@ const navbarUserItems = {
 
 const touristProfileDropdonw = [
     { "My Profile": "/tourist/profile" },
-    { "My Bookings": "/bookings" },
-    { "My Orders": "/orders" },
+    { "My Bookings": "/tourist/bookings" },
+    { "My Orders": "/tourist/orders" },
     { "My Bookmarks": "link" },
-    { "My Complaints": "/complaints" },
+    { "My Complaints": "/tourist/complaints" },
 ];
 
 const NavBar = () => {

@@ -6,6 +6,7 @@ import { HeaderProvider } from "./components/Header/HeaderContext";
 import Header from "./components/Header/Header";
 import NavBar from "./components/NavBar.jsx";
 import Cookies from "js-cookie";
+
 import adminRoutes from "./routes/admin.jsx";
 import authRoutes from "./routes/auth.jsx";
 import advertiserRoutes from "./routes/advertiser.jsx";
@@ -42,16 +43,14 @@ function App() {
                     {returnUserRoutes(authRoutes)}
 
                     <Route element={<LayoutWithNav />}>
-                        {/*start of public even for guests */}
-
                         {returnUserRoutes(publicRoutes)}
-
                         {returnUserRoutes(adminRoutes, "Admin")}
                         {returnUserRoutes(advertiserRoutes, "Advertiser")}
                         {returnUserRoutes(governorRoutes, "Governor")}
                         {returnUserRoutes(sellerRoutes, "Seller")}
                         {returnUserRoutes(tourguideRoutes, "TourGuide")}
                         {returnUserRoutes(touristRoutes, "Tourist")}
+
                         <Route
                             path="/products/:productId"
                             element={<ViewProductPage />}
