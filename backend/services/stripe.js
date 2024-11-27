@@ -18,6 +18,8 @@ stripeRouter.post("/create-payment-intent", async (req, res) => {
             metadata: { integration_check: "accept_a_payment" },
         });
 
+        console.log("payment Intent created: ", paymentIntent);
+
         // Send the client secret to the client
         res.json({
             clientSecret: paymentIntent.client_secret,
@@ -47,7 +49,6 @@ stripeRouter.post("/webhook", async (req, res) => {
     // Handle successful payment
     if (event.type === "charge.updated") {
         const paymentIntent = event.data.object;
-        console.log("Payment succeeded:", paymentIntent);
         // Here you can update your database, send confirmation emails, etc.
         sendEmail(
             paymentIntent.billing_details.email,
