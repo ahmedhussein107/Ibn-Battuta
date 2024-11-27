@@ -2,7 +2,7 @@ import expressWs from "express-ws";
 import Notification from "../models/notification.model.js";
 import { wsIsAuthenticate } from "../routers.middleware/authentication.js";
 const activeUsers = {};
-
+import mongoose from "mongoose";
 function setupWebSocketRoutes(app) {
     expressWs(app);
     app.ws("/notifications", (ws, req) => {
@@ -16,8 +16,7 @@ function setupWebSocketRoutes(app) {
                 activeUsers[userKey] = ws;
 
                 console.log(`User ${userKey} connected via WebSocket`);
-                // next line for testing
-                //sendNotificationCountToUser("6724dffdcebc91210f7074b3", "Admin");
+                sendNotificationCountToUser(userId, userType);
 
                 ws.on("close", () => {
                     delete activeUsers[userKey];
@@ -30,14 +29,60 @@ function setupWebSocketRoutes(app) {
     });
 }
 
-function sendNotificationCountToUser(userId, userType) {
+async function sendNotificationCountToUser(userId, userType) {
     const userKey = `${userId}_${userType}`;
     const ws = activeUsers[userKey];
     console.log("Sending notification count to user:", userKey);
     if (ws && ws.readyState === ws.OPEN) {
-        // TODO logic of counting unread notifications is to be updated
-        ws.send(JSON.stringify({ type: "notificationCount", count: 4 }));
+        console.log(2);
+        const user = await mongoose
+            .model(userType)
+            .findById(userId)
+            .populate("notifications");
+        if (user) {
+            const last_100 = user.notifications.slice(-100);
+            const toRemove = user.notifications.slice(0, -100);
+
+            user.notifications = last_100;
+
+            try {
+                user.save();
+                console.log("Notifications trimmed in user document.");
+
+                const idsToRemove = toRemove.map((notif) => notif._id);
+                Notification.deleteMany({ _id: { $in: idsToRemove } });
+
+                console.log("Notifications removed from Notifications collection.");
+            } catch (error) {
+                console.error("Error while trimming notifications:", error);
+            }
+            const unreadCount = user.notifications.filter(
+                (notification) => !notification.isRead
+            ).length;
+            console.log("Unread count:", unreadCount);
+            ws.send(
+                JSON.stringify({
+                    type: "initialNotifications",
+                    count: unreadCount,
+                    notifications: user.notifications,
+                })
+            );
+            console.log("done");
+        }
+    }
+}
+function incrementnotificationCount(userId, userType, notification) {
+    const userKey = `${userId}_${userType}`;
+    const ws = activeUsers[userKey];
+    console.log("Incrementing notification count for user:", userKey);
+    if (ws && ws.readyState === ws.OPEN) {
+        ws.send(
+            JSON.stringify({
+                type: "onlineNotification",
+                notification: notification,
+            })
+        );
     }
 }
 
-export { setupWebSocketRoutes, sendNotificationCountToUser };
+export { setupWebSocketRoutes, sendNotificationCountToUser, incrementnotificationCount };

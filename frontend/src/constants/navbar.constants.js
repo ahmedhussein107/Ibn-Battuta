@@ -53,12 +53,12 @@ export const governorNavbarItems = [{ Home: "/governor" }, { Browse: "/landmarks
 
 export const adminNavbarItems = [
     { Dashboard: "/admin" },
-    { Inventory: "/inventory" },
+    { Inventory: "/admin/inventory" },
     {
         "Manage Users": [
             { "Users List": "/admin/users" },
             { "Pending Users": "/admin/users/pending" },
-            { Complaints: "/complaints" },
+            { Complaints: "/admin/complaints" },
         ],
     },
     {

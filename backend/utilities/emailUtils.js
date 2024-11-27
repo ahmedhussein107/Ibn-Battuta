@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 import { sendEmail } from "./utilities/emailUtils.js";
 sendEmail("abdelrahim@gmail.com", "Testing", "this is me testing");
 */
-export const sendEmail = async (toEmail, subject, body) => {
+const sendEmail = async (toEmail, subject, body) => {
     try {
         const mailOptions = {
             from: WEBSITE_EMAIL,
@@ -27,3 +27,4 @@ export const sendEmail = async (toEmail, subject, body) => {
         console.log("error sending email", err);
     }
 };
+export default sendEmail;

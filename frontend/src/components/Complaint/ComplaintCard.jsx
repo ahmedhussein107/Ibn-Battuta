@@ -39,7 +39,7 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
     const handleViewComplaint = () => {
         console.log("id of complaint", complaint._id);
         navigate(
-            `${Cookies.get("userType").toLocaleLowerCase()}/complaint/${complaint._id}`
+            `/${Cookies.get("userType").toLocaleLowerCase()}/complaint/${complaint._id}`
         );
         console.log("View clicked");
     };

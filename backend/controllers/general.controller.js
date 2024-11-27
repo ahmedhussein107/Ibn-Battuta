@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import cron from "node-cron";
+import Notification from "../models/notification.model.js";
+import Booking from "../models/booking.model.js";
+import sendEmail from "../utilities/emailUtils.js";
+import { incrementnotificationCount } from "../routes/ws.router.js";
 
 const secretKey =
     process.env.JWT_SECRET || "any key to cipher the password and decipher ";
@@ -99,3 +104,77 @@ export const assignCookies = (res, userType, userId, profileImage, currency = "E
 
     return res;
 };
+
+export const sendNotificationToEmailAndSystem = async (
+    subject,
+    message,
+    userId,
+    userType,
+    relatedId,
+    relatedType,
+    type = "info"
+) => {
+    console.log("making notification");
+    const notification = new Notification({
+        message: message,
+        type: type,
+        relatedType: relatedType,
+        relatedId: relatedId,
+    });
+    await notification.save();
+
+    const user = await mongoose.model(userType).findByIdAndUpdate(
+        userId,
+        {
+            $push: { notifications: notification._id },
+        },
+        { new: true }
+    );
+
+    incrementnotificationCount(userId, userType, notification);
+    sendEmail(user.email, subject, notification.message);
+    console.log("email sent ");
+};
+
+export const notifyAdminsAboutComplaint = async (
+    complaintTitle,
+    complaintId,
+    isComment = false
+) => {
+    const admins = await mongoose.model("Admin").find();
+    for (const admin of admins) {
+        sendNotificationToEmailAndSystem(
+            "New Complaint",
+            isComment
+                ? `Tourist posted a new comment under Complaint ${complaintTitle}`
+                : `A tourist has a complaint about ${complaintTitle}.\nPlease review it.`,
+            admin._id,
+            "Admin",
+            complaintId,
+            "Complaint"
+        );
+    }
+};
+// scheduling notification about upcoming events, taks runs every 1 hour
+// minute hour day month weekday(1-7)
+cron.schedule("0 * * * *", async () => {
+    // starting next day
+    const startWindow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+    const upcomingBookings = await Booking.find({
+        eventStartDate: {
+            $gte: startWindow,
+            $lte: new Date(startWindow.getTime() + 60 * 60 * 1000),
+        }, // 1 hour window
+    });
+    console.log("upcomingBookings", upcomingBookings);
+    for (const booking of upcomingBookings) {
+        sendNotificationToEmailAndSystem(
+            `Reminder: Upcoming ${booking.bookingType}`,
+            `This is a reminder about the upcoming ${booking.bookingType}.\nIt will start in ${booking.eventStartDate}, looking forward to seeing you there!\nFor more details visit our website at https://ibn-battuta.com`,
+            booking.touristID,
+            "Tourist",
+            booking.typeId,
+            booking.bookingType
+        );
+    }
+});
