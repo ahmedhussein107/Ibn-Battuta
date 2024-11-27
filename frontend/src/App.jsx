@@ -70,28 +70,10 @@ function App() {
                 <Header />
 
                 <Routes>
-                    <Route path="/signup" element={<SignUpPage />} />
-                    <Route path="/signin" element={<Signin />} />
-                    <Route path="/select-your-role" element={<SelectYourRole />} />
-
                     <Route element={<LayoutWithNav />}>
                         <Route path="/" element={<HomePage />} />
-                        <Route path="/test" element={<PopUp />} />
-                        <Route path="/complaints" element={<ComplaintList />} />
-                        <Route
-                            path="/complaint/:complaintId"
-                            element={<ViewSingleComplaint />}
-                        />
-                        {/* signin and signup pages */}
-
-                        {/* home pages for each role */}
-                        <Route path="/admin" element={<AdminHome />} />
-                        <Route path="/advertiser" element={<AdvertiserHome />} />
-                        <Route path="/tourguide" element={<TourGuideHome />} />
-                        <Route path="/seller" element={<SellerHome />} />
-                        <Route path="/governor" element={<GovernorHome />} />
-
-                        {/* other pages */}
+                        <Route path="/about" element={<AboutPage />} />
+                        <Route path="/shop" element={<Shop />} />
                         <Route path="/activities" element={<Activities />} />
                         <Route
                             path="/activity-details/:activityId"
@@ -102,36 +84,23 @@ function App() {
                             path="/itinerary-details/:itineraryId"
                             element={<ItineraryDetails />}
                         />
-                        <Route path="/landmarks" element={<Landmarks />} />
-                        <Route path="/shop" element={<Shop />} />
 
-                        <Route path="/about" element={<AboutPage />} />
-                        <Route path="/create-product" element={<CreateProductPage />} />
-                        <Route path="/add-new-user" element={<AddNewUser />} />
-                        <Route path="admin/users" element={<UserManagement />} />
-                        <Route
-                            path="admin/pending"
-                            element={<UserManagement isAll={false} />}
-                        />
-                        <Route
-                            path="/update-product/:productId"
-                            element={<UpdateProductPage />}
-                        />
+                        {/* home pages for each role */}
+                        <Route path="/advertiser" element={<AdvertiserHome />} />
+                        <Route path="/tourguide" element={<TourGuideHome />} />
+                        <Route path="/tourguide" element={<TourGuideProfilePage />} />
+                        <Route path="/seller" element={<SellerHome />} />
+                        <Route path="/governor" element={<GovernorHome />} />
+
+                        {/* other pages */}
+
+                        <Route path="/landmarks" element={<Landmarks />} />
+
                         <Route
                             path="/products/:productId"
                             element={<ViewProductPage />}
                         />
-                        <Route path="/tourguide" element={<TourGuideProfilePage />} />
-                        <Route
-                            path="/landmark-governor"
-                            element={<GovernorLandmarks />}
-                        />
-                        <Route path="/advertiser/assigned" element={<MyActivity />} />
-                        <Route path="/tourguide/assigned" element={<MyItinenrary />} />
-                        <Route path="/inventory" element={<Inventory />} />
 
-                        <Route path="/create-activity" element={<CreateActivityPage />} />
-                        <Route path="/update-activity" element={<UpdateActivityPage />} />
                         <Route path="/view-products" element={<ViewProductsPage />} />
                         <Route path="/choose-activity" element={<ChooseActivity />} />
 
@@ -141,14 +110,6 @@ function App() {
                             element={<CreateItineraryPage />}
                         />
                         <Route path="/create-landmark" element={<CreateLandmarkPage />} />
-
-                        <Route path="/admin/tags" element={<ViewTags />} />
-                        <Route path="/admin/category" element={<ViewCategories />} />
-                        <Route path="/admin/activities" element={<AllActivities />} />
-                        <Route path="/admin/itineraries" element={<AllItineraries />} />
-
-                        <Route path="/bookings" element={<Bookings />} />
-                        <Route path="/orders" element={<Orders />} />
 
                         <Route path="/hotel/offers" element={<HotelList />} />
                         <Route
