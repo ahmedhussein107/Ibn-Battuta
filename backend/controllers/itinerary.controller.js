@@ -1,7 +1,7 @@
 import Itinerary from "../models/itinerary.model.js";
 import Activity from "../models/activity.model.js";
 import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
-
+import { sendNotificationToEmailAndSystem } from "./general.controller.js";
 export const createItinerary = async (req, res) => {
     req.body.tourguideID = req.user.userId;
     try {
@@ -186,6 +186,17 @@ export const toggleFlaggedItineraries = async (req, res) => {
         }
         itinerary.isFlagged = !itinerary.isFlagged;
         await itinerary.save();
+        await sendNotificationToEmailAndSystem(
+            "Itinerary Flagged",
+            `Your Itinerary ${itinerary.name} has been flagged as ${
+                itinerary.isFlagged ? "not " : ""
+            }appropriate`,
+            itinerary.advertiserID,
+            "Advertiser",
+            itinerary._id,
+            "Activity",
+            itinerary.isFlagged ? "warning" : "info"
+        );
         res.status(200).json({
             message: "Itinerary flagged status changed successfully",
             itinerary,

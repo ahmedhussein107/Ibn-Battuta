@@ -1,10 +1,13 @@
 import Complaint from "../models/complaint.model.js";
 import Comment from "../models/comment.model.js";
+import Admin from "../models/admin.model.js";
 import { populateReplies } from "./comment.controller.js";
+import { notifyAdminsAboutComplaint } from "./general.controller.js";
 export const createComplaint = async (req, res) => {
     req.body.touristID = req.user?.userId;
     try {
         const newComplaint = await Complaint.create(req.body);
+        notifyAdminsAboutComplaint(newComplaint.title, newComplaint._id);
         res.status(201).json(newComplaint);
     } catch (error) {
         res.status(400).json({ message: error.message });
