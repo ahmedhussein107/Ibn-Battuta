@@ -11,8 +11,13 @@ import ViewCategories from "../pages/Admin/ViewCategories";
 import AllItineraries from "../pages/Admin/AllItineraries";
 import UpdateProductPage from "../pages/Product/UpdateProductPage";
 import Inventory from "../pages/Seller/Inventory";
+import AdminProfilePage from "../pages/Admin/AdminProfilePage";
 const adminRoutes = [
     { path: "/admin", element: <AdminHome /> },
+    {
+        path: "/admin/profile",
+        element: <AdminProfilePage />,
+    },
     { path: "/admin/tags", element: <ViewTags /> },
     { path: "/admin/categories", element: <ViewCategories /> },
     { path: "/admin/itineraries", element: <AllItineraries /> },

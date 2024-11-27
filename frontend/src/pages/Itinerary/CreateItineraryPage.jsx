@@ -494,7 +494,7 @@ const CreateItineraryPage = () => {
                         handleClick={() => {
                             console.log("date in createItinerary:", date);
                             console.log("time in createItinerary:", time);
-                            navigate("/choose-activity", {
+                            navigate("tourguide/choose-activity", {
                                 state: {
                                     name: name,
                                     language: language,

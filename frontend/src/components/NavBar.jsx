@@ -30,7 +30,7 @@ const navbarUserItems = {
 };
 
 const touristProfileDropdonw = [
-    { "My Profile": "/tourist-profile" },
+    { "My Profile": "/tourist/profile" },
     { "My Bookings": "/bookings" },
     { "My Orders": "/orders" },
     { "My Bookmarks": "link" },
@@ -200,33 +200,33 @@ const NavBar = () => {
                             />
                             <div className="dropdown-content">
                                 {userType === "Admin" ? (
-                                    <Link to={"/admin-profile"} className="dropdown-item">
+                                    <Link to={"/admin/profile"} className="dropdown-item">
                                         {"My Profile"}
                                     </Link>
                                 ) : userType === "Seller" ? (
                                     <Link
-                                        to={"/seller-profile"}
+                                        to={"/seller/profile"}
                                         className="dropdown-item"
                                     >
                                         {"My Profile"}
                                     </Link>
                                 ) : userType === "Advertiser" ? (
                                     <Link
-                                        to={"/advertiser-profile"}
+                                        to={"/advertiser/profile"}
                                         className="dropdown-item"
                                     >
                                         {"My Profile"}
                                     </Link>
                                 ) : userType === "Governor" ? (
                                     <Link
-                                        to={"/governor-profile"}
+                                        to={"/governor/profile"}
                                         className="dropdown-item"
                                     >
                                         {"My Profile"}
                                     </Link>
                                 ) : userType === "TourGuide" ? (
                                     <Link
-                                        to={"/tourguide-profile"}
+                                        to={"/tourguide/profile"}
                                         className="dropdown-item"
                                     >
                                         {"My Profile"}

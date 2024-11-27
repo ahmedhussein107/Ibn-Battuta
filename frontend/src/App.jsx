@@ -71,8 +71,12 @@ function App() {
 
                 <Routes>
                     <Route element={<LayoutWithNav />}>
+                        {/*start  public for guests */}
+
                         <Route path="/" element={<HomePage />} />
                         <Route path="/about" element={<AboutPage />} />
+                        <Route path="/privacy" element={<TermsAndConditions />} />
+
                         <Route path="/shop" element={<Shop />} />
                         <Route path="/activities" element={<Activities />} />
                         <Route
@@ -84,59 +88,20 @@ function App() {
                             path="/itinerary-details/:itineraryId"
                             element={<ItineraryDetails />}
                         />
-
-                        {/* home pages for each role */}
-                        <Route path="/advertiser" element={<AdvertiserHome />} />
-                        <Route path="/tourguide" element={<TourGuideHome />} />
-                        <Route path="/tourguide" element={<TourGuideProfilePage />} />
-                        <Route path="/seller" element={<SellerHome />} />
-                        <Route path="/governor" element={<GovernorHome />} />
-
-                        {/* other pages */}
-
                         <Route path="/landmarks" element={<Landmarks />} />
+
+                        {/* end of public */}
+
+                        {/* maybe it is the shop now */}
+                        <Route path="/view-products" element={<ViewProductsPage />} />
 
                         <Route
                             path="/products/:productId"
                             element={<ViewProductPage />}
                         />
 
-                        <Route path="/view-products" element={<ViewProductsPage />} />
-                        <Route path="/choose-activity" element={<ChooseActivity />} />
-
+                        {/* doesn't exist */}
                         <Route path="/landmark/landmark/" element={<LandmarkPage />} />
-                        <Route
-                            path="/create-itinerary"
-                            element={<CreateItineraryPage />}
-                        />
-                        <Route path="/create-landmark" element={<CreateLandmarkPage />} />
-
-                        <Route path="/hotel/offers" element={<HotelList />} />
-                        <Route
-                            path="/hotel/offer-details/:id"
-                            element={<ShowOfferDetails />}
-                        />
-                        <Route path="/admin-profile" element={<AdminProfilePage />} />
-                        <Route
-                            path="/advertiser-profile"
-                            element={<AdvertiserProfilePage />}
-                        />
-                        <Route
-                            path="/governor-profile"
-                            element={<GovernorProfilePage />}
-                        />
-                        <Route path="/seller-profile" element={<SellerProfilePage />} />
-                        <Route
-                            path="/tourguide-profile"
-                            element={<TourGuideProfilePage />}
-                        />
-                        <Route path="/tourist-profile" element={<TouristProfilePage />} />
-                        <Route path="/privacy" element={<TermsAndConditions />} />
-                        <Route path="/flights" element={<Flights />} />
-                        <Route
-                            path="/flight-booking-details"
-                            element={<FlightBookingDetails />}
-                        />
                     </Route>
                 </Routes>
             </Router>
