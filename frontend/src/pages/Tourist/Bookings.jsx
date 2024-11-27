@@ -94,32 +94,44 @@ const Bookings = () => {
                 <h1 style={headerStyle}>My Bookings</h1>
             </div>
             <div style={{ padding: "1% 0" }}>
-                <div style={buttonGroupStyle}>
-                    {buttons.map((button) => (
-                        <button
-                            key={button}
-                            onClick={() => handleChooseType(button)}
-                            style={
-                                selected === button ? selectedButtonStyle : buttonStyle
-                            }
-                        >
-                            {button}
-                        </button>
-                    ))}
-                </div>
-                <div style={filterButtonsGroupStyle}>
-                    {(selected === "Itineraries" || selected === "Activities") &&
-                        filterButtons.map((button) => (
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        padding: "1% 0",
+                    }}
+                >
+                    <div style={buttonGroupStyle}>
+                        {buttons.map((button) => (
                             <button
                                 key={button}
-                                onClick={() => handleFilter(button)}
+                                onClick={() => handleChooseType(button)}
                                 style={
-                                    filter === button ? selectedButtonStyle : buttonStyle
+                                    selected === button
+                                        ? selectedButtonStyle
+                                        : buttonStyle
                                 }
                             >
                                 {button}
                             </button>
                         ))}
+                    </div>
+                    <div style={filterButtonsGroupStyle}>
+                        {(selected === "Itineraries" || selected === "Activities") &&
+                            filterButtons.map((button) => (
+                                <button
+                                    key={button}
+                                    onClick={() => handleFilter(button)}
+                                    style={
+                                        filter === button
+                                            ? selectedButtonStyle
+                                            : buttonStyle
+                                    }
+                                >
+                                    {button}
+                                </button>
+                            ))}
+                    </div>
                 </div>
 
                 <div style={itemsContainerStyle}>
@@ -217,7 +229,8 @@ const selectedButtonStyle = {
 
 const filterButtonsGroupStyle = {
     marginLeft: "8.5vw",
-    marginTop: "1vh",
+    display: "flex",
+    justifyContent: "center",
 };
 
 const itemsContainerStyle = {
