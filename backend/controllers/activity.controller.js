@@ -83,7 +83,7 @@ export const getAdvertiserActivities = async (req, res) => {
 
 export const getUpcomingActivities = async (req, res) => {
     try {
-        const { rating, ...rest } = req.query;
+        const { rating, price, ...rest } = req.query;
         const filter = buildFilter(rest);
 
         let activities = await Activity.find({
@@ -100,6 +100,17 @@ export const getUpcomingActivities = async (req, res) => {
             const maxRating = bounds[1] ? parseInt(bounds[1]) : 5;
             activities = activities.filter((activity) => {
                 return activity.rating >= minRating && activity.rating <= maxRating;
+            });
+        }
+
+        if (price) {
+            const bounds = price.split("-");
+            const minPrice = bounds[0] ? parseInt(bounds[0]) : 0;
+            const maxPrice = bounds[1] ? parseInt(bounds[1]) : Number.MAX_SAFE_INTEGER;
+            activities = activities.filter((activity) => {
+                const activityPrice =
+                    activity.price * (1 - activity.specialDiscount / 100);
+                return activityPrice >= minPrice && activityPrice <= maxPrice;
             });
         }
 
