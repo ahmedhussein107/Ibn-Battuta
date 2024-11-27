@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../../components/Pagination";
-import bookingsBackground from "../../assets/backgrounds/bookingsBackground.png";
+import bookingsBackground from "../../assets/backgrounds/bookings_bg.png";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import GenericCard from "../../components/GenericCard";
@@ -130,6 +130,7 @@ const Bookings = () => {
                         ))}
                     </div>
                 </div>
+                <hr style={{ width: "90%", margin: "0 auto" }} />
 
                 <div style={itemsContainerStyle}>
                     {/* <GenericCard width="40vw" height="20vw" /> */}
@@ -210,18 +211,20 @@ const buttonGroupStyle = {
 
 const buttonStyle = {
     padding: "10px 20px",
-    border: "2px solid #000",
-    borderRadius: "20px",
+    border: "4px solid ",
+    borderRadius: "40px",
+    borderColor: "#9C4F21",
     backgroundColor: "transparent",
-    color: "#000",
+    color: "#9C4F21",
     cursor: "pointer",
     transition: "background-color 0.3s ease, color 0.3s ease",
 };
 
 const selectedButtonStyle = {
     ...buttonStyle,
-    backgroundColor: "#FF5722",
-    color: "#fff",
+    //backgroundColor: "#9C4F21",
+    backgroundColor: "#FAE2B6",
+    color: "#9C4F21",
 };
 
 const filterButtonsGroupStyle = {

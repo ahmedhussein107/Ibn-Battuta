@@ -363,11 +363,14 @@ export const getFlightBookings = async (req, res) => {
                     ) < new Date()
             );
         } else if (filter === "Upcoming") {
-            bookings = tourist.flightBookings.filter(
-                (booking) =>
-                    new Date(
-                        booking.flightOffers[0].itineraries[0].segments[0].departure.at
-                    ) >= new Date()
+            bookings = tourist.flightBookings.filter((booking) =>
+                booking.flightOffers[0].itineraries.length === 1
+                    ? new Date(
+                          booking.flightOffers[0].itineraries[0].segments[0].departure.at
+                      ) >= new Date()
+                    : new Date(
+                          booking.flightOffers[0].itineraries[1].segments[0].departure.at
+                      ) >= new Date()
             );
         } else {
             bookings = tourist.flightBookings;
