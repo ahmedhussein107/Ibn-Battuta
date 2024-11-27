@@ -108,20 +108,15 @@ const Bookings = () => {
                     ))}
                 </div>
                 <div style={filterButtonsGroupStyle}>
-                    {(selected === "Itineraries" ||
-                        selected === "Activities" ||
-                        selected === "Hotels") &&
-                        filterButtons.map((button) => (
-                            <button
-                                key={button}
-                                onClick={() => handleFilter(button)}
-                                style={
-                                    filter === button ? selectedButtonStyle : buttonStyle
-                                }
-                            >
-                                {button}
-                            </button>
-                        ))}
+                    {filterButtons.map((button) => (
+                        <button
+                            key={button}
+                            onClick={() => handleFilter(button)}
+                            style={filter === button ? selectedButtonStyle : buttonStyle}
+                        >
+                            {button}
+                        </button>
+                    ))}
                 </div>
 
                 <div style={itemsContainerStyle}>

@@ -314,7 +314,6 @@ export const getHotelBookings = async (req, res) => {
         if (!tourist) {
             return res.status(404).json({ error: "Tourist not found" });
         }
-        const total = tourist.hotelBookings.length;
         let bookings = [];
         if (filter === "Past") {
             bookings = tourist.hotelBookings.filter(
@@ -327,6 +326,7 @@ export const getHotelBookings = async (req, res) => {
         } else {
             bookings = tourist.hotelBookings;
         }
+        const total = bookings.length;
         const bookingsSlice = total > 0 ? bookings.slice(toSkip, toSkip + limit) : [];
 
         res.status(200).json({
@@ -343,15 +343,39 @@ export const getFlightBookings = async (req, res) => {
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 10);
         const toSkip = (page - 1) * limit;
+        const filter = req.query.filter;
 
         const touristId = req.user.userId;
         const tourist = await Tourist.findById(touristId);
         if (!tourist) {
             return res.status(404).json({ error: "Tourist not found" });
         }
-        const total = tourist.flightBookings.length;
-        const bookingsSlice =
-            total > 0 ? tourist.flightBookings.slice(toSkip, toSkip + limit) : [];
+
+        let bookings = [];
+
+        if (filter === "Past") {
+            bookings = tourist.flightBookings.filter(
+                (booking) =>
+                    new Date(
+                        booking.flightOffers[0].itineraries[0].segments[0].departure.at
+                    ) < new Date()
+            );
+        } else if (filter === "Upcoming") {
+            bookings = tourist.flightBookings.filter(
+                (booking) =>
+                    new Date(
+                        booking.flightOffers[0].itineraries[0].segments[0].departure.at
+                    ) >= new Date()
+            );
+        } else {
+            bookings = tourist.flightBookings;
+            console.log(
+                "HEYYYYYYYYYYYYYY",
+                bookings[0].flightOffers[0].itineraries[0].segments[0].departure.at
+            );
+        }
+        const total = bookings.length;
+        const bookingsSlice = total > 0 ? bookings.slice(toSkip, toSkip + limit) : [];
 
         res.status(200).json({
             result: bookingsSlice,
