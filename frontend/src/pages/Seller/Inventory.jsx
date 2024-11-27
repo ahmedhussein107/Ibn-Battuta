@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import CardProduct from "../../components/CardProduct";
 import DeleteButton from "../../components/DeleteButton";
 import usePageHeader from "../../components/Header/UseHeaderPage";
-
+import Cookies from "js-cookie";
 const Inventory = () => {
     const navigate = useNavigate();
     usePageHeader(null, null);

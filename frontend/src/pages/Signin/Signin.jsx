@@ -42,6 +42,8 @@ const SigninComponent = () => {
             setResponse("Login Successful! you will be redircted in a few seconds");
             setTimeout(() => {
                 const userType = Cookies.get("userType");
+                window.location.reload();
+
                 if (userType === "Tourist") {
                     navigate("/");
                     return;

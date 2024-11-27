@@ -38,7 +38,7 @@ export const sellerNavbarItems = [
 export const tourGuideNavbarItems = [
     { Home: "/tourGuide" },
     { Browse: [{ Activites: "/activities" }, { Itineraries: "/itineraries" }] },
-    { Assigned: "/tourGuide/assigned" },
+    { Assigned: "/tourguide/assigned" },
     { Analytics: "/analytics" },
 ];
 

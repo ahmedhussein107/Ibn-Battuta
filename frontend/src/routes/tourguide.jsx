@@ -15,6 +15,6 @@ const tourguideRoutes = [
         path: "/tourguide/create-itinerary",
         element: <CreateItineraryPage />,
     },
-    { path: "tourguide/choose-activity", element: <ChooseActivity /> },
+    { path: "/tourguide/choose-activity", element: <ChooseActivity /> },
 ];
 export default tourguideRoutes;
