@@ -274,8 +274,10 @@ export const getActivityBookings = async (req, res) => {
             isInItinerary: false,
         };
         if (filter === "Upcoming") {
+            console.log("here at upcoming");
             query.eventStartDate = { $gte: new Date() };
         } else if (filter === "Past") {
+            console.log("here at past");
             query.eventStartDate = { $lt: new Date() };
         }
         const count = await Booking.countDocuments(query);

@@ -40,7 +40,22 @@ async function sendNotificationCountToUser(userId, userType) {
             .findById(userId)
             .populate("notifications");
         if (user) {
-            console.log("User found:", user.notifications);
+            const last_100 = user.notifications.slice(-100);
+            const toRemove = user.notifications.slice(0, -100);
+
+            user.notifications = last_100;
+
+            try {
+                user.save();
+                console.log("Notifications trimmed in user document.");
+
+                const idsToRemove = toRemove.map((notif) => notif._id);
+                Notification.deleteMany({ _id: { $in: idsToRemove } });
+
+                console.log("Notifications removed from Notifications collection.");
+            } catch (error) {
+                console.error("Error while trimming notifications:", error);
+            }
             const unreadCount = user.notifications.filter(
                 (notification) => !notification.isRead
             ).length;

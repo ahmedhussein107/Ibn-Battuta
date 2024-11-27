@@ -137,7 +137,7 @@ export const getUpcomingItineraries = async (req, res) => {
         const itineraries = await Itinerary.find({
             isActivated: true, // itineraries that are deactivated do not appear to the user according to requirement (25)
             isFlagged: false, // itineraries that are flagged do not appear to the user according to requirement (33)
-            availableDatesAndTimes: { $gt: Date.now() },
+            startDate: { $gt: Date.now() },
             ...query,
         })
             .populate("tourguideID")
