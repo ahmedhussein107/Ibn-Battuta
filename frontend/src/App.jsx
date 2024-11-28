@@ -6,7 +6,6 @@ import { HeaderProvider } from "./components/Header/HeaderContext";
 import Header from "./components/Header/Header";
 import NavBar from "./components/NavBar.jsx";
 import Cookies from "js-cookie";
-
 import adminRoutes from "./routes/admin.jsx";
 import authRoutes from "./routes/auth.jsx";
 import advertiserRoutes from "./routes/advertiser.jsx";

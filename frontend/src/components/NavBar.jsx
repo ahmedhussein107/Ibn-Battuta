@@ -5,6 +5,7 @@ import { faBell } from "@fortawesome/free-solid-svg-icons";
 import "../styles/NavBar.css";
 import { useState, useEffect, useRef } from "react";
 import Button from "./Button";
+import axiosInstance from "../api/axiosInstance";
 
 import {
     guestNavbarItems,
@@ -142,10 +143,21 @@ const NavBar = () => {
         const link = `/${Cookies.get("userType").toLowerCase()}/${prefix}/${
             notification.relatedId
         }`;
+        if (notification.isRead) {
+            navigate(link);
+            return;
+        }
         let newNotifications = notifications;
+        setUnreadNotificationCount(unreadNotificationCount - 1);
+        console.log("notification is ", notification);
         newNotifications[index].isRead = true;
         setNotifications(newNotifications);
-        // TODO: set isRead = true in the backend;
+        try {
+            axiosInstance.put(`/general/markNotificationAsRead/${notification._id}`);
+        } catch (err) {
+            console.log(err);
+        }
+
         setIsNotificationOpen(false);
         navigate(link);
     };
@@ -256,7 +268,10 @@ const NavBar = () => {
                                                     : notification.type
                                             }`}
                                             onClick={() =>
-                                                handleNotificationClick(notification)
+                                                handleNotificationClick(
+                                                    notification,
+                                                    index
+                                                )
                                             }
                                         >
                                             <p className="notification-message">
