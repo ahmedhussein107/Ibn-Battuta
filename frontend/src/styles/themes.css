@@ -3,8 +3,13 @@
     --secondary-color: rgb(242, 220, 220);
     --background-color: #fbf7f5;
 
-    --text-color: #333;
+    /* --text-color: #333;
     --accent-color: #f86624;
+    --accent-color-dark: #c34704;
+    --accent-color-light: #f0b69b; */
+
+    --text-color: #333;
+    --accent-color: #9c4f21;
     --accent-color-dark: #c34704;
     --accent-color-light: #f0b69b;
 
