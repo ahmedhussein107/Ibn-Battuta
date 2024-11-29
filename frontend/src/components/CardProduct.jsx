@@ -33,7 +33,6 @@ const CardProduct = ({
         />
     );
     const rating = Math.floor(product.rating);
-    console.log("rating", rating);
     const ratings = (
         <div style={{ display: "flex", flexDirection: "row" }}>
             <Rating name="read-only" value={rating} readOnly />

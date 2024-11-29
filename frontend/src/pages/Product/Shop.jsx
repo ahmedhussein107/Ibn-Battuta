@@ -14,13 +14,18 @@ import CardProduct from "../../components/CardProduct.jsx";
 import CustomButton from "../../components/Button.jsx";
 import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
 import QuantityControls from "../../components/QuantityControls.jsx";
-import convert from "../../api/convert.js";
-import convertBack from "../../api/convertBack.js";
+
 import Cookies from "js-cookie";
-const minPrice = 0;
-const maxPrice = 1000;
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 
 const Shop = () => {
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, convertPrice, formatPrice } = useCurrencyConverter(currency);
+
+    const minPrice = convertPrice(0, "EGP", currency);
+    const maxPrice = convertPrice(2000, "EGP", currency);
+
     const [products, setProducts] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
     const [ratingRange, setRatingRange] = useState([null, 5]);
@@ -95,11 +100,14 @@ const Shop = () => {
     const buildQuery = () => {
         let query = {};
 
-        // if (priceRange[0] || priceRange[1]) {
-        //     query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
-        // } else {
-        //     delete query.price;
-        // }
+        if (priceRange[0] || priceRange[1]) {
+            query.price =
+                convertPrice(priceRange[0], currency, "EGP") +
+                "-" +
+                convertPrice(priceRange[1], currency, "EGP");
+        } else {
+            delete query.price;
+        }
 
         if (ratingRange[0] || ratingRange[1]) {
             if (!ratingRange[0]) {
@@ -148,6 +156,11 @@ const Shop = () => {
         />,
         <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
     ];
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
+
     return (
         <div
             style={{
@@ -189,12 +202,12 @@ const Shop = () => {
                 >
                     <p>{selectedProduct.name}</p>
                     <p>
-                        Price: {Cookies.get("currency") || "EGP"}
-                        {convert(selectedProduct.price)}
+                        Price:
+                        {formatPrice(selectedProduct.price)}
                     </p>
                     <p>
-                        Total Price: {Cookies.get("currency") || "EGP"}{" "}
-                        {convert(selectedProduct.price * selectedQuantity).toFixed(2)}
+                        Total Price:
+                        {formatPrice(selectedProduct.price * selectedQuantity)}
                     </p>
 
                     <QuantityControls
