@@ -344,3 +344,51 @@ export const getBookmarkStatus = async (req, res) => {
         res.status(400).json({ e: e.message });
     }
 };
+
+export const getActivityBookmarks = async (req, res) => {
+    try {
+        const id = req.user.userId;
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.max(1, parseInt(req.query.limit) || 10);
+        const toSkip = (page - 1) * limit;
+        let query = {
+            touristID: id,
+            bookmarkType: "Activity",
+        };
+        const count = await TouristBookmark.countDocuments(query);
+        const bookings = await TouristBookmark.find(query)
+            .skip(toSkip)
+            .limit(limit)
+            .populate("bookmarkID");
+        res.status(200).json({
+            result: bookings,
+            totalPages: count > 0 ? Math.ceil(count / limit) : 1,
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+export const getItineraryBookmarks = async (req, res) => {
+    try {
+        const id = req.user.userId;
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.max(1, parseInt(req.query.limit) || 10);
+        const toSkip = (page - 1) * limit;
+        let query = {
+            touristID: id,
+            bookmarkType: "Itinerary",
+        };
+        const count = await TouristBookmark.countDocuments(query);
+        const bookings = await TouristBookmark.find(query)
+            .skip(toSkip)
+            .limit(limit)
+            .populate("bookmarkID");
+        res.status(200).json({
+            result: bookings,
+            totalPages: count > 0 ? Math.ceil(count / limit) : 1,
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};

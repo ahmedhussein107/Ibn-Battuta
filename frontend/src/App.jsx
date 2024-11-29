@@ -55,6 +55,7 @@ import TourGuideProfilePage from "./pages/TourGuide/TourGuideProfilePage";
 import TermsAndConditions from "./pages/Privacy/TermsAndConditions";
 import Flights from "./pages/Flights/Flights";
 import FlightBookingDetails from "./pages/Flights/FlightBookingDetails";
+import Bookmarks from "./pages/Tourist/Bookmarks";
 
 const LayoutWithNav = () => (
     <>
@@ -149,6 +150,7 @@ function App() {
 
                         <Route path="/bookings" element={<Bookings />} />
                         <Route path="/orders" element={<Orders />} />
+                        <Route path="/bookmarks" element={<Bookmarks />} />
 
                         <Route path="/hotel/offers" element={<HotelList />} />
                         <Route

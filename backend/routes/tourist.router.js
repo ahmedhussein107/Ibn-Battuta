@@ -11,6 +11,8 @@ import {
     changeTouristPassword,
     toggleBookmark,
     getBookmarkStatus,
+    getActivityBookmarks,
+    getItineraryBookmarks,
 } from "../controllers/tourist.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 
@@ -37,5 +39,9 @@ touristRouter.patch("/updatePassword", isAuthenticated, changeTouristPassword);
 touristRouter.post("/bookmark", isAuthenticated, toggleBookmark);
 
 touristRouter.post("/getBookmarkStatus", isAuthenticated, getBookmarkStatus);
+
+touristRouter.get("/getActivityBookmarks", isAuthenticated, getActivityBookmarks);
+
+touristRouter.get("/getItineraryBookmarks", isAuthenticated, getItineraryBookmarks);
 
 export default touristRouter;
