@@ -50,7 +50,7 @@ export const useCurrencyConverter = (selectedCurrency = "EGP") => {
     };
 
     return {
-        rates: data?.rates,
+        rates: data,
         isLoading,
         error,
         convertPrice,

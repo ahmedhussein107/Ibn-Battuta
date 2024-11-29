@@ -14,6 +14,7 @@ import CardActivity from "../../components/CardActivity";
 import ShareAndMark from "../../components/ShareAndMark";
 import { useNavigate } from "react-router-dom";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
+import { CircularProgress } from "@mui/material";
 import Cookies from "js-cookie";
 
 const Activities = () => {
@@ -235,7 +236,7 @@ const Activities = () => {
 
     if (isLoading) {
         // TODO: add better loading animation
-        return <div>Loading...</div>;
+        return <CircularProgress />;
     }
 
     return (
