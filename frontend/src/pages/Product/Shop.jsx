@@ -18,6 +18,8 @@ import convert from "../../api/convert.js";
 import convertBack from "../../api/convertBack.js";
 import Cookies from "js-cookie";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 const minPrice = 0;
 const maxPrice = 1000;
 
@@ -160,6 +162,7 @@ const Shop = () => {
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    backgroundColor: "white",
                 }}
             ></div>
             <div
@@ -174,55 +177,98 @@ const Shop = () => {
                     style={{
                         border: "2px solid #9C4F21",
                         borderRadius: "50px",
-                        padding: "0.5em 2em",
+                        padding: "0.5em 1.1em",
                         fontSize: "1.1rem",
                         fontWeight: "bold",
                         cursor: "pointer",
                         boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                        backgroundColor: "white",
+                        display: "flex", // Add this
+                        alignItems: "center", // Add this
+                        gap: "0.4rem", // Add this to create space between icon and text
                     }}
                 >
-                    <ShoppingCartIcon /> Shop
+                    <ShoppingBagIcon
+                        style={{
+                            width: "1rem",
+                            height: "1rem",
+                            color: "#9C4F21",
+                            scale: "1.5",
+                        }}
+                    />
+                    <span
+                        style={{
+                            fontSize: "1.3rem",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        Shop
+                    </span>
                 </button>
                 <button
                     style={{
                         border: "2px solid #9C4F21",
                         borderRadius: "50px",
-                        padding: "0.5em 2em",
+                        padding: "0.5em 1.1em",
                         fontSize: "1.1rem",
                         fontWeight: "bold",
                         cursor: "pointer",
                         boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                        backgroundColor: "white",
+                        display: "flex", // Add this
+                        alignItems: "center", // Add this
+                        gap: "0.4rem", // Add this to create space between icon and text
                     }}
                 >
-                    <img
-                        src="/assets/icons/shop-icon.png"
-                        alt="Wishlist"
+                    <FavoriteBorderIcon
                         style={{
-                            marginleft: "1vw",
-                            verticalAlign: "middle",
+                            width: "1rem",
+                            height: "1rem",
+                            color: "#9C4F21",
+                            scale: "1.5",
                         }}
                     />
+                    <span
+                        style={{
+                            fontSize: "1.3rem",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        wishlist
+                    </span>
                 </button>
                 <button
                     style={{
                         border: "2px solid #9C4F21",
                         borderRadius: "50px",
-                        padding: "0.5em 2em",
+                        padding: "0.5em 1.1em",
                         fontSize: "1.1rem",
                         fontWeight: "bold",
                         cursor: "pointer",
                         boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                        marginLeft: "38vw",
+                        backgroundColor: "white",
+                        display: "flex", // Add this
+                        alignItems: "center", // Add this
+                        gap: "0.4rem", // Add this to create space between icon and text
+                        marginLeft: "41vw",
                     }}
                 >
-                    <img
-                        src="/assets/icons/shop-icon.png"
-                        alt="Cart"
+                    <ShoppingCartIcon
                         style={{
-                            marginleft: "1vw",
-                            verticalAlign: "middle",
+                            width: "1rem",
+                            height: "1rem",
+                            color: "#9C4F21",
+                            scale: "1.5",
                         }}
                     />
+                    <span
+                        style={{
+                            fontSize: "1.3rem",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        Cart
+                    </span>
                 </button>
             </div>
 

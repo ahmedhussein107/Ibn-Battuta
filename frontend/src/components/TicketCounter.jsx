@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/TicketCounter.css";
 import convert from "../api/convert";
 import Cookies from "js-cookie";
+
 const TicketCounter = ({ pricePerPerson, maxCount, currentCount, setCount }) => {
     const [maxReached, setMaxReached] = useState(currentCount >= maxCount);
     const totalPrice = currentCount * pricePerPerson;
@@ -38,16 +39,12 @@ const TicketCounter = ({ pricePerPerson, maxCount, currentCount, setCount }) => 
                 <div className="price-row">
                     <span>Price per person</span>
                     <span className="price">
-                        {Cookies.get("currency") || "EGP"}{" "}
-                        {convert(pricePerPerson.toFixed(2))}{" "}
+                        {formatPrice(pricePerPerson.toFixed(2))}{" "}
                     </span>
                 </div>
                 <div className="price-row">
                     <span>Total Price</span>
-                    <span className="price">
-                        {Cookies.get("currency") || "EGP"}{" "}
-                        {convert(totalPrice.toFixed(2))}{" "}
-                    </span>
+                    <span className="price">{formatPrice(totalPrice.toFixed(2))} </span>
                 </div>
             </div>
             {maxReached && (
