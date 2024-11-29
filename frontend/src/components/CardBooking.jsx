@@ -164,7 +164,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
 							Rate now
 						</Button>
 					) : (
-						<Rating name="rating" value={ratingTourGuide} readOnly />
+						<span style={{ color: "grey" }}>{ratingTourGuide}/5</span>
 					)
 				) : (
 					<div />
