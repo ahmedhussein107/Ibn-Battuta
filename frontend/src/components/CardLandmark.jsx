@@ -7,6 +7,8 @@ import TruncatedText from "./TruncatedText";
 import LandmarkTimes from "./LandmarkTimes";
 import convert from "../api/convert";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../hooks/currencyHooks";
 const iconSize = "0.85rem";
 
 const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
@@ -16,6 +18,11 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
             <TitleAndButtons title={landmark.name} buttons={firstLineButtons} />
         </div>
     );
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     const line2 = (
         <div
             style={{
@@ -59,7 +66,7 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
             {Object.keys(landmark.ticketPrices).map((key) => (
                 <div key={key}>
                     {key.toString().charAt(0).toUpperCase() + key.toString().slice(1)}:{" "}
-                    {convert(landmark.ticketPrices[key])}
+                    {formatPrice(landmark.ticketPrices[key])}
                 </div>
             ))}
         </div>

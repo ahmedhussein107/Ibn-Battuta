@@ -15,15 +15,13 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
     const navigate = useNavigate();
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
-
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     const handleShowMore = () => {
         navigate(`/hotel/offer-details/${offer._id}`, { state: { offer } });
         console.log("Show more clicked");
     };
-
-    if (isLoading) {
-        return <CircularProgress />;
-    }
 
     return (
         <div className="hotel-card">

@@ -5,6 +5,8 @@ import Button from "./Button";
 import discountBadge from "/discountBadge.png"; // Replace with the correct path to your badge image
 import convert from "../api/convert";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../hooks/currencyHooks";
 const DiscountCard = ({
     onClick,
     availableSeats,
@@ -13,6 +15,11 @@ const DiscountCard = ({
     width,
     height,
 }) => {
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     // Calculate discounted price
     const discountedPrice =
         discountPercentage > 0 ? price - (price * discountPercentage) / 100 : price;

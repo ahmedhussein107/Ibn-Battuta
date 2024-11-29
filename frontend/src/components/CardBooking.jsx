@@ -10,6 +10,8 @@ import PopUp from "./PopUpsGeneric/PopUp";
 import axiosInstance from "../api/axiosInstance";
 import convert from "../api/convert";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../hooks/currencyHooks";
 
 const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
     const [rating, setRating] = useState(booking.ratingID ? booking.ratingID.rating : 0);
@@ -57,7 +59,11 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
     const givenDate = new Date(date);
     const differenceInMilliseconds = givenDate - currentDate;
     const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24.0);
-
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     const handleRateTourguide = async () => {
         try {
             const response = await axiosInstance.post(
@@ -227,10 +233,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
     const bottomLeft = (
         <div style={{ display: "flex", flexDirection: "column", gap: "0.1em" }}>
             <div>Booking ID: {booking._id}</div>
-            <div>
-                Total Price: {convert(booking.totalPrice)}{" "}
-                {Cookies.get("currency") || "EGP"}
-            </div>
+            <div>Total Price: {formatPrice(booking.totalPrice)}</div>
             <div>Tickets: {booking.count}</div>
             <div
                 style={{
