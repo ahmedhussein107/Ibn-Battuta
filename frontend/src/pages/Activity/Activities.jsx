@@ -14,8 +14,10 @@ import activitiesBackground from "../../assets/backgrounds/activitiesBackground.
 import CardActivity from "../../components/CardActivity";
 import ShareAndMark from "../../components/ShareAndMark";
 import { useNavigate } from "react-router-dom";
+
+// TODO: select better bounds
 const minPrice = 0;
-const maxPrice = 100000;
+const maxPrice = 2000;
 
 import convert from "../../api/convert.js";
 import convertBack from "../../api/convertBack.js";
@@ -61,14 +63,20 @@ const Activities = () => {
         }
     };
 
-    
     const sortActivities = (activities) => {
-       
         let sortedActivities = [...activities]; // Create a shallow copy
         if (sortBy === "priceAsc") {
-            sortedActivities.sort((a, b) => a.price * (1 - (a.specialDiscount/100))  - (b.price * (1 - (b.specialDiscount/100))));
+            sortedActivities.sort(
+                (a, b) =>
+                    a.price * (1 - a.specialDiscount / 100) -
+                    b.price * (1 - b.specialDiscount / 100)
+            );
         } else if (sortBy === "priceDesc") {
-            sortedActivities.sort((a, b) => b.price * (1 - (b.specialDiscount/100)) - (a.price * (1 - (a.specialDiscount/100))));
+            sortedActivities.sort(
+                (a, b) =>
+                    b.price * (1 - b.specialDiscount / 100) -
+                    a.price * (1 - a.specialDiscount / 100)
+            );
         } else if (sortBy === "ratingAsc") {
             sortedActivities.sort((a, b) => a.rating - b.rating);
         } else if (sortBy === "ratingDesc") {
@@ -129,11 +137,11 @@ const Activities = () => {
             delete query.category;
         }
 
-        // if (priceRange[0] || priceRange[1]) {
-        //     query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
-        // } else {
-        //     delete query.price;
-        // }
+        if (priceRange[0] || priceRange[1]) {
+            query.price = priceRange[0] + "-" + priceRange[1]; // TODO: update it if converted
+        } else {
+            delete query.price;
+        }
 
         if (ratingRange[0] || ratingRange[1]) {
             if (!ratingRange[0]) {
@@ -199,7 +207,7 @@ const Activities = () => {
             searchText={location}
             setSearchText={setLocation}
         />,
-        <PriceRange
+        <PriceRange // TODO: change the slider
             priceRange={priceRange}
             setPriceRange={setPriceRange}
             min={minPrice}
@@ -240,9 +248,6 @@ const Activities = () => {
                     backgroundRepeat: "no-repeat",
                 }}
             ></div>
-            {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
-                <NavBar />
-            </div> */}
 
             <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
                 <div

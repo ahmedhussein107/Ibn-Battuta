@@ -1,7 +1,7 @@
 import Itinerary from "../models/itinerary.model.js";
 import Activity from "../models/activity.model.js";
 import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
-
+import { sendNotificationToEmailAndSystem } from "./general.controller.js";
 export const createItinerary = async (req, res) => {
     req.body.tourguideID = req.user.userId;
     try {
@@ -34,7 +34,6 @@ export const deleteItineraries = async (req, res) => {
 
 export const getItineraryById = async (req, res) => {
     try {
-        console.log("I am here");
         const itinerary = await Itinerary.findById(req.params.id).populate("tourguideID");
         if (itinerary) {
             res.status(200).json(itinerary);
@@ -45,7 +44,9 @@ export const getItineraryById = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
-// I want to make a function that returns the minimum no of free spot for an Itinrary by taking minimum of free spots of all its activities
+
+/** I want to make a function that returns the minimum no of free spot for an Itinrary
+by taking minimum of free spots of all its activities */
 export const getFreeSpotsHelper = async (id) => {
     try {
         const itinerary = await Itinerary.findById(id);
@@ -65,7 +66,7 @@ export const getFreeSpotsHelper = async (id) => {
             }
         }
 
-        return mn == 1e9 + 7 ? 0 : mn;
+        return mn;
     } catch (error) {
         throw new Error(error.message); // Return error to the caller
     }
@@ -75,12 +76,12 @@ export const getFreeSpots = async (req, res) => {
     try {
         const id = req.params.id;
         const freeSpots = await getFreeSpotsHelper(id);
-        res.status(200).json(freeSpots );
+        res.status(200).json(freeSpots);
     } catch (error) {
         console.error("Error fetching free spots:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-}
+};
 
 export const updateItinerary = async (req, res) => {
     try {
@@ -136,7 +137,7 @@ export const getUpcomingItineraries = async (req, res) => {
         const itineraries = await Itinerary.find({
             isActivated: true, // itineraries that are deactivated do not appear to the user according to requirement (25)
             isFlagged: false, // itineraries that are flagged do not appear to the user according to requirement (33)
-            availableDatesAndTimes: { $gt: Date.now() },
+            startDate: { $gt: Date.now() },
             ...query,
         })
             .populate("tourguideID")
@@ -185,6 +186,17 @@ export const toggleFlaggedItineraries = async (req, res) => {
         }
         itinerary.isFlagged = !itinerary.isFlagged;
         await itinerary.save();
+        await sendNotificationToEmailAndSystem(
+            "Itinerary Flagged",
+            `Your Itinerary ${itinerary.name} has been flagged as ${
+                itinerary.isFlagged ? "not " : ""
+            }appropriate`,
+            itinerary.advertiserID,
+            "Advertiser",
+            itinerary._id,
+            "Activity",
+            itinerary.isFlagged ? "warning" : "info"
+        );
         res.status(200).json({
             message: "Itinerary flagged status changed successfully",
             itinerary,
@@ -198,24 +210,17 @@ export const toggleFlaggedItineraries = async (req, res) => {
 
 export const toggleActivatedItineraries = async (req, res) => {
     try {
-        console.log("1");
         const itineraryID = req.params.id;
-        console.log("2");
         const itinerary = await Itinerary.findById(itineraryID);
-        console.log("3");
         if (!itinerary) {
             return res.status(404).json({ message: "Itinerary not found" });
         }
-        console.log("4");
         itinerary.isActivated = !itinerary.isActivated;
-        console.log("5");
         await itinerary.save();
-        console.log("6");
         res.status(200).json({
             message: "Itinerary activated status changed successfully",
             itinerary,
         });
-        console.log("7");
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

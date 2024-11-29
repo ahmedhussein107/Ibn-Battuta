@@ -73,7 +73,13 @@ export const createTourist = async (req, res) => {
             req.body.password = hashedPassword;
             const { address, ...body } = req.body;
             const newTourist = await Tourist.create(body);
-            assignCookies(res, "Tourist", newTourist._id, newTourist.currency)
+            assignCookies(
+                res,
+                "Tourist",
+                newTourist._id,
+                newTourist.picture,
+                newTourist.currency
+            )
                 .status(201)
                 .json({ message: "Sign up successful" });
         } else {

@@ -1,10 +1,13 @@
 import Complaint from "../models/complaint.model.js";
 import Comment from "../models/comment.model.js";
+import Admin from "../models/admin.model.js";
 import { populateReplies } from "./comment.controller.js";
+import { notifyAdminsAboutComplaint } from "./general.controller.js";
 export const createComplaint = async (req, res) => {
     req.body.touristID = req.user?.userId;
     try {
         const newComplaint = await Complaint.create(req.body);
+        notifyAdminsAboutComplaint(newComplaint.title, newComplaint._id);
         res.status(201).json(newComplaint);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -122,13 +125,15 @@ export const getComplaintAlongWithReplies = async (req, res) => {
             "touristID",
             "name picture"
         );
-        if (complaint.reply) {
-            let comment = await Comment.findById(complaint.reply);
-            comment = await populateReplies(comment);
-            console.log(complaint);
-            console.log("full comment is:", comment);
-            res.json({ data: { complaint, comment } });
-        } else res.status(200).json({ data: { complaint, comment: null } });
+        if (complaint.replies) {
+            let comments = [];
+            for (let i = 0; i < complaint.replies.length; i++) {
+                let comment = await Comment.findById(complaint.replies[i]);
+                comment = await populateReplies(comment);
+                comments.push(comment);
+            }
+            res.json({ data: { complaint, comments } });
+        } else res.status(200).json({ data: { complaint, comments: [] } });
     } catch (error) {
         console.error("Failed to fetch complaints:", error);
         res.status(500).json({ message: "Server Error" });

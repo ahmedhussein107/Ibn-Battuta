@@ -1,12 +1,11 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-dotenv.config();
+import { WEBSITE_EMAIL, WEBSITE_EMAIL_PASSWORD } from "../config/config.js";
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: process.env.WEBSITE_EMAIL,
-        pass: process.env.WEBSITE_EMAIL_PASSWORD,
+        user: WEBSITE_EMAIL,
+        pass: WEBSITE_EMAIL_PASSWORD,
     },
 });
 
@@ -15,17 +14,19 @@ const transporter = nodemailer.createTransport({
 import { sendEmail } from "./utilities/emailUtils.js";
 sendEmail("abdelrahim@gmail.com", "Testing", "this is me testing");
 */
-export const sendEmail = async (toEmail, subject, body) => {
-    try {
-        const mailOptions = {
-            from: process.env.WEBSITE_EMAIL,
-            to: toEmail,
-            subject: subject,
-            text: body,
-        };
-        await transporter.sendMail(mailOptions);
-    } catch (err) {
-        console.log("error sending email");
-        throw err;
+const sendEmail = async (toEmail, subject, body) => {
+    if (toEmail) {
+        try {
+            const mailOptions = {
+                from: WEBSITE_EMAIL,
+                to: toEmail,
+                subject: subject,
+                text: body,
+            };
+            await transporter.sendMail(mailOptions);
+        } catch (err) {
+            console.log("error sending email", err);
+        }
     }
 };
+export default sendEmail;

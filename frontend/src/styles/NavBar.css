@@ -196,3 +196,59 @@
     align-items: center;
     gap: var(--spacing-small);
 }
+
+.notification-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    z-index: 1000;
+    max-height: 40vh;
+    overflow-y: auto;
+    text-align: center;
+}
+
+.notification-dropdown h4 {
+    margin: 10px 10px 0 10px;
+    font-size: 1rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.notification-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+.notification-item.info {
+    background-color: rgb(220, 229, 247);
+}
+.notification-item.warning {
+    background-color: rgb(246, 202, 202);
+}
+.notification-item.read {
+    background-color: azure;
+}
+
+.notification-item p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.notification-item span {
+    font-size: 0.8rem;
+    color: gray;
+    margin-top: 5px;
+}
+
+.no-notifications {
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: gray;
+}
