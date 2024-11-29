@@ -26,22 +26,27 @@ export const useCurrencyConverter = (selectedCurrency = "EGP") => {
         fromCurrency = "EGP",
         toCurrency = selectedCurrency
     ) => {
-        console.log("data", data);
         if (!data) return amount;
 
         const rates = data;
+        const scaledAmount = 10000 * amount;
         // Convert to EGP first (if not already in EGP)
-        const inEGP = fromCurrency === "EGP" ? amount : amount / rates[fromCurrency];
+        const inEGP =
+            fromCurrency === "EGP" ? scaledAmount : scaledAmount / rates[fromCurrency];
 
         // Convert from USD to target currency
-        return (inEGP * rates[toCurrency]).toFixed(2);
+        return Math.floor((inEGP * rates[toCurrency]) / 100) / 100;
     };
 
-    const formatPrice = (amount, currency = selectedCurrency) => {
+    const formatPriceHelper = (amount, currency = selectedCurrency) => {
         return new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: currency,
         }).format(amount);
+    };
+
+    const formatPrice = (amount, currency = selectedCurrency) => {
+        return formatPriceHelper(convertPrice(amount, "EGP", currency), currency);
     };
 
     return {

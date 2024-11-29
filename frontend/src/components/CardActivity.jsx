@@ -53,7 +53,7 @@ const CardActivity = ({
     );
 
     const description = (
-        <description
+        <p
             style={{
                 fontSize: fontSize * 1.2,
                 width: "100%",
@@ -62,7 +62,7 @@ const CardActivity = ({
             }}
         >
             {activity.description}
-        </description>
+        </p>
     );
     const rating = Math.floor(activity.rating);
     const ratings = (
@@ -107,10 +107,10 @@ const CardActivity = ({
                 fontWeight: "bold",
                 color: "red",
                 textDecoration: "line-through",
-                fontSize: "0.8rem",
+                fontSize: "0.9rem",
             }}
         >
-            {formatPrice(convertPrice(beforeDiscount, "EGP", currency), currency)}
+            {formatPrice(beforeDiscount, currency)}
         </p>
     );
     const currentPrice = (
@@ -119,10 +119,10 @@ const CardActivity = ({
                 display: "flex",
                 flexDirection: "row",
                 fontWeight: "bold",
-                fontSize: "1rem",
+                fontSize: "1.1rem",
             }}
         >
-            {formatPrice(convertPrice(afterDiscount, "EGP", currency), currency)}
+            {formatPrice(afterDiscount, currency)}
         </p>
     );
 

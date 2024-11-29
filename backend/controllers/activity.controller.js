@@ -105,8 +105,8 @@ export const getUpcomingActivities = async (req, res) => {
 
         if (price) {
             const bounds = price.split("-");
-            const minPrice = bounds[0] ? parseInt(bounds[0]) : 0;
-            const maxPrice = bounds[1] ? parseInt(bounds[1]) : Number.MAX_SAFE_INTEGER;
+            const minPrice = bounds[0] ? parseFloat(bounds[0]) : 0;
+            const maxPrice = bounds[1] ? parseFloat(bounds[1]) : Number.MAX_SAFE_INTEGER;
             activities = activities.filter((activity) => {
                 const activityPrice =
                     activity.price * (1 - activity.specialDiscount / 100);
