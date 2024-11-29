@@ -7,20 +7,30 @@ const containerStyle = {
     margin: "auto",
 };
 
-const center = {
-    lat: 30.0444, // Default latitude (Cairo for example)
-    lng: 31.2357, // Default longitude
+// Default center position
+const centerr = {
+    lat: 31.072116833659926, // Default latitude (Cairo for example)
+    lng: 32.24977622243277, // Default longitude
 };
 
-const MapComponent = ({ markerPosition, onMapClick, customStyles }) => {
+// Default marker position (same as center for example)
+const defaultMarkerPosition = {
+    lat: 31.6, // Default latitude
+    lng: 32.9, // Default longitude
+};
+
+const MapComponent = ({
+    markerPosition = defaultMarkerPosition,
+    onMapClick,
+    customStyles,
+}) => {
     const styles = customStyles ? { ...containerStyle, ...customStyles } : containerStyle;
 
     return (
-        // <LoadScript googleMapsApiKey={apiKey}>
         <GoogleMap
             mapContainerStyle={styles}
-            center={markerPosition || center}
-            zoom={10}
+            center={centerr}
+            zoom={7}
             onClick={(event) =>
                 onMapClick({
                     lat: event.latLng.lat(),
@@ -30,7 +40,6 @@ const MapComponent = ({ markerPosition, onMapClick, customStyles }) => {
         >
             {markerPosition && <Marker position={markerPosition} />}
         </GoogleMap>
-        // </LoadScript>
     );
 };
 

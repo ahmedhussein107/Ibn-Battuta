@@ -8,7 +8,6 @@ import TagsIcon from "@mui/icons-material/LocalOffer";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import PopUp from "./PopUpsGeneric/PopUp";
 import axiosInstance from "../api/axiosInstance";
-import convert from "../api/convert";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
@@ -61,9 +60,6 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
     const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24.0);
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
-    if (isLoading) {
-        return <CircularProgress />;
-    }
     const handleRateTourguide = async () => {
         try {
             const response = await axiosInstance.post(
@@ -170,14 +166,16 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
             >
                 <Avatar src={profilePicture} />
                 {" " + name + " "}
-                {differenceInDays < 0 &&
-                booking.bookingType == "Itinerary" &&
-                canRateTourGuide ? (
-                    <Button variant="text" onClick={() => setTourguidePopup(true)}>
-                        Rate now
-                    </Button>
+                {differenceInDays < 0 && booking.bookingType == "Itinerary" ? (
+                    canRateTourGuide ? (
+                        <Button variant="text" onClick={() => setTourguidePopup(true)}>
+                            Rate now
+                        </Button>
+                    ) : (
+                        <Rating name="rating" value={ratingTourGuide} readOnly />
+                    )
                 ) : (
-                    <div></div>
+                    <div />
                 )}
             </div>
         </div>
@@ -290,6 +288,10 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
             </div>
         </div>
     );
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
 
     return (
         <div>

@@ -27,7 +27,8 @@ button:hover {
     border-color: var(--accent-color);
     cursor: pointer;
     transition: background-color 0.3s; /* Transition for hover effect */
-    color: #f86624;
+    /* color: #f86624; */
+    color: #9c4f21;
     margin: 0 var(--spacing-small);
 }
 
