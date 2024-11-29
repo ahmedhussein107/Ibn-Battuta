@@ -76,13 +76,17 @@ export default function ActivityDetails() {
     useEffect(() => {
         const fetchIsBookmarked = async () => {
             if (!activityData) return;
+            if (userType !== "Tourist") return;
             try {
-                const response = await axiosInstance.get(
-                    `tourist/isBookmarked/${activityData._id}`,
+                const response = await axiosInstance.post(
+                    `tourist/getBookmarkStatus/`,
+                    {
+                        bookmarkIDs: [activityData._id],
+                    },
                     { withCredentials: true }
                 );
                 console.log("is bookmarked data", response.data);
-                setIsBookmarked(response.data.isBookmarked);
+                setIsBookmarked(response.data[activityData._id]);
             } catch (error) {
                 console.error("Error fetching is bookmarked:", error);
             }
@@ -196,6 +200,7 @@ export default function ActivityDetails() {
                 isOpen={activityData.isOpenForBooking}
                 bookmark={handleBookmark}
                 isBookmarked={isBookmarked}
+                showBookmark={userType === "Tourist"}
             />
             <ActivityPhotos
                 width="100%"

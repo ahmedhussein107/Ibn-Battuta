@@ -10,6 +10,7 @@ export default function ItineraryAndActivityHeader({
         console.log("Bookmark not working");
     },
     isBookmarked = false,
+    showBookmark = false,
 }) {
     return (
         <div className="itinerary-and-activity-header-container">
@@ -41,6 +42,7 @@ export default function ItineraryAndActivityHeader({
                 mode="header"
                 onSecondIconClick={bookmark}
                 isBookmarked={isBookmarked}
+                showBookmark={showBookmark}
             />
         </div>
     );

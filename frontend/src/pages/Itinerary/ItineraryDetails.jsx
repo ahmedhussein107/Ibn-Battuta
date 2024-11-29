@@ -77,13 +77,17 @@ const ItineraryDetails = () => {
     useEffect(() => {
         const fetchIsBookmarked = async () => {
             if (!itinerary) return;
+            if (userType !== "Tourist") return;
             try {
-                const response = await axiosInstance.get(
-                    `tourist/isBookmarked/${itinerary._id}`,
+                const response = await axiosInstance.post(
+                    `tourist/getBookmarkStatus/`,
+                    {
+                        bookmarkIDs: [itinerary._id],
+                    },
                     { withCredentials: true }
                 );
                 console.log("is bookmarked data", response.data);
-                setIsBookmarked(response.data.isBookmarked);
+                setIsBookmarked(response.data[itinerary._id]);
             } catch (error) {
                 console.error("Error fetching is bookmarked:", error);
             }
@@ -252,6 +256,7 @@ const ItineraryDetails = () => {
                 title={itinerary.name}
                 bookmark={handleBookmark}
                 isBookmarked={isBookmarked}
+                showBookmark={userType === "Tourist"}
             />
             <CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
 

@@ -297,7 +297,7 @@ export const changeTouristPassword = async (req, res) => {
     }
 };
 
-export const addBookmark = async (req, res) => {
+export const toggleBookmark = async (req, res) => {
     const touristID = req.user.userId;
     const { bookmarkID, bookmarkType, isBookmarked } = req.body;
 
@@ -322,28 +322,24 @@ export const addBookmark = async (req, res) => {
     }
 };
 
-export const isBookmarked = async (req, res) => {
+export const getBookmarkStatus = async (req, res) => {
     const touristID = req.user.userId;
-    const bookmarkID = req.params.id;
+    const bookmarkIDs = req.body.bookmarkIDs;
+    const result = {};
     try {
-        const bookmark = await TouristBookmark.findOne({
-            touristID,
-            bookmarkID,
-        });
-        console.log(bookmarkID);
-        console.log(bookmark);
-        if (bookmark) {
-            res.status(200).json({
-                message: "Bookmark exists",
-                bookmark,
-                isBookmarked: true,
+        for (let i = 0; i < bookmarkIDs.length; i++) {
+            const bookmark = await TouristBookmark.findOne({
+                touristID,
+                bookmarkID: bookmarkIDs[i],
             });
-        } else {
-            res.status(200).json({
-                message: "Bookmark does not exist",
-                isBookmarked: false,
-            });
+            if (bookmark) {
+                result[bookmarkIDs[i]] = true;
+            } else {
+                result[bookmarkIDs[i]] = false;
+            }
         }
+        console.log("result", result);
+        res.status(200).json(result);
     } catch (e) {
         res.status(400).json({ e: e.message });
     }

@@ -12,6 +12,7 @@ export default function ShareAndMark({
     direction = "",
     mode = "card",
     isBookmarked = false,
+    showBookmark = false,
 }) {
     const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
@@ -43,13 +44,15 @@ export default function ShareAndMark({
             style={{ width: width, height: height, ...styles }}
         >
             {/* Mark Icon */}
-            <div className="icon" onClick={onSecondIconClick}>
-                <img
-                    src={isBookmarked ? "/markIconFilled.png" : "/markIcon.png"}
-                    alt="Second Icon"
-                    style={mode === "card" ? { width: width, height: height } : {}}
-                />
-            </div>
+            {showBookmark && (
+                <div className="icon" onClick={onSecondIconClick}>
+                    <img
+                        src={isBookmarked ? "/markIconFilled.png" : "/markIcon.png"}
+                        alt="Second Icon"
+                        style={mode === "card" ? { width: width, height: height } : {}}
+                    />
+                </div>
+            )}
 
             {/* Share with Dropdown */}
             <div className="icon">
