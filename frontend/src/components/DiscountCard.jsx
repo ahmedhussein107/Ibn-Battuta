@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import Button from "./Button";
 // Import the discount badge image
 import discountBadge from "/discountBadge.png"; // Replace with the correct path to your badge image
-import convert from "../api/convert";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
@@ -32,20 +31,13 @@ const DiscountCard = ({
                 {/* Conditionally render price display based on discount */}
                 {discountPercentage > 0 ? (
                     <>
-                        <div style={styles.originalPrice}>
-                            {Cookies.get("currency") || "EGP"}{" "}
-                            {convert(price).toLocaleString()}
-                        </div>
+                        <div style={styles.originalPrice}>{formatPrice(price)}</div>
                         <div style={styles.discountedPrice}>
-                            {Cookies.get("currency") || "EGP"}{" "}
-                            {convert(discountedPrice).toLocaleString()}
+                            {formatPrice(discountedPrice)}
                         </div>
                     </>
                 ) : (
-                    <div style={styles.noDiscountPrice}>
-                        {Cookies.get("currency") || "EGP"}{" "}
-                        {convert(price).toLocaleString()}
-                    </div>
+                    <div style={styles.noDiscountPrice}>{formatPrice(price)}</div>
                 )}
             </div>
 

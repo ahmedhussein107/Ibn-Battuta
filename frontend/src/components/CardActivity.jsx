@@ -97,11 +97,8 @@ const CardActivity = ({
     const beforeDiscount = activity.price;
     const afterDiscount = activity.price * (1 - activity.specialDiscount / 100);
 
-    const { convertPrice, formatPrice } = useCurrencyConverter();
     const currency = Cookies.get("currency") || "EGP";
-    if (isLoading) {
-        return <CircularProgress />;
-    }
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
     const originalPrice = (
         <p
@@ -114,7 +111,7 @@ const CardActivity = ({
                 fontSize: "0.9rem",
             }}
         >
-            {formatPrice(beforeDiscount, currency)}
+            {formatPrice(beforeDiscount)}
         </p>
     );
     const currentPrice = (
@@ -126,7 +123,7 @@ const CardActivity = ({
                 fontSize: "1.1rem",
             }}
         >
-            {formatPrice(afterDiscount, currency)}
+            {formatPrice(afterDiscount)}
         </p>
     );
 
@@ -150,6 +147,10 @@ const CardActivity = ({
             ))}
         </div>
     );
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
 
     const card = (
         <GenericCard

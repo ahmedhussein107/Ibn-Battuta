@@ -50,10 +50,7 @@ const TicketCounter = ({ pricePerPerson, maxCount, currentCount, setCount }) => 
                 </div>
                 <div className="price-row">
                     <span>Total Price</span>
-                    <span className="price">
-                        {Cookies.get("currency") || "EGP"}{" "}
-                        {convert(totalPrice.toFixed(2))}{" "}
-                    </span>
+                    <span className="price">{formatPrice(totalPrice.toFixed(2))} </span>
                 </div>
             </div>
             {maxReached && (
