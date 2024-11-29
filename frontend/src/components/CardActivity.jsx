@@ -8,6 +8,7 @@ import TitleAndButtons from "./TitleAndButtons";
 import { Rating } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
 const CardActivity = ({
     activity,
     width,
@@ -98,6 +99,9 @@ const CardActivity = ({
 
     const { convertPrice, formatPrice } = useCurrencyConverter();
     const currency = Cookies.get("currency") || "EGP";
+    if (isLoading) {
+        return <CircularProgress />;
+    }
 
     const originalPrice = (
         <p

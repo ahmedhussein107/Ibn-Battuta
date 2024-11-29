@@ -7,6 +7,8 @@ import DateIcon from "@mui/icons-material/Today";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import convert from "../api/convert";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../hooks/currencyHooks";
 const InventoryCard = ({ product, handleDelete }) => {
     const title = product.name;
     const date = new Date(product.createdAt).toLocaleDateString();
@@ -20,7 +22,11 @@ const InventoryCard = ({ product, handleDelete }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isDeleteHovered, setIsDeleteHovered] = useState(false);
     const [isArchievedHovered, setisArchievedHovered] = useState(false);
-
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     const styles = {
         card: {
             position: "relative",
@@ -204,7 +210,7 @@ const InventoryCard = ({ product, handleDelete }) => {
 
                 <div style={styles.price}>
                     <span style={{ fontWeight: "bold" }}>
-                        {Cookies.get("currency") || "EGP"} {convert(originalPrice)}
+                        {formatPrice(originalPrice)}
                     </span>
                 </div>
 
