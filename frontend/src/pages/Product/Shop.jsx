@@ -17,6 +17,7 @@ import QuantityControls from "../../components/QuantityControls.jsx";
 import convert from "../../api/convert.js";
 import convertBack from "../../api/convertBack.js";
 import Cookies from "js-cookie";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 const minPrice = 0;
 const maxPrice = 1000;
 
@@ -94,13 +95,6 @@ const Shop = () => {
 
     const buildQuery = () => {
         let query = {};
-
-        // if (priceRange[0] || priceRange[1]) {
-        //     query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
-        // } else {
-        //     delete query.price;
-        // }
-
         if (ratingRange[0] || ratingRange[1]) {
             if (!ratingRange[0]) {
                 query.rating = "-" + ratingRange[1];
@@ -168,9 +162,70 @@ const Shop = () => {
                     backgroundRepeat: "no-repeat",
                 }}
             ></div>
-            {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
-                <NavBar />
-            </div> */}
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: "1vh",
+                    marginLeft: "28vw",
+                }}
+            >
+                <button
+                    style={{
+                        border: "2px solid #9C4F21",
+                        borderRadius: "50px",
+                        padding: "0.5em 2em",
+                        fontSize: "1.1rem",
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                    }}
+                >
+                    <ShoppingCartIcon /> Shop
+                </button>
+                <button
+                    style={{
+                        border: "2px solid #9C4F21",
+                        borderRadius: "50px",
+                        padding: "0.5em 2em",
+                        fontSize: "1.1rem",
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                    }}
+                >
+                    <img
+                        src="/assets/icons/shop-icon.png"
+                        alt="Wishlist"
+                        style={{
+                            marginleft: "1vw",
+                            verticalAlign: "middle",
+                        }}
+                    />
+                </button>
+                <button
+                    style={{
+                        border: "2px solid #9C4F21",
+                        borderRadius: "50px",
+                        padding: "0.5em 2em",
+                        fontSize: "1.1rem",
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                        marginLeft: "38vw",
+                    }}
+                >
+                    <img
+                        src="/assets/icons/shop-icon.png"
+                        alt="Cart"
+                        style={{
+                            marginleft: "1vw",
+                            verticalAlign: "middle",
+                        }}
+                    />
+                </button>
+            </div>
+
             <PopUp
                 isOpen={buyingPopUpOpen}
                 setIsOpen={setBuyingPopUpOpen}
@@ -208,8 +263,7 @@ const Shop = () => {
                     style={{
                         width: "25vw",
                         borderRadius: "3vh",
-                        marginTop: "1%",
-                        marginBottom: "1%",
+                        marginTop: "-3vh",
                     }}
                 >
                     <SideBar
