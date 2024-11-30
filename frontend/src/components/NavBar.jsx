@@ -33,7 +33,7 @@ const touristProfileDropdonw = [
     { "My Profile": "/tourist-profile" },
     { "My Bookings": "/bookings" },
     { "My Orders": "/orders" },
-    { "My Bookmarks": "link" },
+    { "My Bookmarks": "/bookmarks" },
     { "My Complaints": "/complaints" },
 ];
 
