@@ -15,16 +15,18 @@ import { sendEmail } from "./utilities/emailUtils.js";
 sendEmail("abdelrahim@gmail.com", "Testing", "this is me testing");
 */
 const sendEmail = async (toEmail, subject, body) => {
-    try {
-        const mailOptions = {
-            from: WEBSITE_EMAIL,
-            to: toEmail,
-            subject: subject,
-            text: body,
-        };
-        await transporter.sendMail(mailOptions);
-    } catch (err) {
-        console.log("error sending email", err);
+    if (toEmail) {
+        try {
+            const mailOptions = {
+                from: WEBSITE_EMAIL,
+                to: toEmail,
+                subject: subject,
+                text: body,
+            };
+            await transporter.sendMail(mailOptions);
+        } catch (err) {
+            console.log("error sending email", err);
+        }
     }
 };
 export default sendEmail;

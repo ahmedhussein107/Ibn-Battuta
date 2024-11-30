@@ -1,3 +1,5 @@
+import "./App.css";
+
 import {
     BrowserRouter as Router,
     Route,
@@ -5,13 +7,16 @@ import {
     Outlet,
     Navigate,
 } from "react-router-dom";
-import "./App.css";
+
 import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
+
 import { HeaderProvider } from "./components/Header/HeaderContext";
 import Header from "./components/Header/Header";
 import NavBar from "./components/NavBar.jsx";
+
 import Cookies from "js-cookie";
+
 import adminRoutes from "./routes/admin.jsx";
 import authRoutes from "./routes/auth.jsx";
 import advertiserRoutes from "./routes/advertiser.jsx";
@@ -20,6 +25,9 @@ import sellerRoutes from "./routes/seller.jsx";
 import tourguideRoutes from "./routes/tourguide.jsx";
 import touristRoutes from "./routes/tourist.jsx";
 import publicRoutes from "./routes/public.jsx";
+
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./hooks/currencyHooks.js";
 
 const returnUserRoutes = (routesList, userType) => {
     return (
@@ -40,36 +48,41 @@ const LayoutWithNav = () => (
 
 function App() {
     return (
-        <HeaderProvider>
-            <Router>
-                <Header />
+        <QueryClientProvider client={queryClient}>
+            <HeaderProvider>
+                <Router>
+                    <Header />
 
-                <Routes>
-                    {returnUserRoutes(authRoutes)}
+                    <Routes>
+                        {returnUserRoutes(authRoutes)}
 
-                    <Route element={<LayoutWithNav />}>
-                        {returnUserRoutes(publicRoutes)}
-                        {returnUserRoutes(adminRoutes, "Admin")}
-                        {returnUserRoutes(advertiserRoutes, "Advertiser")}
-                        {returnUserRoutes(governorRoutes, "Governor")}
-                        {returnUserRoutes(sellerRoutes, "Seller")}
-                        {returnUserRoutes(tourguideRoutes, "TourGuide")}
-                        {returnUserRoutes(touristRoutes, "Tourist")}
+                        <Route element={<LayoutWithNav />}>
+                            {returnUserRoutes(publicRoutes)}
+                            {returnUserRoutes(adminRoutes, "Admin")}
+                            {returnUserRoutes(advertiserRoutes, "Advertiser")}
+                            {returnUserRoutes(governorRoutes, "Governor")}
+                            {returnUserRoutes(sellerRoutes, "Seller")}
+                            {returnUserRoutes(tourguideRoutes, "TourGuide")}
+                            {returnUserRoutes(touristRoutes, "Tourist")}
 
-                        <Route
-                            path="/products/:productId"
-                            element={<ViewProductPage />}
-                        />
+                            <Route
+                                path="/products/:productId"
+                                element={<ViewProductPage />}
+                            />
 
-                        {/* doesn't exist */}
-                        <Route path="/landmark/landmark/" element={<LandmarkPage />} />
+                            {/* doesn't exist */}
+                            <Route
+                                path="/landmark/landmark/"
+                                element={<LandmarkPage />}
+                            />
 
-                        {/* Default route */}
-                        <Route path="*" element={<Navigate to="/signin" />} />
-                    </Route>
-                </Routes>
-            </Router>
-        </HeaderProvider>
+                            {/* Default route */}
+                            <Route path="*" element={<Navigate to="/signin" />} />
+                        </Route>
+                    </Routes>
+                </Router>
+            </HeaderProvider>
+        </QueryClientProvider>
     );
 }
 

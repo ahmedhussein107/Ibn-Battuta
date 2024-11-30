@@ -11,7 +11,8 @@ const PaginationComponent = ({ totalPages, currentPage, onChange }) => {
                 color="#f86624"
                 sx={{
                     "& .MuiPaginationItem-root": {
-                        backgroundColor: "#f0f0f0",
+                        // backgroundColor: "#f0f0f0",
+                        backgroundColor: "#FAE2B6",
                         color: "var(--accent-color)",
                         "&:hover": {
                             backgroundColor: "var(--accent-color)",

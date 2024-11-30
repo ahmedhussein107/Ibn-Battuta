@@ -143,7 +143,7 @@ export const sendNotificationToEmailAndSystem = async (
     );
 
     incrementnotificationCount(userId, userType, notification);
-    sendEmail(user.email, subject, notification.message);
+    sendEmail(user?.email, subject, notification?.message);
     console.log("email sent ");
 };
 

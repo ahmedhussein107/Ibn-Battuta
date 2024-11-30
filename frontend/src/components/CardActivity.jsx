@@ -5,10 +5,10 @@ import TagsIcon from "@mui/icons-material/LocalOffer";
 import Button from "./Button";
 import GenericCard from "./GenericCard";
 import TitleAndButtons from "./TitleAndButtons";
-import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
-import convert from "../api/convert";
+import { useCurrencyConverter } from "../hooks/currencyHooks";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
 const CardActivity = ({
     activity,
     width,
@@ -30,7 +30,8 @@ const CardActivity = ({
                 display: "flex",
                 flexDirection: "row",
                 fontSize: fontSize,
-                gap: "2vw",
+                justifyContent: "space-around",
+                marginLeft: "-5%",
             }}
         >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
@@ -53,12 +54,16 @@ const CardActivity = ({
     );
 
     const description = (
-        <TruncatedText
-            text={activity.description || ""}
-            width={"100%"}
-            height={"80%"}
-            fontSize={"2vh"}
-        />
+        <p
+            style={{
+                fontSize: fontSize * 1.2,
+                width: "100%",
+                height: "80%",
+                overflow: "hidden", // TODO: add ... at the end
+            }}
+        >
+            {activity.description}
+        </p>
     );
     const rating = Math.floor(activity.rating);
     const ratings = (
@@ -92,6 +97,9 @@ const CardActivity = ({
     const beforeDiscount = activity.price;
     const afterDiscount = activity.price * (1 - activity.specialDiscount / 100);
 
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+
     const originalPrice = (
         <p
             style={{
@@ -100,11 +108,10 @@ const CardActivity = ({
                 fontWeight: "bold",
                 color: "red",
                 textDecoration: "line-through",
-                // marginTop: "-10%",
-                fontSize: "0.8rem",
+                fontSize: "0.9rem",
             }}
         >
-            {Cookies.get("currency") || "EGP"} {convert(beforeDiscount)}
+            {formatPrice(beforeDiscount)}
         </p>
     );
     const currentPrice = (
@@ -113,11 +120,10 @@ const CardActivity = ({
                 display: "flex",
                 flexDirection: "row",
                 fontWeight: "bold",
-                // marginTop: "-5%",
-                fontSize: "1rem",
+                fontSize: "1.1rem",
             }}
         >
-            {Cookies.get("currency") || "EGP"} {convert(afterDiscount)}
+            {formatPrice(afterDiscount)}
         </p>
     );
 
@@ -141,6 +147,10 @@ const CardActivity = ({
             ))}
         </div>
     );
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
 
     const card = (
         <GenericCard

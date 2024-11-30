@@ -12,13 +12,17 @@ import Footer from "../../components/Footer";
 import CardItinerary from "../../components/CardItinerary";
 import ShareAndMark from "../../components/ShareAndMark";
 import { useNavigate } from "react-router-dom";
-const minPrice = 0;
-const maxPrice = 1000000;
 
-import convert from "../../api/convert.js";
-import convertBack from "../../api/convertBack.js";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
+
 const Itineraries = () => {
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, convertPrice } = useCurrencyConverter(currency);
+    const minPrice = convertPrice(0, "EGP", currency);
+    const maxPrice = convertPrice(2000, "EGP", currency); // TODO: select better bounds
+
     const [itineraries, setItineraries] = useState([]);
     const [tags, setTags] = useState([""]);
     const [selectedTags, setSelectedTags] = useState([]);
@@ -94,11 +98,14 @@ const Itineraries = () => {
             delete query.tags;
         }
 
-        // if (priceRange[0] || priceRange[1]) {
-        //     query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
-        // } else {
-        //     delete query.price;
-        // }
+        if (priceRange[0] || priceRange[1]) {
+            query.price =
+                convertPrice(priceRange[0], currency, "EGP") +
+                "-" +
+                convertPrice(priceRange[1], currency, "EGP");
+        } else {
+            delete query.price;
+        }
 
         if (name) {
             query.name = "~" + name;
@@ -152,6 +159,11 @@ const Itineraries = () => {
             setCheckedItems={setSelectedTags}
         />,
     ];
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
+
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
             <div

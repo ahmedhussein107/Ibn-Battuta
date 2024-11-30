@@ -10,7 +10,6 @@ import ProfileAndDescription from "./ProfileAndDescription.jsx";
 import CyclicPhotoDisplay from "./CyclicPhotoDisplay.jsx";
 
 // Top-level components
-import NavBar from "../../components/NavBar.jsx";
 import ItineraryAndActivityHeader from "../../components/ItineraryAndActivityHeader.jsx";
 import Tags from "../../components/Tags.jsx";
 import Accessibility from "../../components/Accessibility.jsx";
