@@ -8,6 +8,7 @@ import CardActivity from "../../components/CardActivity";
 import CardItinerary from "../../components/CardItinerary";
 import ShareAndMark from "../../components/ShareAndMark";
 import { useNavigate } from "react-router-dom";
+import FilterButtons from "../../components/FilterButtons";
 
 const Bookmarks = () => {
     const navigate = useNavigate();
@@ -95,21 +96,11 @@ const Bookmarks = () => {
                         padding: "1% 0",
                     }}
                 >
-                    <div style={buttonGroupStyle}>
-                        {buttons.map((button) => (
-                            <button
-                                key={button}
-                                onClick={() => handleChooseType(button)}
-                                style={
-                                    selected === button
-                                        ? selectedButtonStyle
-                                        : buttonStyle
-                                }
-                            >
-                                {button}
-                            </button>
-                        ))}
-                    </div>
+                    <FilterButtons
+                        buttons={buttons}
+                        selected={selected}
+                        handleChooseType={handleChooseType}
+                    />
                 </div>
 
                 <div style={itemsContainerStyle}>
