@@ -6,6 +6,8 @@ import DateIcon from "@mui/icons-material/Today";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import convert from "../api/convert";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../hooks/currencyHooks";
 const ItineraryCard = ({ itinerary, handleDelete }) => {
     const title = itinerary.name;
     const location = itinerary.location;
@@ -21,7 +23,11 @@ const ItineraryCard = ({ itinerary, handleDelete }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isDeleteHovered, setIsDeleteHovered] = useState(false);
     const [isActivateHovered, setIsActivateHovered] = useState(false);
-
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     const styles = {
         card: {
             position: "relative",
@@ -224,7 +230,7 @@ const ItineraryCard = ({ itinerary, handleDelete }) => {
 
                 <div style={styles.price}>
                     <span style={{ fontWeight: "bold" }}>
-                        {Cookies.get("currency") || "EGP"} {convert(originalPrice)}
+                        {formatPrice(originalPrice)}
                     </span>
                 </div>
 

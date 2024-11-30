@@ -9,6 +9,8 @@ import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 import convert from "../api/convert";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../hooks/currencyHooks";
 const CardItinerary = ({
     itinerary,
     width,
@@ -94,6 +96,11 @@ const CardItinerary = ({
             )}
         </div>
     );
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     const price = (
         <div
             style={{
@@ -102,8 +109,7 @@ const CardItinerary = ({
                 fontWeight: "bold",
             }}
         >
-            <p>{Cookies.get("currency") || "EGP"}</p>
-            <p style={{ marginLeft: "5%" }}>{convert(itinerary.price)}</p>
+            <p style={{ marginLeft: "5%" }}>{formatPrice(itinerary.price)}</p>
         </div>
     );
 
