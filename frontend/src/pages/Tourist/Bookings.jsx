@@ -9,6 +9,7 @@ import CardBooking from "../../components/CardBooking";
 import TouristHotelBookings from "../../components/Hotels/TouristHotelBookings";
 import HotelList from "../../components/Hotels/HotelList";
 import FlightList from "../../components/Flights/FlightList";
+import FilterButtons from "../../components/FilterButtons";
 
 const Bookings = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -101,36 +102,20 @@ const Bookings = () => {
                         padding: "1% 0",
                     }}
                 >
-                    <div style={buttonGroupStyle}>
-                        {buttons.map((button) => (
-                            <button
-                                key={button}
-                                onClick={() => handleChooseType(button)}
-                                style={
-                                    selected === button
-                                        ? selectedButtonStyle
-                                        : buttonStyle
-                                }
-                            >
-                                {button}
-                            </button>
-                        ))}
-                    </div>
+                    <FilterButtons
+                        buttons={buttons}
+                        selected={selected}
+                        handleChooseType={handleChooseType}
+                    />
+
                     <div style={filterButtonsGroupStyle}>
-                        {(selected === "Itineraries" || selected === "Activities") &&
-                            filterButtons.map((button) => (
-                                <button
-                                    key={button}
-                                    onClick={() => handleFilter(button)}
-                                    style={
-                                        filter === button
-                                            ? selectedButtonStyle
-                                            : buttonStyle
-                                    }
-                                >
-                                    {button}
-                                </button>
-                            ))}
+                        {(selected === "Itineraries" || selected === "Activities") && (
+                            <FilterButtons
+                                buttons={filterButtons}
+                                selected={filter}
+                                handleChooseType={handleFilter}
+                            />
+                        )}
                     </div>
                 </div>
 
