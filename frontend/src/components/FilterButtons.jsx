@@ -29,18 +29,19 @@ const buttonGroupStyle = {
 
 const buttonStyle = {
     padding: "10px 20px",
-    border: "2px solid #000",
-    borderRadius: "20px",
+    border: "3px solid ",
+    borderRadius: "40px",
+    borderColor: "#9C4F21",
     backgroundColor: "transparent",
-    color: "#000",
+    color: "#9C4F21",
     cursor: "pointer",
     transition: "background-color 0.3s ease, color 0.3s ease",
 };
 
 const selectedButtonStyle = {
     ...buttonStyle,
-    backgroundColor: "#FF5722",
-    color: "#fff",
+    backgroundColor: "#FAE2B6",
+    color: "#9C4F21",
 };
 
 export default FilterButtons;
