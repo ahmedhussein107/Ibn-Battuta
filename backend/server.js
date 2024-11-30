@@ -25,14 +25,16 @@ import customActivityRouter from "./routes/customActivity.router.js";
 import generalRouter from "./routes/general.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+
+// services
 import amadeusHotelsRouter from "./services/hotels.js";
 import amadeusFlightsRouter from "./services/flights.js";
-
+import stripeRouter from "./services/stripe.js";
+// environment variables
 import { PORT, MONGO_URI } from "./config/config.js";
 
 import expressWs from "express-ws";
 import { sendNotificationCountToUser, setupWebSocketRoutes } from "./routes/ws.router.js";
-import stripeRouter from "./services/stripe.js";
 
 const app = expressWs(express()).app;
 
