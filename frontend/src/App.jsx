@@ -1,4 +1,10 @@
-import { BrowserRouter as Router, Route, Routes, Outlet } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Route,
+    Routes,
+    Outlet,
+    Navigate,
+} from "react-router-dom";
 import "./App.css";
 import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
@@ -57,6 +63,9 @@ function App() {
 
                         {/* doesn't exist */}
                         <Route path="/landmark/landmark/" element={<LandmarkPage />} />
+
+                        {/* Default route */}
+                        <Route path="*" element={<Navigate to="/signin" />} />
                     </Route>
                 </Routes>
             </Router>
