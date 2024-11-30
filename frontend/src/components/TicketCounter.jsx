@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/TicketCounter.css";
-import convert from "../api/convert";
+
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";

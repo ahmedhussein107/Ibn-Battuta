@@ -89,6 +89,34 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
         }
     };
 
+    const handleSubmit = async () => {
+        try {
+            const response = await axiosInstance.post(
+                `/rating/rate${booking.bookingType}/${booking.typeId._id}`,
+                { rating, comment },
+                { withCredentials: true }
+            );
+            if (response.status === 201) {
+                setIsReadOnly(true);
+                console.log("Rating added successfully");
+                const newBooking = await axiosInstance.patch(
+                    `/booking/updateBooking/${booking._id}`,
+                    { ratingID: response.data.newRating._id }
+                );
+                if (newBooking.status === 200) {
+                    console.log("Rating ID added to booking successfully");
+                } else {
+                    console.error("Failed to add rating ID to booking");
+                }
+            } else {
+                console.error("Failed to add rating");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            setOpen(false);
+        }
+    };
     const aboveLine = (
         <div>
             <div
@@ -172,7 +200,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                             Rate now
                         </Button>
                     ) : (
-                        <Rating name="rating" value={ratingTourGuide} readOnly />
+                        <span style={{ color: "grey" }}>{ratingTourGuide}/5</span>
                     )
                 ) : (
                     <div />
@@ -180,35 +208,6 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
             </div>
         </div>
     );
-
-    const handleSubmit = async () => {
-        try {
-            const response = await axiosInstance.post(
-                `/rating/rate${booking.bookingType}/${booking.typeId._id}`,
-                { rating, comment },
-                { withCredentials: true }
-            );
-            if (response.status === 201) {
-                setIsReadOnly(true);
-                console.log("Rating added successfully");
-                const newBooking = await axiosInstance.patch(
-                    `/booking/updateBooking/${booking._id}`,
-                    { ratingID: response.data.newRating._id }
-                );
-                if (newBooking.status === 200) {
-                    console.log("Rating ID added to booking successfully");
-                } else {
-                    console.error("Failed to add rating ID to booking");
-                }
-            } else {
-                console.error("Failed to add rating");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        } finally {
-            setOpen(false);
-        }
-    };
 
     const handleCancel = async () => {
         try {
