@@ -46,7 +46,9 @@ export const createOTPandSendEmail = async (req, res) => {
 
         const userName = await mongoose.model("Username").findById(username);
         if (!userName) {
-            return res.status(404).json({ message: "User not found" });
+            return res
+                .status(404)
+                .json({ message: "The username you entered is incorrect" });
         }
 
         const userType = userName.userType;
@@ -69,7 +71,11 @@ export const createOTPandSendEmail = async (req, res) => {
         const email = user.email;
         const subject = "OTP for password reset";
         const message = `Your OTP for password reset is: ${otp}`;
-        await sendEmail(email, subject, message);
+        try {
+            await sendEmail(email, subject, message);
+        } catch (e) {
+            return res.status(404).json({ message: e.message || "Error sending email" });
+        }
 
         res.status(200).json({ message: "OTP created successfully" });
     } catch (err) {
@@ -80,26 +86,35 @@ export const createOTPandSendEmail = async (req, res) => {
 export const verifyOTP = async (req, res) => {
     const { username, otp } = req.body;
 
-    const userName = await mongoose.model("Username").findById(username);
-    if (!userName) {
-        return res.status(404).json({ message: "User not found" });
-    }
     try {
+        const userName = await mongoose.model("Username").findById(username);
+
+        if (!userName) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
         const fiveMinutesInMs = 5 * 60 * 1000;
-        if (Date.now() - new Date(userName.updatedAt).getTime() > fiveMinutesInMs) {
+        console.log("time passed", Date.now() - new Date(userName.updatedAt).getTime());
+        if (
+            Date.now() - new Date(userName.updatedAt).getTime() > fiveMinutesInMs ||
+            !userName.otp
+        ) {
+            userName.otp = null;
+            await userName.save();
             return res.status(400).json({ message: "OTP has expired" });
         }
 
-        if (!bcrypt.compare(userName.otp, otp)) {
+        const otpMatch = await bcrypt.compare(otp, userName.otp);
+
+        if (!otpMatch) {
             return res.status(400).json({ message: "Invalid OTP" });
         }
 
+        userName.otp = null;
+        await userName.save();
         res.status(200).json({ message: "OTP verified successfully" });
     } catch (err) {
         res.status(500).json({ error: err.message });
-    } finally {
-        userName.otp = null;
-        await userName.save();
     }
 };
 

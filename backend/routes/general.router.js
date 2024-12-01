@@ -10,5 +10,5 @@ import {
 generalRouter.put("/changePassword", changePassword);
 generalRouter.post("/login", login);
 generalRouter.post("/createOTP", createOTPandSendEmail);
-generalRouter.get("/verifyOTP", verifyOTP);
+generalRouter.post("/verifyOTP", verifyOTP);
 export default generalRouter;
