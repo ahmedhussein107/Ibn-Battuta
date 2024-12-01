@@ -152,50 +152,62 @@ export const deleteBooking = async (req, res) => {
             const activity = await Activity.findById(booking.typeId);
             date = new Date(activity.startDate);
         }
-        const givenDate = new Date(date);
-        const differenceInMilliseconds = givenDate - currentDate;
-        const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24.0);
-        if (differenceInDays < 2) {
-            return res.status(400).json({ message: "The booking cannot be deleted" });
-        } else {
-            // I want to delete all points got from this booking from the tourist
 
-            const tourist = await Tourist.findById(booking.touristID);
-            if (booking.bookingType === "Itinerary") {
-                const itinerary = await Itinary.findById(booking.typeId);
-                // I want to loop over activites in this itinerary and increase their freeSpots
-                for (const object of itinerary.activities) {
-                    if (object.activityType === "Activity") {
-                        const activityInfo = await Activity.findById(object.activity);
-                        activityInfo.freeSpots = activityInfo.freeSpots + booking.count;
-                        await activityInfo.save();
-                        const activityBooking = await Booking.findOneAndDelete({
-                            touristID,
-                            bookingType: "Activity",
-                            typeId: object.activity,
-                            isInItinerary: true,
-                        });
-                    } else if (object.activityType === "CustomActivity") {
-                        // Handle CustomActivity if needed
-                    }
-                }
-            } else {
-                // I want to add the spots taken from the activity or the Itinerary
-                const activity = await Activity.findById(booking.typeId);
-                activity.freeSpots += booking.count;
-                await activity.save();
-            }
-
-            if (booking.isComplete) {
-                // I want also to add amount to the wallet of the tourist
-                tourist.wallet += booking.totalPrice;
-                tourist.loyalityPoints -= booking.pointsAdded;
-                tourist.points -= booking.pointsAdded;
-                await tourist.save();
+        if (booking.isComplete) {
+            const givenDate = new Date(date);
+            const differenceInMilliseconds = givenDate - currentDate;
+            const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24.0);
+            if (differenceInDays < 2) {
+                return res.status(400).json({ message: "The booking cannot be deleted" });
             }
         }
+
+        // I want to delete all points got from this booking from the tourist
+        const tourist = await Tourist.findById(booking.touristID);
+        if (booking.bookingType === "Itinerary") {
+            const itinerary = await Itinary.findById(booking.typeId);
+            // I want to loop over activites in this itinerary and increase their freeSpots
+            for (const object of itinerary.activities) {
+                if (object.activityType === "Activity") {
+                    const activityInfo = await Activity.findById(object.activity);
+                    activityInfo.freeSpots = activityInfo.freeSpots + booking.count;
+                    await activityInfo.save();
+                    const activityBooking = await Booking.findOneAndDelete({
+                        touristID,
+                        bookingType: "Activity",
+                        typeId: object.activity,
+                        isInItinerary: true,
+                    });
+                } else if (object.activityType === "CustomActivity") {
+                    // Handle CustomActivity if needed
+                }
+            }
+        } else {
+            // I want to add the spots taken from the activity or the Itinerary
+            const activity = await Activity.findById(booking.typeId);
+            activity.freeSpots += booking.count;
+            await activity.save();
+        }
+
+        if (booking.isComplete) {
+            // I want also to add amount to the wallet of the tourist
+            tourist.wallet += booking.totalPrice;
+            tourist.loyalityPoints -= booking.pointsAdded;
+            tourist.points -= booking.pointsAdded;
+            await tourist.save();
+        }
+
         await Booking.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: "Booking deleted successfully" });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+export const deleteBookings = async (req, res) => {
+    try {
+        await Booking.deleteMany({});
+        res.status(200).json({ message: "All bookings deleted successfully" });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

@@ -3,16 +3,27 @@ import React, { createContext, useContext, useState } from "react";
 const FunctionContext = createContext();
 
 export const FunctionProvider = ({ children }) => {
-    const [handlePaymentSuccess, setHandlePaymentSuccess] = useState(() => {});
-    const [handlePaymentFailure, setHandlePaymentFailure] = useState(() => {});
+    const [handlePaymentSuccess, setHandlePaymentSuccess] = useState(async () => {
+        console.log("success");
+    });
+    const [handlePaymentFailure, setHandlePaymentFailure] = useState(async () => {
+        console.log("failure");
+    });
+
+    const setSuccess = (func) => {
+        setHandlePaymentSuccess(() => func);
+    };
+    const setFailure = (func) => {
+        setHandlePaymentFailure(() => func);
+    };
 
     return (
         <FunctionContext.Provider
             value={{
                 handlePaymentSuccess,
-                setHandlePaymentSuccess,
+                setSuccess,
                 handlePaymentFailure,
-                setHandlePaymentFailure,
+                setFailure,
             }}
         >
             {children}

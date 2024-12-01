@@ -12,7 +12,6 @@ import CreateActivityPage from "./pages/Activity/CreateActivityPage";
 import UpdateActivityPage from "./pages/Activity/UpdateActivityPage";
 import AddNewUser from "./pages/Admin/AddNewUser";
 import UserManagement from "./pages/Admin/UserManagement";
-import ViewProductsPage from "./pages/Product/ViewProductsPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
 import CreateItineraryPage from "./pages/Itinerary/CreateItineraryPage";
 import CreateLandmarkPage from "./pages/Landmark/CreateLandmarkPage";
@@ -83,6 +82,7 @@ function App() {
                                 path="/select-your-role"
                                 element={<SelectYourRole />}
                             />
+                            <Route path="/payment" element={<Payment />} />
 
                             <Route element={<LayoutWithNav />}>
                                 <Route path="/" element={<HomePage />} />
@@ -161,10 +161,6 @@ function App() {
                                     element={<UpdateActivityPage />}
                                 />
                                 <Route
-                                    path="/view-products"
-                                    element={<ViewProductsPage />}
-                                />
-                                <Route
                                     path="/choose-activity"
                                     element={<ChooseActivity />}
                                 />
@@ -234,7 +230,6 @@ function App() {
                                     path="/flight-booking-details"
                                     element={<FlightBookingDetails />}
                                 />
-                                <Route path="/payment" element={<Payment />} />
                                 <Route path="/checkout" element={<Checkout />} />
                             </Route>
                         </Routes>

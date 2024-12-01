@@ -19,7 +19,7 @@ const Checkout = ({ listOfItems }) => {
     });
 
     const navigate = useNavigate();
-    const { setHandlePaymentSuccess, setHandlePaymentFailure } = useFunctionContext();
+    const { setSuccess, setFailure } = useFunctionContext();
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
@@ -123,11 +123,10 @@ const Checkout = ({ listOfItems }) => {
         };
         const handleFailure = async () => {
             await axiosInstance.delete(`booking/deleteBooking/${bookingId}`);
-            navigate(-1);
         };
         const amount = 1000;
-        setHandlePaymentSuccess(handleSuccess);
-        setHandlePaymentFailure(handleFailure);
+        setSuccess(handleSuccess);
+        setFailure(handleFailure);
         navigate("/payment", {
             state: {
                 amount,

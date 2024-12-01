@@ -9,6 +9,7 @@ import {
     completeBooking,
     redeemPoints,
     deleteBooking,
+    deleteBookings,
     getitineraryBookings,
     getActivityBookings,
     getHotelBookings,
@@ -30,6 +31,8 @@ bookingRouter.patch("/completeBooking/:id", completeBooking);
 bookingRouter.patch("/redeemPoints/:id", redeemPoints);
 
 bookingRouter.delete("/deleteBooking/:id", deleteBooking);
+
+bookingRouter.delete("/deleteBookings", deleteBookings);
 
 bookingRouter.get("/getItineraryBookings", isAuthenticated, getitineraryBookings);
 

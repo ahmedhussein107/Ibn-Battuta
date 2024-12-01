@@ -58,8 +58,10 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
 app.use(express.json());
 
+app.use("/api/payment", stripeRouter);
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);
 app.use("/api/admin", adminRouter);
