@@ -241,6 +241,58 @@ export const addPreference = async (req, res) => {
         res.status(400).json({ e: e.message });
     }
 };
+// I want a function to get the wishlist of a tourist
+export const getWishlist = async (req, res) => {
+    try {
+        const tourist = await Tourist.findById(req.user.userId);
+        if (!tourist) {
+            return res.status(404).json({ e: "Tourist not found" });
+        }
+
+        res.status(200).json({ wishlist: tourist.wishlist });
+    } catch (e) {
+        res.status(400).json({ e: e.message });
+    }
+};
+
+export const addToWishlist = async (req, res) => {
+    try {
+        const tourist = await Tourist.findById(req.user.userId);
+        if (!tourist) {
+            return res.status(404).json({ e: "Tourist not found" });
+        }
+        const { item } = req.body;
+        if (!item) {
+            return res.status(400).json({ e: "Item is required" });
+        }
+        if (tourist.wishlist.includes(item)) {
+            return res.status(400).json({ e: "Item already exists in wishlist" });
+        }
+        tourist.wishlist.push(item);
+        await tourist.save();
+        res.status(200).json({ message: "Item added to wishlist successfully" });
+    } catch (e) {
+        res.status(400).json({ e: e.message });
+    }
+};
+export const removeFromWishlist = async (req, res) => {
+    try {
+        const tourist = await Tourist.findById(req.user.userId);
+        if (!tourist) {
+            return res.status(404).json({ e: "Tourist not found" });
+        }
+        const { item } = req.body;
+        const index = tourist.wishlist.indexOf(item);
+        if (index === -1) {
+            return res.status(400).json({ e: "Item does not exist in wishlist" });
+        }
+        tourist.wishlist.splice(index, 1);
+        await tourist.save();
+        res.status(200).json({ message: "Item removed from wishlist successfully" });
+    } catch (e) {
+        res.status(400).json({ e: e.message });
+    }
+};
 
 export const removePreference = async (req, res) => {
     try {

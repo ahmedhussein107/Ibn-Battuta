@@ -8,6 +8,8 @@ import { styled } from "@mui/system";
 import axiosInstance from "../api/axiosInstance";
 import convert from "../api/convert";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../hooks/currencyHooks";
 
 const StatusLabel = styled(Chip)(({ theme, status }) => ({
     backgroundColor:
@@ -32,7 +34,11 @@ const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem"
             setComment("");
         }
     }, [open]);
-
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     const Picture = order.product.pictures[0] || "";
     const aboveLine = (
         <div>
@@ -124,9 +130,7 @@ const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem"
                 <div>Items: {order.count}</div>
                 <div>Payment Method: {order.method || "cash on delivery"}</div>
                 <div>Delivery Address: {order.address || "Maadi, Cairo, Egypt"}</div>
-                <div>
-                    Total Price: {convert(order.price)} {Cookies.get("currency") || "EGP"}
-                </div>
+                <div>Total Price: {formatPrice(order.price)}</div>
             </div>
 
             <div

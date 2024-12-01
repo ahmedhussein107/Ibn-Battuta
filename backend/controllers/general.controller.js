@@ -39,6 +39,17 @@ export const updatePassword = async (req, res) => {
     }
 };
 
+export const markNotificationAsRead = async (req, res) => {
+    const notificationId = req.params.id;
+    console.log("updating notification is read");
+    try {
+        await Notification.findByIdAndUpdate(notificationId, { isRead: true });
+        res.status(200).json({ message: "Notification marked as read" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 export const login = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -132,7 +143,7 @@ export const sendNotificationToEmailAndSystem = async (
     );
 
     incrementnotificationCount(userId, userType, notification);
-    sendEmail(user.email, subject, notification.message);
+    sendEmail(user?.email, subject, notification?.message);
     console.log("email sent ");
 };
 

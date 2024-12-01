@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "./HotelCard.css";
-import usePageHeader from "../Header/UseHeaderPage";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import BedIcon from "@mui/icons-material/Bed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
 import PersonIcon from "@mui/icons-material/Person";
 import Button from "../Button";
 import { useNavigate } from "react-router-dom";
-import { convertCurrency } from "../../api/currency";
+
 import Cookies from "js-cookie";
-import convert from "../../api/convert";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
+
 const HotelCard = ({ offer, isAllOffers = true }) => {
     const navigate = useNavigate();
-
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     const handleShowMore = () => {
         navigate(`/hotel/offer-details/${offer._id}`, { state: { offer } });
         console.log("Show more clicked");
@@ -93,8 +98,7 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
                         <strong>Payment:</strong> {offer.paymentMethod}
                     </p>
                     <p>
-                        <strong>Total Price:</strong> {Cookies.get("currency") || "EGP"}
-                        {convert(offer.totalPrice)}
+                        <strong>Total Price:</strong> {formatPrice(offer.totalPrice)}
                     </p>
                 </div>
             </div>

@@ -14,14 +14,21 @@ import CardProduct from "../../components/CardProduct.jsx";
 import CustomButton from "../../components/Button.jsx";
 import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
 import QuantityControls from "../../components/QuantityControls.jsx";
-import convert from "../../api/convert.js";
-import convertBack from "../../api/convertBack.js";
-import { useNavigate } from "react-router-dom"; //REMOVE
+
 import Cookies from "js-cookie";
-const minPrice = 0;
-const maxPrice = 1000;
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 
 const Shop = () => {
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, convertPrice, formatPrice } = useCurrencyConverter(currency);
+
+    const minPrice = convertPrice(0, "EGP", currency);
+    const maxPrice = convertPrice(2000, "EGP", currency);
+
     const [products, setProducts] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
     const [ratingRange, setRatingRange] = useState([null, 5]);
@@ -97,11 +104,14 @@ const Shop = () => {
     const buildQuery = () => {
         let query = {};
 
-        // if (priceRange[0] || priceRange[1]) {
-        //     query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
-        // } else {
-        //     delete query.price;
-        // }
+        if (priceRange[0] || priceRange[1]) {
+            query.price =
+                convertPrice(priceRange[0], currency, "EGP") +
+                "-" +
+                convertPrice(priceRange[1], currency, "EGP");
+        } else {
+            delete query.price;
+        }
 
         if (ratingRange[0] || ratingRange[1]) {
             if (!ratingRange[0]) {
@@ -150,6 +160,11 @@ const Shop = () => {
         />,
         <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
     ];
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
+
     return (
         <div
             style={{
@@ -168,16 +183,116 @@ const Shop = () => {
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    backgroundColor: "white",
                 }}
             ></div>
-            {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
-                <NavBar />
-            </div> */}
-            {/* REMOVE */}
-            <div>
-                <button onClick={() => navigate("/checkout")}>checkout</button>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: "1vh",
+                    marginLeft: "28vw",
+                }}
+            >
+                <button
+                    style={{
+                        border: "2px solid #9C4F21",
+                        borderRadius: "50px",
+                        padding: "0.5em 1.1em",
+                        fontSize: "1.1rem",
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                        backgroundColor: "white",
+                        display: "flex", // Add this
+                        alignItems: "center", // Add this
+                        gap: "0.4rem", // Add this to create space between icon and text
+                    }}
+                >
+                    <ShoppingBagIcon
+                        style={{
+                            width: "1rem",
+                            height: "1rem",
+                            color: "#9C4F21",
+                            scale: "1.5",
+                        }}
+                    />
+                    <span
+                        style={{
+                            fontSize: "1.3rem",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        Shop
+                    </span>
+                </button>
+                <button
+                    style={{
+                        border: "2px solid #9C4F21",
+                        borderRadius: "50px",
+                        padding: "0.5em 1.1em",
+                        fontSize: "1.1rem",
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                        backgroundColor: "white",
+                        display: "flex", // Add this
+                        alignItems: "center", // Add this
+                        gap: "0.4rem", // Add this to create space between icon and text
+                    }}
+                >
+                    <FavoriteBorderIcon
+                        style={{
+                            width: "1rem",
+                            height: "1rem",
+                            color: "#9C4F21",
+                            scale: "1.5",
+                        }}
+                    />
+                    <span
+                        style={{
+                            fontSize: "1.3rem",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        wishlist
+                    </span>
+                </button>
+                <button
+                    style={{
+                        border: "2px solid #9C4F21",
+                        borderRadius: "50px",
+                        padding: "0.5em 1.1em",
+                        fontSize: "1.1rem",
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                        backgroundColor: "white",
+                        display: "flex", // Add this
+                        alignItems: "center", // Add this
+                        gap: "0.4rem", // Add this to create space between icon and text
+                        marginLeft: "41vw",
+                    }}
+                >
+                    <ShoppingCartIcon
+                        style={{
+                            width: "1rem",
+                            height: "1rem",
+                            color: "#9C4F21",
+                            scale: "1.5",
+                        }}
+                    />
+                    <span
+                        style={{
+                            fontSize: "1.3rem",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        Cart
+                    </span>
+                </button>
             </div>
-            {/* REMOVE */}
+
             <PopUp
                 isOpen={buyingPopUpOpen}
                 setIsOpen={setBuyingPopUpOpen}
@@ -196,12 +311,12 @@ const Shop = () => {
                 >
                     <p>{selectedProduct.name}</p>
                     <p>
-                        Price: {Cookies.get("currency") || "EGP"}
-                        {convert(selectedProduct.price)}
+                        Price:
+                        {formatPrice(selectedProduct.price)}
                     </p>
                     <p>
-                        Total Price: {Cookies.get("currency") || "EGP"}{" "}
-                        {convert(selectedProduct.price * selectedQuantity).toFixed(2)}
+                        Total Price:
+                        {formatPrice(selectedProduct.price * selectedQuantity)}
                     </p>
 
                     <QuantityControls
@@ -215,8 +330,7 @@ const Shop = () => {
                     style={{
                         width: "25vw",
                         borderRadius: "3vh",
-                        marginTop: "1%",
-                        marginBottom: "1%",
+                        marginTop: "-3vh",
                     }}
                 >
                     <SideBar
