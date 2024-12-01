@@ -2,7 +2,7 @@
     color: var(--text-color);
     margin: 0;
     width: 100vw; /* Full viewport width */
-    height: auto; /* Full viewport height */
+    height: 100vh; /* Full viewport height */
     background-image: url("/image24.png"); /* Replace with the path to your image */
     background-size: cover;
     background-repeat: no-repeat;
