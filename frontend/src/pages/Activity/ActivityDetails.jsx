@@ -44,7 +44,6 @@ export default function ActivityDetails() {
 
     const [isBookmarked, setIsBookmarked] = useState(false);
 
-
     //To retrieve user type from browser
     useEffect(() => {
         // Retrieve the userType from cookies when the component mounts
@@ -76,14 +75,13 @@ export default function ActivityDetails() {
     }, [activityId]);
     //For mangaing page logic
 
-
     useEffect(() => {
         const fetchIsBookmarked = async () => {
             if (!activityData) return;
             if (userType !== "Tourist") return;
             try {
                 const response = await axiosInstance.post(
-                    `tourist/getBookmarkStatus/`,
+                    `bookmark/getBookmarkStatus/`,
                     {
                         bookmarkIDs: [activityData._id],
                     },
@@ -102,7 +100,7 @@ export default function ActivityDetails() {
         if (!activityData) return;
         try {
             const response = await axiosInstance.post(
-                `tourist/bookmark`,
+                `bookmark/bookmark`,
                 {
                     bookmarkType: "Activity",
                     bookmarkID: activityData._id,
@@ -164,7 +162,6 @@ export default function ActivityDetails() {
     };
 
     if (!activityData) {
-
         return <CircularProgress />;
     }
     return (
@@ -206,7 +203,6 @@ export default function ActivityDetails() {
                 bookmark={handleBookmark}
                 isBookmarked={isBookmarked}
                 showBookmark={userType === "Tourist"}
-
             />
             <ActivityPhotos
                 width="100%"

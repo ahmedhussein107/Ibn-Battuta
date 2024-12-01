@@ -30,8 +30,8 @@ const Bookmarks = () => {
     };
 
     const URI = {
-        Itineraries: "tourist/getItineraryBookmarks",
-        Activities: "tourist/getActivityBookmarks",
+        Itineraries: "bookmark/getItineraryBookmarks",
+        Activities: "bookmark/getActivityBookmarks",
     };
 
     const fetchBookmarks = async () => {
@@ -72,7 +72,7 @@ const Bookmarks = () => {
     const handleBookmark = async (bookmarkID, bookmarkType) => {
         try {
             const response = await axiosInstance.post(
-                `tourist/bookmark`,
+                `bookmark/bookmark`,
                 { bookmarkType, bookmarkID, isBookmarked: true },
                 { withCredentials: true }
             );

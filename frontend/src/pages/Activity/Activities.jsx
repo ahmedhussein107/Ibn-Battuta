@@ -18,7 +18,6 @@ import { CircularProgress } from "@mui/material";
 import Cookies from "js-cookie";
 
 const Activities = () => {
-
     const [userType, setUserType] = useState("Guest");
     const currency = Cookies.get("currency") || "EGP";
     const { convertPrice, isLoading } = useCurrencyConverter();
@@ -75,7 +74,6 @@ const Activities = () => {
         }
     };
 
-
     const fetchBookmarkedStatus = async (query) => {
         if (userType !== "Tourist") return;
 
@@ -84,7 +82,7 @@ const Activities = () => {
         });
         try {
             const response = await axiosInstance.post(
-                `/tourist/getBookmarkStatus/`,
+                `/bookmark/getBookmarkStatus/`,
                 {
                     bookmarkIDs: activityIDs,
                 },
@@ -96,7 +94,6 @@ const Activities = () => {
             console.error("Error fetching bookmark status:", error);
         }
     };
-
 
     const sortActivities = (activities) => {
         let sortedActivities = [...activities]; // Create a shallow copy
@@ -219,7 +216,7 @@ const Activities = () => {
     const handleBookmark = async (activityID) => {
         try {
             const response = await axiosInstance.post(
-                `tourist/bookmark`,
+                `bookmark/bookmark`,
                 {
                     bookmarkType: "Activity",
                     bookmarkID: activityID,
@@ -295,10 +292,10 @@ const Activities = () => {
         />,
     ];
 
-    if (isLoading) {
+    /*if (isLoading) {
         // TODO: add better loading animation
         return <CircularProgress />;
-    }
+    }*/
 
     return (
         <div

@@ -94,7 +94,7 @@ const Itineraries = () => {
         });
         try {
             const response = await axiosInstance.post(
-                `/tourist/getBookmarkStatus/`,
+                `/bookmark/getBookmarkStatus/`,
                 {
                     bookmarkIDs: itineraryIDs,
                 },
@@ -161,7 +161,7 @@ const Itineraries = () => {
     const handleBookmark = async (itineraryID) => {
         try {
             const response = await axiosInstance.post(
-                `tourist/bookmark`,
+                `bookmark/bookmark`,
                 {
                     bookmarkType: "Itinerary",
                     bookmarkID: itineraryID,
@@ -219,9 +219,9 @@ const Itineraries = () => {
         />,
     ];
 
-    if (isLoading) {
+    /*if (isLoading) {
         return <CircularProgress />;
-    }
+    }*/
 
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
