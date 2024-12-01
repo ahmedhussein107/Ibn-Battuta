@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../../components/Pagination";
-import bookingsBackground from "../../assets/backgrounds/bookings_bg.png";
+import bookingsBackground from "../../assets/backgrounds/bookingsBackground.png";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import GenericCard from "../../components/GenericCard";
@@ -10,11 +10,15 @@ import TouristHotelBookings from "../../components/Hotels/TouristHotelBookings";
 import HotelList from "../../components/Hotels/HotelList";
 import FlightList from "../../components/Flights/FlightList";
 
+import { useLocation } from "react-router-dom";
+
 const Bookings = () => {
+    const location = useLocation();
+
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 4;
-    const [selected, setSelected] = useState("Itineraries");
+    const [selected, setSelected] = useState(location?.state?.tab || "Itineraries");
     const [activities, setActivities] = useState([]);
     const [itineraries, setItineraries] = useState([]);
     const [flights, setFlights] = useState([]);
@@ -56,8 +60,6 @@ const Bookings = () => {
                 withCredentials: true,
             });
             console.log("data ", response);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
             switch (selected) {
                 case "Itineraries": {
                     setItineraries(response.data.result);

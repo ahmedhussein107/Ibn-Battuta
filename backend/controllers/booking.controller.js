@@ -234,6 +234,7 @@ export const getitineraryBookings = async (req, res) => {
         let query = {
             touristID: id,
             bookingType: "Itinerary",
+            isComplete: true,
         };
         if (filter === "Upcoming") {
             query.eventStartDate = { $gte: new Date() };
@@ -280,6 +281,7 @@ export const getActivityBookings = async (req, res) => {
             touristID: id,
             bookingType: "Activity",
             isInItinerary: false,
+            isComplete: true,
         };
         if (filter === "Upcoming") {
             console.log("here at upcoming");

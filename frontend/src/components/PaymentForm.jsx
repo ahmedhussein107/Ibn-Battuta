@@ -55,9 +55,9 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
         if (result.error) {
             setError(result.error.message);
             setProcessing(false);
-            setSucceeded(flase);
+            setSucceeded(false);
         } else {
-            await handleSuccess();
+            await handleFailure();
         }
     };
 
@@ -173,7 +173,13 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
                         await handleFailure();
                     }}
                 />
-                <CustomButton stylingMode="1" text="Pay Now" handleClick={handleSubmit} />
+                <CustomButton
+                    stylingMode="1"
+                    text="Pay Now"
+                    handleClick={async () => {
+                        await handleSuccess();
+                    }}
+                />
             </Box>
 
             {error && <div>{error}</div>}

@@ -4,6 +4,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import PaymentForm from "../../components/PaymentForm";
 import { useLocation } from "react-router-dom";
+import { useFunctionContext } from "../../contexts/FunctionContext";
 
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
@@ -13,9 +14,9 @@ const Payment = () => {
     if (!location.state) {
         window.history.back();
     }
-    const { amount, currency, handleSuccess, handleFailure, headerImage } =
-        location.state;
+    const { amount, currency, headerImage } = location.state;
 
+    const { handlePaymentSuccess, handlePaymentFailure } = useFunctionContext();
     usePageHeader(headerImage, "Payment", null, null);
     return (
         <div style={{ marginTop: "18%", width: "80%" }}>
@@ -23,8 +24,8 @@ const Payment = () => {
                 <PaymentForm
                     amount={amount}
                     currency={currency}
-                    handleSuccess={handleSuccess}
-                    handleFailure={handleFailure}
+                    handleSuccess={handlePaymentSuccess}
+                    handleFailure={handlePaymentFailure}
                 />
             </Elements>
         </div>

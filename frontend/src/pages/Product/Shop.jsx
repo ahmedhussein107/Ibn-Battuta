@@ -14,7 +14,7 @@ import CardProduct from "../../components/CardProduct.jsx";
 import CustomButton from "../../components/Button.jsx";
 import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
 import QuantityControls from "../../components/QuantityControls.jsx";
-
+import { useNavigate } from "react-router-dom"; //REMOVE
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
@@ -43,6 +43,7 @@ const Shop = () => {
         rating: 0,
     });
     const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const navigate = useNavigate(); //REMOVE
 
     const sortProducts = (products) => {
         let sortedProducts = [...products]; // Create a shallow copy
@@ -292,6 +293,14 @@ const Shop = () => {
                 </button>
             </div>
 
+            {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
+                <NavBar />
+            </div> */}
+            {/* REMOVE */}
+            <div>
+                <button onClick={() => navigate("/checkout")}>checkout</button>
+            </div>
+            {/* REMOVE */}
             <PopUp
                 isOpen={buyingPopUpOpen}
                 setIsOpen={setBuyingPopUpOpen}
