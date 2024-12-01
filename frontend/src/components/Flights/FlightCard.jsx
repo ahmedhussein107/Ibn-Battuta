@@ -2,7 +2,8 @@ import Button from "../Button";
 import TripDetails from "./TripDetails";
 
 import Cookies from "js-cookie";
-import convert from "../../api/convert";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import { CircularProgress } from "@mui/material";
 
 const FlightCard = ({ trip, airlines, handleClick, mode = 1, bookingNumber }) => {
     const styles = {
@@ -57,6 +58,13 @@ const FlightCard = ({ trip, airlines, handleClick, mode = 1, bookingNumber }) =>
         },
     };
 
+    const currency = Cookies.get("currency") || "EGP";
+    const { formatPrice, isLoading } = useCurrencyConverter(currency);
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
+
     return (
         <div style={styles.card}>
             <div style={styles.cardLeft}>
@@ -82,9 +90,7 @@ const FlightCard = ({ trip, airlines, handleClick, mode = 1, bookingNumber }) =>
             </div>
 
             <div style={styles.cardRight}>
-                <h4>{`${convert(trip.price.total)} ${
-                    Cookies.get("currency") || "EGP"
-                }`}</h4>
+                <h4>{formatPrice(trip.price.total)}</h4>
                 <Button stylingMode="1" text="View" handleClick={handleClick}></Button>
             </div>
         </div>
