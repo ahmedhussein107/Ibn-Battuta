@@ -55,6 +55,7 @@ import TourGuideProfilePage from "./pages/TourGuide/TourGuideProfilePage";
 import TermsAndConditions from "./pages/Privacy/TermsAndConditions";
 import Flights from "./pages/Flights/Flights";
 import FlightBookingDetails from "./pages/Flights/FlightBookingDetails";
+import Checkout from "./pages/Product/CheckoutPage.jsx";
 
 const LayoutWithNav = () => (
     <>
@@ -177,6 +178,7 @@ function App() {
                             element={<FlightBookingDetails />}
                         />
                     </Route>
+                    <Route path="/checkout" element={<Checkout />} />
                 </Routes>
             </Router>
         </HeaderProvider>

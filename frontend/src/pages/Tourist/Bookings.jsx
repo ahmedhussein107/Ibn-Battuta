@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../../components/Pagination";
-import bookingsBackground from "../../assets/backgrounds/bookings_bg.png";
+import bookingsBackground from "../../assets/backgrounds/bookingsBackground.png";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import GenericCard from "../../components/GenericCard";
@@ -56,8 +56,6 @@ const Bookings = () => {
                 withCredentials: true,
             });
             console.log("data ", response);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
             switch (selected) {
                 case "Itineraries": {
                     setItineraries(response.data.result);

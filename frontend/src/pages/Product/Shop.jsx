@@ -16,6 +16,7 @@ import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
 import QuantityControls from "../../components/QuantityControls.jsx";
 import convert from "../../api/convert.js";
 import convertBack from "../../api/convertBack.js";
+import { useNavigate } from "react-router-dom"; //REMOVE
 import Cookies from "js-cookie";
 const minPrice = 0;
 const maxPrice = 1000;
@@ -35,6 +36,7 @@ const Shop = () => {
         rating: 0,
     });
     const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const navigate = useNavigate(); //REMOVE
 
     const sortProducts = (products) => {
         let sortedProducts = [...products]; // Create a shallow copy
@@ -171,6 +173,11 @@ const Shop = () => {
             {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
                 <NavBar />
             </div> */}
+            {/* REMOVE */}
+            <div>
+                <button onClick={() => navigate("/checkout")}>checkout</button>
+            </div>
+            {/* REMOVE */}
             <PopUp
                 isOpen={buyingPopUpOpen}
                 setIsOpen={setBuyingPopUpOpen}
