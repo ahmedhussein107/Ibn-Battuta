@@ -8,6 +8,7 @@ import PriceRange from "../../components/PriceRange.jsx";
 import RatingRange from "../../components/RatingRange.jsx";
 import NavBar from "../../components/NavBar.jsx";
 import Footer from "../../components/Footer.jsx";
+import { useNavigate } from "react-router-dom"; //REMOVE
 import shopBackground from "../../assets/backgrounds/shopBackground.png";
 import ShareAndMark from "../../components/ShareAndMark.jsx";
 import CardProduct from "../../components/CardProduct.jsx";
@@ -186,6 +187,11 @@ const Shop = () => {
                     backgroundColor: "white",
                 }}
             ></div>
+            {/* REMOVE */}
+            <div>
+                <button onClick={() => navigate("/checkout")}>checkout</button>
+            </div>
+            {/* REMOVE */}
             <div
                 style={{
                     display: "flex",
