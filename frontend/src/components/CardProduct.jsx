@@ -6,6 +6,8 @@ import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 import convert from "../api/convert";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../hooks/currencyHooks";
 const CardProduct = ({
     product,
     width,
@@ -23,7 +25,11 @@ const CardProduct = ({
             <TitleAndButtons title={product.name} buttons={firstLineButtons} />
         </div>
     );
-
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     const description = (
         <TruncatedText
             text={product.description}
@@ -33,7 +39,6 @@ const CardProduct = ({
         />
     );
     const rating = Math.floor(product.rating);
-    console.log("rating", rating);
     const ratings = (
         <div style={{ display: "flex", flexDirection: "row" }}>
             <Rating name="read-only" value={rating} readOnly />
@@ -58,8 +63,7 @@ const CardProduct = ({
                 fontWeight: "bold",
             }}
         >
-            <p>{Cookies.get("currency") || "EGP"}</p>
-            <p style={{ marginLeft: "5%" }}>{convert(product.price)}</p>
+            <p style={{ marginLeft: "5%" }}>{formatPrice(product.price)}</p>
         </div>
     );
     const buttons = (

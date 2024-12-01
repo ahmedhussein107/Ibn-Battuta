@@ -4,11 +4,15 @@ import axiosInstance from "../../api/axiosInstance";
 import { Carousel } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import convert from "../../api/convert";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
 const ViewProductPage = () => {
     const { productId } = useParams(); // Get product ID from the URL
     const [product, setProduct] = useState(null);
+
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
     const fetchProductDetails = async () => {
         try {
@@ -23,8 +27,8 @@ const ViewProductPage = () => {
         fetchProductDetails();
     }, [productId]);
 
-    if (!product) {
-        return <p>Loading product details...</p>;
+    if (!product || isLoading) {
+        return <CircularProgress />;
     }
 
     return (
@@ -57,8 +61,7 @@ const ViewProductPage = () => {
 
                 <Card.Body>
                     <Card.Text>
-                        <strong>Price:</strong> {Cookies.get("currency") || "EGP"}
-                        {convert(product.price)}
+                        <strong>Price:</strong> {formatPrice(product.price)}
                     </Card.Text>
                     <Card.Text>
                         <strong>Description:</strong> {product.description}
