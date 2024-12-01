@@ -26,6 +26,7 @@ import Book from "../../components/ItineraryDetails/Book.jsx";
 
 // Other components
 import Map from "../map.jsx";
+import { CircularProgress } from "@mui/material";
 
 // Styles
 import "../../styles/ActivityDetails.css";
@@ -119,7 +120,11 @@ export default function ActivityDetails() {
     };
 
     if (!activityData) {
+<<<<<<< HEAD
         return <div>Loading...</div>;
+=======
+        return <CircularProgress />;
+>>>>>>> main
     }
     return (
         <div className="activity-details-container">

@@ -11,7 +11,7 @@ export const createUsername = async (req, res) => {
 
 export const getUsernames = async (req, res) => {
     try {
-        const usernames = await Username.find(req.body);
+        const usernames = await Username.find();
         res.json(usernames);
     } catch (e) {
         res.status(400).json({ e: e.message });

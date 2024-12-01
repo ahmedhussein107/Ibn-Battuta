@@ -11,6 +11,3 @@ export const API_SECRET = process.env.AMADEUS_API_SECRET;
 // email
 export const WEBSITE_EMAIL = process.env.WEBSITE_EMAIL;
 export const WEBSITE_EMAIL_PASSWORD = process.env.WEBSITE_EMAIL_PASSWORD;
-// stripe
-export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;

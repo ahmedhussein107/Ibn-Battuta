@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 import "../styles/TicketCounter.css";
-import convert from "../api/convert";
+
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../hooks/currencyHooks";
 const TicketCounter = ({ pricePerPerson, maxCount, currentCount, setCount }) => {
     const [maxReached, setMaxReached] = useState(currentCount >= maxCount);
     const totalPrice = currentCount * pricePerPerson;
 
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     const increment = () => {
         if (maxReached) return;
         setCount(currentCount + 1);
@@ -38,16 +45,12 @@ const TicketCounter = ({ pricePerPerson, maxCount, currentCount, setCount }) => 
                 <div className="price-row">
                     <span>Price per person</span>
                     <span className="price">
-                        {Cookies.get("currency") || "EGP"}{" "}
-                        {convert(pricePerPerson.toFixed(2))}{" "}
+                        {formatPrice(pricePerPerson.toFixed(2))}{" "}
                     </span>
                 </div>
                 <div className="price-row">
                     <span>Total Price</span>
-                    <span className="price">
-                        {Cookies.get("currency") || "EGP"}{" "}
-                        {convert(totalPrice.toFixed(2))}{" "}
-                    </span>
+                    <span className="price">{formatPrice(totalPrice.toFixed(2))} </span>
                 </div>
             </div>
             {maxReached && (

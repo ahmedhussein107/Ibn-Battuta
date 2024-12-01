@@ -3,6 +3,8 @@ import Activity from "../models/activity.model.js";
 import Itinary from "../models/itinerary.model.js";
 import Tourist from "../models/tourist.model.js";
 import { getFreeSpotsHelper } from "./itinerary.controller.js";
+import { Query } from "mongoose";
+import path from "path";
 export const getBookings = async (req, res) => {
     try {
         const bookings = await Booking.find();
@@ -224,14 +226,22 @@ export const getitineraryBookings = async (req, res) => {
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 10);
         const toSkip = (page - 1) * limit;
-        const count = await Booking.countDocuments({
+        // const count = await Booking.countDocuments({
+        //     touristID: id,
+        //     bookingType: "Itinerary",
+        // });
+        const filter = req.query.filter;
+        let query = {
             touristID: id,
             bookingType: "Itinerary",
-        });
-        const bookings = await Booking.find({
-            touristID: id,
-            bookingType: "Itinerary",
-        })
+        };
+        if (filter === "Upcoming") {
+            query.eventStartDate = { $gte: new Date() };
+        } else if (filter === "Past") {
+            query.eventStartDate = { $lt: new Date() };
+        }
+        const count = await Booking.countDocuments(query);
+        const bookings = await Booking.find(query)
             .skip(toSkip)
             .limit(limit)
             .populate({
@@ -244,7 +254,12 @@ export const getitineraryBookings = async (req, res) => {
             .populate({
                 path: "ratingID",
                 model: "Rating",
+            })
+            .populate({
+                path: "ratingTourGuideID",
+                model: "Rating",
             });
+        console.log(bookings, "BOOKINGS");
         res.status(200).json({
             result: bookings,
             totalPages: count > 0 ? Math.ceil(count / limit) : 1,
@@ -260,16 +275,21 @@ export const getActivityBookings = async (req, res) => {
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 10);
         const toSkip = (page - 1) * limit;
-        const count = await Booking.countDocuments({
+        const filter = req.query.filter;
+        let query = {
             touristID: id,
             bookingType: "Activity",
             isInItinerary: false,
-        });
-        const bookings = await Booking.find({
-            touristID: id,
-            bookingType: "Activity",
-            isInItinerary: false,
-        })
+        };
+        if (filter === "Upcoming") {
+            console.log("here at upcoming");
+            query.eventStartDate = { $gte: new Date() };
+        } else if (filter === "Past") {
+            console.log("here at past");
+            query.eventStartDate = { $lt: new Date() };
+        }
+        const count = await Booking.countDocuments(query);
+        const bookings = await Booking.find(query)
             .skip(toSkip)
             .limit(limit)
             .populate({
@@ -297,15 +317,27 @@ export const getHotelBookings = async (req, res) => {
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 10);
         const toSkip = (page - 1) * limit;
+        const filter = req.query.filter;
 
         const touristId = req.user.userId;
         const tourist = await Tourist.findById(touristId);
         if (!tourist) {
             return res.status(404).json({ error: "Tourist not found" });
         }
-        const total = tourist.hotelBookings.length;
-        const bookingsSlice =
-            total > 0 ? tourist.hotelBookings.slice(toSkip, toSkip + limit) : [];
+        let bookings = [];
+        if (filter === "Past") {
+            bookings = tourist.hotelBookings.filter(
+                (booking) => new Date(booking.checkInDate) < new Date()
+            );
+        } else if (filter === "Upcoming") {
+            bookings = tourist.hotelBookings.filter(
+                (booking) => new Date(booking.checkInDate) >= new Date()
+            );
+        } else {
+            bookings = tourist.hotelBookings;
+        }
+        const total = bookings.length;
+        const bookingsSlice = total > 0 ? bookings.slice(toSkip, toSkip + limit) : [];
 
         res.status(200).json({
             result: bookingsSlice,
@@ -321,15 +353,42 @@ export const getFlightBookings = async (req, res) => {
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 10);
         const toSkip = (page - 1) * limit;
+        const filter = req.query.filter;
 
         const touristId = req.user.userId;
         const tourist = await Tourist.findById(touristId);
         if (!tourist) {
             return res.status(404).json({ error: "Tourist not found" });
         }
-        const total = tourist.flightBookings.length;
-        const bookingsSlice =
-            total > 0 ? tourist.flightBookings.slice(toSkip, toSkip + limit) : [];
+
+        let bookings = [];
+
+        if (filter === "Past") {
+            bookings = tourist.flightBookings.filter(
+                (booking) =>
+                    new Date(
+                        booking.flightOffers[0].itineraries[0].segments[0].departure.at
+                    ) < new Date()
+            );
+        } else if (filter === "Upcoming") {
+            bookings = tourist.flightBookings.filter((booking) =>
+                booking.flightOffers[0].itineraries.length === 1
+                    ? new Date(
+                          booking.flightOffers[0].itineraries[0].segments[0].departure.at
+                      ) >= new Date()
+                    : new Date(
+                          booking.flightOffers[0].itineraries[1].segments[0].departure.at
+                      ) >= new Date()
+            );
+        } else {
+            bookings = tourist.flightBookings;
+            console.log(
+                "HEYYYYYYYYYYYYYY",
+                bookings[0].flightOffers[0].itineraries[0].segments[0].departure.at
+            );
+        }
+        const total = bookings.length;
+        const bookingsSlice = total > 0 ? bookings.slice(toSkip, toSkip + limit) : [];
 
         res.status(200).json({
             result: bookingsSlice,

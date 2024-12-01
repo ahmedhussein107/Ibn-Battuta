@@ -1,6 +1,6 @@
 import Activity from "../models/activity.model.js";
-import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
-
+import { buildFilter } from "../utilities/searchUtils.js";
+import { sendNotificationToEmailAndSystem } from "./general.controller.js";
 export const getAllActivities = async (req, res) => {
     const query = buildFilter(req.query);
     console.log("in getAllActivities, query is: ", query);
@@ -43,7 +43,7 @@ export const updateActivity = async (req, res) => {
         const activity = await Activity.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
         });
-
+        console.log("i am in activity update");
         if (activity) {
             res.status(200).json(activity);
         } else {
@@ -83,7 +83,7 @@ export const getAdvertiserActivities = async (req, res) => {
 
 export const getUpcomingActivities = async (req, res) => {
     try {
-        const { rating, ...rest } = req.query;
+        const { rating, price, ...rest } = req.query;
         const filter = buildFilter(rest);
 
         let activities = await Activity.find({
@@ -103,6 +103,17 @@ export const getUpcomingActivities = async (req, res) => {
             });
         }
 
+        if (price) {
+            const bounds = price.split("-");
+            const minPrice = bounds[0] ? parseFloat(bounds[0]) : 0;
+            const maxPrice = bounds[1] ? parseFloat(bounds[1]) : Number.MAX_SAFE_INTEGER;
+            activities = activities.filter((activity) => {
+                const activityPrice =
+                    activity.price * (1 - activity.specialDiscount / 100);
+                return activityPrice >= minPrice && activityPrice <= maxPrice;
+            });
+        }
+
         res.status(200).json(activities);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -118,13 +129,24 @@ export const toggleFlaggedActivities = async (req, res) => {
         }
         activity.isFlagged = !activity.isFlagged;
         await activity.save();
+        await sendNotificationToEmailAndSystem(
+            "Activity Flagged",
+            `Your activity ${activity.name} has been flagged as ${
+                activity.isFlagged ? "not " : ""
+            }appropriate`,
+            activity.advertiserID,
+            "Advertiser",
+            activity._id,
+            "Activity",
+            activity.isFlagged ? "warning" : "info"
+        );
+
         res.status(200).json({
             message: "Activity flagged status changed successfully",
             activity,
         });
-
-        // to be continued?
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 };

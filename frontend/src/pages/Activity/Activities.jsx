@@ -8,20 +8,23 @@ import PriceRange from "../../components/PriceRange";
 import RatingRange from "../../components/RatingRange";
 import DatePicker from "../../components/DatePicker";
 import CheckboxList from "../../components/CheckBoxList";
-import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
 import CardActivity from "../../components/CardActivity";
 import ShareAndMark from "../../components/ShareAndMark";
 import { useNavigate } from "react-router-dom";
-const minPrice = 0;
-const maxPrice = 100000;
-
-import convert from "../../api/convert.js";
-import convertBack from "../../api/convertBack.js";
+import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
+import { CircularProgress } from "@mui/material";
 import Cookies from "js-cookie";
 
 const Activities = () => {
+    const currency = Cookies.get("currency") || "EGP";
+    const { convertPrice, isLoading } = useCurrencyConverter();
+
+    // TODO: select better bounds
+    const minPrice = convertPrice(0, "EGP", currency);
+    const maxPrice = convertPrice(2000, "EGP", currency);
+
     const [activities, setActivities] = useState([]);
     const [tags, setTags] = useState([""]);
     const [categories, setCategories] = useState([""]);
@@ -61,14 +64,20 @@ const Activities = () => {
         }
     };
 
-    
     const sortActivities = (activities) => {
-       
         let sortedActivities = [...activities]; // Create a shallow copy
         if (sortBy === "priceAsc") {
-            sortedActivities.sort((a, b) => a.price * (1 - (a.specialDiscount/100))  - (b.price * (1 - (b.specialDiscount/100))));
+            sortedActivities.sort(
+                (a, b) =>
+                    a.price * (1 - a.specialDiscount / 100) -
+                    b.price * (1 - b.specialDiscount / 100)
+            );
         } else if (sortBy === "priceDesc") {
-            sortedActivities.sort((a, b) => b.price * (1 - (b.specialDiscount/100)) - (a.price * (1 - (a.specialDiscount/100))));
+            sortedActivities.sort(
+                (a, b) =>
+                    b.price * (1 - b.specialDiscount / 100) -
+                    a.price * (1 - a.specialDiscount / 100)
+            );
         } else if (sortBy === "ratingAsc") {
             sortedActivities.sort((a, b) => a.rating - b.rating);
         } else if (sortBy === "ratingDesc") {
@@ -129,11 +138,14 @@ const Activities = () => {
             delete query.category;
         }
 
-        // if (priceRange[0] || priceRange[1]) {
-        //     query.price = convertBack(priceRange[0]) + "-" + convertBack(priceRange[1]);
-        // } else {
-        //     delete query.price;
-        // }
+        if (priceRange[0] || priceRange[1]) {
+            query.price =
+                convertPrice(priceRange[0], currency, "EGP") +
+                "-" +
+                convertPrice(priceRange[1], currency, "EGP");
+        } else {
+            delete query.price;
+        }
 
         if (ratingRange[0] || ratingRange[1]) {
             if (!ratingRange[0]) {
@@ -199,7 +211,7 @@ const Activities = () => {
             searchText={location}
             setSearchText={setLocation}
         />,
-        <PriceRange
+        <PriceRange // TODO: change the slider
             priceRange={priceRange}
             setPriceRange={setPriceRange}
             min={minPrice}
@@ -221,6 +233,12 @@ const Activities = () => {
             setCheckedItems={setSelectedCategories}
         />,
     ];
+
+    if (isLoading) {
+        // TODO: add better loading animation
+        return <CircularProgress />;
+    }
+
     return (
         <div
             style={{
@@ -240,9 +258,6 @@ const Activities = () => {
                     backgroundRepeat: "no-repeat",
                 }}
             ></div>
-            {/* <div style={{ position: "fixed", top: 0, left: "9%", zIndex: 1 }}>
-                <NavBar />
-            </div> */}
 
             <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
                 <div

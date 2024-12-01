@@ -8,8 +8,9 @@ import TagsIcon from "@mui/icons-material/LocalOffer";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import PopUp from "./PopUpsGeneric/PopUp";
 import axiosInstance from "../api/axiosInstance";
-import convert from "../api/convert";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../hooks/currencyHooks";
 
 const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
     const [rating, setRating] = useState(booking.ratingID ? booking.ratingID.rating : 0);
@@ -57,7 +58,8 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
     const givenDate = new Date(date);
     const differenceInMilliseconds = givenDate - currentDate;
     const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24.0);
-
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
     const handleRateTourguide = async () => {
         try {
             const response = await axiosInstance.post(
@@ -87,6 +89,34 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
         }
     };
 
+    const handleSubmit = async () => {
+        try {
+            const response = await axiosInstance.post(
+                `/rating/rate${booking.bookingType}/${booking.typeId._id}`,
+                { rating, comment },
+                { withCredentials: true }
+            );
+            if (response.status === 201) {
+                setIsReadOnly(true);
+                console.log("Rating added successfully");
+                const newBooking = await axiosInstance.patch(
+                    `/booking/updateBooking/${booking._id}`,
+                    { ratingID: response.data.newRating._id }
+                );
+                if (newBooking.status === 200) {
+                    console.log("Rating ID added to booking successfully");
+                } else {
+                    console.error("Failed to add rating ID to booking");
+                }
+            } else {
+                console.error("Failed to add rating");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            setOpen(false);
+        }
+    };
     const aboveLine = (
         <div>
             <div
@@ -164,47 +194,20 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
             >
                 <Avatar src={profilePicture} />
                 {" " + name + " "}
-                {differenceInDays < 0 &&
-                booking.bookingType == "Itinerary" &&
-                canRateTourGuide ? (
-                    <Button variant="text" onClick={() => setTourguidePopup(true)}>
-                        Rate now
-                    </Button>
+                {differenceInDays < 0 && booking.bookingType == "Itinerary" ? (
+                    canRateTourGuide ? (
+                        <Button variant="text" onClick={() => setTourguidePopup(true)}>
+                            Rate now
+                        </Button>
+                    ) : (
+                        <span style={{ color: "grey" }}>{ratingTourGuide}/5</span>
+                    )
                 ) : (
-                    <div></div>
+                    <div />
                 )}
             </div>
         </div>
     );
-
-    const handleSubmit = async () => {
-        try {
-            const response = await axiosInstance.post(
-                `/rating/rate${booking.bookingType}/${booking.typeId._id}`,
-                { rating, comment },
-                { withCredentials: true }
-            );
-            if (response.status === 201) {
-                setIsReadOnly(true);
-                console.log("Rating added successfully");
-                const newBooking = await axiosInstance.patch(
-                    `/booking/updateBooking/${booking._id}`,
-                    { ratingID: response.data.newRating._id }
-                );
-                if (newBooking.status === 200) {
-                    console.log("Rating ID added to booking successfully");
-                } else {
-                    console.error("Failed to add rating ID to booking");
-                }
-            } else {
-                console.error("Failed to add rating");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        } finally {
-            setOpen(false);
-        }
-    };
 
     const handleCancel = async () => {
         try {
@@ -227,10 +230,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
     const bottomLeft = (
         <div style={{ display: "flex", flexDirection: "column", gap: "0.1em" }}>
             <div>Booking ID: {booking._id}</div>
-            <div>
-                Total Price: {convert(booking.totalPrice)}{" "}
-                {Cookies.get("currency") || "EGP"}
-            </div>
+            <div>Total Price: {formatPrice(booking.totalPrice)}</div>
             <div>Tickets: {booking.count}</div>
             <div
                 style={{
@@ -287,6 +287,10 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
             </div>
         </div>
     );
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
 
     return (
         <div>

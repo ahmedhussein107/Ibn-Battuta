@@ -26,6 +26,7 @@ const bookingSchema = mongoose.Schema(
         isComplete: { type: Boolean, default: false },
         ratingID: { type: mongoose.Schema.Types.ObjectId, ref: "Rating" },
         ratingTourGuideID: { type: mongoose.Schema.Types.ObjectId, ref: "Rating" },
+        eventStartDate: Date,
     },
     { timestamps: true }
 );

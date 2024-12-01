@@ -14,20 +14,19 @@ const transporter = nodemailer.createTransport({
 import { sendEmail } from "./utilities/emailUtils.js";
 sendEmail("abdelrahim@gmail.com", "Testing", "this is me testing");
 */
-export const sendEmail = async (toEmail, subject, body) => {
-    try {
-        if (!toEmail || !subject || !body) {
-            throw new Error("Email parameters are missing");
+const sendEmail = async (toEmail, subject, body) => {
+    if (toEmail) {
+        try {
+            const mailOptions = {
+                from: WEBSITE_EMAIL,
+                to: toEmail,
+                subject: subject,
+                text: body,
+            };
+            await transporter.sendMail(mailOptions);
+        } catch (err) {
+            console.log("error sending email", err);
         }
-        const mailOptions = {
-            from: WEBSITE_EMAIL,
-            to: toEmail,
-            subject: subject,
-            text: body,
-        };
-        await transporter.sendMail(mailOptions);
-    } catch (err) {
-        console.log("error sending email", err);
-        throw err;
     }
 };
+export default sendEmail;

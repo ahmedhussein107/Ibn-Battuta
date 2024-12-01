@@ -2,12 +2,12 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 
-const marks = [
-    { value: 0, label: "0" },
-    { value: 1000, label: "1000" },
-];
-
 const PriceRange = ({ priceRange, setPriceRange, min, max }) => {
+    const marks = [
+        { value: min, label: min },
+        { value: max, label: max },
+    ];
+
     const handleChange = (event, newValue) => {
         setPriceRange(newValue);
     };
@@ -17,6 +17,7 @@ const PriceRange = ({ priceRange, setPriceRange, min, max }) => {
             <Slider
                 value={priceRange}
                 onChange={handleChange}
+                step={0.01}
                 marks={marks}
                 min={min}
                 max={max}

@@ -14,7 +14,7 @@ const adminSchema = new Schema(
         name: { type: String },
         email: { type: String, ref: "Email" },
         picture: String,
-        notifications: [{ type: Schema.ObjectId, ref: "Notifiction" }],
+        notifications: [{ type: Schema.ObjectId, ref: "Notification" }],
     },
     { timestamps: true }
 );

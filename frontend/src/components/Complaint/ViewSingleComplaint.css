@@ -1,3 +1,8 @@
 .complaint-container {
+    padding-top: 20vh;
     width: 70%;
+}
+
+.comment-list {
+    width: 50%;
 }
