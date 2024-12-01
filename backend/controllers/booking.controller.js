@@ -42,7 +42,6 @@ export const updateBooking = async (req, res) => {
 
 export const createBooking = async (req, res) => {
     try {
-        // The Logic here is to buy with wallet only
         let totprice = 0;
         const { typeId, bookingType, count } = req.body;
         const touristID = req.user.userId;
@@ -60,9 +59,6 @@ export const createBooking = async (req, res) => {
                 return res.status(400).json({ message: "Not enough free spots" });
             }
             totprice = itinerary.price * count;
-            if (tourist.wallet < totprice) {
-                return res.status(400).json({ message: "your balance is not enough" });
-            }
             for (const object of itinerary.activities) {
                 if (object.activityType === "Activity") {
                     const activityInfo = await Activity.findById(object.activity);
@@ -91,13 +87,9 @@ export const createBooking = async (req, res) => {
             activity.freeSpots = activity.freeSpots - count;
             totprice = activity.price * count;
             totprice -= totprice * (activity.specialDiscount / 100.0);
-            if (tourist.wallet < totprice) {
-                return res.status(400).json({ message: "your balance is not enough" });
-            }
             await activity.save();
         }
 
-        tourist.wallet = tourist.wallet - totprice;
         let pointsAdded = 0;
         if (tourist.points <= 100000) {
             pointsAdded = 0.5 * totprice;
@@ -106,9 +98,7 @@ export const createBooking = async (req, res) => {
         } else {
             pointsAdded = totprice * 1.5;
         }
-        tourist.loyalityPoints += pointsAdded;
-        tourist.points += pointsAdded;
-        await tourist.save();
+
         const booking = await Booking.create({
             touristID,
             ...req.body,
@@ -121,14 +111,36 @@ export const createBooking = async (req, res) => {
     }
 };
 
+export const completeBooking = async (req, res) => {
+    const { id } = req.params;
+    const { isWalletUsed } = req.body;
+    try {
+        const booking = await Booking.findById(id);
+        if (!booking) {
+            return res.status(404).json({ message: "Booking not found" });
+        }
+        booking.isComplete = true;
+        const tourist = await Tourist.findById(booking.touristID);
+        tourist.points += booking.pointsAdded;
+        tourist.loyalityPoints += booking.pointsAdded;
+        if (isWalletUsed)
+            tourist.wallet = Math.max(0, tourist.wallet - booking.totalPrice);
+        await tourist.save();
+        await booking.save();
+        res.status(200).json({ message: "Booking completed successfully" });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
 export const deleteBooking = async (req, res) => {
     try {
         const currentDate = new Date(Date.now());
         const booking = await Booking.findById(req.params.id);
-        const { touristID, isInItinerary } = booking;
         if (!booking) {
             return res.status(400).json({ message: "The booking does not exist" });
         }
+        const { touristID, isInItinerary } = booking;
         let date;
         //here I will determine the date
         if (booking.bookingType === "Itinerary") {
@@ -179,11 +191,6 @@ export const deleteBooking = async (req, res) => {
                 tourist.points -= booking.pointsAdded;
                 await tourist.save();
             }
-            // return res.status(200).json({ message: "ahmed was here" });
-        }
-
-        if (!booking) {
-            return res.status(404).json({ message: "Booking not found" });
         }
         await Booking.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: "Booking deleted successfully" });

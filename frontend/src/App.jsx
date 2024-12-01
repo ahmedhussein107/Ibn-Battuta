@@ -55,7 +55,7 @@ import TourGuideProfilePage from "./pages/TourGuide/TourGuideProfilePage";
 import TermsAndConditions from "./pages/Privacy/TermsAndConditions";
 import Flights from "./pages/Flights/Flights";
 import FlightBookingDetails from "./pages/Flights/FlightBookingDetails";
-import StripeWrapper from "./components/StripeWrapper";
+import Payment from "./pages/Payment/Payment.jsx";
 
 const LayoutWithNav = () => (
     <>
@@ -177,7 +177,7 @@ function App() {
                             path="/flight-booking-details"
                             element={<FlightBookingDetails />}
                         />
-                        <Route path="/stripe" element={<StripeWrapper />} />
+                        <Route path="/payment" element={<Payment />} />
                     </Route>
                 </Routes>
             </Router>
