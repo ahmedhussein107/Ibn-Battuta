@@ -120,11 +120,7 @@ export default function ActivityDetails() {
     };
 
     if (!activityData) {
-<<<<<<< HEAD
-        return <div>Loading...</div>;
-=======
         return <CircularProgress />;
->>>>>>> main
     }
     return (
         <div className="activity-details-container">

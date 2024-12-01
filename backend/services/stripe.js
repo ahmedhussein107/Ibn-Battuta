@@ -1,7 +1,7 @@
 import express from "express";
 import Stripe from "stripe";
 import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from "../config/config.js";
-import { sendEmail } from "../utilities/emailUtils.js";
+import sendEmail from "../utilities/emailUtils.js";
 
 const stripeRouter = express.Router();
 const stripe = new Stripe(STRIPE_SECRET_KEY);
