@@ -57,6 +57,7 @@ import Flights from "./pages/Flights/Flights";
 import FlightBookingDetails from "./pages/Flights/FlightBookingDetails";
 import Bookmarks from "./pages/Tourist/Bookmarks";
 import StripeWrapper from "./components/StripeWrapper.jsx";
+import ForgotYourPassword from "./pages/Signin/ForgotYourPassword.jsx";
 
 const LayoutWithNav = () => (
     <>
@@ -74,6 +75,10 @@ function App() {
                 <Routes>
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/signin" element={<Signin />} />
+                    <Route
+                        path="/forgot-your-password"
+                        element={<ForgotYourPassword />}
+                    />
                     <Route path="/select-your-role" element={<SelectYourRole />} />
 
                     <Route element={<LayoutWithNav />}>

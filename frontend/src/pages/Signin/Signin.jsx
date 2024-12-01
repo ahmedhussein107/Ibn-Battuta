@@ -102,6 +102,23 @@ const SigninComponent = () => {
                 }}
                 required={true}
             ></TextField>
+
+            <label htmlFor="terms">
+                <Link to={"/forgot-your-password"}>
+                    <p
+                        style={{
+                            width: "100%",
+                            //textDecoration: "underline",
+                            marginTop: "2%",
+                            marginLeft: "50%",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        Forgot your password?
+                    </p>
+                </Link>
+            </label>
+
             <div
                 style={{
                     display: "flex",
