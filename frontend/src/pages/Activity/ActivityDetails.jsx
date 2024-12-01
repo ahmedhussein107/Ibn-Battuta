@@ -26,6 +26,7 @@ import Book from "../../components/ItineraryDetails/Book.jsx";
 
 // Other components
 import Map from "../map.jsx";
+import { CircularProgress } from "@mui/material";
 
 // Styles
 import "../../styles/ActivityDetails.css";
@@ -40,7 +41,9 @@ export default function ActivityDetails() {
     const [pointsAdded, setPointsAdded] = useState(0);
     const [advertiserName, setAdvertiserName] = useState("");
     const [ticketCount, setTicketCount] = useState(0);
+
     const [isBookmarked, setIsBookmarked] = useState(false);
+
 
     //To retrieve user type from browser
     useEffect(() => {
@@ -72,6 +75,7 @@ export default function ActivityDetails() {
         }
     }, [activityId]);
     //For mangaing page logic
+
 
     useEffect(() => {
         const fetchIsBookmarked = async () => {
@@ -160,7 +164,8 @@ export default function ActivityDetails() {
     };
 
     if (!activityData) {
-        return <div>Loading...</div>;
+
+        return <CircularProgress />;
     }
     return (
         <div className="activity-details-container">
@@ -201,6 +206,7 @@ export default function ActivityDetails() {
                 bookmark={handleBookmark}
                 isBookmarked={isBookmarked}
                 showBookmark={userType === "Tourist"}
+
             />
             <ActivityPhotos
                 width="100%"

@@ -17,6 +17,7 @@ const PriceRange = ({ priceRange, setPriceRange, min, max }) => {
             <Slider
                 value={priceRange}
                 onChange={handleChange}
+                step={0.01}
                 marks={marks}
                 min={min}
                 max={max}

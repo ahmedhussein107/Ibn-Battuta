@@ -1,7 +1,8 @@
 import axios from "axios";
 const api_key = import.meta.env.VITE_CURRENCY_RATE_API_KEY;
 
-export const getExchangeRates = async (baseCurrency = "EGP") => {
+export const getExchangeRates = async () => {
+    const baseCurrency = "EGP";
     const url = `https://v6.exchangerate-api.com/v6/${api_key}/latest/${baseCurrency}`;
     try {
         const response = await axios.get(url);
