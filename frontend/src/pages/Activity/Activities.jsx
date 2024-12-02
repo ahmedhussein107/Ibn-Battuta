@@ -292,10 +292,10 @@ const Activities = () => {
         />,
     ];
 
-    /*if (isLoading) {
+    if (isLoading) {
         // TODO: add better loading animation
         return <CircularProgress />;
-    }*/
+    }
 
     return (
         <div
