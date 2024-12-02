@@ -78,7 +78,8 @@ export const createTourist = async (req, res) => {
                 "Tourist",
                 newTourist._id,
                 newTourist.picture,
-                newTourist.currency
+                newTourist.currency,
+                newTourist.email
             )
                 .status(201)
                 .json({ message: "Sign up successful" });

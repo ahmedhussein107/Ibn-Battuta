@@ -11,9 +11,11 @@ const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 const Payment = () => {
     const location = useLocation();
+
     if (!location.state) {
         window.history.back();
     }
+
     const { amount, currency, headerImage } = location.state;
 
     const { handlePaymentSuccess, handlePaymentFailure } = useFunctionContext();
