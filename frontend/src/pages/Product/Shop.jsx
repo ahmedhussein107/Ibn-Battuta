@@ -86,11 +86,10 @@ const Shop = () => {
     const handleBuyingPopUpOpen = async () => {
         try {
             await axiosInstance.post(
-                "/order/createOrder",
+                "/cart/updateCart",
                 {
-                    product: selectedProduct._id,
+                    productID: selectedProduct._id,
                     count: selectedQuantity,
-                    price: selectedProduct.price * selectedQuantity,
                 },
                 { withCredentials: true }
             );
@@ -187,11 +186,7 @@ const Shop = () => {
                     backgroundColor: "white",
                 }}
             ></div>
-            {/* REMOVE */}
-            <div>
-                <button onClick={() => navigate("/checkout")}>checkout</button>
-            </div>
-            {/* REMOVE */}
+
             <div
                 style={{
                     display: "flex",
@@ -279,6 +274,9 @@ const Shop = () => {
                         gap: "0.4rem", // Add this to create space between icon and text
                         marginLeft: "41vw",
                     }}
+                    onClick={() => {
+                        navigate("/cart");
+                    }}
                 >
                     <ShoppingCartIcon
                         style={{
@@ -306,7 +304,7 @@ const Shop = () => {
                 handleSubmit={async () => {
                     await handleBuyingPopUpOpen();
                 }}
-                actionText="Buy"
+                actionText="Add to cart"
             >
                 <div
                     style={{

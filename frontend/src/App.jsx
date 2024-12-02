@@ -58,6 +58,7 @@ import Flights from "./pages/Flights/Flights";
 import FlightBookingDetails from "./pages/Flights/FlightBookingDetails";
 import Payment from "./pages/Payment/Payment.jsx";
 import Checkout from "./pages/Product/CheckoutPage.jsx";
+import Cart from "./pages/Product/CartPage.jsx";
 import { FunctionProvider } from "./contexts/FunctionContext";
 
 const LayoutWithNav = () => (
@@ -231,6 +232,7 @@ function App() {
                                     element={<FlightBookingDetails />}
                                 />
                                 <Route path="/checkout" element={<Checkout />} />
+                                <Route path="/cart" element={<Cart />} />
                             </Route>
                         </Routes>
                     </Router>
