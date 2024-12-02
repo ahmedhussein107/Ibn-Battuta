@@ -8,20 +8,34 @@ import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import Cookies from "js-cookie";
 import { useFunctionContext } from "../../contexts/FunctionContext";
+import { useLocation } from "react-router-dom";
+import { set } from "mongoose";
 
 const Checkout = ({ listOfItems }) => {
     const [tourist, setTourist] = useState(null);
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
     const [redeemValue, setRedeemValue] = useState(0);
+    const [checkoutSucceed, setCheckoutSucceed] = useState(false);
+    const [paymentMethod, setPaymentMethod] = useState("cash on delivery");
+    const [wallet, setWallet] = useState(0);
+
     const [formData, setFormData] = useState({
         mobile: "",
         address: [],
     });
+    const location = useLocation();
+    const order = location.state.order;
 
     const navigate = useNavigate();
-    const { setSuccess, setFailure } = useFunctionContext();
+    const { setSuccess, handleFailure } = useFunctionContext();
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
+
+    useEffect(() => {
+        return async () => {
+            if (!checkoutSucceed) await handleFailure();
+        };
+    }, []);
 
     useEffect(() => {
         axiosInstance
@@ -108,32 +122,57 @@ const Checkout = ({ listOfItems }) => {
         }
     };
 
-    const handleNext = async () => {
-        const response = await axiosInstance.post(
-            "/booking/createBooking",
-            { typeId: "672faf9887fad62d0420dbc4", bookingType: "Activity", count: 1 },
-            { withCredentials: true }
-        );
-        const bookingId = response.data._id;
-        const handleSuccess = async () => {
-            await axiosInstance.patch(`/booking/completeBooking/${bookingId}`, {
-                isWalletUsed: false,
+    // const handleNext = async () => {
+    //     const response = await axiosInstance.post(
+    //         "/booking/createBooking",
+    //         { typeId: "672faf9887fad62d0420dbc4", bookingType: "Activity", count: 1 },
+    //         { withCredentials: true }
+    //     );
+    //     const bookingId = response.data._id;
+    //     const handleSuccess = async () => {
+    //         await axiosInstance.patch(`/booking/completeBooking/${bookingId}`, {
+    //             isWalletUsed: false,
+    //         });
+    //         navigate("/bookings", { state: { tab: "Activities" } });
+    //     };
+    //     const handleFailure = async () => {
+    //         await axiosInstance.delete(`booking/deleteBooking/${bookingId}`);
+    //     };
+    //     const amount = 1000;
+    //     setSuccess(handleSuccess);
+    //     setFailure(handleFailure);
+    //     navigate("/payment", {
+    //         state: {
+    //             amount,
+    //             currency,
+    //             headerImage: bookingsBackground,
+    //         },
+    //     });
+    // };
+
+    useEffect(() => {
+        if (checkoutSucceed) {
+            const amount = Number(order.totalPrice);
+            navigate("/payment", {
+                state: {
+                    amount,
+                    currency,
+                    headerImage: bookingsBackground,
+                },
             });
-            navigate("/bookings", { state: { tab: "Activities" } });
+        }
+    }, [checkoutSucceed]);
+
+    const handleNext = async () => {
+        const handleSuccess = async () => {
+            await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
+                isWalletUsed: false,
+                methodUsed: paymentMethod,
+                address: formData.address[0].name,
+            });
         };
-        const handleFailure = async () => {
-            await axiosInstance.delete(`booking/deleteBooking/${bookingId}`);
-        };
-        const amount = 1000;
         setSuccess(handleSuccess);
-        setFailure(handleFailure);
-        navigate("/payment", {
-            state: {
-                amount,
-                currency,
-                headerImage: bookingsBackground,
-            },
-        });
+        setCheckoutSucceed(true);
     };
 
     if (isLoading) {
@@ -332,7 +371,7 @@ const Checkout = ({ listOfItems }) => {
                                 Redeem Points
                             </h3>
                             <span style={{ marginLeft: "-4.5vw", padding: "0.5vh 0" }}>
-                                10K Points → 100 EGP
+                                10K Points → {formatPrice(100)}
                             </span>
                             <div
                                 style={{
