@@ -10,11 +10,15 @@ import TouristHotelBookings from "../../components/Hotels/TouristHotelBookings";
 import HotelList from "../../components/Hotels/HotelList";
 import FlightList from "../../components/Flights/FlightList";
 
+import { useLocation } from "react-router-dom";
+
 const Bookings = () => {
+    const location = useLocation();
+
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 4;
-    const [selected, setSelected] = useState("Itineraries");
+    const [selected, setSelected] = useState(location?.state?.tab || "Itineraries");
     const [activities, setActivities] = useState([]);
     const [itineraries, setItineraries] = useState([]);
     const [flights, setFlights] = useState([]);

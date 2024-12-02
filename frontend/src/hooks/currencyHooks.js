@@ -5,8 +5,8 @@ import { getExchangeRates } from "../api/currency";
 export const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            staleTime: 24 * 60 * 60 * 1000, // Consider data fresh for 24 hours
-            cacheTime: 24 * 60 * 60 * 1000, // Keep unused data in cache for 24 hours
+            staleTime: 1024 * 24 * 60 * 60 * 1000, // Consider data fresh for 24 hours
+            cacheTime: 1024 * 24 * 60 * 60 * 1000, // Keep unused data in cache for 24 hours
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,

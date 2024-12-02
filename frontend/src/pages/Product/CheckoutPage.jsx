@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import bookingsBackground from "../../assets/backgrounds/checkoutbg.png";
 import Footer from "../../components/Footer";
-import NavBar from "../../components/NavBar";
-import convert from "../../api/convert";
+import Button from "../../components/Button";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
+import Cookies from "js-cookie";
+import { useFunctionContext } from "../../contexts/FunctionContext";
 
-const Checkout = () => {
+const Checkout = ({ listOfItems }) => {
     const [tourist, setTourist] = useState(null);
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
     const [redeemValue, setRedeemValue] = useState(0);
@@ -13,6 +17,11 @@ const Checkout = () => {
         mobile: "",
         address: [],
     });
+
+    const navigate = useNavigate();
+    const { setSuccess, setFailure } = useFunctionContext();
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
     useEffect(() => {
         axiosInstance
@@ -99,12 +108,43 @@ const Checkout = () => {
         }
     };
 
+    const handleNext = async () => {
+        const response = await axiosInstance.post(
+            "/booking/createBooking",
+            { typeId: "672faf9887fad62d0420dbc4", bookingType: "Activity", count: 1 },
+            { withCredentials: true }
+        );
+        const bookingId = response.data._id;
+        const handleSuccess = async () => {
+            await axiosInstance.patch(`/booking/completeBooking/${bookingId}`, {
+                isWalletUsed: false,
+            });
+            navigate("/bookings", { state: { tab: "Activities" } });
+        };
+        const handleFailure = async () => {
+            await axiosInstance.delete(`booking/deleteBooking/${bookingId}`);
+        };
+        const amount = 1000;
+        setSuccess(handleSuccess);
+        setFailure(handleFailure);
+        navigate("/payment", {
+            state: {
+                amount,
+                currency,
+                headerImage: bookingsBackground,
+            },
+        });
+    };
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
+
     return (
         <div>
             <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
                 <div style={backgroundStyle}>
                     <h1 style={headerStyle}>CheckOut</h1>
-                    <NavBar />
                 </div>
                 <div>
                     <h2
@@ -255,7 +295,7 @@ const Checkout = () => {
                                 Wallet And Points Details
                             </h3>
                             <p style={{ marginLeft: "2vw" }}>
-                                Balance: {convert(tourist?.wallet || 0)}
+                                Balance: {formatPrice(tourist?.wallet || 0)}
                             </p>
                             <p style={{ marginLeft: "2vw" }}>
                                 Points: {tourist?.loyalityPoints || 0}
@@ -346,6 +386,7 @@ const Checkout = () => {
                             Redeem
                         </button>
                     </div>
+                    <Button stylingMode="2" text="Next" handleClick={handleNext} />
                 </div>
                 <Footer />
             </div>
