@@ -6,7 +6,6 @@ import SearchField from "../../components/SearchField/SearchField.jsx";
 import Sorter from "../../components/Sorter.jsx";
 import PriceRange from "../../components/PriceRange.jsx";
 import RatingRange from "../../components/RatingRange.jsx";
-import NavBar from "../../components/NavBar.jsx";
 import Footer from "../../components/Footer.jsx";
 import shopBackground from "../../assets/backgrounds/shopBackground.png";
 import ShareAndMark from "../../components/ShareAndMark.jsx";
@@ -17,6 +16,7 @@ import QuantityControls from "../../components/QuantityControls.jsx";
 
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
+import PaginationComponent from "../../components/Pagination";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -44,29 +44,22 @@ const Shop = () => {
     });
     const [selectedQuantity, setSelectedQuantity] = useState(1);
 
-    const sortProducts = (products) => {
-        let sortedProducts = [...products]; // Create a shallow copy
-        if (sortBy === "priceAsc") {
-            sortedProducts.sort((a, b) => a.price - b.price);
-        } else if (sortBy === "priceDesc") {
-            sortedProducts.sort((a, b) => b.price - a.price);
-        } else if (sortBy === "ratingAsc") {
-            sortedProducts.sort((a, b) => a.rating - b.rating);
-        } else if (sortBy === "ratingDesc") {
-            sortedProducts.sort((a, b) => b.rating - a.rating);
-        }
-        console.log("sortedActivities", sortedProducts);
-        setProducts(sortedProducts);
-    };
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const itemsPerPage = 6;
 
-    const fetchActivities = async (query) => {
+    const fetchProducts = async (query) => {
         try {
-            console.log("query", query);
             const response = await axiosInstance.get(`/product/search/`, {
-                params: query,
+                params: {
+                    ...query,
+                    page: currentPage,
+                    limit: itemsPerPage,
+                    sortBy,
+                },
             });
-            console.log("response", response.data);
-            sortProducts(response.data);
+            setProducts(response.data.result);
+            setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error("Error fetching Products:", error);
         }
@@ -74,12 +67,14 @@ const Shop = () => {
 
     useEffect(() => {
         const query = buildQuery();
-        fetchActivities(query);
-    }, [priceRange, ratingRange, name]);
+        fetchProducts(query);
+        setCurrentPage(1);
+    }, [priceRange, ratingRange, name, sortBy]);
 
     useEffect(() => {
-        sortProducts(products);
-    }, [sortBy]);
+        const query = buildQuery();
+        fetchProducts(query);
+    }, [currentPage]);
 
     const handleBuyingPopUpOpen = async () => {
         try {
@@ -171,6 +166,9 @@ const Shop = () => {
                 position: "absolute",
                 top: "0",
                 left: "0",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.7rem",
                 overflowX: "hidden",
             }}
         >
@@ -189,7 +187,6 @@ const Shop = () => {
                 style={{
                     display: "flex",
                     flexDirection: "row",
-                    marginTop: "1vh",
                     marginLeft: "28vw",
                 }}
             >
@@ -329,7 +326,6 @@ const Shop = () => {
                     style={{
                         width: "25vw",
                         borderRadius: "3vh",
-                        marginTop: "-3vh",
                     }}
                 >
                     <SideBar
@@ -386,6 +382,13 @@ const Shop = () => {
                     ))}
                 </div>
             </div>
+            <PaginationComponent
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onChange={(event, newPage) => {
+                    setCurrentPage(newPage);
+                }}
+            />
             <Footer />
         </div>
     );

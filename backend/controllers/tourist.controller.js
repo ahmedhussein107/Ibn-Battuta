@@ -12,7 +12,7 @@ import TouristBookmark from "../models/touristBookmark.model.js";
 
 export const getTourists = async (req, res) => {
     try {
-        const tourguides = await Tourist.find();
+        const tourguides = await Tourist.find(req.body);
         res.json(tourguides);
     } catch (e) {
         res.json(e.message);

@@ -29,7 +29,6 @@ const touristSchema = new mongoose.Schema(
         hotelBookings: [{ type: Object, default: [] }],
         flightBookings: [{ type: Object, default: [] }],
         preferences: [{ type: String, ref: "Tag" }],
-        wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
         address: [{ name: String, location: String }],
         currency: { type: String, default: "EGP" },
     },

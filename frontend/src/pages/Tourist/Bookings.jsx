@@ -109,13 +109,11 @@ const Bookings = () => {
                     />
 
                     <div style={filterButtonsGroupStyle}>
-                    
-                            <FilterButtons
-                                buttons={filterButtons}
-                                selected={filter}
-                                handleChooseType={handleFilter}
-                            />
-
+                        <FilterButtons
+                            buttons={filterButtons}
+                            selected={filter}
+                            handleChooseType={handleFilter}
+                        />
                     </div>
                 </div>
                 <hr style={{ width: "90%", margin: "0 auto" }} />
