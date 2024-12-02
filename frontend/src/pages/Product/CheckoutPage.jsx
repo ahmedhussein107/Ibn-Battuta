@@ -17,11 +17,13 @@ const Checkout = ({ listOfItems }) => {
     const [redeemValue, setRedeemValue] = useState(0);
     const [checkoutSucceed, setCheckoutSucceed] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState("cash on delivery");
+    const [isWalletUsed, setIsWalletUsed] = useState(false);
     const [wallet, setWallet] = useState(0);
 
     const [formData, setFormData] = useState({
         mobile: "",
         address: [],
+        selectedAddress: "",
     });
     const location = useLocation();
     const order = location.state.order;
@@ -45,6 +47,10 @@ const Checkout = ({ listOfItems }) => {
                 setFormData({
                     mobile: response.data.mobile || "",
                     address: response.data.address || [],
+                    selectedAddress:
+                        response.data.address.length > 0
+                            ? response.data.address[0].name
+                            : "",
                 });
             })
             .catch((error) => {
@@ -52,16 +58,31 @@ const Checkout = ({ listOfItems }) => {
             });
     }, []);
 
-    const handleChange = (event) => {
-        // Update formData temporarily
-        const updatedFormData = { ...formData, [event.target.name]: event.target.value };
+    const handleChange = (e) => {
+        const { name, value } = e.target;
 
-        // Update the state and make the PUT request when leaving the field
-        setFormData(updatedFormData);
+        if (name === "address") {
+            // Always wrap the address input in an array
+            setFormData((prev) => ({
+                ...prev,
+                address: [value], // Ensure it's a single-element array
+            }));
+        } else {
+            // Handle other fields
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
+    };
+
+    const handleSelectAddress = (event) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            selectedAddress: event.target.value,
+        }));
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
         axiosInstance
             .put("/tourist/updateTourist", formData, {
                 withCredentials: true,
@@ -168,12 +189,25 @@ const Checkout = ({ listOfItems }) => {
             await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
                 isWalletUsed: false,
                 methodUsed: paymentMethod,
-                address: formData.address[0].name,
+                address: formData.selectedAddress,
             });
         };
         setSuccess(handleSuccess);
         setCheckoutSucceed(true);
     };
+
+    const handlePaymentMethodChange = (event) => {
+        console.log(event.target.value);
+        setPaymentMethod(event.target.value);
+    };
+
+    const handleUseWallet = (event) => {
+        setIsWalletUsed(event.target.checked);
+    };
+
+    useEffect(() => {
+        console.log(formData.selectedAddress);
+    }, [formData.selectedAddress]);
 
     if (isLoading) {
         return <CircularProgress />;
@@ -230,6 +264,9 @@ const Checkout = ({ listOfItems }) => {
                     <div>
                         Delivery Address*:
                         <select
+                            name="address"
+                            value={formData.selectedAddress}
+                            onChange={handleSelectAddress}
                             style={{
                                 width: "20vw", // Adjust width as needed
                                 height: "4vh", // Set a specified height for consistency
@@ -241,9 +278,6 @@ const Checkout = ({ listOfItems }) => {
                                 display: "block", // Make sure it's a block element
                             }}
                         >
-                            <option value="" disabled selected>
-                                Choose a delivery address
-                            </option>
                             {/* Use map to populate the options dynamically */}
                             {formData.address.map((address, index) => (
                                 <option key={index} value={address.name}>
@@ -272,16 +306,20 @@ const Checkout = ({ listOfItems }) => {
                             <input
                                 type="radio"
                                 name="paymentMethod"
-                                value="cash"
+                                value="cash on delivery"
+                                checked={paymentMethod === "cash on delivery"}
+                                onChange={handlePaymentMethodChange}
                                 style={{ marginRight: "5px", accentColor: "#9c4f21" }}
                             />
-                            Cash
+                            Cash On Delivery
                         </label>
                         <label>
                             <input
                                 type="radio"
                                 name="paymentMethod"
                                 value="card"
+                                checked={paymentMethod === "card"}
+                                onChange={handlePaymentMethodChange}
                                 style={{ marginRight: "5px", accentColor: "#9c4f21" }}
                             />
                             Card
@@ -305,6 +343,8 @@ const Checkout = ({ listOfItems }) => {
                             height: "1.5vh",
                             width: "1.5vw",
                         }}
+                        checked={isWalletUsed}
+                        onChange={handleUseWallet}
                     />
                 </div>
 
