@@ -162,9 +162,9 @@ const Shop = () => {
         <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
     ];
 
-    if (isLoading) {
-        return <CircularProgress />;
-    }
+    // if (isLoading) {
+    //     return <CircularProgress />;
+    // }
 
     return (
         <div
