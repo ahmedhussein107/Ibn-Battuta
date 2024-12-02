@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
-import bookingsBackground from "../../assets/backgrounds/checkoutbg.png";
+import bookingsBackground from "../../assets/backgrounds/image.png";
 import Footer from "../../components/Footer";
 import Button from "../../components/Button";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
