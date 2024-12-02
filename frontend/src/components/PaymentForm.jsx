@@ -10,10 +10,8 @@ import { Typography, Box, TextField, Grid } from "@mui/material";
 import axiosInstance from "../api/axiosInstance";
 import CustomButton from "./Button";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 
 const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
-    const navigate = useNavigate();
     const stripe = useStripe();
     const elements = useElements();
     const [error, setError] = useState(null);
@@ -32,7 +30,7 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
     useEffect(() => {
         const createPayment = async () => {
             const response = await axiosInstance.post("payment/create-payment-intent", {
-                amount,
+                amount: Math.round(amount * 100) / 100,
                 currency,
             });
             console.log("payment Intent created: ", response);
@@ -234,7 +232,7 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
                     stylingMode="2"
                     text="Back"
                     handleClick={() => {
-                        navigate(-1);
+                        window.history.back();
                     }}
                 />
                 <CustomButton stylingMode="1" text="Pay" handleClick={handleSubmit} />

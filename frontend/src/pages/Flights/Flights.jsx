@@ -1,7 +1,6 @@
 import usePageHeader from "../../components/Header/UseHeaderPage";
 import backgroundImage from "../../assets/images/flightsBackgroundImage.png";
 import Footer from "../../components/Footer";
-import NavBar from "../../components/NavBar";
 import React, { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import FlightSearchPage from "../../components/Flights/FlightSearchPage";
@@ -9,8 +8,22 @@ import FlightDetailsPage from "../../components/Flights/FlightDetailsPage";
 import PopUpSuccess from "../../components/PopUpsGeneric/PopUpSuccess";
 import PopUpError from "../../components/PopUpsGeneric/PopUpError";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
+import { useNavigate } from "react-router-dom";
+import { useFunctionContext } from "../../contexts/FunctionContext";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
 
 const Flights = () => {
+    const navigate = useNavigate();
+
+    const { setSuccess, setFailure } = useFunctionContext();
+
+    const currency = Cookies.get("currency") || "EGP";
+    const currencyConverter = useCurrencyConverter(currency);
+    const convertPrice = currencyConverter.convertPrice;
+    const isCurrencyLoading = currencyConverter.isLoading;
+
     usePageHeader(null, null);
     const [step, setStep] = useState(1);
     const [keyword, setKeyword] = useState(""); // Search keyword
@@ -114,9 +127,8 @@ const Flights = () => {
     };
 
     const handleBook = async () => {
-        console.log(selectedFlightOffer);
         setIsBookingLoading(true);
-        try {
+        const handleSuccess = async () => {
             await axiosInstance.post(
                 "/amadeus/flights/book",
                 {
@@ -125,12 +137,28 @@ const Flights = () => {
                 },
                 { withCredentials: true }
             );
-            setIsBookingLoading(false);
-            setSuccessOpen(true);
-        } catch (error) {
-            setIsBookingLoading(false);
-            setErrorOpen(true);
-        }
+            const response = await axiosInstance.get(
+                "/booking/checkPossiblePackageFlight/",
+                {
+                    withCredentials: true,
+                }
+            );
+            const state = { tab: "Flights", hotel: response?.data?.hotel };
+            navigate("/bookings", { state }); // TODO: change the uri to tourist/bookings
+        };
+
+        const handleFailure = async () => {};
+
+        setSuccess(handleSuccess);
+        setFailure(handleFailure);
+
+        navigate("/payment", {
+            state: {
+                amount: convertPrice(selectedFlightOffer.price.total),
+                currency,
+                headerImage: backgroundImage,
+            },
+        });
     };
 
     const handleOnClose = async () => {
@@ -145,6 +173,10 @@ const Flights = () => {
     };
 
     const handleSubmit = () => setPackagePopup(false);
+
+    if (isCurrencyLoading) {
+        return <CircularProgress />;
+    }
 
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
