@@ -27,6 +27,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import amadeusHotelsRouter from "./services/hotels.js";
 import amadeusFlightsRouter from "./services/flights.js";
+import touristCartRouter from "./routes/touristCart.router.js";
 
 import { PORT, MONGO_URI } from "./config/config.js";
 
@@ -83,3 +84,4 @@ app.use("/api/customActivity", customActivityRouter);
 app.use("/api/amadeus/hotels", amadeusHotelsRouter);
 app.use("/api/amadeus/flights", amadeusFlightsRouter);
 app.use("/api/general", generalRouter);
+app.use("/api/cart", touristCartRouter);
