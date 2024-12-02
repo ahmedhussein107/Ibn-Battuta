@@ -21,7 +21,7 @@ const Payment = () => {
     const { handlePaymentSuccess, handlePaymentFailure } = useFunctionContext();
     usePageHeader(headerImage, "Payment", null, null);
     return (
-        <div style={{ marginTop: "18%", width: "80%" }}>
+        <div style={{ marginTop: "20%", width: "80%" }}>
             <Elements stripe={stripePromise}>
                 <PaymentForm
                     amount={amount}

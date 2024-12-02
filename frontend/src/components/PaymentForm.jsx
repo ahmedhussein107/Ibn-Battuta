@@ -90,72 +90,118 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
 
     return (
         <>
-            <form style={{ margin: "auto" }}>
-                <Typography variant="h5" component="h2" gutterBottom>
+            <form style={{ marginTop: "6vh" }}>
+                <Typography
+                    variant="h5"
+                    component="h2"
+                    gutterBottom
+                    sx={{ color: "#9C4F21" }}
+                    // I want more bold
+                    fontSize={"2rem"}
+                    style={{ fontWeight: "bold" }}
+                    marginLeft={"-6rem"}
+                    marginTop={"-2rem"}
+                >
                     Delivery and Payment
                 </Typography>
-
-                <Box sx={{ marginBottom: "1.5rem" }}>
-                    <TextField
-                        fullWidth
-                        label="Name on card"
-                        name="name"
-                        variant="outlined"
-                        required
-                        sx={{ marginBottom: "1rem" }}
-                        onChange={(e) => setName(e.target.value)}
-                    />
+                <Box
+                    sx={{
+                        borderBottom: "1.5px solid #000",
+                        width: "117%",
+                        marginTop: "1rem",
+                        marginLeft: "-6rem",
+                    }}
+                />
+                <Box
+                    sx={{
+                        backgroundColor: "#9C4F21",
+                        padding: "1rem",
+                        borderRadius: "0.25rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        marginTop: "2rem",
+                        marginLeft: "-1rem",
+                        width: "98%",
+                        height: "3vh",
+                    }}
+                >
+                    <Typography
+                        variant="h6"
+                        component="h3"
+                        sx={{
+                            color: "#fff",
+                            fontWeight: "bold",
+                            marginBottom: "1rem",
+                            width: "20vh",
+                        }}
+                    >
+                        Payment options
+                    </Typography>
                 </Box>
+                <div style={{ marginLeft: "2vw" }}>
+                    <Box sx={{ marginTop: "2rem", width: "30vw" }}>
+                        <TextField
+                            fullWidth
+                            label="Name on card"
+                            name="name"
+                            variant="outlined"
+                            required
+                            sx={{ marginBottom: "1rem" }}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </Box>
 
-                <Typography variant="body1" gutterBottom>
-                    Card Information
-                </Typography>
+                    <Typography variant="body1" gutterBottom>
+                        Card Information
+                    </Typography>
 
-                <Grid container spacing={2} sx={{ marginBottom: "1.5rem" }}>
-                    <Grid item xs={12}>
-                        <Box
-                            sx={{
-                                border: "1px solid #ccc",
-                                borderRadius: "0.25rem",
-                                padding: "0.75rem",
-                            }}
-                        >
-                            <CardNumberElement options={cardElementOptions} />
-                        </Box>
+                    <Grid container spacing={2} sx={{ marginBottom: "1.5rem" }}>
+                        <Grid item xs={12}>
+                            <Box
+                                sx={{
+                                    border: "1px solid #ccc",
+                                    borderRadius: "0.25rem",
+                                    padding: "0.75rem",
+                                }}
+                            >
+                                <CardNumberElement options={cardElementOptions} />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box
+                                sx={{
+                                    border: "1px solid #ccc",
+                                    borderRadius: "0.25rem",
+                                    padding: "0.75rem",
+                                }}
+                            >
+                                <CardExpiryElement options={cardElementOptions} />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box
+                                sx={{
+                                    border: "1px solid #ccc",
+                                    borderRadius: "0.25rem",
+                                    padding: "0.75rem",
+                                }}
+                            >
+                                <CardCvcElement options={cardElementOptions} />
+                            </Box>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                        <Box
-                            sx={{
-                                border: "1px solid #ccc",
-                                borderRadius: "0.25rem",
-                                padding: "0.75rem",
-                            }}
-                        >
-                            <CardExpiryElement options={cardElementOptions} />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Box
-                            sx={{
-                                border: "1px solid #ccc",
-                                borderRadius: "0.25rem",
-                                padding: "0.75rem",
-                            }}
-                        >
-                            <CardCvcElement options={cardElementOptions} />
-                        </Box>
-                    </Grid>
-                </Grid>
 
-                <Box sx={{ marginBottom: "1rem" }}>
-                    <TextField
-                        fullWidth
-                        label="Billing Zip Code"
-                        name="zip"
-                        variant="outlined"
-                        required
-                    />
-                </Box>
+                    <Box sx={{ marginBottom: "1rem" }}>
+                        <TextField
+                            fullWidth
+                            label="Billing Zip Code"
+                            name="zip"
+                            variant="outlined"
+                            required
+                        />
+                    </Box>
+                </div>
 
                 <Box
                     sx={{
