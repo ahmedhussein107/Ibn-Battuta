@@ -521,9 +521,7 @@ const CreateItineraryPage = () => {
                         text="Next"
                         width={"10vw"}
                         handleClick={() => {
-                            console.log("Next");
-                            console.log(pickupLocationlatitude);
-                            navigate("/choose-activity", {
+                            navigate("/tourguide/choose-activity", {
                                 state: {
                                     name: name,
                                     language: language,

@@ -225,6 +225,9 @@
     display: flex;
     flex-direction: column;
 }
+.notification-item:hover {
+    cursor: pointer;
+}
 .notification-item.info {
     background-color: rgb(220, 229, 247);
 }

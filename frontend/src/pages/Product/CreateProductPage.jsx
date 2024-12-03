@@ -7,6 +7,7 @@ import Button from "../../components/Button.jsx";
 import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
 import NavBar from "../../components/NavBar.jsx";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
         <PopupContent>
@@ -80,7 +81,10 @@ const CreateProductPage = () => {
             console.log("Product created:", response.data);
 
             showPopupMessage("Product created successfully!", false);
-            setTimeout(() => navigate("/inventory"), 1000);
+            setTimeout(
+                () => navigate(`/${Cookies.get("userType").toLowerCase()}/inventory`),
+                1000
+            );
         } catch (error) {
             console.error("Error creating product:", error);
             showPopupMessage("Error creating product. Please try again.", true);
