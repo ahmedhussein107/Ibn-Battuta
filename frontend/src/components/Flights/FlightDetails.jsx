@@ -2,6 +2,10 @@ import React from "react";
 import TripDetails from "./TripDetails";
 import FlightJourney from "./FlightJourney";
 
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import Cookies from "js-cookie";
+
 const FlightDetails = ({ flightData, airlines }) => {
     const countTravellers = (travelerPricings) => {
         let adults = 0;
@@ -75,6 +79,13 @@ const FlightDetails = ({ flightData, airlines }) => {
               returnItinerary.segments[returnItinerary.segments.length - 1].arrival.at
           )
         : null;
+
+    const currency = Cookies.get("currency") || "EGP";
+    const { formatPrice, isLoading } = useCurrencyConverter(currency);
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
 
     return (
         <div>
@@ -280,7 +291,7 @@ const FlightDetails = ({ flightData, airlines }) => {
                             fontWeight: "700",
                         }}
                     >
-                        Total Price: {flightData.price.total} {flightData.price.currency}
+                        Total Price: {formatPrice(flightData.price.total)}
                     </span>
                 </div>
             </div>

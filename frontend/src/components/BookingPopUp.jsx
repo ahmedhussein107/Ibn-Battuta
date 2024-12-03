@@ -9,6 +9,8 @@ import PopUpSuccess from "./PopUpsGeneric/PopUpSuccess";
 import PopUpError from "./PopUpsGeneric/PopUpError";
 import convert from "../api/convert";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
 const BookingPopUp = ({
     isOpen,
     setIsOpen,
@@ -20,6 +22,11 @@ const BookingPopUp = ({
     const [isSuccess, setIsSuccess] = useState(false);
     const [isError, setIsError] = useState(false);
 
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     const handleSubmit = async () => {
         try {
             //buy ticket;
@@ -65,15 +72,13 @@ const BookingPopUp = ({
                         <p>
                             Price per person:{" "}
                             <span className="price-per-person">
-                                {Cookies.get("currency") || "EGP"}{" "}
-                                {convert(toBeBookedItem.price)}
+                                {formatPrice(toBeBookedItem.price)}
                             </span>
                         </p>
                         <p>
                             Total price:{" "}
                             <span id="total-price">
-                                {Cookies.get("currency") || "EGP"}{" "}
-                                {convert(toBeBookedItem.price * numberOfTickets)}
+                                {formatPrice(toBeBookedItem.price * numberOfTickets)}
                             </span>
                         </p>
                     </div>

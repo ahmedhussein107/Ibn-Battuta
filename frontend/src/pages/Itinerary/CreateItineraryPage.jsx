@@ -6,7 +6,8 @@ import Button from "../../components/Button.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance.js";
 import NavBar from "../../components/NavBar";
-
+import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
+import MapPopUp from "../../components/MapPopUp.jsx";
 const CreateItineraryPage = () => {
     const [name, setName] = useState("");
     const [language, setLanguage] = useState("");
@@ -23,7 +24,18 @@ const CreateItineraryPage = () => {
     const [selectedAccessibility, setSelectedAccessibility] = useState("");
     const [price, setPrice] = useState("");
     const [predefinedTags, setPredefinedTags] = useState([]);
+    const [selectPickupLocation, setSelectPickupLocation] = useState(false);
+    const [selectDropOffLocation, setSelectDropOffLocation] = useState(false);
 
+    const addPickUp = async () => {
+        console.log("PickUp");
+        // <MapPopUp popUpOpen={true} setPopUpOpen={true} />;
+        setSelectPickupLocation(true);
+    };
+    const addDropOff = async () => {
+        console.log("DropOff");
+        setSelectDropOffLocation(true);
+    };
     useEffect(() => {
         const fetchPredefinedTags = async () => {
             try {
@@ -79,6 +91,18 @@ const CreateItineraryPage = () => {
                 width: "100vw",
             }}
         >
+            <MapPopUp
+                popUpOpen={selectPickupLocation}
+                setPopUpOpen={setSelectPickupLocation}
+                setLongitude={setPickupLocationlongitude}
+                setLatitude={setPickupLocationlatitude}
+            />
+            <MapPopUp
+                popUpOpen={selectDropOffLocation}
+                setPopUpOpen={setSelectDropOffLocation}
+                setLongitude={setDropOffLocationlongitude}
+                setLatitude={setDropOffLocationlatitude}
+            />
             <div>
                 <img
                     src={i1}
@@ -235,7 +259,6 @@ const CreateItineraryPage = () => {
                                 type="date"
                                 value={date}
                                 onChange={(e) => {
-                                    // console.log(e.target.value);
                                     setDate(e.target.value);
                                 }}
                                 style={{
@@ -278,23 +301,22 @@ const CreateItineraryPage = () => {
                         >
                             Pin pickup location on map
                         </label>
-                        <div
-                            style={{
-                                width: "100%",
-                                height: "auto",
-                                backgroundColor: "#e0e0e0",
-                                borderRadius: "8px",
-                            }}
-                        >
-                            {
-                                <Map
-                                    setMarkerPosition={(position) => {
-                                        setPickupLocationlongitude(position.lng);
-                                        setPickupLocationlatitude(position.lat);
-                                    }}
-                                />
-                            }
-                        </div>
+                        {
+                            <button
+                                style={{
+                                    padding: "1vh 3vw",
+                                    backgroundColor: "#f5f5f5",
+                                    border: "none",
+                                    borderRadius: "1vh",
+                                    color: "#ff6600",
+                                    fontWeight: "bold",
+                                    cursor: "pointer",
+                                }}
+                                onClick={addPickUp}
+                            >
+                                Pin location
+                            </button>
+                        }
                     </div>
                     <div style={{ width: "40%" }}>
                         <label
@@ -311,18 +333,25 @@ const CreateItineraryPage = () => {
                             style={{
                                 width: "100%",
                                 height: "auto",
-                                backgroundColor: "#e0e0e0",
                                 borderRadius: "8px",
                                 marginLeft: "-4vw",
                             }}
                         >
                             {
-                                <Map
-                                    setMarkerPosition={(position) => {
-                                        setDropOffLocationlongitude(position.lng);
-                                        setDropOffLocationlatitude(position.lat);
+                                <button
+                                    style={{
+                                        padding: "1vh 3vw",
+                                        backgroundColor: "#f5f5f5",
+                                        border: "none",
+                                        borderRadius: "1vh",
+                                        color: "#ff6600",
+                                        fontWeight: "bold",
+                                        cursor: "pointer",
                                     }}
-                                />
+                                    onClick={addDropOff}
+                                >
+                                    Pin location
+                                </button>
                             }
                         </div>
                     </div>
@@ -492,8 +521,6 @@ const CreateItineraryPage = () => {
                         text="Next"
                         width={"10vw"}
                         handleClick={() => {
-                            console.log("date in createItinerary:", date);
-                            console.log("time in createItinerary:", time);
                             navigate("/tourguide/choose-activity", {
                                 state: {
                                     name: name,

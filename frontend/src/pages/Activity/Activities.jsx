@@ -8,22 +8,23 @@ import PriceRange from "../../components/PriceRange";
 import RatingRange from "../../components/RatingRange";
 import DatePicker from "../../components/DatePicker";
 import CheckboxList from "../../components/CheckBoxList";
-import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
 import CardActivity from "../../components/CardActivity";
 import ShareAndMark from "../../components/ShareAndMark";
 import { useNavigate } from "react-router-dom";
-
-// TODO: select better bounds
-const minPrice = 0;
-const maxPrice = 2000;
-
-import convert from "../../api/convert.js";
-import convertBack from "../../api/convertBack.js";
+import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
+import { CircularProgress } from "@mui/material";
 import Cookies from "js-cookie";
 
 const Activities = () => {
+    const currency = Cookies.get("currency") || "EGP";
+    const { convertPrice, isLoading } = useCurrencyConverter();
+
+    // TODO: select better bounds
+    const minPrice = convertPrice(0, "EGP", currency);
+    const maxPrice = convertPrice(2000, "EGP", currency);
+
     const [activities, setActivities] = useState([]);
     const [tags, setTags] = useState([""]);
     const [categories, setCategories] = useState([""]);
@@ -138,7 +139,10 @@ const Activities = () => {
         }
 
         if (priceRange[0] || priceRange[1]) {
-            query.price = priceRange[0] + "-" + priceRange[1]; // TODO: update it if converted
+            query.price =
+                convertPrice(priceRange[0], currency, "EGP") +
+                "-" +
+                convertPrice(priceRange[1], currency, "EGP");
         } else {
             delete query.price;
         }
@@ -229,6 +233,12 @@ const Activities = () => {
             setCheckedItems={setSelectedCategories}
         />,
     ];
+
+    if (isLoading) {
+        // TODO: add better loading animation
+        return <CircularProgress />;
+    }
+
     return (
         <div
             style={{
