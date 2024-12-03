@@ -269,17 +269,17 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
                     </Typography>
                 </Box>
 
-                {error && (
+                {error && !succeeded && (
                     <Alert severity="error" style={{ marginBottom: "1rem" }}>
                         {error}
                     </Alert>
                 )}
-                {processing && <CircularProgress />}
-                {succeeded && (
+                {succeeded && !error && (
                     <Alert severity="success" style={{ marginBottom: "1rem" }}>
                         Payment succeeded!
                     </Alert>
                 )}
+                {processing && !(error || succeeded) && <div>Processing...</div>}
             </form>
             <Box
                 sx={{
