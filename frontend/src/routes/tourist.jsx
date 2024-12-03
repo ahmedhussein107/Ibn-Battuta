@@ -9,6 +9,7 @@ import ShowOfferDetails from "../components/Hotels/ShowOfferDetails";
 import TouristProfilePage from "../pages/Tourist/TouristProfilePage";
 import Flights from "../pages/Flights/Flights";
 import FlightBookingDetails from "../pages/Flights/FlightBookingDetails";
+import Bookmarks from "../pages/Tourist/Bookmarks";
 
 const touristRoutes = [
     { path: "/tourist", element: <HomePage /> },
@@ -34,6 +35,7 @@ const touristRoutes = [
         path: "tourist/flight/flight-booking-details",
         element: <FlightBookingDetails />,
     },
+    { path: "tourist/bookmarks", element: <Bookmarks /> },
 ];
 
 export default touristRoutes;

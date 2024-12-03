@@ -30,11 +30,11 @@ const navbarUserItems = {
     Admin: adminNavbarItems,
 };
 
-const touristProfileDropdonw = [
+const touristProfileDropdown = [
     { "My Profile": "/tourist/profile" },
     { "My Bookings": "/tourist/bookings" },
     { "My Orders": "/tourist/orders" },
-    { "My Bookmarks": "link" },
+    { "My Bookmarks": "/tourist/bookmarks" },
     { "My Complaints": "/tourist/complaints" },
 ];
 
@@ -303,7 +303,7 @@ const NavBar = () => {
                             />
                             <div className="dropdown-content">
                                 {userType === "Tourist" ? (
-                                    touristProfileDropdonw.map((item, index) => {
+                                    touristProfileDropdown.map((item, index) => {
                                         const [label, link] = Object.entries(item)[0];
                                         return (
                                             <Link
