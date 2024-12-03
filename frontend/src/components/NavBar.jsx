@@ -293,7 +293,10 @@ const NavBar = () => {
                         )}
                         <div className="profile-dropdown">
                             <img
-                                src="https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
+                                src={
+                                    Cookies.get("profileImage") ||
+                                    "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
+                                }
                                 alt="Profile"
                                 className="profile-image"
                             />
