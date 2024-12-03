@@ -18,12 +18,14 @@ import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 
 const Itineraries = () => {
+    const [userType, setUserType] = useState("Guest");
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, convertPrice } = useCurrencyConverter(currency);
     const minPrice = convertPrice(0, "EGP", currency);
     const maxPrice = convertPrice(2000, "EGP", currency); // TODO: select better bounds
 
     const [itineraries, setItineraries] = useState([]);
+    const [bookmarkStatus, setBookmarkStatus] = useState({});
     const [tags, setTags] = useState([""]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
@@ -31,6 +33,14 @@ const Itineraries = () => {
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const cookieUserType = Cookies.get("userType") || "Guest";
+        console.log("User type from cookie:", cookieUserType);
+        if (cookieUserType && cookieUserType !== "undefined") {
+            setUserType(cookieUserType);
+        }
+    }, []);
 
     const fetchTags = async () => {
         try {
@@ -76,6 +86,27 @@ const Itineraries = () => {
         }
     };
 
+    const fetchBookmarkedStatus = async (query) => {
+        if (userType !== "Tourist") return;
+
+        const itineraryIDs = itineraries.map((itinerary) => {
+            return itinerary._id;
+        });
+        try {
+            const response = await axiosInstance.post(
+                `/bookmark/getBookmarkStatus/`,
+                {
+                    bookmarkIDs: itineraryIDs,
+                },
+                { withCredentials: true }
+            );
+            console.log("bookmarked status", response.data);
+            setBookmarkStatus(response.data);
+        } catch (error) {
+            console.error("Error fetching bookmark status:", error);
+        }
+    };
+
     useEffect(() => {
         fetchTags();
     }, []);
@@ -89,11 +120,16 @@ const Itineraries = () => {
         sortItineraries(itineraries);
     }, [sortBy]);
 
+    useEffect(() => {
+        fetchBookmarkedStatus();
+    }, [itineraries]);
+
     const buildQuery = () => {
         let query = {};
 
         if (selectedTags && selectedTags.length > 0) {
             query.tags = selectedTags.join("|");
+            console.log(query.tags);
         } else {
             delete query.tags;
         }
@@ -120,6 +156,29 @@ const Itineraries = () => {
         }
 
         return query;
+    };
+
+    const handleBookmark = async (itineraryID) => {
+        try {
+            const response = await axiosInstance.post(
+                `bookmark/bookmark`,
+                {
+                    bookmarkType: "Itinerary",
+                    bookmarkID: itineraryID,
+                    isBookmarked: bookmarkStatus[itineraryID],
+                },
+                { withCredentials: true }
+            );
+            console.log("Bookmark response:", response.data);
+            const oldStatus = bookmarkStatus[itineraryID];
+            setBookmarkStatus((prevStatus) => {
+                prevStatus[itineraryID] = !oldStatus;
+                console.log(prevStatus);
+                return { ...prevStatus };
+            });
+        } catch (error) {
+            console.error("Error bookmarking itinerary:", error);
+        }
     };
 
     const nonCollapsibleItems = [
@@ -225,6 +284,11 @@ const Itineraries = () => {
                                         styles={{ padding: "0.5vh" }}
                                         id={itinerary.id}
                                         direction={`/itinerary-details/${itinerary.id}`}
+                                        isBookmarked={bookmarkStatus[itinerary.id]}
+                                        showBookmark={userType === "Tourist"}
+                                        onSecondIconClick={() =>
+                                            handleBookmark(itinerary.id)
+                                        }
                                     />,
                                 ]}
                                 bottomButtons={[

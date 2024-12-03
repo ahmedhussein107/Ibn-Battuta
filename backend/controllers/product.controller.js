@@ -77,9 +77,12 @@ export const deleteProduct = async (req, res) => {
 
 export const searchProducts = async (req, res) => {
     try {
-        const { rating, ...rest } = req.query;
+        const { rating, sortBy, page, limit, ...rest } = req.query;
+        const _page = Math.max(1, parseInt(req.query.page) || 1);
+        const _limit = Math.max(1, parseInt(req.query.limit) || 10);
+        const toSkip = (_page - 1) * _limit;
         const query = buildFilter(rest);
-        const products = await Product.find({
+        let products = await Product.find({
             ...query,
             isArchived: false,
         });
@@ -87,12 +90,27 @@ export const searchProducts = async (req, res) => {
             const bounds = rating.split("-");
             const minRating = bounds[0] ? parseInt(bounds[0]) : -1;
             const maxRating = bounds[1] ? parseInt(bounds[1]) : 5;
-            const result = products.filter((product) => {
+            products = products.filter((product) => {
                 return product.rating >= minRating && product.rating <= maxRating;
             });
-            return res.status(200).json(result);
         }
-        return res.status(200).json(products);
+        if (sortBy) {
+            if (sortBy === "priceAsc") {
+                products.sort((a, b) => a.price - b.price);
+            } else if (sortBy === "priceDesc") {
+                products.sort((a, b) => b.price - a.price);
+            } else if (sortBy === "ratingAsc") {
+                products.sort((a, b) => a.rating - b.rating);
+            } else if (sortBy === "ratingDesc") {
+                products.sort((a, b) => b.rating - a.rating);
+            }
+        }
+        const count = products.length;
+        products = products.slice(toSkip, Math.min(toSkip + _limit, count));
+        return res.status(200).json({
+            result: products,
+            totalPages: count > 0 ? Math.ceil(count / _limit) : 1,
+        });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }

@@ -18,6 +18,7 @@ import { CircularProgress } from "@mui/material";
 import Cookies from "js-cookie";
 
 const Activities = () => {
+    const [userType, setUserType] = useState("Guest");
     const currency = Cookies.get("currency") || "EGP";
     const { convertPrice, isLoading } = useCurrencyConverter();
 
@@ -26,6 +27,7 @@ const Activities = () => {
     const maxPrice = convertPrice(2000, "EGP", currency);
 
     const [activities, setActivities] = useState([]);
+    const [bookmarkStatus, setBookmarkStatus] = useState({});
     const [tags, setTags] = useState([""]);
     const [categories, setCategories] = useState([""]);
     const [selectedTags, setSelectedTags] = useState([]);
@@ -38,6 +40,14 @@ const Activities = () => {
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const cookieUserType = Cookies.get("userType") || "Guest";
+        console.log("User type from cookie:", cookieUserType);
+        if (cookieUserType && cookieUserType !== "undefined") {
+            setUserType(cookieUserType);
+        }
+    }, []);
     const fetchTags = async () => {
         try {
             const response = await axiosInstance.get(`/tag/allTags/`);
@@ -61,6 +71,27 @@ const Activities = () => {
             setCategories(categs);
         } catch (error) {
             console.error("Error fetching Categories:", error);
+        }
+    };
+
+    const fetchBookmarkedStatus = async (query) => {
+        if (userType !== "Tourist") return;
+
+        const activityIDs = activities.map((activity) => {
+            return activity._id;
+        });
+        try {
+            const response = await axiosInstance.post(
+                `/bookmark/getBookmarkStatus/`,
+                {
+                    bookmarkIDs: activityIDs,
+                },
+                { withCredentials: true }
+            );
+            console.log("bookmarked status", response.data);
+            setBookmarkStatus(response.data);
+        } catch (error) {
+            console.error("Error fetching bookmark status:", error);
         }
     };
 
@@ -104,6 +135,10 @@ const Activities = () => {
         fetchTags();
         fetchCategories();
     }, []);
+
+    useEffect(() => {
+        fetchBookmarkedStatus();
+    }, [activities]);
 
     useEffect(() => {
         const query = buildQuery();
@@ -176,6 +211,29 @@ const Activities = () => {
         }
 
         return query;
+    };
+
+    const handleBookmark = async (activityID) => {
+        try {
+            const response = await axiosInstance.post(
+                `bookmark/bookmark`,
+                {
+                    bookmarkType: "Activity",
+                    bookmarkID: activityID,
+                    isBookmarked: bookmarkStatus[activityID],
+                },
+                { withCredentials: true }
+            );
+            console.log("Bookmark response:", response.data);
+            const oldStatus = bookmarkStatus[activityID];
+            setBookmarkStatus((prevStatus) => {
+                prevStatus[activityID] = !oldStatus;
+                console.log(prevStatus);
+                return { ...prevStatus };
+            });
+        } catch (error) {
+            console.error("Error bookmarking activity:", error);
+        }
     };
 
     const nonCollapsibleItems = [
@@ -296,6 +354,11 @@ const Activities = () => {
                                         height="1.2vw"
                                         styles={{ padding: "0.5vh" }}
                                         direction={`/activity-details/${activity.id}`}
+                                        isBookmarked={bookmarkStatus[activity.id]}
+                                        showBookmark={userType === "Tourist"}
+                                        onSecondIconClick={() =>
+                                            handleBookmark(activity.id)
+                                        }
                                     />,
                                 ]}
                                 bottomButtons={[
