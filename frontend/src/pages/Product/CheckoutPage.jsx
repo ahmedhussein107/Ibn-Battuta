@@ -9,7 +9,6 @@ import { CircularProgress } from "@mui/material";
 import Cookies from "js-cookie";
 import { useFunctionContext } from "../../contexts/FunctionContext";
 import { useLocation } from "react-router-dom";
-import { set } from "mongoose";
 
 const Checkout = ({ listOfItems }) => {
     const [tourist, setTourist] = useState(null);
