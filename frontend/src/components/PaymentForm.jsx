@@ -26,7 +26,10 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
         const success = async () => {
             await handleSuccess();
         };
-        if (succeeded) success();
+        if (succeeded) {
+            console.log("gowa el nagah el fashel");
+            success();
+        }
     }, [succeeded]);
 
     useEffect(() => {
@@ -40,7 +43,10 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
         };
         createPayment();
         return async () => {
-            if (!succeeded) await handleFailure();
+            if (!succeeded) {
+                console.log("gowa el fashal");
+                await handleFailure();
+            }
         };
     }, []);
 
@@ -68,6 +74,7 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
             setError(result.error.message);
             setProcessing(false);
             setSucceeded(false);
+            console.log("ta7t set succeeded false");
         } else {
             setSucceeded(true);
         }

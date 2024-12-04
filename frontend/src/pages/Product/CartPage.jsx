@@ -10,7 +10,6 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 
 const CartPage = () => {
     const navigate = useNavigate();
-    const { setSuccess, setFailure } = useFunctionContext();
     const [cart, setCart] = useState([]);
 
     usePageHeader(background, "Cart", null, null);
@@ -23,24 +22,7 @@ const CartPage = () => {
     }, []);
 
     const handleCheckoutClick = async () => {
-        try {
-            const response = await axiosInstance.post(
-                "/order/createOrder",
-                {},
-                {
-                    withCredentials: true,
-                }
-            );
-            const handleFailure = async () => {
-                await axiosInstance.delete(`order/deleteOrder/${response.data._id}`);
-            };
-            setFailure(handleFailure);
-
-            navigate("/checkout", { state: { order: response.data } });
-            console.log(response.data);
-        } catch (error) {
-            console.log(error.message);
-        }
+        navigate("/checkout");
     };
 
     return (
@@ -108,6 +90,7 @@ const CartPage = () => {
                     Cart
                 </span>
             </button>
+            <button onClick={() => navigate("/tourist/checkout")}>checkout</button>
         </div>
     );
 };
