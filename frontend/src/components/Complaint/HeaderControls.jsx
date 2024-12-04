@@ -49,7 +49,6 @@ const HeaderControls = ({ onFilterChange, selectedFilter, onSort, isSorted }) =>
                     </>
                 )}
             </div>
-            <div className="admin-controls-seprator"></div>
         </>
     );
 };
