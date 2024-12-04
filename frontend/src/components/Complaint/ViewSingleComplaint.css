@@ -1,8 +1,24 @@
+.view-single-complaint {
+    border: 1px solid black;
+    border-radius: 50px;
+    width: 75%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 40vh;
+    padding: 5vmin;
+}
+
 .complaint-container {
-    padding-top: 20vh;
-    width: 70%;
+    width: 90%;
 }
 
 .comment-list {
     width: 50%;
+}
+.complaint-back-button {
+    margin: 5vh;
+    background-color: var(--accent-color);
+    border-radius: 50px;
 }
