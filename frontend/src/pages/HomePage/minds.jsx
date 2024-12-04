@@ -51,7 +51,7 @@ const Minds = () => {
                     fontWeight: "bold",
                     fontFamily: "serif",
                     textAlign: "center",
-                    zIndex: 2,
+                    zIndex: 1,
                     position: "absolute",
                     width: "100%",
                     userSelect: "none",
@@ -61,7 +61,7 @@ const Minds = () => {
                 Curious Minds
             </h2>
 
-            <img
+            {/* <img
                 src={i1}
                 alt="Map Background"
                 style={{
@@ -70,86 +70,98 @@ const Minds = () => {
                     pointerEvents: "none",
                     userSelect: "none",
                 }}
-            />
+            /> */}
 
             <div
                 style={{
-                    position: "absolute",
-                    top: "12vh",
-                    left: "2%",
-                    right: "5%",
+                    width: "100vw",
+                    height: "80vh",
+                    backgroundImage: `url(${i1})`,
+                    backgroundSize: "100% 100%",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
                     borderRadius: "10px",
-                    padding: "40px",
-                    justifyContent: "center",
                 }}
             >
-                {questions.map((item, index) => (
-                    <div
-                        key={index}
-                        style={{
-                            marginBottom: "10px",
-                            background: "#fff",
-                            padding: "17px 23px",
-                            borderRadius: "5px",
-                            cursor: "pointer",
-                            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-                            overflow: "hidden",
-                            transition: "height 0.3s ease",
-                        }}
-                        onClick={() => toggleQuestion(index)}
-                    >
+                <div
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    {questions.map((item, index) => (
                         <div
+                            key={index}
                             style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                            }}
-                        >
-                            <summary
-                                style={{
-                                    fontSize: "1.5rem",
-                                    color: "#A0522D",
-                                    outline: "none",
-                                    userSelect: "none",
-                                    listStyle: "none",
-                                    cursor: "pointer",
-                                    margin: 0,
-                                }}
-                            >
-                                {item.question}
-                            </summary>
-                            {openIndex === index ? (
-                                <FaChevronUp
-                                    style={{ fontSize: "1.2rem", color: "#A0522D" }}
-                                />
-                            ) : (
-                                <FaChevronDown
-                                    style={{ fontSize: "1.2rem", color: "#A0522D" }}
-                                />
-                            )}
-                        </div>
-                        <div
-                            style={{
-                                maxHeight: openIndex === index ? "200px" : "0",
+                                width: "80%",
+                                marginBottom: "10px",
+                                background: "#fff",
+                                padding: "0.8rem 2rem",
+                                borderRadius: "5px",
+                                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                                transition: "height 0.2s ease-in-out",
                                 overflow: "hidden",
-                                transition: "max-height 0.5s ease",
+                                cursor: "pointer",
                             }}
+                            onClick={() => toggleQuestion(index)}
                         >
-                            <p
+                            <div
                                 style={{
-                                    marginTop: "10px",
-                                    fontSize: "1rem",
-                                    color: "#555",
-                                    padding: openIndex === index ? "10px 0" : "0",
-                                    opacity: openIndex === index ? 1 : 0,
-                                    transition: "opacity 0.5s ease",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
                                 }}
                             >
-                                {item.answer}
-                            </p>
+                                <summary
+                                    style={{
+                                        fontSize: "1.5rem",
+                                        color: "#A0522D",
+                                        outline: "none",
+                                        userSelect: "none",
+                                        listStyle: "none",
+                                        cursor: "pointer",
+                                        margin: 0,
+                                    }}
+                                >
+                                    {item.question}
+                                </summary>
+                                {openIndex === index ? (
+                                    <FaChevronUp
+                                        style={{ fontSize: "1.2rem", color: "#A0522D" }}
+                                    />
+                                ) : (
+                                    <FaChevronDown
+                                        style={{ fontSize: "1.2rem", color: "#A0522D" }}
+                                    />
+                                )}
+                            </div>
+                            <div
+                                style={{
+                                    maxHeight: openIndex === index ? "200px" : "0",
+                                    overflow: "hidden",
+                                    transition: "max-height 0.5s ease",
+                                }}
+                            >
+                                <p
+                                    style={{
+                                        marginTop: "10px",
+                                        fontSize: "1rem",
+                                        color: "#555",
+                                        padding: openIndex === index ? "10px 0" : "0",
+                                        opacity: openIndex === index ? 1 : 0,
+                                        transition: "opacity 0.5s ease",
+                                    }}
+                                >
+                                    {item.answer}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
     );
