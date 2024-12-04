@@ -7,6 +7,7 @@ import Sorter from "../../components/Sorter.jsx";
 import PriceRange from "../../components/PriceRange.jsx";
 import RatingRange from "../../components/RatingRange.jsx";
 import Footer from "../../components/Footer.jsx";
+import { useNavigate } from "react-router-dom"; //REMOVE
 import shopBackground from "../../assets/backgrounds/shopBackground.png";
 import ShareAndMark from "../../components/ShareAndMark.jsx";
 import CardProduct from "../../components/CardProduct.jsx";
@@ -30,20 +31,21 @@ const Shop = () => {
 	const minPrice = convertPrice(0, "EGP", currency);
 	const maxPrice = convertPrice(2000, "EGP", currency);
 
-	const [products, setProducts] = useState([]);
-	const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-	const [ratingRange, setRatingRange] = useState([null, 5]);
-	const [sortBy, setSortBy] = useState("priceAsc");
-	const [name, setName] = useState("");
-	const [buyingPopUpOpen, setBuyingPopUpOpen] = useState(false);
-	const [selectedProduct, setSelectedProduct] = useState({
-		_id: "",
-		name: "",
-		description: "",
-		price: 0,
-		rating: 0,
-	});
-	const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const [products, setProducts] = useState([]);
+    const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
+    const [ratingRange, setRatingRange] = useState([null, 5]);
+    const [sortBy, setSortBy] = useState("priceAsc");
+    const [name, setName] = useState("");
+    const [buyingPopUpOpen, setBuyingPopUpOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState({
+        _id: "",
+        name: "",
+        description: "",
+        price: 0,
+        rating: 0,
+    });
+    const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const navigate = useNavigate(); //REMOVE
 
 	const [selectedPage, setSelectedPage] = useState("Shop");
 	const [wishlistStatus, setWishlistStatus] = useState({});
@@ -130,14 +132,13 @@ const Shop = () => {
 				{
 					productID: selectedProduct._id,
 					count: selectedQuantity,
-					price: selectedProduct.price * selectedQuantity,
 				},
 				{ withCredentials: true }
 			);
 			setBuyingPopUpOpen(false);
 		} catch (error) {
-			console.error("Error creating order:", error);
-			alert("Error creating order. Please try again.");
+			console.error("Error adding to cart:", error);
+			alert("Error adding to cart. Please try again.");
 		}
 	};
 
@@ -197,10 +198,6 @@ const Shop = () => {
 		<RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
 	];
 
-	if (isLoading) {
-		return <CircularProgress />;
-	}
-
 	const handleAddToWishlist = async (productID) => {
 		try {
 			const response = await axiosInstance.post(
@@ -222,6 +219,10 @@ const Shop = () => {
 			console.error("Error Add product to wishlist:", error);
 		}
 	};
+
+	if (isLoading) {
+		return <CircularProgress />;
+	}
 
 	return (
 		<div
@@ -321,31 +322,31 @@ const Shop = () => {
 				</button>
 			</div>
 
-			<PopUp
-				isOpen={buyingPopUpOpen}
-				setIsOpen={setBuyingPopUpOpen}
-				headerText={"Choose the quantity"}
-				handleSubmit={async () => {
-					await handleBuyingPopUpOpen();
-				}}
-				actionText="Buy"
-			>
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "column",
-						alignItems: "center",
-					}}
-				>
-					<p>{selectedProduct.name}</p>
-					<p>
-						Price:
-						{formatPrice(selectedProduct.price)}
-					</p>
-					<p>
-						Total Price:
-						{formatPrice(selectedProduct.price * selectedQuantity)}
-					</p>
+            <PopUp
+                isOpen={buyingPopUpOpen}
+                setIsOpen={setBuyingPopUpOpen}
+                headerText={"Choose the quantity"}
+                handleSubmit={async () => {
+                    await handleBuyingPopUpOpen();
+                }}
+                actionText="Add to cart"
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    <p>{selectedProduct.name}</p>
+                    <p>
+                        Price:
+                        {formatPrice(selectedProduct.price)}
+                    </p>
+                    <p>
+                        Total Price:
+                        {formatPrice(selectedProduct.price * selectedQuantity)}
+                    </p>
 
 					<QuantityControls
 						selectedQuantity={selectedQuantity}

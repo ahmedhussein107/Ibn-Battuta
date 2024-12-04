@@ -26,6 +26,8 @@ import generalRouter from "./routes/general.router.js";
 import touristBookmarkRouter from "./routes/touristBookmark.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+
+// services
 import amadeusHotelsRouter from "./services/hotels.js";
 import amadeusFlightsRouter from "./services/flights.js";
 import touristCartRouter from "./routes/touristCart.router.js";
@@ -33,6 +35,8 @@ import touristWishlistRouter from "./routes/touristWishlist.router.js";
 
 import { setupPromoCodeScheduledJobs } from "./controllers/promocode.controller.js";
 
+import stripeRouter from "./services/stripe.js";
+// environment variables
 import { PORT, MONGO_URI } from "./config/config.js";
 
 import expressWs from "express-ws";
@@ -61,8 +65,10 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
 app.use(express.json());
 
+app.use("/api/payment", stripeRouter);
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);
 app.use("/api/admin", adminRouter);

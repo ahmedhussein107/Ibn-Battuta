@@ -50,8 +50,9 @@ function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <HeaderProvider>
-                <Router>
-                    <Header />
+                <FunctionProvider>
+                    <Router>
+                        <Header />
 
                     <Routes>
                         {returnUserRoutes(authRoutes)}

@@ -9,7 +9,9 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
 import { uploadFile } from "../../api/firebase";
-import convert from "../../api/convert";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import { CircularProgress } from "@mui/material";
+
 const PageWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -245,6 +247,9 @@ export default function TouristProfilePage() {
         currency: "",
     });
     const navigate = useNavigate();
+
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
     useEffect(() => {
         axiosInstance
@@ -563,6 +568,10 @@ export default function TouristProfilePage() {
             });
     };
 
+    if (isLoading) {
+        return <CircularProgress />;
+    }
+
     return (
         <PageWrapper>
             <div
@@ -868,7 +877,7 @@ export default function TouristProfilePage() {
                         </WalletHeader>
 
                         <PointsSection>
-                            <p>Balance: {convert(tourist?.wallet || 0)}</p>
+                            <p>Balance: {formatPrice(tourist?.wallet || 0)}</p>
                             <h3>My Points</h3>
                             <p>Points: {tourist?.loyalityPoints || 0}</p>
                             Level: {currentLevel}

@@ -23,6 +23,7 @@ const bookingSchema = mongoose.Schema(
         totalPrice: { type: Number, required: true },
         pointsAdded: { type: Number, required: true },
         isInItinerary: { type: Boolean, default: false },
+        isComplete: { type: Boolean, default: false },
         ratingID: { type: mongoose.Schema.Types.ObjectId, ref: "Rating" },
         ratingTourGuideID: { type: mongoose.Schema.Types.ObjectId, ref: "Rating" },
         eventStartDate: Date,
