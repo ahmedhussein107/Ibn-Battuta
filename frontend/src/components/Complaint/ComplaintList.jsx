@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
 import ComplaintCard from "./ComplaintCard";
-import AdminControls from "./AdminControls";
-import ComplaintFormPopup from "./NewComplaintPopUp";
+import HeaderControls from "./HeaderControls";
 import "./ComplaintList.css";
 import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../Pagination";
-import complaintHeader from "../../assets/backgrounds/complaintHeader.png";
-
 import Button from "../Button";
 import Cookies from "js-cookie";
-import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp";
 import usePageHeader from "../Header/UseHeaderPage";
 
 const ComplaintList = () => {
@@ -18,13 +14,9 @@ const ComplaintList = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [selectedFilter, setSelectedFilter] = useState("all");
     const [isSorted, setIsSorted] = useState(false);
-    const [isCreateOpen, setIsCreateOpen] = useState(false);
     const itemsPerPage = 4;
     const userType = Cookies.get("userType") || "Tourist";
-    usePageHeader(
-        "https://cdn.pixabay.com/photo/2017/06/04/16/31/stars-2371478_1280.jpg",
-        "Complaints Page"
-    );
+    usePageHeader("/complaints.png", "Complaints Page");
 
     useEffect(() => {
         fetchComplaints(currentPage);
@@ -68,31 +60,14 @@ const ComplaintList = () => {
 
     return (
         <div className="complaint-list-container">
-            {userType === "Admin" && (
-                <AdminControls
-                    onFilterChange={handleFilter}
-                    selectedFilter={selectedFilter}
-                    onSort={handleSort}
-                    isSorted={isSorted}
-                />
-            )}
-            {userType === "Tourist" && (
-                <>
-                    <button
-                        className="create-complaint-button"
-                        onClick={() => setIsCreateOpen(true)}
-                    >
-                        <AddCircleOutlineSharpIcon
-                            sx={{ marginRight: "5px", verticalAlign: "middle" }}
-                        />
-                        File a Complaint
-                    </button>
-                    <ComplaintFormPopup
-                        isOpen={isCreateOpen}
-                        setIsOpen={setIsCreateOpen}
-                    />
-                </>
-            )}
+            <HeaderControls
+                onFilterChange={handleFilter}
+                selectedFilter={selectedFilter}
+                onSort={handleSort}
+                isSorted={isSorted}
+            />
+            <div className="header-controls-seprator"></div>
+
             <div className="complaint-grid">
                 {complaints.map((complaint) => (
                     <ComplaintCard
