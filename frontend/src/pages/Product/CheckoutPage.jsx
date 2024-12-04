@@ -182,14 +182,14 @@ const Checkout = () => {
                 await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
                     isWalletUsed: isWalletUsed,
                 });
-                navigate("/bookings");
+                navigate("/tourist/bookings");
             };
 
             if (paymentMethod === "card") {
                 setFailure(handleFailure);
                 setSuccess(handleSuccess);
                 const amount = Number(order.totalPrice);
-                navigate("/payment", {
+                navigate("/tourist/payment", {
                     state: {
                         amount,
                         currency,
