@@ -46,6 +46,41 @@ const getOrderData = () => {
     //           3- list of (productTypeID, totaltickets, solddtickets)
 };
 
+const getEventNameWithData = async (eventType = "Activity", userId, userType) => {
+    const events = await mongoose.model(eventType).find({
+        [`${userType.toLowerCase()}ID`]: userId,
+    });
+
+    return events.map(async (event) => {
+        const bookedTickets = await Booking.find({
+            bookingType: eventType,
+            typeId: event._id,
+        }).countDocuments();
+        const revenue = await Booking.aggregate([
+            {
+                $match: { bookingType: eventType, typeId: event._id },
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalRevenue: { $sum: "$totalPrice" },
+                },
+            },
+        ]);
+
+        const totalRevenue = revenue.length > 0 ? revenue[0].totalRevenue : 0; // case with no matching documents
+        let _event = {
+            id: event._id,
+            name: event.name,
+            totalTickets: event?.initialFreeSpots,
+            startDate: event.startDate,
+            bookedTickets: bookedTickets,
+            revenue: totalRevenue,
+        };
+        return _event;
+    });
+};
+
 const getProductDatePriceData = async (userId, userType) => {
     // TODO: update when order becomes a list of product
     try {

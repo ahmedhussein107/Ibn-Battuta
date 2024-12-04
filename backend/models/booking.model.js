@@ -77,5 +77,7 @@ bookingSchema.pre("updateOne", validateUpdateReferences);
 bookingSchema.pre("findByIdAndUpdate", validateUpdateReferences);
 
 bookingSchema.index({ touristID: 1 });
+bookingSchema.index({ bookingType: 1 });
+bookingSchema.index({ typeId: 1 });
 
 export default mongoose.model("Booking", bookingSchema);

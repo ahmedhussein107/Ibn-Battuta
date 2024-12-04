@@ -25,7 +25,7 @@ const activitySchema = new Schema(
         isFlagged: { type: Boolean, default: false },
         sumOfRatings: { type: Number, default: 0 },
         initialFreeSpots: { type: Number, default: 0, required: true },
-        freeSpots: { type: Number, default: initialFreeSpots, required: true },
+        freeSpots: { type: Number, required: true },
         specialDiscount: { type: Number, default: 0 },
     },
     { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
