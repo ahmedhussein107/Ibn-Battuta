@@ -26,6 +26,7 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
             await handleSuccess();
         };
         if (succeeded) {
+            localStorage.setItem("success", "true");
             console.log("gowa el nagah el fashel");
             success();
         }
@@ -41,10 +42,15 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
             setClientSecret(response.data.clientSecret);
         };
         createPayment();
+    }, []);
+
+    useEffect(() => {
         return async () => {
-            if (!succeeded) {
+            if (localStorage.getItem("success") !== "true") {
                 console.log("gowa el fashal");
                 await handleFailure();
+            } else {
+                localStorage.removeItem("success");
             }
         };
     }, []);

@@ -146,7 +146,7 @@ const Checkout = () => {
     //         await axiosInstance.patch(`/booking/completeBooking/${bookingId}`, {
     //             isWalletUsed: false,
     //         });
-    //         navigate("/bookings", { state: { tab: "Activities" } });
+    //         navigate("/tourist/bookings", { state: { tab: "Activities" } });
     //     };
     //     const handleFailure = async () => {
     //         await axiosInstance.delete(`booking/deleteBooking/${bookingId}`);
@@ -154,7 +154,7 @@ const Checkout = () => {
     //     const amount = 1000;
     //     setSuccess(handleSuccess);
     //     setFailure(handleFailure);
-    //     navigate("/payment", {
+    //     navigate("/tourist/payment", {
     //         state: {
     //             amount,
     //             currency,
