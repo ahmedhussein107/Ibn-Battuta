@@ -193,7 +193,7 @@ const MyActivity = () => {
                     }}
                     variant="outlined"
                     onClick={() => {
-                        navigate("/create-activity");
+                        navigate("/advertiser/create-activity");
                     }}
                 >
                     <AddIcon sx={{ fontSize: "3vh" }} />

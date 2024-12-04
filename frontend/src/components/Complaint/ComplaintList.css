@@ -10,21 +10,20 @@
 
 .complaint-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns */
-    gap: 16px; /* Space between each card */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
     width: 100%;
     margin-bottom: 20px;
 }
 
-.create-complaint-button {
-    margin-bottom: calc(2 * var(--spacing-large));
-    background-color: var(--background-color);
-    color: black;
-    border: 1px solid black;
+.complaint-grid > :nth-last-child(1):nth-child(odd) {
+    grid-column: span 2;
+    justify-self: center;
+    width: 45%;
 }
-
-.create-complaint-button:hover {
-    background-color: var(--secondary-color);
-    color: white;
-    border: 1px solid black;
+.header-controls-seprator {
+    height: 1px;
+    width: 100%;
+    background-color: black;
+    margin-bottom: 1.5vh;
 }
