@@ -29,6 +29,7 @@ const bookingSchema = mongoose.Schema(
     },
     { timestamps: true }
 );
+bookingSchema.index({ createdAt: 1 });
 
 bookingSchema.pre("save", async function (next) {
     try {
