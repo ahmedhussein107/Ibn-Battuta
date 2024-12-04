@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import Footer from "../../components/Footer";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 import axiosInstance from "../../api/axiosInstance";
 import bookingsBackground from "../../assets/backgrounds/checkoutbg.png";
-import Footer from "../../components/Footer";
 import Button from "../../components/Button";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
 import { useNavigate } from "react-router-dom";
@@ -9,16 +11,13 @@ import { CircularProgress } from "@mui/material";
 import Cookies from "js-cookie";
 import { useFunctionContext } from "../../contexts/FunctionContext";
 import { useLocation } from "react-router-dom";
-import { set } from "mongoose";
 
-const Checkout = ({ listOfItems }) => {
+const Checkout = () => {
     const [tourist, setTourist] = useState(null);
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
     const [redeemValue, setRedeemValue] = useState(0);
-    const [checkoutSucceed, setCheckoutSucceed] = useState(false);
-    const [paymentMethod, setPaymentMethod] = useState("cash on delivery");
+    const [paymentMethod, setPaymentMethod] = useState("");
     const [isWalletUsed, setIsWalletUsed] = useState(false);
-    const [wallet, setWallet] = useState(0);
 
     const [formData, setFormData] = useState({
         mobile: "",
@@ -26,18 +25,11 @@ const Checkout = ({ listOfItems }) => {
         selectedAddress: "",
     });
     const location = useLocation();
-    const order = location.state.order;
 
     const navigate = useNavigate();
-    const { setSuccess, handleFailure } = useFunctionContext();
+    const { setSuccess, setFailure } = useFunctionContext();
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
-
-    useEffect(() => {
-        return async () => {
-            if (!checkoutSucceed) await handleFailure();
-        };
-    }, []);
 
     useEffect(() => {
         axiosInstance
@@ -50,7 +42,7 @@ const Checkout = ({ listOfItems }) => {
                     selectedAddress:
                         response.data.address.length > 0
                             ? response.data.address[0].name
-                            : "",
+                            : "Please Add Your address",
                 });
             })
             .catch((error) => {
@@ -171,29 +163,45 @@ const Checkout = ({ listOfItems }) => {
     //     });
     // };
 
-    useEffect(() => {
-        if (checkoutSucceed) {
-            const amount = Number(order.totalPrice);
-            navigate("/payment", {
-                state: {
-                    amount,
-                    currency,
-                    headerImage: bookingsBackground,
-                },
-            });
-        }
-    }, [checkoutSucceed]);
-
     const handleNext = async () => {
-        const handleSuccess = async () => {
-            await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
-                isWalletUsed: false,
-                methodUsed: paymentMethod,
-                address: formData.selectedAddress,
-            });
-        };
-        setSuccess(handleSuccess);
-        setCheckoutSucceed(true);
+        try {
+            const response = await axiosInstance.post(
+                "/order/createOrder",
+                { method: paymentMethod, address: formData.selectedAddress },
+                {
+                    withCredentials: true,
+                }
+            );
+            const order = response.data.order;
+
+            const handleFailure = async () => {
+                await axiosInstance.delete(`order/deleteOrder/${order._id}`);
+            };
+
+            const handleSuccess = async () => {
+                await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
+                    isWalletUsed: isWalletUsed,
+                });
+                navigate("/bookings");
+            };
+
+            if (paymentMethod === "card") {
+                setFailure(handleFailure);
+                setSuccess(handleSuccess);
+                const amount = Number(order.totalPrice);
+                navigate("/payment", {
+                    state: {
+                        amount,
+                        currency,
+                        headerImage: bookingsBackground,
+                    },
+                });
+            } else {
+                await handleSuccess();
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
     };
 
     const handlePaymentMethodChange = (event) => {
@@ -205,16 +213,198 @@ const Checkout = ({ listOfItems }) => {
         setIsWalletUsed(event.target.checked);
     };
 
-    useEffect(() => {
-        console.log(formData.selectedAddress);
-    }, [formData.selectedAddress]);
-
     if (isLoading) {
         return <CircularProgress />;
     }
 
     return (
         <div>
+            <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+                <div style={backgroundStyle}>
+                    <h1 style={headerStyle}>CheckOut</h1>
+                </div>
+                {/* the first part of the page */}
+                <div>
+                    <h2
+                        style={{
+                            color: "#9c4f21",
+                            marginLeft: "2vw",
+                            marginTop: "1vh",
+                            fontSize: "40px",
+                        }}
+                    >
+                        Delivery and Payment
+                    </h2>
+                    <hr
+                        style={{
+                            width: "95%",
+                            color: "#9c4f21",
+                            margin: "1vh 1vh auto",
+                            marginLeft: "2vw",
+                        }}
+                    />
+                </div>
+                {/* the title and the horizontal line for the first part of the page */}
+
+                <div
+                    style={{
+                        display: "flex",
+                        direction: "row",
+                        justifyContent: "space-between",
+                        padding: "1% 0",
+                        marginBottom: "2vh",
+                    }}
+                >
+                    {/* Right componentthe first part of the form with the contact details and the delivery address */}
+                    <div>
+                        <div
+                            style={{
+                                fontFamily: "Inder",
+                                marginLeft: "2vw",
+                            }}
+                        >
+                            <p> Contact Mobile Number:</p>
+                            <Box
+                                component="form"
+                                sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+                                noValidate
+                                autoComplete="off"
+                                required
+                            >
+                                <TextField
+                                    required
+                                    id="outlined-required"
+                                    label="Mobile Number"
+                                    name="mobile"
+                                    value={formData.mobile}
+                                    onBlur={handleSubmit}
+                                    onChange={handleChange}
+                                    style={{
+                                        width: "20vw",
+                                        height: "4vh",
+                                        marginTop: "1vh",
+                                    }}
+                                />
+                            </Box>
+                        </div>
+                        <div
+                            style={{
+                                fontFamily: "Inder",
+                                marginLeft: "2vw",
+                                marginTop: "2vh",
+                            }}
+                        >
+                            <p> Delivery Address*:</p>
+                            <select
+                                name="address"
+                                value={formData.selectedAddress}
+                                onChange={handleSelectAddress}
+                                style={{
+                                    width: "20vw", // Adjust width as needed
+                                    height: "6vh", // Set a specified height for consistency
+                                    marginTop: "1vh", // Space above the select
+                                    padding: "10px", // Padding for the select
+                                    border: "1px solid #ccc", // Border styling
+                                    borderRadius: "4px", // Rounded corners
+                                    boxSizing: "border-box", // Include padding/border in width/height
+                                    display: "block", // Make sure it's a block element
+                                    marginLeft: "0.5vw",
+                                }}
+                            >
+                                {formData.address.map((address, index) => (
+                                    <option key={index} value={address.name}>
+                                        {address.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                direction: "row",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    fontFamily: "Inder",
+                                    marginLeft: "2vw",
+                                    marginTop: "2vh",
+                                    color: "#9c4f21",
+                                    fontSize: "30px",
+                                }}
+                            >
+                                Payment Method:
+                            </div>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    marginLeft: "1vw",
+                                    marginTop: "2vh",
+                                }}
+                            >
+                                <label style={{ marginRight: "20px" }}>
+                                    <input
+                                        type="radio"
+                                        name="paymentMethod"
+                                        value="cash on delivery"
+                                        checked={paymentMethod === "cash on delivery"}
+                                        onChange={handlePaymentMethodChange}
+                                        style={{
+                                            marginRight: "5px",
+                                            accentColor: "#9c4f21",
+                                        }}
+                                    />
+                                    Cash On Delivery
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="paymentMethod"
+                                        value="card"
+                                        checked={paymentMethod === "card"}
+                                        onChange={handlePaymentMethodChange}
+                                        style={{
+                                            marginRight: "5px",
+                                            accentColor: "#9c4f21",
+                                        }}
+                                    />
+                                    Card
+                                </label>
+                            </div>
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                marginTop: "1vh",
+                                marginLeft: "2vw",
+                            }}
+                        >
+                            Use Wallet Balance
+                            <input
+                                type="checkbox"
+                                style={{
+                                    marginLeft: "10px",
+                                    accentColor: "#9c4f21",
+                                    height: "1.5vh",
+                                    width: "1.5vw",
+                                }}
+                                checked={isWalletUsed}
+                                onChange={handleUseWallet}
+                            />
+                        </div>
+                    </div>
+                    <Button stylingMode="2" text="Next" handleClick={handleNext} />
+                    {/* Left componentthe first part of the form with the promocode and payment details */}
+                    <div></div>
+                </div>
+                <Footer />
+            </div>
+        </div>
+
+        /* <div>
             <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
                 <div style={backgroundStyle}>
                     <h1 style={headerStyle}>CheckOut</h1>
@@ -278,7 +468,6 @@ const Checkout = ({ listOfItems }) => {
                                 display: "block", // Make sure it's a block element
                             }}
                         >
-                            {/* Use map to populate the options dynamically */}
                             {formData.address.map((address, index) => (
                                 <option key={index} value={address.name}>
                                     {address.name}
@@ -469,8 +658,7 @@ const Checkout = ({ listOfItems }) => {
                 </div>
                 <Footer />
             </div>
-            {/* <div style={{ fontFamily: "Inder" }}>Promo Code</div> */}
-        </div>
+        </div>*/
     );
 };
 

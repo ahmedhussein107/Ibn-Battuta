@@ -8,12 +8,12 @@ export const createOrder = async (req, res) => {
     try {
         const buyer = req.user.userId;
         const tourist = await Tourist.findById(buyer);
+        const { method, address } = req.body;
         let totalPrice = 0;
         let productsList = [];
         const cart = await TouristCart.find({ touristID: tourist._id }).populate(
             "productID"
         );
-        console.log(1);
         for (let entry of cart) {
             const product = entry.productID;
             const count = entry.count;
@@ -25,14 +25,14 @@ export const createOrder = async (req, res) => {
             product.quantity -= count;
             product.numberOfSales += count;
             productsList.push({ product: product._id, count, price });
-            console.log(product._id);
         }
-        console.log(2);
-        console.log(3);
-        console.log(productsList);
-        console.log({ buyer, purchases: productsList, totalPrice });
-        const order = await Order.create({ buyer, purchases: productsList, totalPrice });
-        console.log(4);
+        const order = await Order.create({
+            buyer,
+            purchases: productsList,
+            totalPrice,
+            method,
+            address,
+        });
         for (let entry of cart) {
             const product = entry.productID;
             await product.save();
@@ -45,20 +45,19 @@ export const createOrder = async (req, res) => {
 
 export const completeOrder = async (req, res) => {
     try {
+        console.log("gowa completee order");
         const order = await Order.findById(req.params.id).populate("purchases.product");
-        const { isWalletUsed, methodUsed, address } = req.body;
+        const { isWalletUsed } = req.body;
         const tourist = await Tourist.findById(order.buyer);
         if (isWalletUsed) {
             tourist.wallet = Math.max(0, tourist.wallet - booking.totalPrice);
             await tourist.save();
         }
-        order.address = address;
-        order.method = methodUsed;
         order.isComplete = true;
         await order.save();
-        res.json(order);
+
         for (let purchase of order.purchases) {
-            const product = purchase.productID;
+            const product = purchase.product;
             if (product.quantity == 0) {
                 sendNotificationToEmailAndSystem(
                     "Product out of stock",
@@ -71,6 +70,7 @@ export const completeOrder = async (req, res) => {
             }
         }
         const cart = await TouristCart.deleteMany({ touristID: tourist._id });
+        res.status(200).json({ message: "Order completed successfully", order });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -87,14 +87,15 @@ export const getOrders = async (req, res) => {
 
 export const deleteOrder = async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id);
+        console.log("betro7 failure lehhhhhh");
+        const order = await Order.findById(req.params.id).populate("purchases.product");
         const tourist = await Tourist.findById(order.buyer);
 
         if (order.isComplete && order.status === "delivered") {
             return res.json({ message: "Can't delete a delivered order" });
         }
         for (let purchase of order.purchases) {
-            const product = purchase.productID;
+            const product = purchase.product;
             product.quantity += purchase.count;
             product.numberOfSales -= purchase.count;
             await product.save();
