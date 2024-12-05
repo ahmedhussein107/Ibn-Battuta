@@ -8,6 +8,7 @@ import CommentPopUp from "./NewCommentPopUp";
 import Comment from "./Comment";
 import usePageHeader from "../Header/UseHeaderPage";
 import { useNavigate } from "react-router-dom";
+import Button from "../Button";
 const ViewSingleComplaint = () => {
     usePageHeader("/complaints.png", "Complaint Page");
     const navigate = useNavigate();
@@ -86,10 +87,13 @@ const ViewSingleComplaint = () => {
                 )}
             </div>
 
-            <button className="complaint-back-button" onClick={() => navigate(-1)}>
-                {" "}
-                Back{" "}
-            </button>
+            <Button
+                handleClick={() => navigate(-1)}
+                stylingMode="always-light"
+                text="Back"
+                height="20px"
+                customStyle={{ marginTop: "20px", marginBottom: "20px" }}
+            ></Button>
         </>
     );
 };

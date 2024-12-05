@@ -192,7 +192,7 @@ const headerStyle = {
 const buttonGroupStyle = {
     display: "flex",
     gap: "10px",
-    marginLeft: "2%",
+    marginLeft: "1%",
 };
 
 const buttonStyle = {
@@ -217,6 +217,7 @@ const filterButtonsGroupStyle = {
     marginLeft: "8.5vw",
     display: "flex",
     justifyContent: "center",
+    marginRight: "2%",
 };
 
 const itemsContainerStyle = {

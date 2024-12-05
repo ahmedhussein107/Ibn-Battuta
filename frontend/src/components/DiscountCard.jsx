@@ -43,7 +43,7 @@ const DiscountCard = ({
 
             <Button
                 stylingMode="always-dark"
-                text="Book now"
+                text="Book Now"
                 customStyle={{
                     maxHeight: "40px",
                     borderRadius: "80px",

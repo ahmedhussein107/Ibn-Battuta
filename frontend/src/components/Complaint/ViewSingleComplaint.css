@@ -17,8 +17,3 @@
 .comment-list {
     width: 50%;
 }
-.complaint-back-button {
-    margin: 5vh;
-    background-color: var(--accent-color);
-    border-radius: 50px;
-}
