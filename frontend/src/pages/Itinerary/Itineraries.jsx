@@ -298,8 +298,8 @@ const Itineraries = () => {
                                             navigate(
                                                 `/itinerary-details/${itinerary.id}`
                                             ),
-                                        type: "1",
-                                        width: "70%",
+                                        type: "always-dark",
+                                        width: "50%",
                                     },
                                 ]}
                             />

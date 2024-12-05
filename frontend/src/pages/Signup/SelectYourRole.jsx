@@ -110,7 +110,7 @@ const SelectYourRoleComponent = ({ navigate }) => {
                         }}
                     >
                         <Button
-                            stylingMode="2"
+                            stylingMode="dark-when-hovered"
                             text="Cancel"
                             width={"10vw"}
                             handleClick={() => {
@@ -118,7 +118,7 @@ const SelectYourRoleComponent = ({ navigate }) => {
                             }}
                         />
                         <Button
-                            stylingMode="1"
+                            stylingMode="always-dark"
                             text="Next"
                             width={"10vw"}
                             handleClick={() => {

@@ -228,7 +228,7 @@ const NavBar = () => {
                         </Link>
 
                         <Button
-                            stylingMode="submit"
+                            stylingMode="always-dark"
                             text={"Sign Up"}
                             handleClick={() => navigate("/select-your-role")}
                             isLoading={false}

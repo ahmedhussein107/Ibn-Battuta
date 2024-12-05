@@ -517,7 +517,7 @@ const CreateItineraryPage = () => {
                         Cancel
                     </button>
                     <Button
-                        stylingMode="1"
+                        stylingMode="always-light"
                         text="Next"
                         width={"10vw"}
                         handleClick={() => {

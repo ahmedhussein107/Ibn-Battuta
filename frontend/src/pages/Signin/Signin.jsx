@@ -113,7 +113,7 @@ const SigninComponent = () => {
                 }}
             >
                 <Button
-                    stylingMode="1"
+                    stylingMode="always-dark"
                     text={"Sign in"}
                     handleClick={hanldeClick}
                     width={"10vw"}

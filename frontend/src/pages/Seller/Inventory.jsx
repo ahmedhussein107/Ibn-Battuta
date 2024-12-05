@@ -298,7 +298,7 @@ const Inventory = () => {
                                         controlButtons={
                                             <>
                                                 <CustomButton
-                                                    stylingMode="1"
+                                                    stylingMode="always-dark"
                                                     text="Edit"
                                                     width="70%"
                                                     height="30%"
@@ -309,7 +309,7 @@ const Inventory = () => {
                                                     }}
                                                 />
                                                 <CustomButton
-                                                    stylingMode="2"
+                                                    stylingMode="dark-when-hovered"
                                                     text={
                                                         product.isArchived
                                                             ? "Unarchive"

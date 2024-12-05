@@ -118,7 +118,7 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
             <div className="complaint-footer">
                 {!isExpanded ? (
                     <Button
-                        stylingMode="submit"
+                        stylingMode="always-dark"
                         text={"View"}
                         handleClick={handleViewComplaint}
                         isLoading={false}

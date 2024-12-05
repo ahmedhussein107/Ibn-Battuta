@@ -73,7 +73,7 @@ const HotelsControls = ({
                 </div>
             </div>
             <Button
-                stylingMode="submit"
+                stylingMode="always-dark"
                 text={"Find Hotel"}
                 handleClick={handleSearch}
                 isLoading={isSearching}

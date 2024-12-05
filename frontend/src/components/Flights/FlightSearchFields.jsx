@@ -474,7 +474,7 @@ const FlightSearchFields = ({
 
                 {/* Search Button on the far right of the rectangle */}
                 <Button
-                    stylingMode="1" // Orange button style
+                    stylingMode="always-dark" // Orange button style
                     text="Search"
                     handleClick={handleSearch}
                     customStyle={{ marginRight: "1vw" }}

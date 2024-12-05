@@ -212,7 +212,7 @@ const SignUpPage = () => {
 
                     <div className="button-group">
                         <Button
-                            stylingMode="2"
+                            stylingMode="dark-when-hovered"
                             text={"Previous"}
                             handleClick={handlepreviousStep}
                             disabled={step == 1}
@@ -229,7 +229,7 @@ const SignUpPage = () => {
 
                         {step == 1 && (
                             <Button
-                                stylingMode="2"
+                                stylingMode="always-dark"
                                 text={"Next"}
                                 handleClick={handleNextStep}
                                 disabled={step == 2}
@@ -247,7 +247,7 @@ const SignUpPage = () => {
 
                         {step == 2 && (
                             <Button
-                                stylingMode="submit"
+                                stylingMode="always-dark"
                                 text={"Submit"}
                                 handleClick={handleSubmit}
                                 disabled={isLoading}

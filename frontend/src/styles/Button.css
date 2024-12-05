@@ -1,62 +1,86 @@
-button:hover {
-    background-color: initial;
-    border: none;
-}
-
 .button-text {
     font-size: 1em;
 }
 
-.button-1 {
-    border-radius: var(--spacing-medium);
+.button-always-light {
+    background-color: white;
+    color: var(--accent-color);
+
+    border: 1px solid var(--accent-color);
+    border-radius: 50px;
     padding: var(--spacing-small) var(--spacing-medium);
-    background-color: var(--accent-color);
     cursor: pointer;
     transition: background-color 0.3s; /* Transition for hover effect */
     margin: 0 var(--spacing-small);
-    color: white;
-    width: 10px;
     font-weight: bolder !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
-.button-2 {
-    color: var(--text-color);
-    border-radius: var(--spacing-medium);
+.button-always-dark {
+    background-color: var(--accent-color);
+    color: white;
+
+    border: 1px solid var(--spacing-medium);
+    border-radius: 50px;
+
     padding: var(--spacing-small) var(--spacing-medium);
-    background-color: white;
     border-color: var(--accent-color);
     cursor: pointer;
-    transition: background-color 0.3s; /* Transition for hover effect */
-    /* color: #f86624; */
-    color: #9c4f21;
+    transition: background-color 0.3s;
     margin: 0 var(--spacing-small);
 }
 
-.button-submit {
-    border-radius: var(--spacing-medium);
+.button-dark-when-hovered {
+    border-radius: 50px;
     padding: var(--spacing-small) var(--spacing-medium);
-    background-color: var(--accent-color);
+    background-color: white;
+    color: var(--accent-color);
+
     cursor: pointer;
-    transition: background-color 0.3s; /* Transition for hover effect */
+    transition: background-color 0.3s;
     margin: 0 var(--spacing-small);
-    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
 }
 
-.button-submit:hover {
-    color: var(--text-color);
+.button-dark-when-hovered:hover {
     background-color: var(--accent-color);
-}
-.button-1:hover {
-    color: var(--text-color);
-    background-color: var(--accent-color);
-}
-.button-2:hover {
     color: white;
+    border-radius: 50px;
+    border: 1px solid transparent;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.25s, border-color 0.25s;
+    transform: scale(1.05);
+}
+
+/* button-1 becomes doesn't have a colored background */
+
+.button-always-light:hover {
+    background-color: white;
+    border: 1px solid var(--accent-color);
+    border-radius: 50px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.25s, border-color 0.25s;
+    transform: scale(1.05);
+}
+
+/* button-2 has colored background when hovered */
+.button-always-dark:hover {
     background-color: var(--accent-color);
+    color: white;
+    border-radius: 50px;
+    border: 1px solid transparent;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.25s, border-color 0.25s;
+    transform: scale(1.05);
 }
 
 .loader {

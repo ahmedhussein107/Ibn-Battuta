@@ -273,7 +273,7 @@ const AllItineraries = () => {
                                             navigate(`/itinerary-details`, {
                                                 state: { itinerary },
                                             }),
-                                        type: "1",
+                                        type: "always-dark",
                                         width: "70%",
                                         styles: {
                                             display: "flex",
