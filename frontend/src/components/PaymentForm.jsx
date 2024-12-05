@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-
+import i1 from "../assets/payment/visa.png";
+import i2 from "../assets/payment/mastercard.png";
+import i3 from "../assets/payment/amex.png";
+import i4 from "../assets/payment/discover.png";
 import {
     CardNumberElement,
     CardExpiryElement,
@@ -20,7 +23,37 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
     const [succeeded, setSucceeded] = useState(false);
     const [clientSecret, setClientSecret] = useState("");
     const [name, setName] = useState("");
+    const [cardType, setCardType] = useState(""); // New state for card type
+    const detectCardType = (number) => {
+        const patterns = {
+            Visa: /^4/,
+            MasterCard: /^5[1-5]/,
+            Amex: /^3[47]/,
+            Discover: /^6(?:011|5)/,
+        };
 
+        for (const [type, pattern] of Object.entries(patterns)) {
+            if (pattern.test(number)) {
+                return type;
+            }
+        }
+        return "Unknown";
+    };
+    const handleCardNumberChange = (event) => {
+        console.log(1);
+        if (event.brand) {
+            console.log(2);
+            setCardType(event.brand);
+        } else {
+            setCardType("");
+        }
+    };
+    const cardLogos = {
+        visa: i1,
+        mastercard: i2,
+        amex: i3,
+        discover: i4,
+    };
     useEffect(() => {
         const success = async () => {
             await handleSuccess();
@@ -156,16 +189,37 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
 
                     <Grid container spacing={2} sx={{ marginBottom: "1.5rem" }}>
                         <Grid item xs={12}>
-                            <Box
-                                sx={{
-                                    border: "1px solid #ccc",
-                                    borderRadius: "0.25rem",
-                                    padding: "0.75rem",
-                                    width: "28.5vw",
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: "1rem",
+                                    alignItems: "center",
                                 }}
                             >
-                                <CardNumberElement options={cardElementOptions} />
-                            </Box>
+                                <Box
+                                    sx={{
+                                        border: "1px solid #ccc",
+                                        borderRadius: "0.25rem",
+                                        padding: "0.9rem",
+                                        width: "28.5vw",
+                                        height: "2vh",
+                                    }}
+                                >
+                                    <CardNumberElement
+                                        options={cardElementOptions}
+                                        onChange={handleCardNumberChange}
+                                    />
+                                </Box>
+                                {cardType && cardLogos[cardType] && (
+                                    <Box>
+                                        <img
+                                            src={cardLogos[cardType]}
+                                            style={{ height: "5vh", width: "auto" }}
+                                        />
+                                    </Box>
+                                )}
+                            </div>
                         </Grid>
                         <Grid item xs={6}>
                             <Box
