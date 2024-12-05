@@ -16,7 +16,9 @@ const TouristFields = ({ userData, onChange }) => {
         <div className="common-form-step">
             {/* Mobile Number Input */}
             <div className="form-group">
-                <label>Mobile Number</label>
+                <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
+                    Mobile Number
+                </label>
                 <PhoneInput
                     preferredCountries={["us", "gb", "fr", "de", "it"]}
                     onChange={(value) => onChange({ target: { name: "mobile", value } })}
@@ -35,7 +37,9 @@ const TouristFields = ({ userData, onChange }) => {
 
             {/* Date of Birth Input */}
             <div className="form-group" style={{ width: "420px" }}>
-                <label>Date of Birth</label>
+                <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
+                    Date of Birth
+                </label>
                 <div className="date-input-group">
                     <select
                         name="day"
@@ -86,7 +90,9 @@ const TouristFields = ({ userData, onChange }) => {
 
             {/* Nationality Input */}
             <div className="form-group">
-                <label>Nationality</label>
+                <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
+                    Nationality
+                </label>
                 <input
                     type="text"
                     name="nationality"
@@ -98,7 +104,9 @@ const TouristFields = ({ userData, onChange }) => {
             </div>
             {/* Address Input */}
             <div className="form-group">
-                <label>Address</label>
+                <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
+                    Address
+                </label>
                 <input
                     type="text"
                     name="address"
@@ -110,7 +118,7 @@ const TouristFields = ({ userData, onChange }) => {
             </div>
             {/* Job Input */}
             <div className="form-group">
-                <label>Job</label>
+                <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>Job</label>
                 <input
                     type="text"
                     name="job"

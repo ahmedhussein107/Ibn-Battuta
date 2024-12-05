@@ -97,6 +97,22 @@ const SignUpPage = () => {
         setError(null);
         setIsLoading(true);
         try {
+            if (
+                !userData.email ||
+                !userData.password ||
+                !userData.username ||
+                !userData.name
+            ) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+            if (userData.password.length < 4) {
+                alert("Password must be at least 4 characters long.");
+                return;
+            }
+            if (!termsAccepted) {
+                alert("You must accept the terms and conditions.");
+            }
             if (userType !== "Tourist" && !file1) {
                 alert("You must upload an ID file.");
                 return;
@@ -157,9 +173,11 @@ const SignUpPage = () => {
     };
 
     return (
-        <div className="container">
+        <div className="signup-container">
             <div className="form-container">
-                <h1 style={{ textAlign: "center" }}>Sign Up</h1>
+                <h1 style={{ textAlign: "center", color: "var(--accent-color)" }}>
+                    Sign Up
+                </h1>
 
                 <form onSubmit={handleSubmit} id="form" className="form">
                     {step == 1 && (
@@ -197,10 +215,15 @@ const SignUpPage = () => {
                                     id="terms"
                                     checked={termsAccepted}
                                     onChange={handleTermsChange}
+                                    style={{ accentColor: "var(--accent-color)" }}
                                 />
                                 <label htmlFor="terms">
                                     I accept the
-                                    <a href="/privacy" target="_blank">
+                                    <a
+                                        href="/privacy"
+                                        target="_blank"
+                                        style={{ color: "var(--accent-color)" }}
+                                    >
                                         {" "}
                                         terms and conditions{" "}
                                     </a>
@@ -219,11 +242,8 @@ const SignUpPage = () => {
                             isLoading={false}
                             customStyle={{
                                 marginLeft: "20px",
-                                width: "173px",
-                                height: "55px",
-                                minHieght: "70px",
-                                borderRadius: "60px",
                             }}
+                            width="8vw"
                             type={"button"}
                         />
 
@@ -234,12 +254,9 @@ const SignUpPage = () => {
                                 handleClick={handleNextStep}
                                 disabled={step == 2}
                                 isLoading={false}
+                                width="8vw"
                                 customStyle={{
                                     marginLeft: "20px",
-                                    width: "173px",
-                                    height: "55px",
-                                    minHieght: "70px",
-                                    borderRadius: "60px",
                                 }}
                                 type={"button"}
                             />
@@ -251,13 +268,10 @@ const SignUpPage = () => {
                                 text={"Submit"}
                                 handleClick={handleSubmit}
                                 disabled={isLoading}
+                                width="8vw"
                                 isLoading={isLoading}
                                 customStyle={{
                                     marginLeft: "20px",
-                                    width: "173px",
-                                    height: "55px",
-                                    minHieght: "70px",
-                                    borderRadius: "60px",
                                 }}
                             />
                         )}
