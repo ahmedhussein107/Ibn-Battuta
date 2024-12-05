@@ -12,7 +12,7 @@ import FlightBookingDetails from "../pages/Flights/FlightBookingDetails";
 import Bookmarks from "../pages/Tourist/Bookmarks";
 import Payment from "../pages/Payment/Payment.jsx";
 import Checkout from "../pages/Product/CheckoutPage.jsx";
-import Cart from "../pages/Product/CartPage.jsx";
+import Cart from "../pages/Product/Cart.jsx";
 
 const touristRoutes = [
     { path: "/tourist", element: <HomePage /> },
