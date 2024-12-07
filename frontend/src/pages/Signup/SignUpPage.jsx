@@ -108,7 +108,7 @@ const SignUpPage = () => {
             if (!termsAccepted) {
                 alert("You must accept the terms and conditions.");
             }
-            if (userType === "Tourist" && (!userData.DOB || !userData.mobileNumber)) {
+            if (userType === "Tourist" && (!userData.DOB || !userData.number)) {
                 alert("Please fill in all required fields.");
                 return;
             }
