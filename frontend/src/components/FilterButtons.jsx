@@ -29,7 +29,7 @@ const buttonGroupStyle = {
 
 const buttonStyle = {
     padding: "10px 20px",
-    border: "3px solid ",
+    border: "1px solid ",
     borderRadius: "40px",
     borderColor: "#9C4F21",
     backgroundColor: "transparent",

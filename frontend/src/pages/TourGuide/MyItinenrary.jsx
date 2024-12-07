@@ -250,7 +250,7 @@ const MyItinenrary = () => {
                                             navigate(
                                                 `/tourguide/edit-itinerary/${itinerary._id}`
                                             ),
-                                        type: "1",
+                                        type: "always-dark",
                                         width: "70%",
                                         styles: {
                                             display: "flex",
@@ -265,7 +265,7 @@ const MyItinenrary = () => {
                                             : "Activate",
                                         onClick: () =>
                                             activateItineraryHandler(itinerary._id),
-                                        type: "2",
+                                        type: "always-dark",
                                         width: "70%",
                                         styles: {
                                             marginTop: "2%",

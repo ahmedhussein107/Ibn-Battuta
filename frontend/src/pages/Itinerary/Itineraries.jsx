@@ -7,7 +7,7 @@ import Sorter from "../../components/Sorter";
 import PriceRange from "../../components/PriceRange";
 import CheckboxList from "../../components/CheckBoxList";
 import itineraryBackground from "../../assets/images/Itinerariesbackground.png";
-import NavBar from "../../components/NavBar";
+import PaginationComponent from "../../components/Pagination.jsx";
 import Footer from "../../components/Footer";
 import CardItinerary from "../../components/CardItinerary";
 import ShareAndMark from "../../components/ShareAndMark";
@@ -22,7 +22,11 @@ const Itineraries = () => {
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, convertPrice } = useCurrencyConverter(currency);
     const minPrice = convertPrice(0, "EGP", currency);
-    const maxPrice = convertPrice(2000, "EGP", currency); // TODO: select better bounds
+    const maxPrice = convertPrice(100000000, "EGP", currency);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const itemsPerPage = 6;
 
     const [itineraries, setItineraries] = useState([]);
     const [bookmarkStatus, setBookmarkStatus] = useState({});
@@ -55,32 +59,23 @@ const Itineraries = () => {
         }
     };
 
-    const sortItineraries = (itineraries) => {
-        let sortItineraries = [...itineraries]; // Create a shallow copy
-        if (sortBy === "priceAsc") {
-            sortItineraries.sort((a, b) => a.price - b.price);
-        } else if (sortBy === "priceDesc") {
-            sortItineraries.sort((a, b) => b.price - a.price);
-        } else if (sortBy === "ratingAsc") {
-            sortItineraries.sort((a, b) => a.rating - b.rating);
-        } else if (sortBy === "ratingDesc") {
-            sortItineraries.sort((a, b) => b.rating - a.rating);
-        }
-        console.log("sortedItineraries", sortItineraries);
-        setItineraries(sortItineraries);
-    };
-
     const fetchItineraries = async (query) => {
         try {
             console.log("query", query);
             const response = await axiosInstance.get(
                 `/itinerary/getUpcomingItineraries/`,
                 {
-                    params: query,
+                    params: {
+                        ...query,
+                        page: currentPage,
+                        limit: itemsPerPage,
+                        sortBy,
+                    },
                 }
             );
             console.log("response", response.data);
-            sortItineraries(response.data);
+            setItineraries(response.data.result);
+            setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error("Error fetching Activities:", error);
         }
@@ -113,12 +108,14 @@ const Itineraries = () => {
 
     useEffect(() => {
         const query = buildQuery();
+        setCurrentPage(1);
         fetchItineraries(query);
-    }, [priceRange, name, location]);
+    }, [priceRange, location, tags, name, sortBy]);
 
     useEffect(() => {
-        sortItineraries(itineraries);
-    }, [sortBy]);
+        const query = buildQuery();
+        fetchItineraries(query);
+    }, [currentPage]);
 
     useEffect(() => {
         fetchBookmarkedStatus();
@@ -206,12 +203,7 @@ const Itineraries = () => {
             searchText={location}
             setSearchText={setLocation}
         />,
-        <PriceRange
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-            min={minPrice}
-            max={maxPrice}
-        />,
+        <PriceRange priceRange={priceRange} setPriceRange={setPriceRange} />,
         <CheckboxList
             items={tags}
             checkedItems={selectedTags}
@@ -298,14 +290,23 @@ const Itineraries = () => {
                                             navigate(
                                                 `/itinerary-details/${itinerary.id}`
                                             ),
-                                        type: "1",
-                                        width: "70%",
+                                        type: "always-dark",
+                                        width: "50%",
                                     },
                                 ]}
                             />
                         </div>
                     ))}
                 </div>
+            </div>
+            <div style={{ paddingBottom: "1%" }}>
+                <PaginationComponent
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    onChange={(event, newPage) => {
+                        setCurrentPage(newPage);
+                    }}
+                />
             </div>
             <Footer />
         </div>

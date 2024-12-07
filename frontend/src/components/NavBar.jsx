@@ -164,8 +164,11 @@ const NavBar = () => {
     const handleLogout = () => {
         // TODO: log out logic is not implemented
         Cookies.remove("userType");
+        Cookies.remove("jwt");
+        Cookies.remove("profileImage");
         Cookies.set("currency", "EGP");
         setUserType("Guest");
+
         navigate("/");
     };
 
@@ -225,7 +228,7 @@ const NavBar = () => {
                         </Link>
 
                         <Button
-                            stylingMode="submit"
+                            stylingMode="always-dark"
                             text={"Sign Up"}
                             handleClick={() => navigate("/select-your-role")}
                             isLoading={false}

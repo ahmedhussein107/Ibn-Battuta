@@ -1,28 +1,32 @@
 import React from "react";
 import LocationIcon from "@mui/icons-material/LocationOn";
 import TagsIcon from "@mui/icons-material/LocalOffer";
+import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import GenericCard from "./GenericCard";
 import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import LandmarkTimes from "./LandmarkTimes";
-import convert from "../api/convert";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
+
 const iconSize = "0.85rem";
 
 const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
     const image = landmark.pictures[0];
+    const currency = Cookies.get("currency") || " EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
+
     const line1 = (
         <div style={{ fontSize: "1.3rem" }}>
             <TitleAndButtons title={landmark.name} buttons={firstLineButtons} />
         </div>
     );
-    const currency = Cookies.get("currency") || "EGP";
-    const { isLoading, formatPrice } = useCurrencyConverter(currency);
-    if (isLoading) {
-        return <CircularProgress />;
-    }
+
     const line2 = (
         <div
             style={{
@@ -59,14 +63,71 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
             style={{
                 display: "flex",
                 flexDirection: "column",
-                fontSize: "1rem",
-                fontWeight: "bold",
+                backgroundColor: "#f5f7fa",
+                borderRadius: "8px",
+                padding: "12px",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
             }}
         >
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "10px",
+                    color: "#2c3e50",
+                }}
+            >
+                <ConfirmationNumberIcon
+                    style={{
+                        marginRight: "10px",
+                        color: "#4299e1",
+                        fontSize: "1.2rem",
+                    }}
+                />
+                <h4
+                    style={{
+                        margin: 0,
+                        fontSize: "1rem",
+                        fontWeight: "600",
+                        userSelect: "none",
+                    }}
+                >
+                    Ticket Prices
+                </h4>
+            </div>
             {Object.keys(landmark.ticketPrices).map((key) => (
-                <div key={key}>
-                    {key.toString().charAt(0).toUpperCase() + key.toString().slice(1)}:{" "}
-                    {formatPrice(landmark.ticketPrices[key])}
+                <div
+                    key={key}
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginBottom: "8px",
+                        padding: "8px",
+                        backgroundColor: "white",
+                        borderRadius: "6px",
+                        boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+                        userSelect: "none",
+                    }}
+                >
+                    <span
+                        style={{
+                            textTransform: "capitalize",
+                            fontWeight: "500",
+                            color: "#34495e",
+                        }}
+                    >
+                        {key.toString().charAt(0).toUpperCase() +
+                            key.toString().slice(1) +
+                            " : "}
+                    </span>
+                    <span
+                        style={{
+                            fontWeight: "bold",
+                            color: "#9C5F11",
+                        }}
+                    >
+                        {formatPrice(landmark.ticketPrices[key])}
+                    </span>
                 </div>
             ))}
         </div>
@@ -82,6 +143,7 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
             height={height}
         />
     );
+
     return card;
 };
 

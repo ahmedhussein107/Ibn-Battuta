@@ -91,12 +91,40 @@ const SignUpPage = () => {
             setSetp(step - 1);
         }
     };
+	const convertToDate = (dateObj) => {
+		if (!dateObj || !dateObj.year || !dateObj.month || !dateObj.day) {
+			return null;
+		  }
+		  
+		  // Create new date - subtract 1 from month since JavaScript months are 0-based
+		  return new Date(
+			parseInt(dateObj.year),
+			parseInt(dateObj.month) - 1, // Convert "02" to 1 (February)
+			parseInt(dateObj.day)
+		  );
+
+	}
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError(null);
         setIsLoading(true);
         try {
+            if (!userData.email || !userData.password || !userData.username) {
+                alert("Please fill in all required fields. ");
+                return;
+            }
+            if (userData.password.length < 4) {
+                alert("Password must be at least 4 characters long.");
+                return;
+            }
+            if (!termsAccepted) {
+                alert("You must accept the terms and conditions.");
+            }
+            if (userType === "Tourist" && (!userData.DOB || !userData.mobile )) {
+                alert("Please fill in all required fields. ");
+                return;
+            }
             if (userType !== "Tourist" && !file1) {
                 alert("You must upload an ID file.");
                 return;
@@ -132,7 +160,10 @@ const SignUpPage = () => {
                 certificatesPath.push(IdPath);
                 userData.documents = certificatesPath;
             }
-
+			
+			if(userData.DOB){
+				userData.DOB = convertToDate(userData.DOB);
+			}
             const response = await axiosInstance.post(
                 `/${userType.toLowerCase()}/create${userType}`,
                 userData,
@@ -143,7 +174,7 @@ const SignUpPage = () => {
             console.log("File 1:", file1);
             console.log("Files 2:", file2);
             console.log("pict", imageFile);
-            navigate("/signin");
+            navigate("/signin")	;
         } catch (error) {
             setError(error.response.data.e);
             console.log(error);
@@ -157,9 +188,11 @@ const SignUpPage = () => {
     };
 
     return (
-        <div className="container">
+        <div className="signup-container">
             <div className="form-container">
-                <h1 style={{ textAlign: "center" }}>Sign Up</h1>
+                <h1 style={{ textAlign: "center", color: "var(--accent-color)" }}>
+                    Sign Up
+                </h1>
 
                 <form onSubmit={handleSubmit} id="form" className="form">
                     {step == 1 && (
@@ -197,10 +230,15 @@ const SignUpPage = () => {
                                     id="terms"
                                     checked={termsAccepted}
                                     onChange={handleTermsChange}
+                                    style={{ accentColor: "var(--accent-color)" }}
                                 />
                                 <label htmlFor="terms">
                                     I accept the
-                                    <a href="/privacy" target="_blank">
+                                    <a
+                                        href="/privacy"
+                                        target="_blank"
+                                        style={{ color: "var(--accent-color)" }}
+                                    >
                                         {" "}
                                         terms and conditions{" "}
                                     </a>
@@ -212,34 +250,28 @@ const SignUpPage = () => {
 
                     <div className="button-group">
                         <Button
-                            stylingMode="2"
+                            stylingMode="dark-when-hovered"
                             text={"Previous"}
                             handleClick={handlepreviousStep}
                             disabled={step == 1}
                             isLoading={false}
                             customStyle={{
                                 marginLeft: "20px",
-                                width: "173px",
-                                height: "55px",
-                                minHieght: "70px",
-                                borderRadius: "60px",
                             }}
+                            width="8vw"
                             type={"button"}
                         />
 
                         {step == 1 && (
                             <Button
-                                stylingMode="2"
+                                stylingMode="always-dark"
                                 text={"Next"}
                                 handleClick={handleNextStep}
                                 disabled={step == 2}
                                 isLoading={false}
+                                width="8vw"
                                 customStyle={{
                                     marginLeft: "20px",
-                                    width: "173px",
-                                    height: "55px",
-                                    minHieght: "70px",
-                                    borderRadius: "60px",
                                 }}
                                 type={"button"}
                             />
@@ -247,17 +279,14 @@ const SignUpPage = () => {
 
                         {step == 2 && (
                             <Button
-                                stylingMode="submit"
+                                stylingMode="always-dark"
                                 text={"Submit"}
                                 handleClick={handleSubmit}
                                 disabled={isLoading}
+                                width="8vw"
                                 isLoading={isLoading}
                                 customStyle={{
                                     marginLeft: "20px",
-                                    width: "173px",
-                                    height: "55px",
-                                    minHieght: "70px",
-                                    borderRadius: "60px",
                                 }}
                             />
                         )}

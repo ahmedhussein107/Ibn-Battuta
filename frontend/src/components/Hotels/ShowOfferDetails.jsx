@@ -171,7 +171,7 @@ const ShowOfferDetails = () => {
             </div>
             {!bookingId ? (
                 <Button
-                    stylingMode="submit"
+                    stylingMode="always-dark"
                     text="Book Now"
                     handleClick={handleOnAction}
                     disabled={isLoading}

@@ -26,7 +26,7 @@ const CheckboxList = ({ items, checkedItems, setCheckedItems }) => {
         <Box
             sx={{
                 padding: 2,
-                backgroundColor: "#f3f6f9", // Light blue background color
+                backgroundColor: "#FCF3E2",
                 borderRadius: "2vh",
                 width: "90%",
             }}
