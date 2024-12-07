@@ -15,7 +15,6 @@ const Button = ({
     customStyle = {},
     type,
     icon = null,
-    isDisabled = false,
 }) => {
     return (
         <button
@@ -23,7 +22,6 @@ const Button = ({
             onClick={handleClick}
             style={{ width: width, height: height, ...customStyle }} // Inline style for width
             type={type}
-            disabled={isDisabled}
         >
             {isLoading ? (
                 <span className="loader"></span>

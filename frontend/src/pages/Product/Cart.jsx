@@ -78,6 +78,12 @@ const Cart = () => {
         return valid;
     };
 
+    const handleClick = () => {
+        if (getValidity()) {
+            navigate("/tourist/checkout", { state: { price: getTotalPrice() } });
+        }
+    };
+
     return (
         <div
             style={{
@@ -232,17 +238,16 @@ const Cart = () => {
                             </span>
                         </span>
                     </span>
+
                     <Button
                         text="Checkout"
-                        handleClick={() =>
-                            navigate("/tourist/checkout", {
-                                state: { price: getTotalPrice() },
-                            })
-                        }
+                        handleClick={handleClick}
                         stylingMode={1}
-                        customStyle={{ marginBottom: "1%", marginLeft: "85%" }}
-                        isDisabled={!getValidity()}
+                        customStyle={
+                            getValidity() ? normalButtonStyle : disabledButtonStyle
+                        }
                     />
+
                     {!getValidity() && (
                         <Alert
                             severity="error"
@@ -286,6 +291,15 @@ const selectedButtonStyle = {
     ...buttonStyle,
     backgroundColor: "#FAE2B6",
     color: "#9C4F21",
+};
+
+const normalButtonStyle = { marginBottom: "1%", marginLeft: "85%" };
+const disabledButtonStyle = {
+    marginBottom: "1%",
+    marginLeft: "85%",
+    cursor: "not-allowed",
+    disabled: true,
+    backgroundColor: "grey",
 };
 
 export default Cart;
