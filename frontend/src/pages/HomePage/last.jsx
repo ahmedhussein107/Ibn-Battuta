@@ -162,7 +162,6 @@ const Last = () => {
                 <div
                     style={{
                         marginTop: "3vh",
-                        fontSize: "1.5vh",
                         marginLeft: "5vh",
                         userSelect: "none",
                         fontSize: "1rem",
