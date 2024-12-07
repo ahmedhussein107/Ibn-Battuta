@@ -82,24 +82,23 @@ const LandmarkTimes = ({ times, width = "100%", fontSize = "0.8rem" }) => {
                 style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    alignItems: "center",
+                    alignItems: "right",
                     marginBottom: "1%", // Use percentage for margin
                 }}
             >
-                <div style={{ fontSize: fontSize }}>
+                <div style={{ fontSize: fontSize, color: "#5B5B5B" }}>
                     <span role="img" aria-label="clock">
                         🕒
                     </span>
                     {selectedDay.day
-                        ? `OPEN HOURS from ${selectedDay.open} to ${selectedDay.close}`
-                        : "No Day is selected yet"}
+                        ? ` OPEN HOURS from ${selectedDay.open} to ${selectedDay.close}`
+                        : " No Day is selected yet"}
                 </div>
                 <div
                     style={{
                         padding: "0.5% 1%", // Use percentage for padding
                         backgroundColor: isOpenNow ? "#FFC107" : "#E0E0E0",
                         color: "#FFFFFF",
-                        borderRadius: "5px",
                         fontFamily: "Inika",
                     }}
                 >
@@ -110,9 +109,10 @@ const LandmarkTimes = ({ times, width = "100%", fontSize = "0.8rem" }) => {
             <div
                 style={{
                     display: "flex",
-                    gap: "1%",
+                    gap: "2.4%",
                     flexWrap: "wrap",
                     alignItems: "center",
+                    userSelect: "none",
                 }}
             >
                 {daysOfWeek.map((day, index) => (
@@ -123,11 +123,10 @@ const LandmarkTimes = ({ times, width = "100%", fontSize = "0.8rem" }) => {
                             cursor: "pointer",
                             textAlign: "center",
                             padding: "0.9em",
-                            borderRadius: "5px",
                             backgroundColor:
-                                day.day === selectedDay.day ? "#FFC107" : "#F5F5F5",
+                                day.day === selectedDay.day ? "#FFC107" : "#E1E8EE",
                             color: "#000",
-                            transition: "background-color 0.3s",
+                            transition: "background-color 0.3s ease",
                         }}
                     >
                         <div
@@ -152,7 +151,7 @@ const LandmarkTimes = ({ times, width = "100%", fontSize = "0.8rem" }) => {
                                     color:
                                         day.day === selectedDay.day
                                             ? "#FFFFFF"
-                                            : "#BBBBBB",
+                                            : "#A6A4A4",
                                 }}
                             >
                                 {getNext(day.day)}

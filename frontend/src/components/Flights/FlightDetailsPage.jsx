@@ -27,11 +27,11 @@ const FlightDetailsPage = ({
                     margin: "3vh 0 3vh 0",
                 }}
             >
-                <Button text="Back" stylingMode="2" handleClick={handleBack} />
+                <Button text="Back" stylingMode="always-light" handleClick={handleBack} />
                 {mode == 1 && (
                     <Button
                         text="Book"
-                        stylingMode="1"
+                        stylingMode="always-dark"
                         handleClick={handleBook}
                         isLoading={isLoading}
                     />

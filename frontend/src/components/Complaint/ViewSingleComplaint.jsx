@@ -6,7 +6,12 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import CommentPopUp from "./NewCommentPopUp";
 import Comment from "./Comment";
+import usePageHeader from "../Header/UseHeaderPage";
+import { useNavigate } from "react-router-dom";
+import Button from "../Button";
 const ViewSingleComplaint = () => {
+    usePageHeader("/complaints.png", "Complaint Page");
+    const navigate = useNavigate();
     const { complaintId } = useParams();
     const [complaint, setComplaint] = useState({
         title: "Title",
@@ -45,40 +50,50 @@ const ViewSingleComplaint = () => {
     };
     return (
         <>
-            <div className="complaint-container">
-                <ComplaintCard
-                    complaint={complaint}
-                    isExpanded={true}
-                    onReply={() => onReply(null)}
-                    setComplaint={setComplaint}
-                />
-                <CommentPopUp
-                    isOpen={isOpen}
-                    setIsOpen={setIsOpen}
-                    complaintId={complaintId}
-                    parentComment={parentComment}
-                />
-            </div>
-            {!!comments && (
-                <>
-                    <div className="comment-list">
-                        {comments.map((comment) => (
-                            <Comment
-                                key={comment._id}
-                                comment={comment}
-                                onReply={onReply}
-                            />
-                        ))}
-                    </div>
+            <div className="view-single-complaint">
+                <div className="complaint-container">
+                    <ComplaintCard
+                        complaint={complaint}
+                        isExpanded={true}
+                        onReply={() => onReply(null)}
+                        setComplaint={setComplaint}
+                    />
                     <CommentPopUp
-                        key={123}
                         isOpen={isOpen}
                         setIsOpen={setIsOpen}
                         complaintId={complaintId}
                         parentComment={parentComment}
                     />
-                </>
-            )}
+                </div>
+                {!!comments && (
+                    <>
+                        <div className="comment-list">
+                            {comments.map((comment) => (
+                                <Comment
+                                    key={comment._id}
+                                    comment={comment}
+                                    onReply={onReply}
+                                />
+                            ))}
+                        </div>
+                        <CommentPopUp
+                            key={123}
+                            isOpen={isOpen}
+                            setIsOpen={setIsOpen}
+                            complaintId={complaintId}
+                            parentComment={parentComment}
+                        />
+                    </>
+                )}
+            </div>
+
+            <Button
+                handleClick={() => navigate(-1)}
+                stylingMode="always-light"
+                text="Back"
+                height="20px"
+                customStyle={{ marginTop: "20px", marginBottom: "20px" }}
+            ></Button>
         </>
     );
 };

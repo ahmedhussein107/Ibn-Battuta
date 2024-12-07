@@ -24,7 +24,7 @@ const FlightBookingDetails = () => {
 
                 <Button
                     text="Back"
-                    stylingMode="2"
+                    stylingMode="always-light"
                     handleClick={() => window.history.back()}
                     customStyle={{ marginBottom: "3vh" }}
                 />

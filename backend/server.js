@@ -23,6 +23,7 @@ import ratingRouter from "./routes/rating.router.js";
 import landmarkRouter from "./routes/landmark.router.js";
 import customActivityRouter from "./routes/customActivity.router.js";
 import generalRouter from "./routes/general.router.js";
+import touristBookmarkRouter from "./routes/touristBookmark.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -30,6 +31,9 @@ import cookieParser from "cookie-parser";
 import amadeusHotelsRouter from "./services/hotels.js";
 import amadeusFlightsRouter from "./services/flights.js";
 import touristCartRouter from "./routes/touristCart.router.js";
+import touristWishlistRouter from "./routes/touristWishlist.router.js";
+
+import { setupPromoCodeScheduledJobs } from "./controllers/promocode.controller.js";
 
 import stripeRouter from "./services/stripe.js";
 // environment variables
@@ -52,6 +56,7 @@ connect(MONGO_URI)
     });
 
 setupWebSocketRoutes(app);
+setupPromoCodeScheduledJobs();
 
 app.use(cookieParser());
 const corsOptions = {
@@ -89,5 +94,7 @@ app.use("/api/landmark", landmarkRouter);
 app.use("/api/customActivity", customActivityRouter);
 app.use("/api/amadeus/hotels", amadeusHotelsRouter);
 app.use("/api/amadeus/flights", amadeusFlightsRouter);
+app.use("/api/bookmark", touristBookmarkRouter);
 app.use("/api/general", generalRouter);
 app.use("/api/cart", touristCartRouter);
+app.use("/api/wishlist", touristWishlistRouter);

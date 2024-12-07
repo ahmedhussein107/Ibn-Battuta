@@ -652,13 +652,13 @@ const CreateActivityPage = () => {
                 >
                     <ButtonGroup>
                         <Button
-                            stylingMode="2"
+                            stylingMode="dark-when-hovered"
                             text="Cancel"
                             handleClick={() => navigate("/advertiser/assigned")}
                             width="auto"
                         />
                         <Button
-                            stylingMode="1"
+                            stylingMode="always-dark"
                             text="Create Activity"
                             handleClick={handleSubmit}
                             width="auto"

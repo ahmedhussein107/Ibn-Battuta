@@ -188,7 +188,7 @@ const Checkout = () => {
     //         await axiosInstance.patch(`/booking/completeBooking/${bookingId}`, {
     //             isWalletUsed: false,
     //         });
-    //         navigate("/bookings", { state: { tab: "Activities" } });
+    //         navigate("/tourist/bookings", { state: { tab: "Activities" } });
     //     };
     //     const handleFailure = async () => {
     //         await axiosInstance.delete(`booking/deleteBooking/${bookingId}`);
@@ -196,7 +196,7 @@ const Checkout = () => {
     //     const amount = 1000;
     //     setSuccess(handleSuccess);
     //     setFailure(handleFailure);
-    //     navigate("/payment", {
+    //     navigate("/tourist/payment", {
     //         state: {
     //             amount,
     //             currency,
@@ -228,14 +228,14 @@ const Checkout = () => {
                 await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
                     isWalletUsed: isWalletUsed,
                 });
-                navigate("/bookings");
+                navigate("/tourist/bookings");
             };
 
             if (paymentMethod === "card") {
                 setFailure(handleFailure);
                 setSuccess(handleSuccess);
                 const amount = Number(order.totalPrice);
-                navigate("/payment", {
+                navigate("/tourist/payment", {
                     state: {
                         amount,
                         currency,

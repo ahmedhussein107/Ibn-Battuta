@@ -44,7 +44,7 @@ export const deleteTouristCart = async (req, res) => {
 export const deleteItemFromTouristCart = async (req, res) => {
     try {
         const touristID = req.user.userId;
-        const productID = req.body.productID;
+        const productID = req.params.id;
         await TouristCart.findOneAndDelete({ touristID, productID });
         res.status(200).json({ message: "product removed from cart successfully" });
     } catch (error) {

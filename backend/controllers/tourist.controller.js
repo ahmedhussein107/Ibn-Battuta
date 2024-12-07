@@ -8,9 +8,11 @@ import { assignCookies } from "./general.controller.js";
 import Admin from "../models/admin.model.js";
 import Complaint from "../models/complaint.model.js";
 import Booking from "../models/booking.model.js";
+import TouristBookmark from "../models/touristBookmark.model.js";
+
 export const getTourists = async (req, res) => {
     try {
-        const tourguides = await Tourist.find();
+        const tourguides = await Tourist.find(req.body);
         res.json(tourguides);
     } catch (e) {
         res.json(e.message);
@@ -78,7 +80,8 @@ export const createTourist = async (req, res) => {
                 "Tourist",
                 newTourist._id,
                 newTourist.picture,
-                newTourist.currency
+                newTourist.currency,
+                newTourist.email
             )
                 .status(201)
                 .json({ message: "Sign up successful" });

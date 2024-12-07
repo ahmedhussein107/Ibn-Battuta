@@ -92,7 +92,8 @@ export const login = async (req, res) => {
             userRecord.userType,
             user._id.toString(),
             user.picture,
-            user.currency
+            user.currency,
+            user.email
         )
             .status(200)
             .json({ message: "Login successful", user });
@@ -102,7 +103,14 @@ export const login = async (req, res) => {
     }
 };
 
-export const assignCookies = (res, userType, userId, profileImage, currency = "EGP") => {
+export const assignCookies = (
+    res,
+    userType,
+    userId,
+    profileImage,
+    currency = "EGP",
+    email = ""
+) => {
     const maxAge = 5 * 60 * 60 * 1000; // 5 hours
     const token = jwt.sign({ userId, userType }, secretKey, {
         expiresIn: "5h",
@@ -110,6 +118,7 @@ export const assignCookies = (res, userType, userId, profileImage, currency = "E
 
     res.cookie("jwt", token, { maxAge });
     res.cookie("userType", userType, { maxAge });
+    res.cookie("email", email, { maxAge });
     if (profileImage) res.cookie("profileImage", profileImage, { maxAge });
     if (userType === "Tourist") res.cookie("currency", currency || "EGP", { maxAge });
 

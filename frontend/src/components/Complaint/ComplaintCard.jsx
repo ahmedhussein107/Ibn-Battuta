@@ -38,7 +38,9 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
     };
     const handleViewComplaint = () => {
         console.log("id of complaint", complaint._id);
-        navigate(`/complaint/${complaint._id}`);
+        navigate(
+            `/${Cookies.get("userType").toLocaleLowerCase()}/complaint/${complaint._id}`
+        );
         console.log("View clicked");
     };
     const handleUpdateStatus = async () => {
@@ -116,14 +118,14 @@ const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
             <div className="complaint-footer">
                 {!isExpanded ? (
                     <Button
-                        stylingMode="submit"
+                        stylingMode="always-dark"
                         text={"View"}
                         handleClick={handleViewComplaint}
                         isLoading={false}
+                        width="5vw"
+                        height="4vh"
                         customStyle={{
                             marginLeft: "20px",
-                            height: "5vh",
-                            minHieght: "70px",
                             borderRadius: "60px",
                         }}
                     />

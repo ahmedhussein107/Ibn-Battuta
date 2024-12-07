@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-const QuantityControls = ({ selectedQuantity, setSelectedQuantity }) => {
+const QuantityControls = ({ selectedQuantity, setSelectedQuantity, mode = 1 }) => {
     const handleQuantityChange = (change) => {
-        setSelectedQuantity(prev => Math.max(1, prev + change));
+        setSelectedQuantity(Math.max(1, selectedQuantity + change));
     };
 
     const handleInputChange = (e) => {
@@ -10,36 +10,46 @@ const QuantityControls = ({ selectedQuantity, setSelectedQuantity }) => {
     };
 
     return (
-        <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1em",
-            minHeight: "5em",
-            marginBottom: "1.5em"
-        }}>
-            <label style={{
-                display: "block",
-                fontSize: "1.1em",
-                fontWeight: "500",
-                marginBottom: "0.5em"
-            }}>Quantity</label>
-
-            <div style={{
+        <div
+            style={{
                 display: "flex",
-                alignItems: "center"
-            }}>
+                alignItems: "center",
+                gap: "1em",
+                minHeight: "5em",
+                marginBottom: "1.5em",
+            }}
+        >
+            {mode == 1 && (
+                <label
+                    style={{
+                        display: "block",
+                        fontSize: "1.1em",
+                        fontWeight: "500",
+                        marginBottom: "0.5em",
+                    }}
+                >
+                    Quantity
+                </label>
+            )}
+
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                }}
+            >
                 <button
                     type="button"
                     onClick={() => handleQuantityChange(-1)}
                     style={{
-                        backgroundColor: "#f28b82",
+                        backgroundColor: "#ECD1B4",
                         color: "#fff",
                         padding: "0.5rem",
                         fontSize: "1.2rem",
                         border: "none",
                         minWidth: "1.5em",
                         borderRadius: "0.3em",
-                        cursor: "pointer"
+                        cursor: "pointer",
                     }}
                 >
                     -
@@ -56,7 +66,7 @@ const QuantityControls = ({ selectedQuantity, setSelectedQuantity }) => {
                         fontWeight: "bold",
                         border: "none",
                         outline: "none",
-                        backgroundColor: "transparent"
+                        backgroundColor: "transparent",
                     }}
                     min="1"
                 />
@@ -65,14 +75,14 @@ const QuantityControls = ({ selectedQuantity, setSelectedQuantity }) => {
                     type="button"
                     onClick={() => handleQuantityChange(1)}
                     style={{
-                        backgroundColor: "#f28b82",
+                        backgroundColor: "#ECD1B4",
                         color: "#fff",
                         padding: "0.5rem",
                         fontSize: "1.2rem",
                         border: "none",
                         minWidth: "1.5em",
                         borderRadius: "0.3em",
-                        cursor: "pointer"
+                        cursor: "pointer",
                     }}
                 >
                     +

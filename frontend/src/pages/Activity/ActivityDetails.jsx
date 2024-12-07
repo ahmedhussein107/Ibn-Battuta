@@ -41,6 +41,8 @@ export default function ActivityDetails() {
     const [advertiserName, setAdvertiserName] = useState("");
     const [ticketCount, setTicketCount] = useState(0);
 
+    const [isBookmarked, setIsBookmarked] = useState(false);
+
     //To retrieve user type from browser
     useEffect(() => {
         // Retrieve the userType from cookies when the component mounts
@@ -71,6 +73,46 @@ export default function ActivityDetails() {
         }
     }, [activityId]);
     //For mangaing page logic
+
+    useEffect(() => {
+        const fetchIsBookmarked = async () => {
+            if (!activityData) return;
+            if (userType !== "Tourist") return;
+            try {
+                const response = await axiosInstance.post(
+                    `bookmark/getBookmarkStatus/`,
+                    {
+                        bookmarkIDs: [activityData._id],
+                    },
+                    { withCredentials: true }
+                );
+                console.log("is bookmarked data", response.data);
+                setIsBookmarked(response.data[activityData._id]);
+            } catch (error) {
+                console.error("Error fetching is bookmarked:", error);
+            }
+        };
+        fetchIsBookmarked();
+    }, [activityData]);
+
+    const handleBookmark = async () => {
+        if (!activityData) return;
+        try {
+            const response = await axiosInstance.post(
+                `bookmark/bookmark`,
+                {
+                    bookmarkType: "Activity",
+                    bookmarkID: activityData._id,
+                    isBookmarked,
+                },
+                { withCredentials: true }
+            );
+            console.log("Bookmark response:", response.data);
+            setIsBookmarked(!isBookmarked);
+        } catch (error) {
+            console.error("Error bookmarking activity:", error);
+        }
+    };
 
     const handleBooking = async () => {
         try {
@@ -157,6 +199,9 @@ export default function ActivityDetails() {
                 title={activityData.name}
                 category={activityData.category}
                 isOpen={activityData.isOpenForBooking}
+                bookmark={handleBookmark}
+                isBookmarked={isBookmarked}
+                showBookmark={userType === "Tourist"}
             />
             <ActivityPhotos
                 width="100%"

@@ -3,27 +3,57 @@ import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../../components/Pagination";
 import bookingsBackground from "../../assets/backgrounds/bookingsBackground.png";
 import Footer from "../../components/Footer";
-import NavBar from "../../components/NavBar";
-import GenericCard from "../../components/GenericCard";
 import CardBooking from "../../components/CardBooking";
 import TouristHotelBookings from "../../components/Hotels/TouristHotelBookings";
-import HotelList from "../../components/Hotels/HotelList";
 import FlightList from "../../components/Flights/FlightList";
+import FilterButtons from "../../components/FilterButtons";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import PopUp from "../../components/PopUpsGeneric/PopUp";
 
 const Bookings = () => {
-    const location = useLocation();
-
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 4;
-    const [selected, setSelected] = useState(location?.state?.tab || "Itineraries");
+    const [selected, setSelected] = useState("Itineraries");
     const [activities, setActivities] = useState([]);
     const [itineraries, setItineraries] = useState([]);
     const [flights, setFlights] = useState([]);
     const [hotels, setHotels] = useState([]);
     const [filter, setFilter] = useState("All");
+
+    const [popupOpen, setPopupOpen] = useState(false);
+    const [popupContent, setPopupContent] = useState(null);
+
+    const navigate = useNavigate();
+
+    const handlePopupSubmit = () => {
+        setPopupOpen(false);
+    };
+
+    const location = useLocation();
+    console.log("state: ", location.state);
+
+    useEffect(() => {
+        if (location.state?.tab) setSelected(location.state.tab);
+        if (location.state?.hotel) {
+            const hotel = location.state.hotel;
+            if (location.state?.tab == "Hotels") {
+                setPopupOpen(true);
+                const content = `You are booking a flight to ${hotel.chosenCity.name}. 
+                                 Do you want to book a limousine to hotel ${hotel.name} for 1000 
+                                 ${hotel.currency}?`;
+                setPopupContent(content);
+            } else if (location.state?.tab == "Flights") {
+                setPopupOpen(true);
+                const content = `You can book a limousine with this flight to hotel ${hotel.name}
+                                 in ${hotel.chosenCity.name}. Do you want to book this package for 
+                                 1000 ${hotel.currency}?`;
+                setPopupContent(content);
+            }
+        }
+        // TODO: handle the refresh
+    }, []);
 
     const buttons = ["Itineraries", "Activities", "Flights", "Hotels"];
     const filterButtons = ["All", "Past", "Upcoming"];
@@ -92,6 +122,16 @@ const Bookings = () => {
 
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+            {popupOpen && (
+                <PopUp
+                    isOpen={popupOpen}
+                    setIsOpen={setPopupOpen}
+                    headerText="Do you want to book a package?"
+                    handleSubmit={handlePopupSubmit}
+                >
+                    <p>{popupContent}</p>
+                </PopUp>
+            )}
             <div style={backgroundStyle}>
                 <h1 style={headerStyle}>My Bookings</h1>
             </div>
@@ -103,33 +143,18 @@ const Bookings = () => {
                         padding: "1% 0",
                     }}
                 >
-                    <div style={buttonGroupStyle}>
-                        {buttons.map((button) => (
-                            <button
-                                key={button}
-                                onClick={() => handleChooseType(button)}
-                                style={
-                                    selected === button
-                                        ? selectedButtonStyle
-                                        : buttonStyle
-                                }
-                            >
-                                {button}
-                            </button>
-                        ))}
-                    </div>
+                    <FilterButtons
+                        buttons={buttons}
+                        selected={selected}
+                        handleChooseType={handleChooseType}
+                    />
+
                     <div style={filterButtonsGroupStyle}>
-                        {filterButtons.map((button) => (
-                            <button
-                                key={button}
-                                onClick={() => handleFilter(button)}
-                                style={
-                                    filter === button ? selectedButtonStyle : buttonStyle
-                                }
-                            >
-                                {button}
-                            </button>
-                        ))}
+                        <FilterButtons
+                            buttons={filterButtons}
+                            selected={filter}
+                            handleChooseType={handleFilter}
+                        />
                     </div>
                 </div>
                 <hr style={{ width: "90%", margin: "0 auto" }} />
@@ -208,7 +233,7 @@ const headerStyle = {
 const buttonGroupStyle = {
     display: "flex",
     gap: "10px",
-    marginLeft: "2%",
+    marginLeft: "1%",
 };
 
 const buttonStyle = {
@@ -233,6 +258,7 @@ const filterButtonsGroupStyle = {
     marginLeft: "8.5vw",
     display: "flex",
     justifyContent: "center",
+    marginRight: "2%",
 };
 
 const itemsContainerStyle = {

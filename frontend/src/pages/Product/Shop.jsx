@@ -6,7 +6,6 @@ import SearchField from "../../components/SearchField/SearchField.jsx";
 import Sorter from "../../components/Sorter.jsx";
 import PriceRange from "../../components/PriceRange.jsx";
 import RatingRange from "../../components/RatingRange.jsx";
-import NavBar from "../../components/NavBar.jsx";
 import Footer from "../../components/Footer.jsx";
 import { useNavigate } from "react-router-dom"; //REMOVE
 import shopBackground from "../../assets/backgrounds/shopBackground.png";
@@ -18,6 +17,7 @@ import QuantityControls from "../../components/QuantityControls.jsx";
 
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
+import PaginationComponent from "../../components/Pagination";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -25,6 +25,7 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 
 const Shop = () => {
     const currency = Cookies.get("currency") || "EGP";
+    const userType = Cookies.get("userType") || "Guest";
     const { isLoading, convertPrice, formatPrice } = useCurrencyConverter(currency);
 
     const minPrice = convertPrice(0, "EGP", currency);
@@ -46,29 +47,57 @@ const Shop = () => {
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     const navigate = useNavigate(); //REMOVE
 
-    const sortProducts = (products) => {
-        let sortedProducts = [...products]; // Create a shallow copy
-        if (sortBy === "priceAsc") {
-            sortedProducts.sort((a, b) => a.price - b.price);
-        } else if (sortBy === "priceDesc") {
-            sortedProducts.sort((a, b) => b.price - a.price);
-        } else if (sortBy === "ratingAsc") {
-            sortedProducts.sort((a, b) => a.rating - b.rating);
-        } else if (sortBy === "ratingDesc") {
-            sortedProducts.sort((a, b) => b.rating - a.rating);
+    const [selectedPage, setSelectedPage] = useState("Shop");
+    const [wishlistStatus, setWishlistStatus] = useState({});
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const itemsPerPage = 10;
+
+    const fetchWishlistStatus = async (query) => {
+        if (userType !== "Tourist") return;
+
+        const productIDs = products.map((product) => {
+            return product._id;
+        });
+        try {
+            const response = await axiosInstance.post(
+                `/wishlist/getProductsStatus/`,
+                {
+                    productIDs,
+                },
+                { withCredentials: true }
+            );
+            console.log("wishlist status", response.data);
+            setWishlistStatus(response.data);
+        } catch (error) {
+            console.error("Error fetching wishlist status:", error);
         }
-        console.log("sortedActivities", sortedProducts);
-        setProducts(sortedProducts);
     };
 
-    const fetchActivities = async (query) => {
+    const fetchProducts = async (query) => {
         try {
-            console.log("query", query);
-            const response = await axiosInstance.get(`/product/search/`, {
-                params: query,
-            });
-            console.log("response", response.data);
-            sortProducts(response.data);
+            const response =
+                selectedPage == "Shop"
+                    ? await axiosInstance.get(`/product/search/`, {
+                          params: {
+                              ...query,
+                              page: currentPage,
+                              limit: itemsPerPage,
+                              sortBy,
+                          },
+                      })
+                    : await axiosInstance.get(`/wishlist/getWishlistProducts`, {
+                          params: {
+                              ...query,
+                              page: currentPage,
+                              limit: itemsPerPage,
+                              sortBy,
+                          },
+                          withCredentials: true,
+                      });
+            setProducts(response.data.result);
+            setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error("Error fetching Products:", error);
         }
@@ -76,12 +105,25 @@ const Shop = () => {
 
     useEffect(() => {
         const query = buildQuery();
-        fetchActivities(query);
-    }, [priceRange, ratingRange, name]);
+        fetchProducts(query);
+        setCurrentPage(1);
+    }, [priceRange, ratingRange, name, sortBy, selectedPage]);
 
     useEffect(() => {
-        sortProducts(products);
-    }, [sortBy]);
+        const query = buildQuery();
+        fetchProducts(query);
+    }, [currentPage]);
+
+    useEffect(() => {
+        fetchWishlistStatus();
+    }, [products]);
+
+    useEffect(() => {
+        if (selectedPage == "wishlist") {
+            const query = buildQuery();
+            fetchProducts(query);
+        }
+    }, [wishlistStatus]);
 
     const handleBuyingPopUpOpen = async () => {
         try {
@@ -94,10 +136,9 @@ const Shop = () => {
                 { withCredentials: true }
             );
             setBuyingPopUpOpen(false);
-            window.location.reload();
         } catch (error) {
-            console.error("Error creating order:", error);
-            alert("Error creating order. Please try again.");
+            console.error("Error adding to cart:", error);
+            alert("Error adding to cart. Please try again.");
         }
     };
 
@@ -161,9 +202,31 @@ const Shop = () => {
         <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
     ];
 
-    // if (isLoading) {
-    //     return <CircularProgress />;
-    // }
+    const handleAddToWishlist = async (productID) => {
+        try {
+            const response = await axiosInstance.post(
+                `wishlist/wishlist`,
+                {
+                    productID,
+                    isInWishlist: wishlistStatus[productID],
+                },
+                { withCredentials: true }
+            );
+            console.log("Wishlist response:", response.data);
+            const oldStatus = wishlistStatus[productID];
+            setWishlistStatus((prevStatus) => {
+                prevStatus[productID] = !oldStatus;
+                console.log(prevStatus);
+                return { ...prevStatus };
+            });
+        } catch (error) {
+            console.error("Error Add product to wishlist:", error);
+        }
+    };
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
 
     return (
         <div
@@ -172,6 +235,9 @@ const Shop = () => {
                 position: "absolute",
                 top: "0",
                 left: "0",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.7rem",
                 overflowX: "hidden",
             }}
         >
@@ -186,29 +252,16 @@ const Shop = () => {
                     backgroundColor: "white",
                 }}
             ></div>
-
             <div
                 style={{
                     display: "flex",
                     flexDirection: "row",
-                    marginTop: "1vh",
                     marginLeft: "28vw",
                 }}
             >
                 <button
-                    style={{
-                        border: "2px solid #9C4F21",
-                        borderRadius: "50px",
-                        padding: "0.5em 1.1em",
-                        fontSize: "1.1rem",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                        backgroundColor: "white",
-                        display: "flex", // Add this
-                        alignItems: "center", // Add this
-                        gap: "0.4rem", // Add this to create space between icon and text
-                    }}
+                    style={selectedPage == "Shop" ? selectedButtonStyle : buttonStyle}
+                    onClick={() => setSelectedPage("Shop")}
                 >
                     <ShoppingBagIcon
                         style={{
@@ -228,19 +281,8 @@ const Shop = () => {
                     </span>
                 </button>
                 <button
-                    style={{
-                        border: "2px solid #9C4F21",
-                        borderRadius: "50px",
-                        padding: "0.5em 1.1em",
-                        fontSize: "1.1rem",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                        backgroundColor: "white",
-                        display: "flex", // Add this
-                        alignItems: "center", // Add this
-                        gap: "0.4rem", // Add this to create space between icon and text
-                    }}
+                    style={selectedPage == "wishlist" ? selectedButtonStyle : buttonStyle}
+                    onClick={() => setSelectedPage("wishlist")}
                 >
                     <FavoriteBorderIcon
                         style={{
@@ -256,27 +298,15 @@ const Shop = () => {
                             color: "#9C4F21",
                         }}
                     >
-                        wishlist
+                        Wishlist
                     </span>
                 </button>
                 <button
                     style={{
-                        border: "2px solid #9C4F21",
-                        borderRadius: "50px",
-                        padding: "0.5em 1.1em",
-                        fontSize: "1.1rem",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                        backgroundColor: "white",
-                        display: "flex", // Add this
-                        alignItems: "center", // Add this
-                        gap: "0.4rem", // Add this to create space between icon and text
-                        marginLeft: "41vw",
+                        ...buttonStyle,
+                        marginLeft: "62%",
                     }}
-                    onClick={() => {
-                        navigate("/cart");
-                    }}
+                    onClick={() => navigate("/tourist/cart")}
                 >
                     <ShoppingCartIcon
                         style={{
@@ -334,7 +364,6 @@ const Shop = () => {
                     style={{
                         width: "25vw",
                         borderRadius: "3vh",
-                        marginTop: "-3vh",
                     }}
                 >
                     <SideBar
@@ -364,13 +393,18 @@ const Shop = () => {
                                         width="1.2vw"
                                         height="1.2vw"
                                         styles={{ padding: "0.5vh" }}
+                                        isBookmarked={wishlistStatus[product.id]}
+                                        showBookmark={userType === "Tourist"}
+                                        onSecondIconClick={() =>
+                                            handleAddToWishlist(product.id)
+                                        }
                                     />,
                                 ]}
                                 controlButtons={[
                                     <div style={{ fontSize: "0.8rem" }}>
                                         <CustomButton
-                                            text="Buy Now"
-                                            stylingMode="1"
+                                            text="Add to cart"
+                                            stylingMode="always-dark"
                                             handleClick={() => {
                                                 setSelectedProduct(product);
                                                 setSelectedQuantity(1);
@@ -391,9 +425,37 @@ const Shop = () => {
                     ))}
                 </div>
             </div>
+            <PaginationComponent
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onChange={(event, newPage) => {
+                    setCurrentPage(newPage);
+                }}
+            />
             <Footer />
         </div>
     );
+};
+
+const buttonStyle = {
+    border: "2px solid #9C4F21",
+    borderRadius: "50px",
+    padding: "0.5em 1.1em",
+    fontSize: "1.1rem",
+    fontWeight: "bold",
+    cursor: "pointer",
+    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+    backgroundColor: "white",
+    display: "flex", // Add this
+    alignItems: "center", // Add this
+    gap: "0.4rem", // Add this to create space between icon and text
+    transition: "background-color 0.3s ease, color 0.3s ease",
+};
+
+const selectedButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: "#FAE2B6",
+    color: "#9C4F21",
 };
 
 export default Shop;

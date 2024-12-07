@@ -121,6 +121,9 @@ export const completeBooking = async (req, res) => {
         if (!booking) {
             return res.status(404).json({ message: "Booking not found" });
         }
+        if (booking.isComplete) {
+            return res.status(400).json({ message: "The booking is already completed" });
+        }
         booking.isComplete = true;
         const tourist = await Tourist.findById(booking.touristID);
         tourist.points += booking.pointsAdded;
