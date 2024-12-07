@@ -79,7 +79,7 @@ const ItineraryDetails = () => {
             if (userType !== "Tourist") return;
             try {
                 const response = await axiosInstance.post(
-                    `tourist/getBookmarkStatus/`,
+                    `bookmark/getBookmarkStatus/`,
                     {
                         bookmarkIDs: [itinerary._id],
                     },
@@ -117,7 +117,7 @@ const ItineraryDetails = () => {
         if (!itinerary) return;
         try {
             const response = await axiosInstance.post(
-                `tourist/bookmark`,
+                `bookmark/bookmark`,
                 {
                     bookmarkType: "Itinerary",
                     bookmarkID: itinerary._id,

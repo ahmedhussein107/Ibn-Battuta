@@ -1,9 +1,9 @@
-.container {
+.signup-container {
     color: var(--text-color);
     margin: 0;
     width: 100vw; /* Full viewport width */
     height: 100vh; /* Full viewport height */
-    background-image: url("/image24.png"); /* Replace with the path to your image */
+    background-image: url("/auth.png"); /* Replace with the path to your image */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -13,7 +13,9 @@
     justify-content: center; /* Center horizontally */
     overflow: visible;
 }
-
+/* .signup-container input {
+    width: 50%;
+} */
 .form {
     display: flex;
     flex-direction: column;
@@ -24,10 +26,11 @@
     padding: var(--spacing-large);
     border-radius: var(--border-radius); /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, var(--opacity-transparent)); /* Slight shadow for depth */
-    width: 85%; /* Width relative to the parent div */
-    height: 85%;
+    width: 30%; /* Width relative to the parent div */
     display: flex;
     flex-direction: column; /* Stack children vertically */
+    margin-top: 5%;
+    margin-bottom: 10%;
 }
 
 .form-container h1 {
@@ -104,7 +107,9 @@
 .checkbox-group input[type="checkbox"] {
     margin-right: var(--spacing-small);
     transform: scale(1.5);
+    background-color: var(--accent-color);
 }
+
 .checkbox-group input[type="checkbox"]:hover {
     cursor: pointer;
 }

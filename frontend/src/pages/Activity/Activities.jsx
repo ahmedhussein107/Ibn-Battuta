@@ -74,7 +74,6 @@ const Activities = () => {
         }
     };
 
-
     const fetchBookmarkedStatus = async (query) => {
         if (userType !== "Tourist") return;
 
@@ -83,7 +82,7 @@ const Activities = () => {
         });
         try {
             const response = await axiosInstance.post(
-                `/tourist/getBookmarkStatus/`,
+                `/bookmark/getBookmarkStatus/`,
                 {
                     bookmarkIDs: activityIDs,
                 },
@@ -95,7 +94,6 @@ const Activities = () => {
             console.error("Error fetching bookmark status:", error);
         }
     };
-
 
     const sortActivities = (activities) => {
         let sortedActivities = [...activities]; // Create a shallow copy
@@ -218,7 +216,7 @@ const Activities = () => {
     const handleBookmark = async (activityID) => {
         try {
             const response = await axiosInstance.post(
-                `tourist/bookmark`,
+                `bookmark/bookmark`,
                 {
                     bookmarkType: "Activity",
                     bookmarkID: activityID,
@@ -368,7 +366,7 @@ const Activities = () => {
                                         text: "Book Now",
                                         onClick: () =>
                                             navigate(`/activity-details/${activity.id}`),
-                                        type: "1",
+                                        type: "always-dark",
                                         width: "50%",
                                         styles: {
                                             display: "flex",

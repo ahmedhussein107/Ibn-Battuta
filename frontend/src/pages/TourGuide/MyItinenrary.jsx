@@ -212,7 +212,7 @@ const MyItinenrary = () => {
                     }}
                     variant="outlined"
                     onClick={() => {
-                        navigate("/create-itinerary");
+                        navigate("/tourguide/create-itinerary");
                     }}
                 >
                     <AddIcon sx={{ fontSize: "3vh" }} />
@@ -247,8 +247,10 @@ const MyItinenrary = () => {
                                     {
                                         text: "Edit",
                                         onClick: () =>
-                                            navigate(`/edit-itinerary/${itinerary._id}`),
-                                        type: "1",
+                                            navigate(
+                                                `/tourguide/edit-itinerary/${itinerary._id}`
+                                            ),
+                                        type: "always-dark",
                                         width: "70%",
                                         styles: {
                                             display: "flex",
@@ -263,7 +265,7 @@ const MyItinenrary = () => {
                                             : "Activate",
                                         onClick: () =>
                                             activateItineraryHandler(itinerary._id),
-                                        type: "2",
+                                        type: "always-dark",
                                         width: "70%",
                                         styles: {
                                             marginTop: "2%",

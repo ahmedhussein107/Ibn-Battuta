@@ -80,7 +80,7 @@ export default function ActivityDetails() {
             if (userType !== "Tourist") return;
             try {
                 const response = await axiosInstance.post(
-                    `tourist/getBookmarkStatus/`,
+                    `bookmark/getBookmarkStatus/`,
                     {
                         bookmarkIDs: [activityData._id],
                     },
@@ -99,7 +99,7 @@ export default function ActivityDetails() {
         if (!activityData) return;
         try {
             const response = await axiosInstance.post(
-                `tourist/bookmark`,
+                `bookmark/bookmark`,
                 {
                     bookmarkType: "Activity",
                     bookmarkID: activityData._id,

@@ -233,7 +233,7 @@ const AllActivities = () => {
                                             navigate(`/activity-details`, {
                                                 state: activity,
                                             }),
-                                        type: "1",
+                                        type: "always-dark",
                                         width: "70%",
                                         styles: {
                                             display: "flex",

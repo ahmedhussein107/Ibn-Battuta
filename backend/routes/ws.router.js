@@ -30,6 +30,8 @@ function setupWebSocketRoutes(app) {
 }
 
 async function sendNotificationCountToUser(userId, userType) {
+    if (userType === "Governor") return; // no noitifications list in the model
+
     const userKey = `${userId}_${userType}`;
     const ws = activeUsers[userKey];
     console.log("Sending notification count to user:", userKey);
@@ -72,6 +74,7 @@ async function sendNotificationCountToUser(userId, userType) {
     }
 }
 function incrementnotificationCount(userId, userType, notification) {
+    if (userType === "Governor") return; // no noitifications list in the model
     const userKey = `${userId}_${userType}`;
     const ws = activeUsers[userKey];
     console.log("Incrementing notification count for user:", userKey);

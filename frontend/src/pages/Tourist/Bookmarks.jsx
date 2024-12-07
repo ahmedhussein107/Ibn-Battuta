@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../../components/Pagination";
-import bookingsBackground from "../../assets/backgrounds/bookingsBackground.png";
+import bookingsBackground from "../../assets/backgrounds/bookings_bg.png";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import CardActivity from "../../components/CardActivity";
@@ -30,8 +30,8 @@ const Bookmarks = () => {
     };
 
     const URI = {
-        Itineraries: "tourist/getItineraryBookmarks",
-        Activities: "tourist/getActivityBookmarks",
+        Itineraries: "bookmark/getItineraryBookmarks",
+        Activities: "bookmark/getActivityBookmarks",
     };
 
     const fetchBookmarks = async () => {
@@ -72,7 +72,7 @@ const Bookmarks = () => {
     const handleBookmark = async (bookmarkID, bookmarkType) => {
         try {
             const response = await axiosInstance.post(
-                `tourist/bookmark`,
+                `bookmark/bookmark`,
                 { bookmarkType, bookmarkID, isBookmarked: true },
                 { withCredentials: true }
             );
@@ -102,6 +102,7 @@ const Bookmarks = () => {
                         handleChooseType={handleChooseType}
                     />
                 </div>
+                <hr style={{ width: "90%", margin: "0 auto" }} />
 
                 <div style={itemsContainerStyle}>
                     {/* <GenericCard width="40vw" height="20vw" /> */}
@@ -136,7 +137,7 @@ const Bookmarks = () => {
                                                     navigate(
                                                         `/activity-details/${bookmark.bookmarkID._id}`
                                                     ),
-                                                type: "1",
+                                                type: "always-dark",
                                                 width: "50%",
                                                 styles: {
                                                     display: "flex",
@@ -183,8 +184,8 @@ const Bookmarks = () => {
                                                     navigate(
                                                         `/itinerary-details/${bookmark.bookmarkID._id}`
                                                     ),
-                                                type: "1",
-                                                width: "50%",
+                                                type: "always-dark",
+                                                width: "80%",
                                                 styles: {
                                                     display: "flex",
                                                     justifyContent: "center",
@@ -213,7 +214,7 @@ const Bookmarks = () => {
 const backgroundStyle = {
     width: "100vw",
     height: "30vh",
-    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bookingsBackground})`,
+    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${bookingsBackground})`,
     backgroundSize: "100% 100%",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",

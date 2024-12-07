@@ -474,7 +474,7 @@ const TimelineN = ({ date, time }) => {
                                                     setSelectedActivity(activity);
                                                     setSelectTimeIntervalOpen(true);
                                                 },
-                                                type: "1",
+                                                type: "always-dark",
                                                 width: "50%",
                                                 styles: {
                                                     display: "flex",
@@ -511,7 +511,7 @@ const TimelineN = ({ date, time }) => {
                                                         setSelectedActivity(activity);
                                                         setSelectTimeIntervalOpen(true);
                                                     },
-                                                    type: "1",
+                                                    type: "always-dark",
                                                     width: "50%",
                                                     styles: {
                                                         display: "flex",
@@ -549,14 +549,14 @@ const TimelineN = ({ date, time }) => {
                     }}
                 >
                     <CustomButton
-                        stylingMode="2"
+                        stylingMode="always-light"
                         text="Previous"
                         handleClick={() => {
                             navigate(-1);
                         }}
                     />
                     <CustomButton
-                        stylingMode="submit"
+                        stylingMode="always-dark"
                         text="Create Itinerary"
                         handleClick={async () => {
                             let totalPrice = Number(location.state.price);

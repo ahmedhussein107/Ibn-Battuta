@@ -5,6 +5,7 @@ import { faBell } from "@fortawesome/free-solid-svg-icons";
 import "../styles/NavBar.css";
 import { useState, useEffect, useRef } from "react";
 import Button from "./Button";
+import axiosInstance from "../api/axiosInstance";
 
 import {
     guestNavbarItems,
@@ -29,12 +30,12 @@ const navbarUserItems = {
     Admin: adminNavbarItems,
 };
 
-const touristProfileDropdonw = [
-    { "My Profile": "/tourist-profile" },
-    { "My Bookings": "/bookings" },
-    { "My Orders": "/orders" },
-    { "My Bookmarks": "/bookmarks" },
-    { "My Complaints": "/complaints" },
+const touristProfileDropdown = [
+    { "My Profile": "/tourist/profile" },
+    { "My Bookings": "/tourist/bookings" },
+    { "My Orders": "/tourist/orders" },
+    { "My Bookmarks": "/tourist/bookmarks" },
+    { "My Complaints": "/tourist/complaints" },
 ];
 
 const useClickOutside = (callback) => {
@@ -133,20 +134,41 @@ const NavBar = () => {
         setIsNotificationOpen(!isNotificationOpen);
         console.log("Notification clicked");
     };
-    const handleNotificationClick = (notification) => {
+    const handleNotificationClick = (notification, index) => {
         // TODO: navigate to the appropriate page;
         let prefix = notification.relatedType.toLowerCase();
         if (prefix.endsWith("s")) {
             prefix = prefix.slice(0, -1);
         }
-        const link = `${prefix}/${notification.relatedId}`;
+        const link = `/${Cookies.get("userType").toLowerCase()}/${prefix}/${
+            notification.relatedId
+        }`;
+        if (notification.isRead) {
+            navigate(link);
+            return;
+        }
+        let newNotifications = notifications;
+        setUnreadNotificationCount(unreadNotificationCount - 1);
+        console.log("notification is ", notification);
+        newNotifications[index].isRead = true;
+        setNotifications(newNotifications);
+        try {
+            axiosInstance.put(`/general/markNotificationAsRead/${notification._id}`);
+        } catch (err) {
+            console.log(err);
+        }
+
+        setIsNotificationOpen(false);
         navigate(link);
     };
     const handleLogout = () => {
         // TODO: log out logic is not implemented
         Cookies.remove("userType");
+        Cookies.remove("jwt");
+        Cookies.remove("profileImage");
         Cookies.set("currency", "EGP");
         setUserType("Guest");
+
         navigate("/");
     };
 
@@ -206,7 +228,7 @@ const NavBar = () => {
                         </Link>
 
                         <Button
-                            stylingMode="submit"
+                            stylingMode="always-dark"
                             text={"Sign Up"}
                             handleClick={() => navigate("/select-your-role")}
                             isLoading={false}
@@ -250,7 +272,10 @@ const NavBar = () => {
                                                     : notification.type
                                             }`}
                                             onClick={() =>
-                                                handleNotificationClick(notification)
+                                                handleNotificationClick(
+                                                    notification,
+                                                    index
+                                                )
                                             }
                                         >
                                             <p className="notification-message">
@@ -272,45 +297,16 @@ const NavBar = () => {
                         )}
                         <div className="profile-dropdown">
                             <img
-                                src="https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
+                                src={
+                                    Cookies.get("profileImage") ||
+                                    "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
+                                }
                                 alt="Profile"
                                 className="profile-image"
                             />
                             <div className="dropdown-content">
-                                {userType === "Admin" ? (
-                                    <Link to={"/admin-profile"} className="dropdown-item">
-                                        {"My Profile"}
-                                    </Link>
-                                ) : userType === "Seller" ? (
-                                    <Link
-                                        to={"/seller-profile"}
-                                        className="dropdown-item"
-                                    >
-                                        {"My Profile"}
-                                    </Link>
-                                ) : userType === "Advertiser" ? (
-                                    <Link
-                                        to={"/advertiser-profile"}
-                                        className="dropdown-item"
-                                    >
-                                        {"My Profile"}
-                                    </Link>
-                                ) : userType === "Governor" ? (
-                                    <Link
-                                        to={"/governor-profile"}
-                                        className="dropdown-item"
-                                    >
-                                        {"My Profile"}
-                                    </Link>
-                                ) : userType === "TourGuide" ? (
-                                    <Link
-                                        to={"/tourguide-profile"}
-                                        className="dropdown-item"
-                                    >
-                                        {"My Profile"}
-                                    </Link>
-                                ) : userType === "Tourist" ? (
-                                    touristProfileDropdonw.map((item, index) => {
+                                {userType === "Tourist" ? (
+                                    touristProfileDropdown.map((item, index) => {
                                         const [label, link] = Object.entries(item)[0];
                                         return (
                                             <Link
@@ -322,7 +318,15 @@ const NavBar = () => {
                                             </Link>
                                         );
                                     })
-                                ) : null}
+                                ) : userType === "Guest" ? null : (
+                                    <Link
+                                        to={`/${userType.toLowerCase()}/profile`}
+                                        className="dropdown-item"
+                                    >
+                                        {"My Profile"}
+                                    </Link>
+                                )}
+
                                 <div className="dropdown-separator"></div>
                                 <div className="log-out" onClick={handleLogout}>
                                     Logout

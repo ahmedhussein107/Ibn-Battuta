@@ -11,8 +11,11 @@ import axiosInstance from "../api/axiosInstance";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
+import { useNavigate } from "react-router-dom";
 
 const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
+    const navigate = useNavigate();
+
     const [rating, setRating] = useState(booking.ratingID ? booking.ratingID.rating : 0);
     const [comment, setComment] = useState(
         booking.ratingID ? booking.ratingID.comment : ""
@@ -55,11 +58,14 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
         booking.bookingType == "Itinerary"
             ? booking.typeId?.availableDatesAndTimes[0]
             : booking.typeId?.startDate;
+
     const givenDate = new Date(date);
     const differenceInMilliseconds = givenDate - currentDate;
     const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24.0);
+
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
+
     const handleRateTourguide = async () => {
         try {
             const response = await axiosInstance.post(
@@ -117,95 +123,103 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
             setOpen(false);
         }
     };
-    const aboveLine = (
-        <div>
+
+    const FirstLine = () => (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                gap: "0.2rem",
+            }}
+        >
+            <h2 style={{ fontSize: "1em", margin: 0 }}>{booking.typeId?.name}</h2>
             <div
                 style={{
                     display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    gap: "0.2rem",
-                }}
-            >
-                <h2 style={{ fontSize: fontSize, margin: 0 }}>{booking.typeId?.name}</h2>
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        fontSize: "0.8rem",
-                        color: "#777",
-                        marginRight: "1rem",
-                    }}
-                >
-                    <CalendarTodayIcon sx={{ marginRight: "0.3rem", fontSize: "1em" }} />
-                    {new Date(booking.createdAt).toLocaleString("en-US", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                        hour12: true,
-                    })}
-                </div>
-            </div>
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    gap: "0.2rem",
+                    alignItems: "center",
+                    fontSize: "0.6em",
+                    color: "#777",
                     marginRight: "1rem",
                 }}
             >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <LocationIcon sx={{ marginRight: "0.5rem", fontSize: "1.1em" }} />
-                    {booking.typeId?.location}
-                </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    {booking.bookingType == "Itinerary" ? (
-                        <LanguageIcon
-                            style={{ marginRight: "0.5rem", fontSize: "1.1em" }}
-                        />
-                    ) : (
-                        <TagsIcon style={{ marginRight: "0.5rem", fontSize: "1.1em" }} />
-                    )}
-                    {booking.bookingType == "Itinerary"
-                        ? booking.typeId?.language
-                        : booking.typeId?.category}
-                </div>
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                    }}
-                >
-                    <TagsIcon sx={{ marginRight: "0.5rem", fontSize: "1.1em" }} />
-                    {booking.typeId?.tags.join(", ")}
-                </div>
+                <CalendarTodayIcon sx={{ marginRight: "0.3rem", fontSize: "1em" }} />
+                {new Date(booking.createdAt).toLocaleString("en-US", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                })}
             </div>
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    padding: "1%",
-                    gap: "1%",
-                }}
-            >
-                <Avatar src={profilePicture} />
-                {" " + name + " "}
-                {differenceInDays < 0 && booking.bookingType == "Itinerary" ? (
-                    canRateTourGuide ? (
-                        <Button variant="text" onClick={() => setTourguidePopup(true)}>
-                            Rate now
-                        </Button>
-                    ) : (
-                        <span style={{ color: "grey" }}>{ratingTourGuide}/5</span>
-                    )
+        </div>
+    );
+
+    const secondLineIconSize = "0.85em";
+    const secondLineFontSize = "0.75em";
+
+    const IconBesideText = ({ Icon, text }) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+            <Icon sx={{ marginRight: "0.3rem", fontSize: secondLineIconSize }} />
+            <p style={{ margin: 0, fontSize: secondLineFontSize }}>{text}</p>
+        </div>
+    );
+
+    const SecondLine = () => (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                gap: "0.2rem",
+                marginRight: "1rem",
+                fontSize: "0.9em",
+            }}
+        >
+            <IconBesideText Icon={LocationIcon} text={booking.typeId?.location} />
+            {booking.bookingType == "Itinerary" && (
+                <IconBesideText Icon={LanguageIcon} text={booking.typeId?.language} />
+            )}
+            {booking.bookingType == "Activity" && (
+                <IconBesideText Icon={TagsIcon} text={booking.typeId?.category} />
+            )}
+            <IconBesideText Icon={TagsIcon} text={booking.typeId?.tags.join(", ")} />
+        </div>
+    );
+
+    const ThirdLine = () => (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                padding: "1%",
+                gap: "1rem",
+                fontSize: "0.8em",
+            }}
+        >
+            <Avatar src={profilePicture} sx={{ width: "1.4em", height: "1.4em" }} />
+            {" " + name + " "}
+            {differenceInDays < 0 && booking.bookingType == "Itinerary" ? (
+                canRateTourGuide ? (
+                    <Button variant="text" onClick={() => setTourguidePopup(true)}>
+                        Rate now
+                    </Button>
                 ) : (
-                    <div />
-                )}
-            </div>
+                    <span style={{ color: "grey" }}>{ratingTourGuide}/5</span>
+                )
+            ) : (
+                <div />
+            )}
+        </div>
+    );
+
+    const aboveLine = (
+        <div style={{ fontSize: fontSize }}>
+            <FirstLine />
+            <SecondLine />
+            <ThirdLine />
         </div>
     );
 
@@ -236,7 +250,9 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                 style={{
                     display: "flex",
                     flexDirection: "row",
-                    justifyContent: "space-between",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    marginRight: "0.5rem",
                     width: "100%",
                 }}
             >
@@ -259,16 +275,16 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                     style={{
                         display: "flex",
                         flexDirection: "row",
-                        justifyContent: "space-between",
+                        justifyContent: "flex-end",
                         width: "40%",
                     }}
                 >
                     {differenceInDays >= 2 ? (
                         <CustomButton
-                            stylingMode="2"
-                            width="50%"
+                            stylingMode="dark-when-hovered"
+                            width="40%"
                             text="cancel"
-                            customStyle={{ padding: "0.8rem" }}
+                            customStyle={{}}
                             handleClick={() => {
                                 setCancelPopup(true);
                             }}
@@ -277,11 +293,27 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                         <div></div>
                     )}
                     <CustomButton
-                        stylingMode="1"
-                        width="50%"
+                        stylingMode="always-dark"
+                        width="40%"
                         text="view"
-                        customStyle={{ padding: "0.8rem" }}
-                        onClick={() => {}} // Add onClick
+                        customStyle={{}}
+                        handleClick={() => {
+                            const type = booking.bookingType;
+                            if (type == "Itinerary" || type == "Activity") {
+                                navigate(
+                                    `/${type.toLocaleLowerCase()}-details/${
+                                        booking.typeId._id
+                                    }`,
+                                    {
+                                        state: {
+                                            id: booking.typeId._id,
+                                        },
+                                    }
+                                );
+                            } else {
+                                console.log("Invalid type");
+                            }
+                        }}
                     />
                 </div>
             </div>
@@ -406,14 +438,16 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                 setIsOpen={setCancelPopup}
                 headerText={`Are you sure you want to cancel this booking?`}
                 handleSubmit={handleCancel}
-            ></PopUp>
+            >
+                <div></div>
+            </PopUp>
             <GenericCard
                 image={Picture}
                 aboveLine={aboveLine}
                 bottomLeft={bottomLeft}
                 bottomRight={<></>}
-                width="46vw"
-                height="26vh"
+                width={width}
+                height={height}
                 upperHeight="44%"
                 lowerHeight="54%"
                 bottomLeftWidth="100%"

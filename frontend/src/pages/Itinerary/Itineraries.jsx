@@ -94,7 +94,7 @@ const Itineraries = () => {
         });
         try {
             const response = await axiosInstance.post(
-                `/tourist/getBookmarkStatus/`,
+                `/bookmark/getBookmarkStatus/`,
                 {
                     bookmarkIDs: itineraryIDs,
                 },
@@ -161,7 +161,7 @@ const Itineraries = () => {
     const handleBookmark = async (itineraryID) => {
         try {
             const response = await axiosInstance.post(
-                `tourist/bookmark`,
+                `bookmark/bookmark`,
                 {
                     bookmarkType: "Itinerary",
                     bookmarkID: itineraryID,
@@ -298,8 +298,8 @@ const Itineraries = () => {
                                             navigate(
                                                 `/itinerary-details/${itinerary.id}`
                                             ),
-                                        type: "1",
-                                        width: "70%",
+                                        type: "always-dark",
+                                        width: "50%",
                                     },
                                 ]}
                             />
