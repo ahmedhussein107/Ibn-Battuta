@@ -8,36 +8,9 @@
     max-height: 2vh;
     padding-bottom: 1.5vh;
 }
-.admin-control button {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    border-radius: 30px;
-    border-color: black;
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background-color 0.3s; /* Smooth transition for hover */
-    margin-right: 10px;
-}
-
-/*
-button:hover {
-    background-color: var(--accent-color-light);
-    border: 1px solid black;
-} */
-
-button.selected {
-    background-color: var(--accent-color);
-    color: white;
-    border-color: black;
-}
-
-button:hover:not(.selected) {
-    /* background-color: var(--accent-color); */
-    border-color: black;
-}
 
 .filter-buttons {
-    gap: 20px;
+    display: flex;
 }
 .sort-div {
     align-items: center;

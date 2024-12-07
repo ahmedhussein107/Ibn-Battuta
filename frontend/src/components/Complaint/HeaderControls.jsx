@@ -5,6 +5,7 @@ import AddCircleOutlineSharpIcon from "@mui/icons-material/AddCircleOutlineSharp
 import ComplaintFormPopup from "./NewComplaintPopUp";
 import { useState } from "react";
 import Cookies from "js-cookie";
+import Button from "../Button";
 const HeaderControls = ({ onFilterChange, selectedFilter, onSort, isSorted }) => {
     const [isCreateOpen, setIsCreateOpen] = useState(false);
 
@@ -13,35 +14,45 @@ const HeaderControls = ({ onFilterChange, selectedFilter, onSort, isSorted }) =>
             <div className="admin-control">
                 <div className="filter-buttons">
                     {["all", "pending", "resolved"].map((filter) => (
-                        <button
+                        <Button
                             key={filter}
-                            className={selectedFilter === filter ? "selected" : ""}
-                            onClick={() => onFilterChange(filter)}
-                        >
-                            {filter.charAt(0).toUpperCase() + filter.slice(1)}{" "}
-                        </button>
+                            handleClick={() => onFilterChange(filter)}
+                            text={filter.charAt(0).toUpperCase() + filter.slice(1)}
+                            height="4vh"
+                            stylingMode={
+                                selectedFilter === filter ? "always-dark" : "always-light"
+                            }
+                        ></Button>
                     ))}
                 </div>
                 {Cookies.get("userType") === "admin" ? (
                     <div className="sort-div">
-                        <button className={isSorted ? "selected" : ""} onClick={onSort}>
-                            <SortIcon
-                                sx={{ marginRight: "5px", verticalAlign: "middle" }}
-                            />
-                            Sort by Date
-                        </button>
+                        <Button
+                            handleClick={onSort}
+                            text="Sort by Date"
+                            stylingMode="always-light"
+                            height="4vh"
+                            icon={
+                                <SortIcon
+                                    sx={{ marginRight: "5px", verticalAlign: "middle" }}
+                                />
+                            }
+                        ></Button>
                     </div>
                 ) : (
                     <>
-                        <button
-                            className="create-complaint-button"
-                            onClick={() => setIsCreateOpen(true)}
-                        >
-                            <AddCircleOutlineSharpIcon
-                                sx={{ marginRight: "5px", verticalAlign: "middle" }}
-                            />
-                            File a Complaint
-                        </button>
+                        <Button
+                            handleClick={() => setIsCreateOpen(true)}
+                            text="File a Complaint"
+                            stylingMode="always-light"
+                            height="4vh"
+                            icon={
+                                <AddCircleOutlineSharpIcon
+                                    sx={{ marginRight: "5px", verticalAlign: "middle" }}
+                                />
+                            }
+                        ></Button>
+
                         <ComplaintFormPopup
                             isOpen={isCreateOpen}
                             setIsOpen={setIsCreateOpen}
@@ -49,7 +60,6 @@ const HeaderControls = ({ onFilterChange, selectedFilter, onSort, isSorted }) =>
                     </>
                 )}
             </div>
-            <div className="admin-controls-seprator"></div>
         </>
     );
 };

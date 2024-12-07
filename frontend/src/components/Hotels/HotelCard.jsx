@@ -104,7 +104,7 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
             </div>
             <div className="show-more-div">
                 <Button
-                    stylingMode="submit"
+                    stylingMode="always-dark"
                     text={"Show details"}
                     handleClick={handleShowMore}
                     customStyle={{

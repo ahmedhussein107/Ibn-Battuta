@@ -152,7 +152,7 @@ const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
                             </div>
                         </div>
                         <CustomButton
-                            stylingMode="1"
+                            stylingMode="always-dark"
                             text="Create Activity"
                             handleClick={handleSubmit}
                         />

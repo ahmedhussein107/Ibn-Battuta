@@ -91,7 +91,11 @@ const FlightCard = ({ trip, airlines, handleClick, mode = 1, bookingNumber }) =>
 
             <div style={styles.cardRight}>
                 <h4>{formatPrice(trip.price.total)}</h4>
-                <Button stylingMode="1" text="View" handleClick={handleClick}></Button>
+                <Button
+                    stylingMode="always-dark"
+                    text="View"
+                    handleClick={handleClick}
+                ></Button>
             </div>
         </div>
     );
