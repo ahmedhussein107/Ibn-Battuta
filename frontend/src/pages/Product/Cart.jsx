@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import usePageHeader from "../../components/Header/UseHeaderPage";
 import background from "../../assets/backgrounds/shopBackground.png";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -10,7 +10,8 @@ import Footer from "../../components/Footer";
 import CartItem from "../../components/CartItem";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 import Cookies from "js-cookie";
-import { CircularProgress } from "@mui/material";
+import { Alert, CircularProgress } from "@mui/material";
+import Button from "../../components/Button.jsx";
 
 const Cart = () => {
     const navigate = useNavigate();
@@ -33,17 +34,48 @@ const Cart = () => {
         fetchCart();
     }, []);
 
-    const setProductCount = (index, newCount) => {
+    const setProductCount = async (index, newCount) => {
+        if (newCount == 0) {
+            deleteProductFromCart(index);
+            return;
+        }
+        const response = await axiosInstance.post(
+            "/cart/updateCart",
+            { productID: cart[index].productID._id, count: newCount },
+            { withCredentials: true }
+        );
+        console.log(response.data);
         const newCart = [...cart];
         console.log(newCart);
         newCart[index].count = newCount;
         setCart(newCart);
     };
 
-    const deleteProductFromCart = (index) => {
+    const deleteProductFromCart = async (index) => {
+        const response = await axiosInstance.delete(
+            `/cart/deleteProduct/${cart[index].productID._id}`,
+            { withCredentials: true }
+        );
+        console.log(response.data);
         const newCart = [...cart];
         newCart.splice(index, 1);
         setCart(newCart);
+    };
+
+    const getTotalPrice = () => {
+        let price = 0;
+        for (let i = 0; i < cart.length; i++) {
+            price += cart[i].productID.price * cart[i].count;
+        }
+        return price;
+    };
+
+    const getValidity = () => {
+        let valid = true;
+        for (let i = 0; i < cart.length; i++) {
+            valid &= cart[i].productID.quantity >= cart[i].count;
+        }
+        return valid;
     };
 
     return (
@@ -136,6 +168,10 @@ const Cart = () => {
                         backgroundColor: "#FFFAFA",
                         borderRadius: "2vh",
                         paddingTop: "3vh",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        boxShadow: "0 2px 2px rgba(0, 0, 0, 0.1)", // Add shadow here
                     }}
                 >
                     {cart.map((element, index) => (
@@ -147,11 +183,83 @@ const Cart = () => {
                             formatPrice={formatPrice}
                         />
                     ))}
+
+                    <span
+                        style={{
+                            display: "flex",
+                            width: "95%",
+                            alignContent: "center",
+                            justifyContent: "space-between",
+                            marginBottom: "1%",
+                        }}
+                    >
+                        <span>
+                            <span
+                                style={{
+                                    fontSize: "1.2rem",
+                                    fontWeight: "bold",
+                                    color: "#9C4F21",
+                                }}
+                            >
+                                Items:{" "}
+                            </span>
+                            <span
+                                style={{
+                                    fontSize: "1.2rem",
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                {cart.length}
+                            </span>{" "}
+                        </span>
+                        <span>
+                            <span
+                                style={{
+                                    fontSize: "1.2rem",
+                                    fontWeight: "bold",
+                                    color: "#9C4F21",
+                                }}
+                            >
+                                Total Price:{" "}
+                            </span>
+                            <span
+                                style={{
+                                    fontSize: "1.2rem",
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                {formatPrice(getTotalPrice())}
+                            </span>
+                        </span>
+                    </span>
+                    <Button
+                        text="Checkout"
+                        handleClick={() =>
+                            navigate("/tourist/checkout", {
+                                state: { price: getTotalPrice() },
+                            })
+                        }
+                        stylingMode={1}
+                        customStyle={{ marginBottom: "1%", marginLeft: "85%" }}
+                        isDisabled={!getValidity()}
+                    />
+                    {!getValidity() && (
+                        <Alert
+                            severity="error"
+                            style={{ width: "95%", marginBottom: "1%" }}
+                        >
+                            Some items in your cart are not available. Please remove them
+                            to proceed to checkout.
+                        </Alert>
+                    )}
                 </div>
             )}
 
             {!isLoading && !cartIsLoading && cart.length == 0 && (
-                <p>Your cart is empty! Go to the shop to add some products</p>
+                <p>
+                    Your cart is empty! Go to the <Link to="/shop">shop</Link> page to add
+                    some products
+                </p>
             )}
 
             <Footer />

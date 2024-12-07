@@ -2,6 +2,7 @@ import QuantityControls from "./QuantityControls";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import ErrorIcon from "@mui/icons-material/Error";
+import { Tooltip } from "@mui/material";
 
 const CartItem = ({
     product,
@@ -48,7 +49,17 @@ const CartItem = ({
                             }}
                         >
                             <h2 style={{ color: "#9C4F21" }}>{name}</h2>
-                            {quantity < count && <ErrorIcon style={{ color: "red" }} />}
+                            {quantity < count && (
+                                <Tooltip
+                                    title={
+                                        quantity == 0
+                                            ? "Out of Stock"
+                                            : "Not enough items in stock"
+                                    }
+                                >
+                                    <ErrorIcon style={{ color: "red" }} />
+                                </Tooltip>
+                            )}
                         </div>
                         <IconButton aria-label="delete" onClick={onDelete}>
                             <CloseIcon />
@@ -137,6 +148,7 @@ const cartItemStyle = {
     alignItems: "center",
     justifyContent: "center",
     height: "30vh",
+    width: "100%",
 };
 const itemImageStyle = {
     borderRadius: "5%",
