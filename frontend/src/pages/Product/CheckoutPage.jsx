@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import Footer from "../../components/Footer";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import Switch from "@mui/material/Switch";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import { styled } from "@mui/material/styles";
+import Alert from "@mui/material/Alert";
+import CheckIcon from "@mui/icons-material/Check";
 import axiosInstance from "../../api/axiosInstance";
 import bookingsBackground from "../../assets/backgrounds/checkoutbg.png";
 import Button from "../../components/Button";
@@ -11,13 +17,24 @@ import { CircularProgress } from "@mui/material";
 import Cookies from "js-cookie";
 import { useFunctionContext } from "../../contexts/FunctionContext";
 import { useLocation } from "react-router-dom";
+import PopUp from "../../components/PopUpsGeneric/PopUp";
+import { set } from "mongoose";
 
 const Checkout = () => {
     const [tourist, setTourist] = useState(null);
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
     const [redeemValue, setRedeemValue] = useState(0);
-    const [paymentMethod, setPaymentMethod] = useState("");
+    const [paymentMethod, setPaymentMethod] = useState("cash on delivery");
     const [isWalletUsed, setIsWalletUsed] = useState(false);
+    const [promoCode, setPromoCode] = useState("");
+    const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+    const [isAdressPopUpOpen, setIsAdressPopUpOpen] = useState(false);
+    const [alert, setAlert] = useState({ open: false, severity: "info", message: "" });
+    const [popupAlert, setPopupAlert] = useState({
+        open: false,
+        severity: "info",
+        message: "",
+    });
 
     const [formData, setFormData] = useState({
         mobile: "",
@@ -47,6 +64,7 @@ const Checkout = () => {
             })
             .catch((error) => {
                 console.error("Error fetching tourist:", error);
+                showAlert("error", "An error occurred while fetching your profile.");
             });
     }, []);
 
@@ -63,6 +81,20 @@ const Checkout = () => {
             // Handle other fields
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
+    };
+
+    const showAlert = (severity, message) => {
+        setAlert({ open: true, severity, message });
+        // setTimeout(() => {
+        //     setAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+        // }, 8000); // Alert will close after 5 seconds
+    };
+
+    const showPopUpAlert = (severity, message) => {
+        setPopupAlert({ open: true, severity, message });
+        setTimeout(() => {
+            setPopupAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+        }, 8000); // Alert will close after 5 seconds
     };
 
     const handleSelectAddress = (event) => {
@@ -84,6 +116,7 @@ const Checkout = () => {
             })
             .catch((error) => {
                 console.error("Error updating tourist:", error);
+                showAlert("error", "An error occurred while updating your Profile.");
             });
     };
 
@@ -107,7 +140,7 @@ const Checkout = () => {
                     { withCredentials: true }
                 )
                 .then((response) => {
-                    alert(response.data.message);
+                    showAlert("success", response.data.message);
                     const updatedTourist = {
                         ...tourist,
                         loyalityPoints: tourist.loyalityPoints - pointsToRedeem,
@@ -116,23 +149,32 @@ const Checkout = () => {
                     setTourist(updatedTourist);
                     setPointsToRedeem(0);
                     setRedeemValue(0);
+                    setIsPopUpOpen(false);
                 })
                 .catch((error) => {
                     console.error("Error redeeming points:", error);
-                    alert(
+                    showAlert(
+                        "error",
                         error.response?.data?.e ||
                             "An error occurred while redeeming points."
                     );
                 });
         } else if (pointsToRedeem === 0) {
-            alert("Please enter a valid amount of points to redeem.");
+            showPopUpAlert("error", "Please enter a valid amount of points to redeem.");
         } else if (tourist?.loyalityPoints < pointsToRedeem) {
-            alert("Insufficient points for redemption.");
+            showPopUpAlert("error", "Insufficient points for redemption.");
         } else if (pointsToRedeem % 10000 !== 0) {
-            alert("Please enter a multiple of 10000.");
+            showPopUpAlert("error", "Please enter a multiple of 10000.");
         } else {
-            alert("Insufficient points for redemption or invalid input");
+            showPopUpAlert(
+                "error",
+                "Insufficient points for redemption or invalid input"
+            );
         }
+    };
+
+    const handleAddButton = () => {
+        setIsPopUpOpen(true);
     };
 
     // const handleNext = async () => {
@@ -164,6 +206,10 @@ const Checkout = () => {
     // };
 
     const handleNext = async () => {
+        if (!formData.mobile.trim()) {
+            showAlert("error", "Please enter your mobile number before proceeding.");
+            return; // Exit the function to prevent further execution
+        }
         try {
             const response = await axiosInstance.post(
                 "/order/createOrder",
@@ -200,6 +246,10 @@ const Checkout = () => {
                 await handleSuccess();
             }
         } catch (error) {
+            showAlert(
+                "error",
+                error.response?.data?.e || "An error occurred while creating your order."
+            );
             console.log(error.message);
         }
     };
@@ -213,12 +263,93 @@ const Checkout = () => {
         setIsWalletUsed(event.target.checked);
     };
 
-    if (isLoading) {
-        return <CircularProgress />;
-    }
+    useEffect(() => {
+        const totamount = 1000;
+        if (isWalletUsed) {
+            if (totamount < tourist.wallet) {
+                showAlert(
+                    "info",
+                    "You don't have enough money in your wallet.Please redeem points to add balance to you wallet or choose an additional payment method."
+                );
+            }
+        }
+        console.log(formData.selectedAddress);
+    }, [isWalletUsed, formData.selectedAddress]);
+
+    const handleBackButton = () => {
+        navigate(-1);
+    };
+
+    const IOSSwitch = styled((props) => (
+        <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+    ))(({ theme }) => ({
+        width: 42,
+        height: 26,
+        padding: 0,
+        "& .MuiSwitch-switchBase": {
+            padding: 0,
+            margin: 2,
+            transitionDuration: "300ms",
+            "&.Mui-checked": {
+                transform: "translateX(16px)",
+                color: "#fff",
+                "& + .MuiSwitch-track": {
+                    backgroundColor: "#9c4f21",
+                    opacity: 1,
+                    border: 0,
+                    ...(theme.palette.mode === "dark" && {
+                        backgroundColor: "#9c4f21",
+                    }),
+                },
+                "&.Mui-disabled + .MuiSwitch-track": {
+                    opacity: 0.5,
+                },
+            },
+            "&.Mui-focusVisible .MuiSwitch-thumb": {
+                color: "#9c4f21",
+                border: "6px solid #fff",
+            },
+            "&.Mui-disabled .MuiSwitch-thumb": {
+                color: theme.palette.grey[100],
+                ...(theme.palette.mode === "dark" && {
+                    color: theme.palette.grey[600],
+                }),
+            },
+            "&.Mui-disabled + .MuiSwitch-track": {
+                opacity: 0.7,
+                ...(theme.palette.mode === "dark" && {
+                    opacity: 0.3,
+                }),
+            },
+        },
+        "& .MuiSwitch-thumb": {
+            boxSizing: "border-box",
+            width: 22,
+            height: 22,
+        },
+        "& .MuiSwitch-track": {
+            borderRadius: 26 / 2,
+            backgroundColor: "#E9E9EA",
+            opacity: 1,
+            transition: theme.transitions.create(["background-color"], {
+                duration: 500,
+            }),
+            ...(theme.palette.mode === "dark" && {
+                backgroundColor: "#39393D",
+            }),
+        },
+    }));
+
+    const handleAddAddress = () => {
+        setIsAdressPopUpOpen(true);
+    };
+
+    // if (isLoading) {
+    //     return <CircularProgress />;
+    // }
 
     return (
-        <div>
+        <div style={{ display: "flex", displaydirection: "column" }}>
             <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
                 <div style={backgroundStyle}>
                     <h1 style={headerStyle}>CheckOut</h1>
@@ -252,18 +383,28 @@ const Checkout = () => {
                         direction: "row",
                         justifyContent: "space-between",
                         padding: "1% 0",
-                        marginBottom: "2vh",
+
+                        //marginBottom: "1vh",
                     }}
                 >
-                    {/* Right componentthe first part of the form with the contact details and the delivery address */}
-                    <div>
+                    {/* Right component first part of the form with the contact details and the delivery address */}
+                    <div style={{ marginLeft: "4vw" }}>
                         <div
                             style={{
-                                fontFamily: "Inder",
-                                marginLeft: "2vw",
+                                marginLeft: "3vw",
+                                marginBottom: "1vh",
+                                color: "#9c4f21",
+                                fontSize: "35px",
                             }}
                         >
-                            <p> Contact Mobile Number:</p>
+                            Contact Details:
+                        </div>
+                        <div
+                            style={{
+                                marginLeft: "4vw",
+                            }}
+                        >
+                            <p style={{ fontSize: "25px" }}> Contact Mobile Number:</p>
                             <Box
                                 component="form"
                                 sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
@@ -280,71 +421,133 @@ const Checkout = () => {
                                     onBlur={handleSubmit}
                                     onChange={handleChange}
                                     style={{
-                                        width: "20vw",
+                                        width: "25vw",
                                         height: "4vh",
                                         marginTop: "1vh",
+                                        marginLeft: "1vw",
                                     }}
                                 />
                             </Box>
                         </div>
                         <div
                             style={{
-                                fontFamily: "Inder",
-                                marginLeft: "2vw",
+                                marginLeft: "4vw",
                                 marginTop: "2vh",
+                                fontSize: "25px",
                             }}
                         >
-                            <p> Delivery Address*:</p>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    marginTop: "1vh",
+                                    direction: "row",
+                                }}
+                            >
+                                <p> Delivery Address:</p>
+                            </div>
                             <select
                                 name="address"
                                 value={formData.selectedAddress}
-                                onChange={handleSelectAddress}
+                                onChange={(e) => {
+                                    if (e.target.value === "addNew") {
+                                        setIsAdressPopUpOpen(true); // Open the popup
+                                    } else {
+                                        handleSelectAddress(e);
+                                    }
+                                }}
                                 style={{
-                                    width: "20vw", // Adjust width as needed
-                                    height: "6vh", // Set a specified height for consistency
-                                    marginTop: "1vh", // Space above the select
-                                    padding: "10px", // Padding for the select
-                                    border: "1px solid #ccc", // Border styling
-                                    borderRadius: "4px", // Rounded corners
-                                    boxSizing: "border-box", // Include padding/border in width/height
-                                    display: "block", // Make sure it's a block element
-                                    marginLeft: "0.5vw",
+                                    width: "25vw",
+                                    height: "6vh",
+                                    marginTop: "1vh",
+                                    padding: "10px",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "4px",
+                                    boxSizing: "border-box",
+                                    display: "block",
+                                    marginLeft: "1vw",
                                 }}
                             >
+                                <option value="addNew">Add new Address</option>
                                 {formData.address.map((address, index) => (
                                     <option key={index} value={address.name}>
                                         {address.name}
                                     </option>
                                 ))}
                             </select>
+
+                            {isAdressPopUpOpen && (
+                                <PopUp
+                                    isOpen={isAdressPopUpOpen}
+                                    setIsOpen={setIsAdressPopUpOpen}
+                                    headerText={"Add Address"}
+                                    actionText={"Add"}
+                                    handleSubmit={handleAddAddress}
+                                />
+                            )}
                         </div>
                         <div
                             style={{
                                 display: "flex",
-                                alignItems: "center",
-                                direction: "row",
+                                flexDirection: "column",
+                                alignItems: "flex-start",
+                                marginLeft: "2vw",
+                                marginTop: "2vh",
                             }}
                         >
                             <div
                                 style={{
-                                    fontFamily: "Inder",
-                                    marginLeft: "2vw",
-                                    marginTop: "2vh",
+                                    marginLeft: "1vw",
+                                    marginBottom: "1.5vh",
                                     color: "#9c4f21",
-                                    fontSize: "30px",
+                                    fontSize: "35px",
                                 }}
                             >
-                                Payment Method:
+                                Payment:
                             </div>
                             <div
                                 style={{
                                     display: "flex",
-                                    alignItems: "center",
-                                    marginLeft: "1vw",
-                                    marginTop: "2vh",
+                                    flexDirection: "column",
+                                    marginLeft: "3vw",
+                                    width: "25vw",
+                                    gap: "1rem",
                                 }}
                             >
-                                <label style={{ marginRight: "20px" }}>
+                                <label
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        border: "1px solid #ccc",
+                                        borderRadius: "8px",
+                                        padding: "0.5vw",
+                                        height: "4.5vh",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            fontSize: "25px",
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                display: "inline-flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                width: "1vw",
+                                                height: "1vh",
+                                                marginRight: "0.5vw",
+                                            }}
+                                        >
+                                            💵
+                                        </span>
+                                        Cash on delivery
+                                    </div>
                                     <input
                                         type="radio"
                                         name="paymentMethod"
@@ -352,13 +555,45 @@ const Checkout = () => {
                                         checked={paymentMethod === "cash on delivery"}
                                         onChange={handlePaymentMethodChange}
                                         style={{
-                                            marginRight: "5px",
                                             accentColor: "#9c4f21",
+                                            width: "2.5vw",
+                                            height: "2.5vh",
                                         }}
                                     />
-                                    Cash On Delivery
                                 </label>
-                                <label>
+                                <label
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        border: "1px solid #ccc",
+                                        borderRadius: "8px",
+                                        padding: "0.5vw",
+                                        height: "4vh",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            fontSize: "25px",
+                                        }}
+                                    >
+                                        <span
+                                            style={{
+                                                display: "inline-flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                width: "1vw",
+                                                height: "1vh",
+                                                marginRight: "0.5vw",
+                                            }}
+                                        >
+                                            💳
+                                        </span>
+                                        Credit/Debit card
+                                    </div>
                                     <input
                                         type="radio"
                                         name="paymentMethod"
@@ -366,40 +601,493 @@ const Checkout = () => {
                                         checked={paymentMethod === "card"}
                                         onChange={handlePaymentMethodChange}
                                         style={{
-                                            marginRight: "5px",
                                             accentColor: "#9c4f21",
+                                            width: "2.5vw",
+                                            height: "2.5vh",
                                         }}
                                     />
-                                    Card
                                 </label>
+                            </div>
+                        </div>
+
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                marginTop: "1vh",
+                                marginLeft: "5vw",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    flexDirection: "row",
+                                    fontWeight: "bold",
+                                    fontSize: "25px",
+                                }}
+                            >
+                                Use Wallet Balance
+                                <div style={{ padding: "1vw" }}>
+                                    <IOSSwitch
+                                        checked={isWalletUsed}
+                                        onChange={handleUseWallet}
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    flexDirection: "row",
+                                    gap: "1vw",
+                                }}
+                            >
+                                <p
+                                    style={{
+                                        marginLeft: "0.5vw",
+                                        marginTop: "-1vh",
+                                        fontSize: "25px",
+                                    }}
+                                >
+                                    Balance:{formatPrice(tourist?.wallet || 0)}
+                                </p>
+
+                                {tourist?.loyalityPoints > 0 && (
+                                    <Box
+                                        sx={{ "& > :not(style)": { m: 1 } }}
+                                        style={{ marginTop: "-2vh" }}
+                                    >
+                                        <Fab
+                                            size="small"
+                                            sx={{
+                                                backgroundColor: "#9c4f21",
+                                                color: "white",
+                                                "&:hover": {
+                                                    backgroundColor: "#9c4f21", // Change this to your preferred hover color
+                                                    color: "white",
+                                                },
+                                            }}
+                                            aria-label="add"
+                                            onClick={handleAddButton}
+                                        >
+                                            <AddIcon />
+                                        </Fab>
+                                    </Box>
+                                )}
+
+                                <PopUp
+                                    isOpen={isPopUpOpen}
+                                    setIsOpen={setIsPopUpOpen}
+                                    headerText={"Redeem Points"}
+                                    actionText={"Reedem"}
+                                    handleSubmit={handleRedeemPoints}
+                                >
+                                    {/* The remaining contents of the popup go here */}
+                                    <div
+                                        style={{
+                                            border: "1px solid #ccc",
+                                            borderRadius: "8px",
+                                            width: "30vw",
+                                            //marginTop: "-6vh",
+                                            // marginLeft: "2vw",
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                            }}
+                                        >
+                                            <div>
+                                                <h3
+                                                    style={{
+                                                        marginLeft: "1.5vw",
+                                                        color: "#9c4f21",
+                                                    }}
+                                                >
+                                                    Wallet And Points Details
+                                                </h3>
+                                                <p style={{ marginLeft: "2vw" }}>
+                                                    Balance:{" "}
+                                                    {formatPrice(tourist?.wallet || 0)}
+                                                </p>
+                                                <p style={{ marginLeft: "2vw" }}>
+                                                    Points: {tourist?.loyalityPoints || 0}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr
+                                            style={{
+                                                marginTop: "0.5vh",
+                                                width: "95%",
+                                                marginLeft: "0.8vw",
+                                            }}
+                                        />
+                                        <div
+                                            style={{
+                                                marginTop: "2vh",
+                                                marginLeft: "-5vw",
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    flexDirection: "column",
+                                                    marginBottom: "1.5vh",
+                                                }}
+                                            >
+                                                <h3
+                                                    style={{
+                                                        marginLeft: "-8.5vw",
+                                                        color: "#9c4f21",
+                                                        marginTop: "-1.5vh",
+                                                    }}
+                                                >
+                                                    Redeem Points
+                                                </h3>
+                                                <span
+                                                    style={{
+                                                        marginLeft: "28%",
+                                                        padding: "0.5vh 2vw",
+                                                    }}
+                                                >
+                                                    10K Points → {formatPrice(100)}
+                                                </span>
+                                                <div
+                                                    style={{
+                                                        marginLeft: "2.5vw",
+                                                    }}
+                                                >
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            justifyContent:
+                                                                "space-between",
+                                                            direction: "row",
+                                                            marginLeft: "7vw",
+                                                        }}
+                                                    >
+                                                        <input
+                                                            type="number"
+                                                            placeholder="Points to redeem"
+                                                            value={pointsToRedeem}
+                                                            onChange={
+                                                                handleRedeemPointsChange
+                                                            }
+                                                            style={{
+                                                                width: "10vw",
+                                                                textAlign: "center",
+                                                                border: "1px solid #ccc",
+                                                                borderRadius: "4px",
+                                                                //marginRight: "10px",
+                                                                // marginLeft: "2vw",
+                                                            }}
+                                                        />
+                                                        →
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Value"
+                                                            value={redeemValue.toFixed(2)}
+                                                            readOnly
+                                                            style={{
+                                                                width: "10vw",
+                                                                textAlign: "center",
+                                                                border: "1px solid #ccc",
+                                                                borderRadius: "4px",
+                                                                //marginLeft: "10px",
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* <button
+                                                style={{
+                                                    backgroundColor: "#9c4f21",
+                                                    color: "white",
+                                                    border: "none",
+                                                    borderRadius: "20px",
+                                                    marginTop: "3vh",
+                                                    cursor: "pointer",
+                                                }}
+                                                onClick={handleRedeemPoints}
+                                            >
+                                                Redeem
+                                            </button> */}
+                                        </div>
+                                    </div>
+                                    {popupAlert.open && (
+                                        <Alert
+                                            severity={popupAlert.severity}
+                                            onClose={() =>
+                                                setPopupAlert({
+                                                    ...popupAlert,
+                                                    open: false,
+                                                })
+                                            }
+                                            style={{
+                                                marginBottom: "1vh",
+                                                fontSize: "22px",
+                                                textAlign: "center",
+                                                marginTop: "2vh",
+                                            }}
+                                        >
+                                            {popupAlert.message}
+                                        </Alert>
+                                    )}
+                                </PopUp>
+                                {/* <button
+                                    style={{
+                                        backgroundColor: "#9c4f21",
+                                        color: "white",
+                                        border: "none",
+                                        borderRadius: "20px",
+                                        marginTop: "-1vh",
+                                        cursor: "pointer",
+                                    }}
+                                    onClick={handleRedeemPoints}
+                                >
+                                    Redeem Points
+                                </button> */}
+                            </div>
+                        </div>
+                    </div>
+                    {/* Left component */}
+                    <div style={{ marginRight: "10vw" }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                // marginTop: "1vh",
+                                displaydirection: "column",
+                                alignItems: "center",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    marginBottom: "1.5vh",
+                                }}
+                            >
+                                <p style={{ color: "#9c4f21", fontSize: "35px" }}>
+                                    {" "}
+                                    Promo Code:
+                                </p>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        displaydirection: "row",
+                                        gap: "2vw",
+                                    }}
+                                >
+                                    <Box
+                                        component="form"
+                                        sx={{
+                                            "& > :not(style)": { m: 1, width: "25ch" },
+                                        }}
+                                        noValidate
+                                        autoComplete="off"
+                                        required
+                                    >
+                                        <TextField
+                                            id="outlined-basic"
+                                            label="Promo Code"
+                                            name="promoCode"
+                                            value={promoCode}
+                                            variant="outlined"
+                                            //onChange={(e) => setPromoCode(e.target.value)}
+                                            //onBlur={handleSubmit}
+                                            // onChange={handleChange}
+                                            style={{
+                                                width: "25vw",
+                                                height: "4vh",
+                                                marginTop: "1vh",
+                                            }}
+                                        />
+                                    </Box>
+                                    <Button
+                                        stylingMode="1"
+                                        text="Apply"
+                                        customStyle={{
+                                            fontSize: "25px",
+                                            textAlign: "center",
+                                            position: "center",
+                                            alignItems: "center",
+                                            lineHeight: "1vh",
+                                        }}
+                                        //handleClick={handle}
+                                        width="8vw"
+                                        height="5vh"
+                                    />
+                                </div>
+                                <div>
+                                    <div
+                                        style={{
+                                            border: "1px solid #ddd",
+                                            borderRadius: "8px",
+                                            overflow: "hidden",
+                                            width: "37vw",
+                                            fontFamily: "Arial, sans-serif",
+                                            backgroundColor: "#fff",
+                                            marginTop: "8vh",
+                                        }}
+                                    >
+                                        {/* Header */}
+                                        <div
+                                            style={{
+                                                backgroundColor: "#A0522D", // Brown color
+                                                color: "#fff",
+                                                height: "3vh",
+                                                padding: "0.5vw",
+                                                fontSize: "28px",
+                                                fontWeight: "bold",
+                                                textAlign: "center",
+                                            }}
+                                        >
+                                            Price Details
+                                        </div>
+                                        {/* Body */}
+                                        <div
+                                            style={{
+                                                padding: "1vh",
+                                                color: "#4F4F4F",
+                                            }}
+                                        >
+                                            {/* Items Price Row */}
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    justifyContent: "space-between",
+                                                    margin: "0.5vh 0",
+                                                    fontSize: "20px",
+                                                    padding: "0.5vh",
+                                                }}
+                                            >
+                                                <span>Items price</span>
+                                                {/* <span>${itemsPrice.toFixed(2)}</span> */}
+                                            </div>
+
+                                            {/* Tax and Fees Row */}
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    justifyContent: "space-between",
+                                                    margin: "0.5vh 0",
+                                                    fontSize: "20px",
+                                                    padding: "0.5vh",
+                                                }}
+                                            >
+                                                <span>Tax and service fees</span>
+                                                {/* <span>${taxFees.toFixed(2)}</span> */}
+                                            </div>
+
+                                            {/* Promocode Row */}
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    justifyContent: "space-between",
+                                                    margin: "0.5vh 0",
+                                                    fontSize: "20px",
+                                                    padding: "0.5vh",
+                                                }}
+                                            >
+                                                <span>Promocode Discount</span>
+                                                {/* <span>-${promoCode.toFixed(2)}</span> */}
+                                            </div>
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    justifyContent: "space-between",
+                                                    margin: "0.5vh 0",
+                                                    fontSize: "20px",
+                                                    padding: "0.5vh",
+                                                }}
+                                            >
+                                                <span>Amount taken from wallet</span>
+                                                {/* <span>-${promoCode.toFixed(2)}</span> */}
+                                            </div>
+
+                                            {/* Divider */}
+                                            <hr
+                                                style={{
+                                                    border: "none",
+                                                    borderTop: "1px solid #ddd",
+                                                    margin: "2vh 0",
+                                                }}
+                                            />
+
+                                            {/* Total Row */}
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    justifyContent: "space-between",
+                                                    fontSize: "20px",
+                                                    fontWeight: "bold",
+                                                    marginTop: "1vh",
+                                                    padding: "2vh ",
+                                                }}
+                                            >
+                                                <span>Total</span>
+                                                <span
+                                                    style={{
+                                                        fontSize: "18px",
+                                                        color: "#000",
+                                                    }}
+                                                >
+                                                    {/* ${total.toFixed(2)} */}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div
                             style={{
                                 display: "flex",
-                                alignItems: "center",
-                                marginTop: "1vh",
-                                marginLeft: "2vw",
+                                justifyContent: "center",
+                                displaydirection: "row",
                             }}
                         >
-                            Use Wallet Balance
-                            <input
-                                type="checkbox"
-                                style={{
-                                    marginLeft: "10px",
-                                    accentColor: "#9c4f21",
-                                    height: "1.5vh",
-                                    width: "1.5vw",
-                                }}
-                                checked={isWalletUsed}
-                                onChange={handleUseWallet}
+                            <Button
+                                stylingMode="2"
+                                text="Back"
+                                handleClick={handleBackButton}
+                                width="10vw"
+                                height="5vh"
+                            />
+                            <Button
+                                stylingMode="1"
+                                text="Next"
+                                handleClick={handleNext}
+                                width="10vw"
+                                height="5vh"
                             />
                         </div>
                     </div>
-                    <Button stylingMode="2" text="Next" handleClick={handleNext} />
-                    {/* Left componentthe first part of the form with the promocode and payment details */}
-                    <div></div>
                 </div>
+                {alert.open && (
+                    <Alert
+                        severity={alert.severity}
+                        onClose={() => setAlert({ ...alert, open: false })}
+                        style={{
+                            alignItems: "center",
+                            marginTop: "1vh",
+                            width: "80vw",
+                            marginLeft: "8vw",
+                            marginBottom: "2vh",
+                            fontSize: "22px",
+                            textAlign: "center",
+                        }}
+                    >
+                        {alert.message}
+                    </Alert>
+                )}
                 <Footer />
             </div>
         </div>
