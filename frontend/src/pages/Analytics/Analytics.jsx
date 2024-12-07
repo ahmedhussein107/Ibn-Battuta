@@ -25,9 +25,9 @@ import {
 } from "recharts";
 import Select from "react-select";
 import SearchField from "../../components/SearchField/SearchField";
+import Cookies from "js-cookie";
 
 const tableHeadStyle = {
-    textAlign: "left",
     padding: "10px",
     fontSize: "1.1rem",
     borderBottom: "2px solid var(--accent-color)",
@@ -263,6 +263,7 @@ const DrawTable = ({ data }) => {
                 style={{
                     maxHeight: data.length > 5 ? "300px" : "none",
                     overflowY: data.length > 5 ? "auto" : "visible",
+                    marginRight: "20px",
                 }}
             >
                 <table
@@ -270,6 +271,7 @@ const DrawTable = ({ data }) => {
                         width: "100%",
                         borderCollapse: "separate",
                         borderSpacing: "0 10px",
+                        margin: "10px",
                     }}
                 >
                     <thead>
@@ -545,6 +547,10 @@ const DrawRadialBarChart = ({ data }) => {
 };
 
 const DrawTouristsPerMonth = ({ data }) => {
+    if (!data || data.length === 0) {
+        return null;
+    }
+
     const maxTourists = Math.max(...data.map((item) => item.tourists));
 
     return (
@@ -672,12 +678,15 @@ const DrawTouristsPerMonth = ({ data }) => {
 const Analytics = () => {
     usePageHeader("/analytics.png", "Analytics");
 
-    const [data, setData] = useState();
+    const [data, setData] = useState({});
     useEffect(() => {
-        axiosInstance.get("/analytics/getAnalytics").then((res) => {
-            console.log("result is :", res.data);
-            setData(res.data);
-        });
+        console.log("i am here");
+        axiosInstance
+            .get("/analytics/getAnalytics", { withCredentials: true })
+            .then((res) => {
+                console.log("result is :", res);
+                setData(res.data);
+            });
     }, []);
     return (
         <div
@@ -713,7 +722,9 @@ const Analytics = () => {
                     gap: "4vw",
                 }}
             >
-                <DrawTouristsPerMonth data={sampleTouristData} />
+                {Cookies.get("userType") === "Admin" && (
+                    <DrawTouristsPerMonth data={data.touristData} />
+                )}
                 <DrawRadialBarChart data={sampleData} title="Total Revenue Per Month" />
             </div>
         </div>
