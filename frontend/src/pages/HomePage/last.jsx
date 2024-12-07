@@ -10,9 +10,8 @@ const Last = () => {
     return (
         <div
             style={{
-                width: "90vw",
-                height: "55vh",
-                marginLeft: "4vw",
+                width: "97vw",
+                height: "72vh",
                 marginTop: "5vh",
                 display: "flex",
                 flexDirection: "row",
@@ -36,9 +35,10 @@ const Last = () => {
             >
                 <h1
                     style={{
-                        fontSize: "5vh",
+                        fontSize: "2.6rem",
                         fontWeight: "bold",
                         marginBottom: "18vh",
+                        marginLeft: "10%",
                         userSelect: "none",
                     }}
                 >
@@ -165,13 +165,14 @@ const Last = () => {
                         fontSize: "1.5vh",
                         marginLeft: "5vh",
                         userSelect: "none",
+                        fontSize: "1rem",
                     }}
                 >
                     <h2
                         style={{
                             fontWeight: "bold",
                             marginBottom: "1vh",
-                            fontSize: "4vh",
+                            fontSize: "2em",
                         }}
                     >
                         Contact Us
