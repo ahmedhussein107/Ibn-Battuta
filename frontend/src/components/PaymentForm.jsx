@@ -381,7 +381,7 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
             >
                 <CustomButton
                     customStyle={{ width: "10vw" }}
-                    stylingMode="2"
+                    stylingMode="always-light"
                     text="Back"
                     handleClick={() => {
                         window.history.back();
@@ -389,7 +389,7 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
                 />
                 <CustomButton
                     customStyle={{ width: "10vw" }}
-                    stylingMode="1"
+                    stylingMode="always-dark"
                     text="Pay"
                     handleClick={handleSubmit}
                 />

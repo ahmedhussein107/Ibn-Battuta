@@ -50,7 +50,7 @@ export const completeOrder = async (req, res) => {
         const { isWalletUsed } = req.body;
         const tourist = await Tourist.findById(order.buyer);
         if (isWalletUsed) {
-            tourist.wallet = Math.max(0, tourist.wallet - booking.totalPrice);
+            tourist.wallet = Math.max(0, tourist.wallet - order.totalPrice);
             await tourist.save();
         }
         order.isComplete = true;

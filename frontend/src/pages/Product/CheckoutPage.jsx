@@ -18,7 +18,6 @@ import Cookies from "js-cookie";
 import { useFunctionContext } from "../../contexts/FunctionContext";
 import { useLocation } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
-import { set } from "mongoose";
 
 const Checkout = () => {
     const [tourist, setTourist] = useState(null);
@@ -28,6 +27,7 @@ const Checkout = () => {
     const [isWalletUsed, setIsWalletUsed] = useState(false);
     const [promoCode, setPromoCode] = useState("");
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+    const [isCompletionPopUpOpen, setIsCompletionPopUpOpen] = useState(false);
     const [isAdressPopUpOpen, setIsAdressPopUpOpen] = useState(false);
     const [alert, setAlert] = useState({ open: false, severity: "info", message: "" });
     const [popupAlert, setPopupAlert] = useState({
@@ -59,7 +59,7 @@ const Checkout = () => {
                     selectedAddress:
                         response.data.address.length > 0
                             ? response.data.address[0].name
-                            : "Please Add Your address",
+                            : "",
                 });
             })
             .catch((error) => {
@@ -210,6 +210,10 @@ const Checkout = () => {
             showAlert("error", "Please enter your mobile number before proceeding.");
             return; // Exit the function to prevent further execution
         }
+        if (!formData.selectedAddress.trim()) {
+            showAlert("error", "Please enter your address before proceeding.");
+            return; // Exit the function to prevent further execution
+        }
         try {
             const response = await axiosInstance.post(
                 "/order/createOrder",
@@ -228,10 +232,17 @@ const Checkout = () => {
                 await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
                     isWalletUsed: isWalletUsed,
                 });
-                navigate("/tourist/bookings");
+                if (
+                    paymentMethod === "cash on delivery" ||
+                    (paymentMethod === "card" &&
+                        isWalletUsed === true &&
+                        tourist.wallet >= location.state.price)
+                ) {
+                    setIsCompletionPopUpOpen(true);
+                } else navigate("/tourist/orders");
             };
 
-            if (paymentMethod === "card") {
+            if (paymentMethod === "card" && isWalletUsed === false) {
                 setFailure(handleFailure);
                 setSuccess(handleSuccess);
                 const amount = Number(order.totalPrice);
@@ -262,19 +273,6 @@ const Checkout = () => {
     const handleUseWallet = (event) => {
         setIsWalletUsed(event.target.checked);
     };
-
-    useEffect(() => {
-        const totamount = 1000;
-        if (isWalletUsed) {
-            if (totamount < tourist.wallet) {
-                showAlert(
-                    "info",
-                    "You don't have enough money in your wallet.Please redeem points to add balance to you wallet or choose an additional payment method."
-                );
-            }
-        }
-        console.log(formData.selectedAddress);
-    }, [isWalletUsed, formData.selectedAddress]);
 
     const handleBackButton = () => {
         navigate(-1);
@@ -342,6 +340,11 @@ const Checkout = () => {
 
     const handleAddAddress = () => {
         setIsAdressPopUpOpen(true);
+    };
+
+    const handleCompleteOrder = () => {
+        setIsCompletionPopUpOpen(false);
+        navigate("/tourist/orders");
     };
 
     // if (isLoading) {
@@ -911,7 +914,7 @@ const Checkout = () => {
                                         />
                                     </Box>
                                     <Button
-                                        stylingMode="1"
+                                        stylingMode={"always-dark"}
                                         text="Apply"
                                         customStyle={{
                                             fontSize: "25px",
@@ -969,7 +972,9 @@ const Checkout = () => {
                                                 }}
                                             >
                                                 <span>Items price</span>
-                                                {/* <span>${itemsPrice.toFixed(2)}</span> */}
+                                                <span style={{ fontWeight: "bold" }}>
+                                                    {formatPrice(location.state.price)}
+                                                </span>
                                             </div>
 
                                             {/* Tax and Fees Row */}
@@ -983,7 +988,9 @@ const Checkout = () => {
                                                 }}
                                             >
                                                 <span>Tax and service fees</span>
-                                                {/* <span>${taxFees.toFixed(2)}</span> */}
+                                                <span style={{ fontWeight: "bold" }}>
+                                                    {formatPrice(10)}
+                                                </span>
                                             </div>
 
                                             {/* Promocode Row */}
@@ -1008,8 +1015,37 @@ const Checkout = () => {
                                                     padding: "0.5vh",
                                                 }}
                                             >
-                                                <span>Amount taken from wallet</span>
-                                                {/* <span>-${promoCode.toFixed(2)}</span> */}
+                                                {isWalletUsed && (
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            justifyContent:
+                                                                "space-between",
+                                                            //margin: "0.5vh 0",
+                                                            fontSize: "20px",
+                                                            padding: "0.5vh",
+                                                            gap: "18vw",
+                                                        }}
+                                                    >
+                                                        <span>
+                                                            Amount taken from wallet
+                                                        </span>
+                                                        <span
+                                                            style={{
+                                                                color: "red",
+                                                                fontWeight: "bold",
+                                                            }}
+                                                        >
+                                                            -
+                                                            {formatPrice(
+                                                                Math.min(
+                                                                    tourist.wallet,
+                                                                    location.state.price
+                                                                )
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                )}
                                             </div>
 
                                             {/* Divider */}
@@ -1039,7 +1075,17 @@ const Checkout = () => {
                                                         color: "#000",
                                                     }}
                                                 >
-                                                    {/* ${total.toFixed(2)} */}
+                                                    {isWalletUsed
+                                                        ? formatPrice(
+                                                              Math.max(
+                                                                  location.state.price -
+                                                                      tourist.wallet,
+                                                                  0
+                                                              )
+                                                          )
+                                                        : formatPrice(
+                                                              location.state.price
+                                                          )}
                                                 </span>
                                             </div>
                                         </div>
@@ -1055,18 +1101,33 @@ const Checkout = () => {
                             }}
                         >
                             <Button
-                                stylingMode="2"
+                                stylingMode="always-light"
                                 text="Back"
                                 handleClick={handleBackButton}
                                 width="10vw"
                                 height="5vh"
                             />
                             <Button
-                                stylingMode="1"
-                                text="Next"
+                                stylingMode="always-dark"
+                                text={
+                                    (paymentMethod === "card" && !isWalletUsed) ||
+                                    (paymentMethod === "card" &&
+                                        isWalletUsed &&
+                                        tourist.wallet < location.state.price)
+                                        ? "Next"
+                                        : "Place Order"
+                                }
                                 handleClick={handleNext}
                                 width="10vw"
                                 height="5vh"
+                            />
+                            <PopUp
+                                isOpen={isCompletionPopUpOpen}
+                                setIsOpen={setIsCompletionPopUpOpen}
+                                headerText={"Your order is placed successfully."}
+                                containsActionButton={false}
+                                cancelText="Ok"
+                                handleOnClose={handleCompleteOrder}
                             />
                         </div>
                     </div>
@@ -1091,262 +1152,6 @@ const Checkout = () => {
                 <Footer />
             </div>
         </div>
-
-        /* <div>
-            <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
-                <div style={backgroundStyle}>
-                    <h1 style={headerStyle}>CheckOut</h1>
-                </div>
-                <div>
-                    <h2
-                        style={{
-                            color: "#9c4f21",
-                            marginLeft: "2vw",
-                            marginTop: "2vh",
-                            fontSize: "40px",
-                        }}
-                    >
-                        Delivery and Payment
-                    </h2>
-                    <hr
-                        style={{
-                            width: "95%",
-                            color: "#9c4f21",
-                            margin: "1vh 1vh auto",
-                            marginLeft: "2vw",
-                        }}
-                    />
-                </div>
-                <div style={{ fontFamily: "Inder", marginLeft: "2vw", marginTop: "1vh" }}>
-                    <div>
-                        Contact Mobile Number*:
-                        <textarea
-                            placeholder="Mobile Number"
-                            name="mobile"
-                            value={formData.mobile}
-                            onBlur={handleSubmit}
-                            onChange={handleChange}
-                            style={{
-                                width: "20vw",
-                                height: "4vh",
-                                marginTop: "1vh",
-                                marginBottom: "1vh",
-                                padding: "10px",
-                                border: "1px solid #ccc",
-                                borderRadius: "4px",
-                                display: "block",
-                                boxSizing: "border-box",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        Delivery Address*:
-                        <select
-                            name="address"
-                            value={formData.selectedAddress}
-                            onChange={handleSelectAddress}
-                            style={{
-                                width: "20vw", // Adjust width as needed
-                                height: "4vh", // Set a specified height for consistency
-                                marginTop: "1vh", // Space above the select
-                                padding: "10px", // Padding for the select
-                                border: "1px solid #ccc", // Border styling
-                                borderRadius: "4px", // Rounded corners
-                                boxSizing: "border-box", // Include padding/border in width/height
-                                display: "block", // Make sure it's a block element
-                            }}
-                        >
-                            {formData.address.map((address, index) => (
-                                <option key={index} value={address.name}>
-                                    {address.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginTop: "2vh",
-                        marginLeft: "2vw",
-                    }}
-                >
-                    <div
-                        style={{ color: "#9c4f21", fontSize: "30px", marginRight: "1vw" }}
-                    >
-                        Payment Method:
-                    </div>
-
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                        <label style={{ marginRight: "20px" }}>
-                            <input
-                                type="radio"
-                                name="paymentMethod"
-                                value="cash on delivery"
-                                checked={paymentMethod === "cash on delivery"}
-                                onChange={handlePaymentMethodChange}
-                                style={{ marginRight: "5px", accentColor: "#9c4f21" }}
-                            />
-                            Cash On Delivery
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="paymentMethod"
-                                value="card"
-                                checked={paymentMethod === "card"}
-                                onChange={handlePaymentMethodChange}
-                                style={{ marginRight: "5px", accentColor: "#9c4f21" }}
-                            />
-                            Card
-                        </label>
-                    </div>
-                </div>
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginTop: "1vh",
-                        marginLeft: "2vw",
-                    }}
-                >
-                    Use Wallet Balance
-                    <input
-                        type="checkbox"
-                        style={{
-                            marginLeft: "10px",
-                            accentColor: "#9c4f21",
-                            height: "1.5vh",
-                            width: "1.5vw",
-                        }}
-                        checked={isWalletUsed}
-                        onChange={handleUseWallet}
-                    />
-                </div>
-
-                <div style={{ padding: "1% 0" }}>
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            padding: "1% 0",
-                        }}
-                    ></div>
-                </div>
-
-                <div
-                    style={{
-                        border: "1px solid #ccc",
-                        borderRadius: "8px",
-                        width: "30vw",
-                        marginTop: "-6vh",
-                        marginLeft: "2vw",
-                        fontFamily: "Inder",
-                    }}
-                >
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <div>
-                            <h3 style={{ marginLeft: "1.5vw", color: "#9c4f21" }}>
-                                Wallet And Points Details
-                            </h3>
-                            <p style={{ marginLeft: "2vw" }}>
-                                Balance: {formatPrice(tourist?.wallet || 0)}
-                            </p>
-                            <p style={{ marginLeft: "2vw" }}>
-                                Points: {tourist?.loyalityPoints || 0}
-                            </p>
-                        </div>
-                    </div>
-                    <hr
-                        style={{ marginTop: "0.5vh", width: "95%", marginLeft: "0.8vw" }}
-                    />
-                    <div
-                        style={{
-                            marginTop: "2vh",
-                            marginLeft: "-5vw",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                        }}
-                    >
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                flexDirection: "column",
-                                marginBottom: "1.5vh",
-                            }}
-                        >
-                            <h3
-                                style={{
-                                    marginLeft: "-7.5vw",
-                                    color: "#9c4f21",
-                                    marginTop: "-1.5vh",
-                                }}
-                            >
-                                Redeem Points
-                            </h3>
-                            <span style={{ marginLeft: "-4.5vw", padding: "0.5vh 0" }}>
-                                10K Points → {formatPrice(100)}
-                            </span>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    direction: "row",
-                                    marginLeft: "7vw",
-                                }}
-                            >
-                                <input
-                                    type="number"
-                                    placeholder="Points to redeem"
-                                    value={pointsToRedeem}
-                                    onChange={handleRedeemPointsChange}
-                                    style={{
-                                        width: "10vw",
-                                        textAlign: "center",
-                                        border: "1px solid #ccc",
-                                        borderRadius: "4px",
-                                        //marginRight: "10px",
-                                        // marginLeft: "2vw",
-                                    }}
-                                />
-                                →
-                                <input
-                                    type="text"
-                                    placeholder="Value"
-                                    value={redeemValue.toFixed(2)}
-                                    readOnly
-                                    style={{
-                                        width: "10vw",
-                                        textAlign: "center",
-                                        border: "1px solid #ccc",
-                                        borderRadius: "4px",
-                                        //marginLeft: "10px",
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        <button
-                            style={{
-                                backgroundColor: "#9c4f21",
-                                color: "white",
-                                border: "none",
-                                borderRadius: "20px",
-                                marginTop: "3vh",
-                                cursor: "pointer",
-                            }}
-                            onClick={handleRedeemPoints}
-                        >
-                            Redeem
-                        </button>
-                    </div>
-                    <Button stylingMode="2" text="Next" handleClick={handleNext} />
-                </div>
-                <Footer />
-            </div>
-        </div>*/
     );
 };
 
