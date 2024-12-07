@@ -28,6 +28,7 @@
         "dequal": "^2.0.3",
         "firebase": "^10.14.1",
         "js-cookie": "^3.0.5",
+        "lucide-react": "^0.468.0",
         "react": "^18.3.1",
         "react-autosuggest": "^10.1.0",
         "react-bootstrap": "^2.10.5",

@@ -4,7 +4,7 @@ import "../styles/Button.css"; // Make sure to create and import your styling fi
 
 //Styling mode = 1 => White, 2 => Orange button. custumStyle to add additional styling if needed like width, height, margin ...
 const Button = ({
-    stylingMode,
+    stylingMode = "2",
     text,
     handleClick = () => {
         console.log("buttonclick handle needs to be fixed");

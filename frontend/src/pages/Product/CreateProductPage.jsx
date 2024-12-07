@@ -269,7 +269,7 @@ const CreateProductPage = () => {
 
                 <ButtonGroup>
                     <Button
-                        stylingMode="2"
+                        stylingMode="dark-when-hovered"
                         text="Cancel"
                         handleClick={() => {
                             setFormData(defaultData);
@@ -278,7 +278,7 @@ const CreateProductPage = () => {
                         width="auto"
                     />
                     <Button
-                        stylingMode="1"
+                        stylingMode="always-dark"
                         text="Create Product"
                         handleClick={handleSubmit}
                         width="auto"

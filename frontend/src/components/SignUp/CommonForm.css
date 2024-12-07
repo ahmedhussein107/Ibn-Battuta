@@ -1,33 +1,35 @@
 .common-form-step {
     display: flex;
     flex-direction: column;
-    justify-items: center;
-    /* justify-content: space-between; */
+    justify-content: center;
     align-items: center;
-    height: 60vh;
 }
 .form-group {
+    width: 100%;
     display: flex;
     flex-direction: column;
-
+    align-items: center;
+    justify-content: flex-start;
     margin-top: 10px;
     font-size: 24px;
 }
 
 .form-group input,
 .form-group .react-tel-input {
-    width: 400px;
+    width: 70%;
     min-height: 30px;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
     margin-left: 0;
+    font-size: 1rem;
 }
 
 .custom-icon-label {
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 10vw;
+    max-height: 10vh;
     border-radius: 50%;
+    margin-bottom: 6vh;
 }
 .custom-icon-label:hover {
     cursor: pointer;
@@ -114,4 +116,16 @@
 /* If necessary, you can use !important to ensure your styles take precedence */
 .react-tel-input .form-control {
     font-size: 16px !important; /* Ensure font size is applied */
+}
+
+.phone-input-group {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.phone-input-group input {
+    font-size: 1rem;
+    border: none;
 }

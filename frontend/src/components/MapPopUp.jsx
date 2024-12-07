@@ -75,7 +75,7 @@ const MapPopUp = ({ popUpOpen, setPopUpOpen, setLongitude, setLatitude }) => {
                         </div>
                     </div>
                     <CustomButton
-                        stylingMode="1"
+                        stylingMode="always-dark"
                         text="Done"
                         handleClick={handleSubmit}
                     />

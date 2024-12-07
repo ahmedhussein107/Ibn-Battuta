@@ -366,7 +366,7 @@ const Activities = () => {
                                         text: "Book Now",
                                         onClick: () =>
                                             navigate(`/activity-details/${activity.id}`),
-                                        type: "1",
+                                        type: "always-dark",
                                         width: "50%",
                                         styles: {
                                             display: "flex",
