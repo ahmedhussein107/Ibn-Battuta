@@ -299,7 +299,7 @@ const Itineraries = () => {
                                                 `/itinerary-details/${itinerary.id}`
                                             ),
                                         type: "always-dark",
-                                        width: "50%",
+                                        width: "80%",
                                     },
                                 ]}
                             />
