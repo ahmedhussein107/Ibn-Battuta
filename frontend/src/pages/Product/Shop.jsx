@@ -404,7 +404,7 @@ const Shop = () => {
                                     <div style={{ fontSize: "0.8rem" }}>
                                         <CustomButton
                                             text="Add to cart"
-                                            stylingMode="1"
+                                            stylingMode="always-dark"
                                             handleClick={() => {
                                                 setSelectedProduct(product);
                                                 setSelectedQuantity(1);

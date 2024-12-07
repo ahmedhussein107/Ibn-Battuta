@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Welcome from "../../components/Welcome";
 import { TextField } from "@mui/material";
 
-import TravellerBackground from "../../assets/backgrounds/travellerBackground.png";
 import Button from "../../components/Button";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
@@ -72,6 +71,7 @@ const SigninComponent = () => {
                     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
                     marginLeft: "20%",
                     fontWeight: "600",
+                    color: "var(--accent-color)",
                 }}
             >
                 Sign in
@@ -106,13 +106,26 @@ const SigninComponent = () => {
             <div
                 style={{
                     display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    marginTop: "10px",
+                    color: "var(--accent-color)",
+                    cursor: "pointer",
+                }}
+                onClick={() => {}}
+            >
+                <div>Forgot your password? </div>
+            </div>
+            <div
+                style={{
+                    display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
                     marginLeft: "25%",
                 }}
             >
                 <Button
-                    stylingMode="1"
+                    stylingMode="always-dark"
                     text={"Sign in"}
                     handleClick={hanldeClick}
                     width={"10vw"}
@@ -129,7 +142,14 @@ const SigninComponent = () => {
                     {response}
                 </p>
             </div>
-            <p style={{ display: "flex", flexDirection: "row", marginLeft: "12%" }}>
+            <p
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: "12%",
+                    marginTop: "2vh",
+                }}
+            >
                 Don't have an account?{" "}
                 {
                     <Link to={"/select-your-role"}>
@@ -139,6 +159,7 @@ const SigninComponent = () => {
                                 textDecoration: "underline",
                                 marginTop: "-2%",
                                 marginLeft: "16%",
+                                color: "var(--accent-color)",
                             }}
                         >
                             Sign Up
@@ -176,7 +197,7 @@ const Signin = () => {
                 style={{
                     width: "55vw",
                     height: "100vh",
-                    backgroundImage: `url(${TravellerBackground})`,
+                    backgroundImage: `url("./auth.png")`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",

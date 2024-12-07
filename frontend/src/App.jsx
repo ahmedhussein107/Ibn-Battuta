@@ -1,4 +1,5 @@
 import "./App.css";
+import "./index.css";
 
 import {
     BrowserRouter as Router,
@@ -10,7 +11,6 @@ import {
 
 import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
-
 import { HeaderProvider } from "./components/Header/HeaderContext";
 import { FunctionProvider } from "./contexts/FunctionContext.jsx";
 import Header from "./components/Header/Header";

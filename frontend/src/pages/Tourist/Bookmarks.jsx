@@ -136,7 +136,7 @@ const Bookmarks = () => {
                                                     navigate(
                                                         `/activity-details/${bookmark.bookmarkID._id}`
                                                     ),
-                                                type: "1",
+                                                type: "always-dark",
                                                 width: "50%",
                                                 styles: {
                                                     display: "flex",
@@ -183,7 +183,7 @@ const Bookmarks = () => {
                                                     navigate(
                                                         `/itinerary-details/${bookmark.bookmarkID._id}`
                                                     ),
-                                                type: "1",
+                                                type: "always-dark",
                                                 width: "50%",
                                                 styles: {
                                                     display: "flex",

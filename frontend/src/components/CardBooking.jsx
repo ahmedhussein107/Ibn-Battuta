@@ -265,7 +265,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                 >
                     {differenceInDays >= 2 ? (
                         <CustomButton
-                            stylingMode="2"
+                            stylingMode="dark-when-hovered"
                             width="50%"
                             text="cancel"
                             customStyle={{ padding: "0.8rem" }}
@@ -277,7 +277,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                         <div></div>
                     )}
                     <CustomButton
-                        stylingMode="1"
+                        stylingMode="always-dark"
                         width="50%"
                         text="view"
                         customStyle={{ padding: "0.8rem" }}

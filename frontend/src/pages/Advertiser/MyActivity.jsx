@@ -6,7 +6,8 @@ import { Avatar } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
 import Footer from "../../components/Footer";
-import Button from "@mui/material/Button";
+// import Button from "@mui/material/Button";
+import Button from "../../components/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SwapVert from "@mui/icons-material/SwapVert";
 import axiosInstance from "../../api/axiosInstance";
@@ -165,40 +166,50 @@ const MyActivity = () => {
 
                     <div />
                 </div>
-                <Button
+                <div
+                    className="activity-controls-buttons"
                     style={{
-                        marginLeft: "2vw",
-                        borderRadius: "4vh",
-                        minWidth: "2vw",
-                        color: "black",
-                        borderColor: "black",
-                        maxHeight: "4.2vh",
-                    }}
-                    variant="outlined"
-                    onClick={() => {
-                        setSortBy((prev) => (prev === "Newest" ? "Oldest" : "Newest"));
+                        display: "flex",
+                        marginTop: "1%",
                     }}
                 >
-                    <SwapVert sx={{ fontSize: "3vh" }} />
-                    <p style={{ marginLeft: ".3vw" }}>Sort by Date</p>
-                </Button>
-                <Button
-                    style={{
-                        marginLeft: "2vw",
-                        borderRadius: "4vh",
-                        minWidth: "1vw",
-                        color: "black",
-                        borderColor: "black",
-                        maxHeight: "4.2vh",
-                    }}
-                    variant="outlined"
-                    onClick={() => {
-                        navigate("/create-activity");
-                    }}
-                >
-                    <AddIcon sx={{ fontSize: "3vh" }} />
-                    <p style={{ marginLeft: ".3vw" }}>Create Activity</p>
-                </Button>
+                    <Button
+                        stylingMode="always-light"
+                        handleClick={() => {
+                            setSortBy((prev) =>
+                                prev === "Newest" ? "Oldest" : "Newest"
+                            );
+                        }}
+                        height="4vh"
+                        icon={
+                            <SwapVert
+                                sx={{
+                                    fontSize: "3vh",
+                                    marginRight: ".3vw",
+                                    verticalAlign: "middle",
+                                }}
+                            />
+                        }
+                        text={"Sort by Date"}
+                    ></Button>
+                    <Button
+                        stylingMode="always-light"
+                        height="4vh"
+                        handleClick={() => {
+                            navigate("/advertiser/create-activity");
+                        }}
+                        text={"Create Activity"}
+                        icon={
+                            <AddIcon
+                                sx={{
+                                    fontSize: "3vh",
+                                    marginRight: ".3vw",
+                                    verticalAlign: "middle",
+                                }}
+                            />
+                        }
+                    ></Button>
+                </div>
                 <div
                     style={{
                         marginTop: "1%",
@@ -228,7 +239,7 @@ const MyActivity = () => {
                                             navigate("/edit-activity", {
                                                 state: activity,
                                             }),
-                                        type: "1",
+                                        type: "always-dark",
                                         width: "50%",
                                         styles: {
                                             display: "flex",

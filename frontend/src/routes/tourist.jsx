@@ -1,4 +1,4 @@
-import HomePage from "../pages/HomePage";
+import HomePage from "../pages/HomePage/HomePage";
 import AllActivities from "../pages/Admin/AllActivities";
 import ComplaintList from "../components/Complaint/ComplaintList";
 import ViewSingleComplaint from "../components/Complaint/ViewSingleComplaint";

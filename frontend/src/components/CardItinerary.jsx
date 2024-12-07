@@ -116,8 +116,7 @@ const CardItinerary = ({
         <div
             style={{
                 display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
+                flexDirection: "row",
                 width: "100%",
             }}
         >
@@ -128,6 +127,7 @@ const CardItinerary = ({
                     width={width}
                     handleClick={onClick}
                     customStyle={styles}
+                    height="6vh"
                 />
             ))}
         </div>
