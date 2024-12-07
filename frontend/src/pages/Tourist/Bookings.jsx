@@ -10,6 +10,8 @@ import TouristHotelBookings from "../../components/Hotels/TouristHotelBookings";
 import HotelList from "../../components/Hotels/HotelList";
 import FlightList from "../../components/Flights/FlightList";
 import FilterButtons from "../../components/FilterButtons";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import { CircularProgress } from "@mui/material";
 
 const Bookings = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -89,6 +91,12 @@ const Bookings = () => {
         setCurrentPage(1);
     }, [selected, filter]);
 
+    const { isLoading } = useCurrencyConverter();
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
+
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
             <div style={backgroundStyle}>
@@ -128,6 +136,7 @@ const Bookings = () => {
                                         booking={booking}
                                         width="46vw"
                                         height="34vh"
+                                        fontSize="1.2rem"
                                     />
                                 </div>
                             ))}
@@ -141,6 +150,7 @@ const Bookings = () => {
                                         booking={booking}
                                         width="46vw"
                                         height="34vh"
+                                        fontSize="1.2rem"
                                     />
                                 </div>
                             ))}
@@ -171,7 +181,7 @@ const Bookings = () => {
 const backgroundStyle = {
     width: "100vw",
     height: "30vh",
-    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bookingsBackground})`,
+    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${bookingsBackground})`,
     backgroundSize: "100% 100%",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
