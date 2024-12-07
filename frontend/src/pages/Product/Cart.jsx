@@ -242,10 +242,11 @@ const Cart = () => {
                     <Button
                         text="Checkout"
                         handleClick={handleClick}
-                        stylingMode={1}
-                        customStyle={
-                            getValidity() ? normalButtonStyle : disabledButtonStyle
-                        }
+                        stylingMode={getValidity() ? "always-dark" : "disabled"}
+                        customStyle={{
+                            marginBottom: "1%",
+                            marginLeft: "85%",
+                        }}
                     />
 
                     {!getValidity() && (
@@ -291,15 +292,6 @@ const selectedButtonStyle = {
     ...buttonStyle,
     backgroundColor: "#FAE2B6",
     color: "#9C4F21",
-};
-
-const normalButtonStyle = { marginBottom: "1%", marginLeft: "85%" };
-const disabledButtonStyle = {
-    marginBottom: "1%",
-    marginLeft: "85%",
-    cursor: "not-allowed",
-    disabled: true,
-    backgroundColor: "grey",
 };
 
 export default Cart;

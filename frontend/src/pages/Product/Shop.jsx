@@ -298,7 +298,7 @@ const Shop = () => {
                             color: "#9C4F21",
                         }}
                     >
-                        wishlist
+                        Wishlist
                     </span>
                 </button>
                 <button
