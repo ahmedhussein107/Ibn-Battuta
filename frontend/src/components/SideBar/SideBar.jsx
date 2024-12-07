@@ -47,7 +47,7 @@ const SideBar = ({ collapsibleItems, nonCollapsibleItems, titles }) => {
             style={{
                 width: "80%",
                 padding: "1vw 3vh",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                boxShadow: "2px 4px 8px rgba(156, 79, 33, 0.2)",
                 borderRadius: "8px",
                 backgroundColor: "white",
             }}

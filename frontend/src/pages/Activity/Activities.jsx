@@ -22,9 +22,8 @@ const Activities = () => {
     const currency = Cookies.get("currency") || "EGP";
     const { convertPrice, isLoading } = useCurrencyConverter();
 
-    // TODO: select better bounds
     const minPrice = convertPrice(0, "EGP", currency);
-    const maxPrice = convertPrice(2000, "EGP", currency);
+    const maxPrice = convertPrice(1000000000, "EGP", currency);
 
     const [activities, setActivities] = useState([]);
     const [bookmarkStatus, setBookmarkStatus] = useState({});
@@ -272,8 +271,6 @@ const Activities = () => {
         <PriceRange // TODO: change the slider
             priceRange={priceRange}
             setPriceRange={setPriceRange}
-            min={minPrice}
-            max={maxPrice}
         />,
         <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
         <div style={{ display: "flex", flexDirection: "column" }}>

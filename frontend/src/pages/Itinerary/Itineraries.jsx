@@ -206,12 +206,7 @@ const Itineraries = () => {
             searchText={location}
             setSearchText={setLocation}
         />,
-        <PriceRange
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-            min={minPrice}
-            max={maxPrice}
-        />,
+        <PriceRange priceRange={priceRange} setPriceRange={setPriceRange} />,
         <CheckboxList
             items={tags}
             checkedItems={selectedTags}
