@@ -78,6 +78,12 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        if (succeeded) {
+            return;
+        }
+
+        setError(null);
         setProcessing(true);
 
         if (!stripe || !elements) {
@@ -85,6 +91,12 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
         }
 
         const email = Cookies.get("email") || "";
+
+        if (!name || name.trim() === "") {
+            setError("Please enter a name");
+            setProcessing(false);
+            return;
+        }
 
         const result = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
@@ -102,6 +114,7 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
             setSucceeded(false);
         } else {
             setSucceeded(true);
+            // setProcessing(false);
         }
     };
 
@@ -121,220 +134,228 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
     };
 
     return (
-        <>
-            <form style={{ marginTop: "5vh", height: "100%" }}>
+        <div
+            style={{
+                marginTop: "5vh",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+            }}
+        >
+            <Typography
+                variant="h5"
+                component="h2"
+                gutterBottom
+                sx={{ color: "#9C4F21" }}
+                fontSize={"2rem"}
+                style={{ fontWeight: "bold" }}
+                marginLeft={"-6rem"}
+                marginTop={"-2rem"}
+            >
+                Delivery and Payment
+            </Typography>
+            <Box
+                sx={{
+                    borderBottom: "1.5px solid #000",
+                    width: "117%",
+                    marginTop: "1rem",
+                    marginLeft: "-6rem",
+                }}
+            />
+            <Box
+                sx={{
+                    backgroundColor: "#9C4F21",
+                    padding: "1rem",
+                    borderRadius: "0.25rem",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    marginTop: "2rem",
+                    marginLeft: "-1rem",
+                    width: "98%",
+                    height: "3vh",
+                }}
+            >
                 <Typography
-                    variant="h5"
-                    component="h2"
-                    gutterBottom
-                    sx={{ color: "#9C4F21" }}
-                    fontSize={"2rem"}
-                    style={{ fontWeight: "bold" }}
-                    marginLeft={"-6rem"}
-                    marginTop={"-2rem"}
+                    variant="h6"
+                    component="h3"
+                    sx={{
+                        color: "#fff",
+                        fontWeight: "bold",
+                        marginBottom: "1rem",
+                        width: "20vh",
+                    }}
                 >
-                    Delivery and Payment
+                    Payment options
                 </Typography>
-                <Box
-                    sx={{
-                        borderBottom: "1.5px solid #000",
-                        width: "117%",
-                        marginTop: "1rem",
-                        marginLeft: "-6rem",
-                    }}
-                />
-                <Box
-                    sx={{
-                        backgroundColor: "#9C4F21",
-                        padding: "1rem",
-                        borderRadius: "0.25rem",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        marginTop: "2rem",
-                        marginLeft: "-1rem",
-                        width: "98%",
-                        height: "3vh",
-                    }}
-                >
-                    <Typography
-                        variant="h6"
-                        component="h3"
-                        sx={{
-                            color: "#fff",
-                            fontWeight: "bold",
-                            marginBottom: "1rem",
-                            width: "20vh",
-                        }}
-                    >
-                        Payment options
-                    </Typography>
+            </Box>
+            <div style={{ marginLeft: "2vw" }}>
+                <Box sx={{ marginTop: "2rem", width: "30vw" }}>
+                    <TextField
+                        fullWidth
+                        label="Name on card"
+                        name="name"
+                        variant="outlined"
+                        required
+                        sx={{ marginBottom: "1rem" }}
+                        onChange={(e) => setName(e.target.value)}
+                    />
                 </Box>
-                <div style={{ marginLeft: "2vw" }}>
-                    <Box sx={{ marginTop: "2rem", width: "30vw" }}>
-                        <TextField
-                            fullWidth
-                            label="Name on card"
-                            name="name"
-                            variant="outlined"
-                            required
-                            sx={{ marginBottom: "1rem" }}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                    </Box>
 
-                    <Typography variant="body1" gutterBottom>
-                        Card Information
-                    </Typography>
+                <Typography variant="body1" gutterBottom>
+                    Card Information
+                </Typography>
 
-                    <Grid container spacing={2} sx={{ marginBottom: "1.5rem" }}>
-                        <Grid item xs={12}>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    gap: "1rem",
-                                    alignItems: "center",
+                <Grid container spacing={2} sx={{ marginBottom: "1.5rem" }}>
+                    <Grid item xs={12}>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: "1rem",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    border: "1px solid #ccc",
+                                    borderRadius: "0.25rem",
+                                    padding: "0.9rem",
+                                    width: "28.5vw",
+                                    height: "2vh",
                                 }}
                             >
-                                <Box
-                                    sx={{
-                                        border: "1px solid #ccc",
-                                        borderRadius: "0.25rem",
-                                        padding: "0.9rem",
-                                        width: "28.5vw",
-                                        height: "2vh",
-                                    }}
-                                >
-                                    <CardNumberElement
-                                        options={cardElementOptions}
-                                        onChange={handleCardNumberChange}
+                                <CardNumberElement
+                                    options={cardElementOptions}
+                                    onChange={handleCardNumberChange}
+                                />
+                            </Box>
+                            {cardType && cardLogos[cardType] && (
+                                <Box>
+                                    <img
+                                        src={cardLogos[cardType]}
+                                        style={{ height: "5vh", width: "auto" }}
                                     />
                                 </Box>
-                                {cardType && cardLogos[cardType] && (
-                                    <Box>
-                                        <img
-                                            src={cardLogos[cardType]}
-                                            style={{ height: "5vh", width: "auto" }}
-                                        />
-                                    </Box>
-                                )}
-                            </div>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box
-                                sx={{
-                                    border: "1px solid #ccc",
-                                    borderRadius: "0.25rem",
-                                    padding: "0.75rem",
-                                    width: "13vw",
-                                }}
-                            >
-                                <CardExpiryElement options={cardElementOptions} />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box
-                                sx={{
-                                    border: "1px solid #ccc",
-                                    borderRadius: "0.25rem",
-                                    padding: "0.75rem",
-                                    width: "13vw",
-                                    marginLeft: "-23.7vw",
-                                }}
-                            >
-                                <CardCvcElement options={cardElementOptions} />
-                            </Box>
-                        </Grid>
+                            )}
+                        </div>
                     </Grid>
+                    <Grid item xs={6}>
+                        <Box
+                            sx={{
+                                border: "1px solid #ccc",
+                                borderRadius: "0.25rem",
+                                padding: "0.75rem",
+                                width: "13vw",
+                            }}
+                        >
+                            <CardExpiryElement options={cardElementOptions} />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Box
+                            sx={{
+                                border: "1px solid #ccc",
+                                borderRadius: "0.25rem",
+                                padding: "0.75rem",
+                                width: "13vw",
+                                marginLeft: "-23.7vw",
+                            }}
+                        >
+                            <CardCvcElement options={cardElementOptions} />
+                        </Box>
+                    </Grid>
+                </Grid>
 
-                    <Box sx={{ marginBottom: "1rem", width: "30vw" }}>
-                        <TextField
-                            fullWidth
-                            label="Billing Zip Code"
-                            name="zip"
-                            variant="outlined"
-                            required
-                        />
-                    </Box>
-                </div>
+                <Box sx={{ marginBottom: "1rem", width: "30vw" }}>
+                    <TextField
+                        fullWidth
+                        label="Billing Zip Code"
+                        name="zip"
+                        variant="outlined"
+                        required
+                    />
+                </Box>
+            </div>
 
-                <Box
-                    sx={{
-                        padding: "1rem",
-                        marginBottom: "1.5rem",
-                        borderRadius: "0.25rem",
+            <Box
+                sx={{
+                    padding: "1rem",
+                    marginBottom: "1.5rem",
+                    borderRadius: "0.25rem",
+                }}
+            >
+                <div
+                    style={{
+                        backgroundColor: "#FCE5B5",
+                        padding: "16px",
+                        borderRadius: "8px",
+                        marginBottom: "16px",
                     }}
                 >
-                    <div
-                        style={{
-                            backgroundColor: "#FCE5B5",
-                            padding: "16px",
-                            borderRadius: "8px",
-                            marginBottom: "16px",
-                        }}
-                    >
-                        <Typography variant="subtitle1" gutterBottom>
-                            Important information about your booking:
-                        </Typography>
-                    </div>
-                    <div style={{ marginLeft: "2vw" }}>
-                        <ol>
-                            <li>This rate is refundable.</li>
-                            <li>Stay extensions will require a new reservation.</li>
-                            <li>Front desk staff will greet guests on arrival.</li>
-                            <li>
-                                No refunds will be issued for late check-in or early
-                                check-out.
-                            </li>
-                        </ol>
-                    </div>
-                    <Typography
-                        variant="body2"
-                        sx={{
-                            marginTop: "1rem",
-                            fontSize: "0.875rem",
-                            color: "#6c757d", // Muted color for the text
-                        }}
-                    >
-                        By clicking the button below, I acknowledge that I have reviewed
-                        the{" "}
-                        <a
-                            href="/privacy"
-                            style={{ color: "#007bff", textDecoration: "none" }}
-                        >
-                            Privacy Statement
-                        </a>{" "}
-                        and have reviewed and accept the{" "}
-                        <a
-                            href="/privacy"
-                            style={{ color: "#007bff", textDecoration: "none" }}
-                        >
-                            Rules and Restrictions
-                        </a>{" "}
-                        and{" "}
-                        <a
-                            href="/privacy"
-                            style={{ color: "#007bff", textDecoration: "none" }}
-                        >
-                            Terms of Use
-                        </a>
-                        .
+                    <Typography variant="subtitle1" gutterBottom>
+                        Important information about your booking:
                     </Typography>
-                </Box>
+                </div>
+                <div style={{ marginLeft: "2vw" }}>
+                    <ol>
+                        <li>This rate is refundable.</li>
+                        <li>Stay extensions will require a new reservation.</li>
+                        <li>Front desk staff will greet guests on arrival.</li>
+                        <li>
+                            No refunds will be issued for late check-in or early
+                            check-out.
+                        </li>
+                    </ol>
+                </div>
+                <Typography
+                    variant="body2"
+                    sx={{
+                        marginTop: "1rem",
+                        fontSize: "0.875rem",
+                        color: "#6c757d", // Muted color for the text
+                    }}
+                >
+                    By clicking the button below, I acknowledge that I have reviewed the{" "}
+                    <a
+                        href="/privacy"
+                        target="_blank"
+                        style={{ color: "#007bff", textDecoration: "none" }}
+                    >
+                        Privacy Statement
+                    </a>{" "}
+                    and have reviewed and accept the{" "}
+                    <a
+                        href="/privacy"
+                        target="_blank"
+                        style={{ color: "#007bff", textDecoration: "none" }}
+                    >
+                        Rules and Restrictions
+                    </a>{" "}
+                    and{" "}
+                    <a
+                        href="/privacy"
+                        target="_blank"
+                        style={{ color: "#007bff", textDecoration: "none" }}
+                    >
+                        Terms of Use
+                    </a>
+                    .
+                </Typography>
+            </Box>
 
-                {error && !succeeded && (
-                    <Alert severity="error" style={{ marginBottom: "1rem" }}>
-                        {error}
-                    </Alert>
-                )}
-                {succeeded && !error && (
-                    <Alert severity="success" style={{ marginBottom: "1rem" }}>
-                        Payment succeeded!
-                    </Alert>
-                )}
-                {processing && !(error || succeeded) && <div>Processing...</div>}
-            </form>
+            {error && (
+                <Alert severity="error" style={{ marginBottom: "1rem" }}>
+                    {error}
+                </Alert>
+            )}
+            {succeeded && (
+                <Alert severity="success" style={{ marginBottom: "1rem" }}>
+                    Your payment was successfully processed. We’re redirecting you now...
+                </Alert>
+            )}
+            {processing && <CircularProgress sx={{ alignSelf: "center" }} />}
             <Box
                 sx={{
                     display: "flex",
@@ -360,7 +381,7 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
                     handleClick={handleSubmit}
                 />
             </Box>
-        </>
+        </div>
     );
 };
 
