@@ -97,12 +97,7 @@ const SignUpPage = () => {
         setError(null);
         setIsLoading(true);
         try {
-            if (
-                !userData.email ||
-                !userData.password ||
-                !userData.username ||
-                !userData.name
-            ) {
+            if (!userData.email || !userData.password || !userData.username) {
                 alert("Please fill in all required fields.");
                 return;
             }
@@ -112,6 +107,10 @@ const SignUpPage = () => {
             }
             if (!termsAccepted) {
                 alert("You must accept the terms and conditions.");
+            }
+            if (userType === "Tourist" && (!userData.DOB || !userData.mobileNumber)) {
+                alert("Please fill in all required fields.");
+                return;
             }
             if (userType !== "Tourist" && !file1) {
                 alert("You must upload an ID file.");

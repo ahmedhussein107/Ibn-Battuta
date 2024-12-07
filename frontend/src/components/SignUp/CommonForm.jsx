@@ -48,7 +48,7 @@ const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
             {/* Username Input */}
             <div className="form-group">
                 <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
-                    Username
+                    Username*
                 </label>
                 <input
                     type="text"
@@ -62,7 +62,7 @@ const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
             {/* Email Input */}
             <div className="form-group">
                 <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
-                    Email
+                    Email*
                 </label>
 
                 <input
@@ -77,7 +77,7 @@ const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
             {/* Password Input */}
             <div className="form-group">
                 <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
-                    Password
+                    Password*
                 </label>
                 <input
                     type="password"
