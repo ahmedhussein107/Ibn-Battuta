@@ -2,10 +2,10 @@ import express from "express";
 // import Order from "../models/order.model.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 import {
-	createOrder,
-	getOrders,
-	getOrdersByUser,
-	updateOrder,
+    createOrder,
+    getOrders,
+    getOrdersByUser,
+    updateOrder,
 } from "../controllers/order.controller.js";
 const orderRouter = express.Router();
 

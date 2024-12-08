@@ -24,6 +24,7 @@ const activitySchema = new Schema(
         isOpenForBooking: { type: Boolean, default: true },
         isFlagged: { type: Boolean, default: false },
         sumOfRatings: { type: Number, default: 0 },
+        initialFreeSpots: { type: Number, default: 0, required: true },
         freeSpots: { type: Number, required: true },
         specialDiscount: { type: Number, default: 0 },
     },
@@ -38,6 +39,10 @@ activitySchema.methods.addRating = async function (rating) {
 
 activitySchema.pre("save", async function (next) {
     try {
+        if (this.freeSpots === undefined) {
+            this.freeSpots = this.initialFreeSpots;
+        }
+
         const { advertiserID, category, tags, ratings } = this;
 
         await validateAdvertiserAndCategory(advertiserID, category, next);

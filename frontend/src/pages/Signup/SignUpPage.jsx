@@ -91,19 +91,18 @@ const SignUpPage = () => {
             setSetp(step - 1);
         }
     };
-	const convertToDate = (dateObj) => {
-		if (!dateObj || !dateObj.year || !dateObj.month || !dateObj.day) {
-			return null;
-		  }
-		  
-		  // Create new date - subtract 1 from month since JavaScript months are 0-based
-		  return new Date(
-			parseInt(dateObj.year),
-			parseInt(dateObj.month) - 1, // Convert "02" to 1 (February)
-			parseInt(dateObj.day)
-		  );
+    const convertToDate = (dateObj) => {
+        if (!dateObj || !dateObj.year || !dateObj.month || !dateObj.day) {
+            return null;
+        }
 
-	}
+        // Create new date - subtract 1 from month since JavaScript months are 0-based
+        return new Date(
+            parseInt(dateObj.year),
+            parseInt(dateObj.month) - 1, // Convert "02" to 1 (February)
+            parseInt(dateObj.day)
+        );
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -121,7 +120,8 @@ const SignUpPage = () => {
             if (!termsAccepted) {
                 alert("You must accept the terms and conditions.");
             }
-            if (userType === "Tourist" && (!userData.DOB || !userData.mobile )) {
+
+            if (userType === "Tourist" && (!userData.DOB || !userData.mobile)) {
                 alert("Please fill in all required fields. ");
                 return;
             }
@@ -160,10 +160,10 @@ const SignUpPage = () => {
                 certificatesPath.push(IdPath);
                 userData.documents = certificatesPath;
             }
-			
-			if(userData.DOB){
-				userData.DOB = convertToDate(userData.DOB);
-			}
+
+            if (userData.DOB) {
+                userData.DOB = convertToDate(userData.DOB);
+            }
             const response = await axiosInstance.post(
                 `/${userType.toLowerCase()}/create${userType}`,
                 userData,
@@ -174,7 +174,7 @@ const SignUpPage = () => {
             console.log("File 1:", file1);
             console.log("Files 2:", file2);
             console.log("pict", imageFile);
-            navigate("/signin")	;
+            navigate("/signin");
         } catch (error) {
             setError(error.response.data.e);
             console.log(error);
