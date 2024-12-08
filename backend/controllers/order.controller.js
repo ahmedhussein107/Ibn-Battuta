@@ -4,6 +4,7 @@ import Product from "../models/product.model.js";
 import { sendNotificationToEmailAndSystem } from "./general.controller.js";
 export const createOrder = async (req, res) => {
     try {
+        console.log(req.body);
         req.body.buyer = req.user.userId;
         const { product, count, price, buyer } = req.body;
         const tourist = await Tourist.findById(buyer);

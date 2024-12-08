@@ -19,7 +19,7 @@ const PriceRange = ({ priceRange, setPriceRange }) => {
                 padding: "10px",
                 border: "1px solid #ccc",
                 borderRadius: "8px",
-                backgroundColor: "#FCF3E2",
+                backgroundColor: "#FFFBF3",
                 maxWidth: "300px",
                 margin: "auto",
             }}

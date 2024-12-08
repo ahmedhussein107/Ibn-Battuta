@@ -189,7 +189,7 @@ const CreateActivityPage = () => {
                 endDate: combinedEndDate.toISOString(),
                 pictures: uploadedFileUrls,
                 tags: selectedTags,
-                freeSpots: parseInt(formData.freeSpots) || 0,
+                initialFreeSpots: parseInt(formData.freeSpots) || 0,
                 specialDiscount: parseFloat(formData.specialDiscount) || 0,
                 price: parseFloat(formData.price) || 0,
                 Latitude: formData.Latitude ? parseFloat(formData.Latitude) : undefined,

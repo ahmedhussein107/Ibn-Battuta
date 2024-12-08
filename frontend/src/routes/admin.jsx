@@ -12,6 +12,7 @@ import AllItineraries from "../pages/Admin/AllItineraries";
 import UpdateProductPage from "../pages/Product/UpdateProductPage";
 import Inventory from "../pages/Seller/Inventory";
 import AdminProfilePage from "../pages/Admin/AdminProfilePage";
+import Analytics from "../pages/Analytics/Analytics";
 const adminRoutes = [
     { path: "/admin", element: <AdminHome /> },
     {
@@ -37,6 +38,7 @@ const adminRoutes = [
         element: <UserManagement isAll={false} />,
     },
     { path: "/admin/users/new", element: <AddNewUser /> },
+    { path: "/admin/analytics", element: <Analytics /> },
 ];
 
 export default adminRoutes;

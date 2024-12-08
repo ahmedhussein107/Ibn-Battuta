@@ -6,16 +6,18 @@ import SearchField from "../../components/SearchField/SearchField";
 import Sorter from "../../components/Sorter";
 import PriceRange from "../../components/PriceRange";
 import RatingRange from "../../components/RatingRange";
-import DatePicker from "../../components/DatePicker";
+// import DatePicker from "../../components/DatePicker";
 import CheckboxList from "../../components/CheckBoxList";
 import Footer from "../../components/Footer";
-import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
+import activitiesBackground from "../../assets/backgrounds/activities.png";
 import CardActivity from "../../components/CardActivity";
 import ShareAndMark from "../../components/ShareAndMark";
 import PaginationComponent from "../../components/Pagination.jsx";
 import { useNavigate } from "react-router-dom";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 import { CircularProgress } from "@mui/material";
+import { DatePicker } from "antd";
+const { RangePicker } = DatePicker;
 import Cookies from "js-cookie";
 
 const Activities = () => {
@@ -257,15 +259,14 @@ const Activities = () => {
             searchText={location}
             setSearchText={setLocation}
         />,
-        <PriceRange // TODO: change the slider
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-        />,
+        <PriceRange priceRange={priceRange} setPriceRange={setPriceRange} />,
         <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
-        <div style={{ display: "flex", flexDirection: "column" }}>
-            <DatePicker label="Start Date" setValue={setStartDate} />
-            <DatePicker label="End Date" setValue={setEndDate} />
-        </div>,
+        <RangePicker
+            onChange={(_, dateStrings) => {
+                setStartDate(dateStrings[0]);
+                setEndDate(dateStrings[1]);
+            }}
+        />,
         <CheckboxList
             items={tags}
             checkedItems={selectedTags}
@@ -296,17 +297,44 @@ const Activities = () => {
                 style={{
                     width: "100vw",
                     height: "30vh",
+                    color: "#FAE2B6",
                     backgroundImage: `url(${activitiesBackground})`,
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
                 }}
-            ></div>
+            >
+                <div style={{ marginBottom: "2%" }}>
+                    <p
+                        style={{
+                            fontSize: "2.5rem",
+                            marginBottom: "1rem",
+                            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+                            color: "white",
+                            fontWeight: "bold",
+                            userSelect: "none",
+                        }}
+                    >
+                        Activities
+                    </p>
+                </div>
+            </div>
 
-            <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: "2%",
+                    width: "100%",
+                }}
+            >
                 <div
                     style={{
-                        width: "40vw",
+                        width: "30%",
                         borderRadius: "3vh",
                         marginTop: "1%",
                         marginBottom: "1%",
@@ -321,18 +349,18 @@ const Activities = () => {
                 <div
                     style={{
                         minHeight: "50vh",
-                        width: "100vw",
+                        width: "65%",
                         display: "flex",
                         flexDirection: "column",
                         flexWrap: "wrap",
-                        justifyContent: "space-evenly",
+                        justifyContent: "space-between",
                     }}
                 >
                     {activities.map((activity, index) => (
                         <div key={index} style={{ padding: "1.5vh" }}>
                             <CardActivity
                                 activity={activity}
-                                width={"60vw"}
+                                width={"90%"}
                                 height={"34vh"}
                                 firstLineButtons={[
                                     <ShareAndMark
