@@ -24,6 +24,7 @@ import landmarkRouter from "./routes/landmark.router.js";
 import customActivityRouter from "./routes/customActivity.router.js";
 import generalRouter from "./routes/general.router.js";
 import touristBookmarkRouter from "./routes/touristBookmark.router.js";
+import landmarkTagRouter from "./routes/landmarkTag.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -100,3 +101,4 @@ app.use("/api/general", generalRouter);
 app.use("/api/cart", touristCartRouter);
 app.use("/api/wishlist", touristWishlistRouter);
 app.use("/api/analytics", analyticsRouter);
+app.use("/api/landmarkTag", landmarkRouter);
