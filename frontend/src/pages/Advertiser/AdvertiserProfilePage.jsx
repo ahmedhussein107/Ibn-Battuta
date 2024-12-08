@@ -432,7 +432,9 @@ const AdvertiserProfilePage = () => {
                         "Updated Advertiser Picture:",
                         response.data.picture
                     );
-                    window.location.reload();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 5000); // Alert will close after 5 seconds
                 })
                 .catch((error) => {
                     console.error("Error uploading picture:", error);
@@ -658,7 +660,6 @@ const AdvertiserProfilePage = () => {
                                             }}
                                             onClick={() => {
                                                 setIsEditing1(false); // Set editing mode to false
-                                                resetFormData1(); // Reset the form if necessary
                                             }} // Function to handle cancel action
                                         >
                                             Cancel
