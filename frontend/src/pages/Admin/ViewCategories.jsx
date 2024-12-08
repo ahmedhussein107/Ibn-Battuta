@@ -1,30 +1,23 @@
 import React, { useState, useEffect } from "react";
-import {
-	Paper,
-	TextField,
-	Button,
-	Box,
-	Chip,
-	Dialog,
-	DialogTitle,
-	DialogContent,
-	DialogActions,
-	IconButton,
-} from "@mui/material";
+import { Paper, TextField, Button, Box, Chip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Close";
+import SearchField from "../../components/SearchField/SearchField";
+import categoryBackground from "../../assets/backgrounds/tags.png";
+import CustomButton from "../../components/Button";
+import PopUp from "../../components/PopUpsGeneric/PopUp";
 
 import axiosInstance from "../../api/axiosInstance";
-import SearchBar from "../../components/SearchBar";
 import Footer from "../../components/Footer";
 
 const ViewCategories = () => {
 	const [Categories, setCategories] = useState([]);
 	const [open, setOpen] = useState(false);
+	const [categoryName, setCategoryName] = useState("");
 	const [newCategory, setNewCategory] = useState("");
 	const [editingCategory, setEditingCategory] = useState(null);
 	const [editedCategoryName, setEditedCategoryName] = useState("");
@@ -52,16 +45,26 @@ const ViewCategories = () => {
 		setNewCategory("");
 	};
 
-	useEffect(() => {
-		axiosInstance
-			.get("/category/allCategories")
+	const fetchCategories = async () => {
+		const query = categoryName == "" ? {} : { _id: "~" + categoryName };
+		await axiosInstance
+			.get("/category/searchCategories/", {
+				params: {
+					...query,
+				},
+			})
 			.then((res) => {
+				console.log(res);
 				setCategories(res.data);
 			})
 			.catch((error) => {
 				console.error("Error fetching Categories: ", error);
 			});
-	}, []);
+	};
+
+	useEffect(() => {
+		fetchCategories();
+	}, [categoryName]);
 
 	const handleDelete = (categoryId) => {
 		axiosInstance
@@ -108,159 +111,42 @@ const ViewCategories = () => {
 
 	return (
 		<div style={styles.container}>
-			{/* Search and New Category Button Section */}
-			<Box sx={styles.searchBox}>
-				{/* Search Bar */}
-				<SearchBar />
-				{/* New Category Button */}
-				<Button
-					sx={styles.dialogButton}
-					onClick={handleOpen}
-					variant="outlined"
-					startIcon={<AddIcon />}
-				>
-					New Category
-				</Button>
-			</Box>
-
-			{/* Categories Grid Section */}
-			<Paper
-				elevation={3}
-				sx={{
-					p: 3,
-					borderRadius: 4,
-					bgcolor: "white",
-					width: "100%",
-					maxWidth: 800,
+			<div
+				style={{
+					width: "100vw",
+					height: "35vh",
+					color: "#FAE2B6",
+					backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${categoryBackground})`,
+					backgroundSize: "100% 100%",
+					backgroundPosition: "center",
+					backgroundRepeat: "no-repeat",
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "flex-end",
+					alignItems: "center",
 				}}
 			>
-				<Box
-					sx={{
-						display: "flex",
-						flexWrap: "wrap",
-						gap: 1.5,
-					}}
-				>
-					{Categories.map((category) => (
-						<Chip
-							key={category._id}
-							label={
-								editingCategory === category._id ? (
-									<TextField
-										value={editedCategoryName}
-										onChange={(e) => setEditedCategoryName(e.target.value)}
-										variant="standard"
-										InputProps={{ disableUnderline: true }}
-										sx={{ width: "100%" }}
-									/>
-								) : (
-									category._id
-								)
-							}
-							sx={styles.chip}
-							deleteIcon={
-								editingCategory === category._id ? (
-									<Box sx={{ display: "flex", gap: 0.5, mr: 1 }}>
-										<CheckIcon
-											sx={{
-												fontSize: 16,
-												cursor: "pointer",
-												color: "#666666",
-												":hover": { color: "#333333" },
-											}}
-											onClick={() => handleEditConfirm(category._id)}
-										/>
-										<CancelIcon
-											sx={{
-												fontSize: 16,
-												cursor: "pointer",
-												color: "#666666",
-												":hover": { color: "#333333" },
-											}}
-											onClick={handleEditCancel}
-										/>
-									</Box>
-								) : (
-									<Box sx={{ display: "flex", gap: 0.5, mr: 1 }}>
-										<EditIcon
-											sx={{
-												fontSize: 16,
-												cursor: "pointer",
-												color: "#666666",
-												":hover": { color: "#333333" },
-											}}
-											onClick={() => handleEditStart(category)}
-										/>
-										<DeleteIcon
-											sx={{
-												fontSize: 16,
-												cursor: "pointer",
-												color: "#666666",
-												":hover": { color: "#333333" },
-											}}
-											onClick={() => handleDelete(category._id)}
-										/>
-									</Box>
-								)
-							}
-							onDelete={() => {}}
-						/>
-					))}
-				</Box>
-			</Paper>
-
-			<Dialog
-				open={open}
-				onClose={handleClose}
-				PaperProps={{
-					style: {
-						backgroundColor: "#F5F5F5",
-						borderRadius: 20,
-						boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-						padding: "24px",
-						width: "80vw",
-						height: "50vh",
-						display: "flex",
-						flexDirection: "column",
-						// alignItems: "center",
-						// justifyContent: "center",
-					},
-				}}
-			>
-				<DialogTitle
-					sx={{
-						fontWeight: 600,
-						fontSize: "20px",
-						color: "#333333",
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-					}}
-				>
-					<IconButton
-						onClick={handleClose}
-						sx={{
-							color: "#666666",
-							position: "absolute",
-							right: "24px",
-							":hover": {
-								color: "#333333",
-							},
+				<div style={{ marginLeft: "5%", marginBottom: "2%" }}>
+					<p
+						style={{
+							fontSize: "2.5rem",
+							marginBottom: "1rem",
+							textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+							color: "white",
+							fontWeight: "500",
+							userSelect: "none",
 						}}
 					>
-						<CloseIcon />
-					</IconButton>
-					Add Category
-				</DialogTitle>
-				<DialogContent
-					sx={{
-						display: "flex",
-						flexDirection: "column",
-						alignItems: "center",
-						justifyContent: "center",
-						// gap: "16px",
-						flex: "1 0 auto",
-					}}
+						Category
+					</p>
+				</div>
+			</div>
+			{open && (
+				<PopUp
+					isOpen={open}
+					setIsOpen={setOpen}
+					headerText={"Add new category"}
+					handleSubmit={handleAddCategory}
 				>
 					<TextField
 						autoFocus
@@ -272,48 +158,145 @@ const ViewCategories = () => {
 							"& .MuiOutlinedInput-root": {
 								borderRadius: "20px",
 								backgroundColor: "#FFFFFF",
-								// padding: "8px 16px",
 							},
 						}}
 					/>
-				</DialogContent>
-				<DialogActions
+				</PopUp>
+			)}
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "row",
+					justifyContent: "space-between",
+					marginLeft: "8%",
+					marginRight: "8%",
+				}}
+			>
+				<div>
+					<SearchField
+						placeholder={"Search by category"}
+						searchText={categoryName}
+						setSearchText={setCategoryName}
+					/>
+				</div>
+				<CustomButton
+					stylingMode="dark-when-hovered"
+					text={"New Categoty"}
+					handleClick={() => {
+						setOpen(true);
+					}}
+					isLoading={false}
+					width="14%"
+					customStyle={{
+						borderRadius: "60px",
+						// border: "2px solid black",
+						fontSize: "1rem",
+						textAlign: "center",
+					}}
+					icon={<AddIcon sx={{ verticalAlign: "middle", marginRight: "5px" }} />}
+				/>
+			</div>
+			{/* Categories Grid Section */}
+			<div style={{ display: "flex", justifyContent: "center", height: "60vh" }}>
+				<Paper
+					elevation={3}
 					sx={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						// gap: "16px",
+						p: 3,
+						borderRadius: 4,
+						bgcolor: "white",
+						width: "80%",
 					}}
 				>
-					<Button
-						onClick={handleAddCategory}
-						variant="contained"
+					<Box
 						sx={{
-							borderRadius: "20px",
-							backgroundColor: "#FF6B6B",
-							color: "#FFFFFF",
-							width: "24%",
-							"&:hover": {
-								backgroundColor: "#FF4C4C",
-							},
+							display: "flex",
+							flexWrap: "wrap",
+							gap: 1.5,
 						}}
 					>
-						Add
-					</Button>
-				</DialogActions>
-			</Dialog>
+						{Categories.map((category) => (
+							<Chip
+								key={category._id}
+								label={
+									editingCategory === category._id ? (
+										<TextField
+											value={editedCategoryName}
+											onChange={(e) => setEditedCategoryName(e.target.value)}
+											variant="standard"
+											InputProps={{ disableUnderline: true }}
+											sx={{ width: "100%" }}
+										/>
+									) : (
+										category._id
+									)
+								}
+								sx={styles.chip}
+								deleteIcon={
+									editingCategory === category._id ? (
+										<Box sx={{ display: "flex", gap: 0.5, mr: 1 }}>
+											<CheckIcon
+												sx={{
+													fontSize: 16,
+													cursor: "pointer",
+													color: "#666666",
+													":hover": { color: "#333333" },
+												}}
+												onClick={() => handleEditConfirm(category._id)}
+											/>
+											<CancelIcon
+												sx={{
+													fontSize: 16,
+													cursor: "pointer",
+													color: "#666666",
+													":hover": { color: "#333333" },
+												}}
+												onClick={handleEditCancel}
+											/>
+										</Box>
+									) : (
+										<Box sx={{ display: "flex", gap: 0.5, mr: 1 }}>
+											<EditIcon
+												sx={{
+													fontSize: 16,
+													cursor: "pointer",
+													color: "#666666",
+													":hover": { color: "#333333" },
+												}}
+												onClick={() => handleEditStart(category)}
+											/>
+											<DeleteIcon
+												sx={{
+													fontSize: 16,
+													cursor: "pointer",
+													color: "#666666",
+													":hover": { color: "#333333" },
+												}}
+												onClick={() => handleDelete(category._id)}
+											/>
+										</Box>
+									)
+								}
+								onDelete={() => {}}
+							/>
+						))}
+					</Box>
+				</Paper>
+			</div>
 			<Footer />
 		</div>
 	);
 };
 
-// Define constants for styles
 const styles = {
 	container: {
+		width: "100vw",
+		position: "absolute",
+		top: "0",
+		left: "0",
 		display: "flex",
 		flexDirection: "column",
-		alignItems: "center",
-		gap: 20,
+		gap: "0.7rem",
+		overflowX: "hidden",
 	},
 	searchBox: {
 		display: "flex",
@@ -331,37 +314,23 @@ const styles = {
 		display: "flex",
 		alignItems: "center",
 		width: "100%",
-		maxWidth: 600,
 		borderRadius: 25,
 		boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
 		bgcolor: "#EBE9E9",
 		p: 1,
 	},
 	chip: {
-		height: "auto",
+		height: "5vh",
 		borderRadius: "20px",
-		width: "9vw",
+		width: "19%",
 		padding: "8px 12px",
-		backgroundColor: "#F5F5F5",
+		backgroundColor: "#FCF3E2",
 		display: "flex",
 		justifyContent: "space-between",
 		"& .MuiChip-label": {
 			padding: 0,
 		},
 		border: "1px solid #666666",
-	},
-	dialogButton: {
-		borderRadius: "24px",
-		height: 40,
-		px: 2,
-		border: "2px solid #E0E0E0",
-		color: "black",
-		textTransform: "none",
-		boxShadow: "none",
-		"&:hover": {
-			border: "1px solid #E0E0E0",
-			bgcolor: "#F5F5F5",
-		},
 	},
 };
 
