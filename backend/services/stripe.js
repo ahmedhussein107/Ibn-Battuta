@@ -47,12 +47,22 @@ stripeRouter.post("/webhook", async (req, res) => {
     // Handle successful payment
     if (event.type === "charge.updated") {
         const paymentIntent = event.data.object;
-        console.log("Payment succeeded:", paymentIntent);
-        // Here you can update your database, send confirmation emails, etc.
+        const body = `
+        <!DOCTYPE html>
+        <html>
+            <body>
+                <h1>Payment Received</h1>
+                <p>Amount: ${paymentIntent.amount / 100} ${paymentIntent.currency}</p>
+                <p>Payment Status: ${paymentIntent.status}</p>
+                <p>Receipt URL: ${paymentIntent.receipt_url}</p>
+            </body>
+        </html>
+        `;
         sendEmail(
             paymentIntent.billing_details.email,
-            "Testing",
-            paymentIntent.receipt_url
+            "Successful Payment",
+            body,
+            "html"
         );
     }
 

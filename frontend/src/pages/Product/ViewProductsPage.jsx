@@ -5,8 +5,7 @@ import Form from "react-bootstrap/Form";
 import axiosInstance from "../../api/axiosInstance"; // your axios instance with baseURL
 import { Carousel } from "react-bootstrap"; // Bootstrap Carousel for image sliding
 import { useNavigate } from "react-router-dom";
-import convert from "../../api/convert";
-import Cookies from "js-cookie";
+
 const ViewProductsPage = () => {
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
@@ -138,10 +137,7 @@ const ViewProductsPage = () => {
                             </Carousel>
                             <Card.Body>
                                 <Card.Title>{product.name}</Card.Title>
-                                <Card.Text>
-                                    Price: {Cookies.get("currency") || "EGP"}
-                                    {convert(product.price)}
-                                </Card.Text>
+                                <Card.Text>Price: ${product.price}</Card.Text>
                                 <Card.Text>{product.description}</Card.Text>
                                 <Card.Text>Rating: {product.sumOfRatings}</Card.Text>
                                 <Button

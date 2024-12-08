@@ -7,7 +7,6 @@ const usePageHeader = (
     SearchBarComponent = null,
     ProfilePictureComponent = null
 ) => {
-    console.log("useHeader is", useHeader());
     const { setHeaderData, clearHeader } = useHeader();
 
     useEffect(() => {

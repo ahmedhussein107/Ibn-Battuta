@@ -26,6 +26,10 @@ const sendEmail = async (toEmail, subject, body) => {
             subject: subject,
             text: body,
         };
+        if (type === "html") {
+            mailOptions.html = body;
+            delete mailOptions.text;
+        }
         await transporter.sendMail(mailOptions);
     } catch (err) {
         console.log("error sending email", err);
