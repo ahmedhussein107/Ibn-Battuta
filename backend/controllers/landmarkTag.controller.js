@@ -1,58 +1,46 @@
-import Tag from "../models/tag.model.js";
-import { buildFilter } from "../utilities/searchUtils.js";
+import LandmarkTag from "../models/landmarkTag.model";
 
-export const createTag = async (req, res) => {
+export const createLandmarkTag = async (req, res) => {
 	try {
 		console.log(req.body);
-		const tag = await Tag.create(req.body);
-		res.json(tag);
+		const landmarkTag = await LandmarkTag.create(req.body);
+		res.json(landmarkTag);
 	} catch (e) {
 		res.status(400).json({ e: e.message });
 	}
 };
 
-export const getTag = async (req, res) => {
+export const getLandmarkTags = async (req, res) => {
 	try {
-		const tag = await Tag.find();
-		res.json(tag);
+		const landmarkTag = await LandmarkTag.find();
+		res.json(landmarkTag);
 	} catch (e) {
 		res.status(400).json({ e: e.message });
 	}
 };
 
-export const searchTags = async (req, res) => {
+export const getLandmarkTag = async (req, res) => {
 	try {
-		const query = buildFilter(req.query);
-		console.log(query);
-		const tags = await Tag.find(query);
-		res.json(tags);
+		const landmarkTag = await LandmarkTag.findById(req.params.id);
+		res.json(landmarkTag);
 	} catch (e) {
 		res.status(400).json({ e: e.message });
 	}
 };
 
-export const getTagByID = async (req, res) => {
-	try {
-		const tag = await Tag.findById(req.query.id);
-		res.json(tag);
-	} catch (e) {
-		res.status(400).json({ e: e.message });
-	}
-};
-
-export const updateTag = async (req, res) => {
+export const updateLandmarkTag = async (req, res) => {
 	try {
 		const tagId = req.params.id; // Extract the tag ID from the request params
 
 		// Delete the tag by its ID
-		const result = await Tag.findByIdAndDelete(tagId);
+		const result = await LandmarkTag.findByIdAndDelete(tagId);
 
 		// Check if any document was deleted
 		if (result) {
 			// Create a new tag with the updated data
 			try {
 				// If the tag ID does not exist in the database, create a new tag
-				const updatedTag = await Tag.create(req.body);
+				const updatedTag = await LandmarkTag.create(req.body);
 
 				// Return the updated tag
 				res.json(updatedTag);
@@ -69,12 +57,12 @@ export const updateTag = async (req, res) => {
 	}
 };
 
-export const deleteTag = async (req, res) => {
+export const deleteLandmarkTag = async (req, res) => {
 	try {
 		const tagId = req.params.id; // Extract the tag ID from the request params
 
 		// Delete the tag by its ID
-		const result = await Tag.deleteOne({ _id: tagId });
+		const result = await LandmarkTag.deleteOne({ _id: tagId });
 
 		// Check if any document was deleted
 		if (result.deletedCount > 0) {

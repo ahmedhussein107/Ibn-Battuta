@@ -17,16 +17,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Close";
+import SearchField from "../../components/SearchField/SearchField";
+import tagsBackground from "../../assets/backgrounds/tags.png";
 
 import axiosInstance from "../../api/axiosInstance";
-import SearchBar from "../../components/SearchBar";
-import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 
 const ViewTags = () => {
 	const [tags, setTags] = useState([]);
 	const [open, setOpen] = useState(false);
 	const [newTag, setNewTag] = useState("");
+	const [tagName, setTagName] = useState("");
 	const [editingTag, setEditingTag] = useState(null);
 	const [editedTagName, setEditedTagName] = useState("");
 
@@ -55,14 +56,19 @@ const ViewTags = () => {
 
 	useEffect(() => {
 		axiosInstance
-			.get("/tag/allTags")
+			.get("/tag/searchTags/", {
+				params: {
+					id: "~" + tagName,
+				},
+			})
 			.then((res) => {
 				setTags(res.data);
 			})
 			.catch((error) => {
 				console.error("Error fetching tags: ", error);
 			});
-	}, []);
+		console.log(tagName);
+	}, [tagName]);
 
 	const handleDelete = (tagId) => {
 		axiosInstance
@@ -104,8 +110,42 @@ const ViewTags = () => {
 
 	return (
 		<div style={styles.container}>
-			<Box sx={styles.searchBox}>
-				<SearchBar />
+			<div
+				style={{
+					width: "100vw",
+					height: "35vh",
+					color: "#FAE2B6",
+					backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${tagsBackground})`,
+					backgroundSize: "100% 100%",
+					backgroundPosition: "center",
+					backgroundRepeat: "no-repeat",
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "flex-end",
+					alignItems: "center",
+				}}
+			>
+				<div style={{ marginLeft: "5%", marginBottom: "2%" }}>
+					<p
+						style={{
+							fontSize: "2.5rem",
+							marginBottom: "1rem",
+							textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+							color: "white",
+							fontWeight: "500",
+							userSelect: "none",
+						}}
+					>
+						Tags
+					</p>
+				</div>
+			</div>
+			<div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+				<SearchField
+					placeholder={"Search by tag"}
+					searchText={tagName}
+					setSearchText={setTagName}
+				/>
 				<Button
 					sx={styles.dialogButton}
 					onClick={handleOpen}
@@ -114,7 +154,7 @@ const ViewTags = () => {
 				>
 					New Tag
 				</Button>
-			</Box>
+			</div>
 
 			<Paper
 				elevation={3}
@@ -201,7 +241,7 @@ const ViewTags = () => {
 				</Box>
 			</Paper>
 
-			<Dialog
+			{/* <Dialog
 				open={open}
 				onClose={handleClose}
 				PaperProps={{
@@ -288,7 +328,7 @@ const ViewTags = () => {
 						Add
 					</Button>
 				</DialogActions>
-			</Dialog>
+			</Dialog> */}
 			<Footer />
 		</div>
 	);
@@ -296,10 +336,14 @@ const ViewTags = () => {
 
 const styles = {
 	container: {
+		width: "100vw",
+		position: "absolute",
+		top: "0",
+		left: "0",
 		display: "flex",
 		flexDirection: "column",
-		alignItems: "center",
-		gap: 20,
+		gap: "0.7rem",
+		overflowX: "hidden",
 	},
 	searchBox: {
 		display: "flex",
