@@ -56,9 +56,9 @@ const CardActivity = ({
     const description = (
         <p
             style={{
-                fontSize: fontSize * 1.2,
+                fontSize: fontSize,
                 width: "100%",
-                height: "80%",
+                height: "70%",
                 overflow: "hidden", // TODO: add ... at the end
             }}
         >

@@ -19,19 +19,23 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
         return <CircularProgress />;
     }
     const handleShowMore = () => {
-        navigate(`/hotel/offer-details/${offer._id}`, { state: { offer } });
+        navigate(`/tourist/hotel/offer-details/${offer._id}`, { state: { offer } });
         console.log("Show more clicked");
     };
 
     return (
         <div className="hotel-card">
-            <h2 className="hotel-name">{offer.name} </h2>
+            <h2 className="hotel-name" style={{ color: "var(--accent-color)" }}>
+                {offer.name}{" "}
+            </h2>
             {!isAllOffers && (
-                <h4 style={{ margin: "0" }}>Booking ID: {offer.bookingId}</h4>
+                <h4 style={{ margin: "0", color: "var(--accent-color)" }}>
+                    Booking ID: {offer.bookingId}
+                </h4>
             )}
 
             <div className="hotel-location">
-                <span className="icon-text">
+                <span className="icon-text" style={{ color: "var(--accent-color)" }}>
                     <LocationOnIcon
                         sx={{ varticalAlign: "middle", marginRight: "5px" }}
                     />
@@ -44,7 +48,7 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
 
             {/* Hotel Image */}
             <div className="hotel-image">
-                <img src={offer.image} alt="Hotel Room" />
+                <img src={offer.image} alt="Hotel Room" style={{ borderRadius: "6px" }} />
             </div>
 
             {/* Room Info */}
@@ -53,14 +57,24 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
                 <div className="room-info">
                     <span className="icon-text">
                         <PersonIcon
-                            sx={{ verticalAlign: "middle", marginRight: "5px" }}
+                            sx={{
+                                verticalAlign: "middle",
+                                marginRight: "5px",
+                                color: "var(--accent-color)",
+                            }}
                         />
                         <span>
                             {offer.guests} adult{offer.guests > 1 ? "s" : ""}
                         </span>
                     </span>
                     <span className="icon-text">
-                        <BedIcon sx={{ verticalAlign: "middle", marginRight: "5px" }} />
+                        <BedIcon
+                            sx={{
+                                verticalAlign: "middle",
+                                marginRight: "5px",
+                                color: "var(--accent-color)",
+                            }}
+                        />
                         <span>
                             {offer.beds} Bed{offer.beds > 1 ? "s" : ""}
                         </span>
@@ -71,6 +85,7 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
                                 verticalAlign: "middle",
                                 marginLeft: "10px",
                                 marginRight: "5px",
+                                color: "var(--accent-color)",
                             }}
                         />
                         <span>
@@ -105,7 +120,7 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
             <div className="show-more-div">
                 <Button
                     stylingMode="always-dark"
-                    text={"Show details"}
+                    text={"View"}
                     handleClick={handleShowMore}
                     customStyle={{
                         width: "60%",

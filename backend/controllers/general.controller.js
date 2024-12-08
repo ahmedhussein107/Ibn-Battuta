@@ -9,31 +9,109 @@ import { incrementnotificationCount } from "../routes/ws.router.js";
 
 const secretKey =
     process.env.JWT_SECRET || "any key to cipher the password and decipher ";
-
-export const updatePassword = async (req, res) => {
+export const changePassword = async (req, res) => {
     try {
-        const { userType, userId, oldPassword, newPassword } = req.body;
+        const { username, newPassword } = req.body;
+
+        const userName = await mongoose.model("Username").findById(username);
+        if (!userName) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const userType = userName.userType;
 
         const UserModel = mongoose.model(userType);
         if (!UserModel) {
             return res.status(400).json({ message: "Invalid user type" });
         }
-        const user = await UserModel.findById(userId);
+        const user = await UserModel.findOne({ username });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
-        if (!isPasswordValid) {
-            return res.status(401).json({ message: "Invalid credentials" });
-        }
-
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-
         user.password = hashedNewPassword;
         await user.save();
 
         res.status(200).json({ message: "Password updated successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+export const createOTPandSendEmail = async (req, res) => {
+    try {
+        const { username } = req.body;
+
+        const userName = await mongoose.model("Username").findById(username);
+        if (!userName) {
+            return res
+                .status(404)
+                .json({ message: "The username you entered is incorrect" });
+        }
+
+        const userType = userName.userType;
+        const UserModel = mongoose.model(userType);
+        if (!UserModel) {
+            return res.status(400).json({ message: "Invalid user type" });
+        }
+        const user = await UserModel.findOne({ username });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        const hashedOTP = await bcrypt.hash(otp.toString(), 10);
+
+        await mongoose.model("Username").findByIdAndUpdate(username, {
+            otp: hashedOTP,
+        });
+
+        const email = user.email;
+        const subject = "OTP for password reset";
+        const message = `Your OTP for password reset is: ${otp}`;
+        try {
+            await sendEmail(email, subject, message);
+        } catch (e) {
+            return res.status(404).json({ message: e.message || "Error sending email" });
+        }
+
+        res.status(200).json({ message: "OTP created successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+export const verifyOTP = async (req, res) => {
+    const { username, otp } = req.body;
+
+    try {
+        const userName = await mongoose.model("Username").findById(username);
+
+        if (!userName) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const fiveMinutesInMs = 5 * 60 * 1000;
+        console.log("time passed", Date.now() - new Date(userName.updatedAt).getTime());
+        if (
+            Date.now() - new Date(userName.updatedAt).getTime() > fiveMinutesInMs ||
+            !userName.otp
+        ) {
+            userName.otp = null;
+            await userName.save();
+            return res.status(400).json({ message: "Your OTP has expired" });
+        }
+
+        const otpMatch = await bcrypt.compare(otp, userName.otp);
+
+        if (!otpMatch) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+
+        userName.otp = null;
+        await userName.save();
+        res.status(200).json({ message: "OTP verified successfully" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -118,9 +196,11 @@ export const assignCookies = (
 
     res.cookie("jwt", token, { maxAge });
     res.cookie("userType", userType, { maxAge });
-    res.cookie("email", email, { maxAge });
     if (profileImage) res.cookie("profileImage", profileImage, { maxAge });
-    if (userType === "Tourist") res.cookie("currency", currency || "EGP", { maxAge });
+    if (userType === "Tourist") {
+        res.cookie("currency", currency || "EGP", { maxAge });
+        res.cookie("email", email, { maxAge });
+    }
 
     return res;
 };

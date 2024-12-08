@@ -83,7 +83,10 @@ export const getAdvertiserActivities = async (req, res) => {
 
 export const getUpcomingActivities = async (req, res) => {
     try {
-        const { rating, price, ...rest } = req.query;
+        const { rating, price, page, limit, sortBy, ...rest } = req.query;
+        const _page = Math.max(1, parseInt(req.query.page) || 1);
+        const _limit = Math.max(1, parseInt(req.query.limit) || 10);
+        const toSkip = (_page - 1) * _limit;
         const filter = buildFilter(rest);
 
         let activities = await Activity.find({
@@ -114,7 +117,35 @@ export const getUpcomingActivities = async (req, res) => {
             });
         }
 
-        res.status(200).json(activities);
+        if (sortBy) {
+            if (sortBy === "priceAsc") {
+                activities.sort((a, b) => {
+                    const specialDiscountPriceA =
+                        (a.price * (100 - a.specialDiscount)) / 100;
+                    const specialDiscountPriceB =
+                        (b.price * (100 - b.specialDiscount)) / 100;
+                    return specialDiscountPriceA - specialDiscountPriceB;
+                });
+            } else if (sortBy === "priceDesc") {
+                activities.sort((a, b) => {
+                    const specialDiscountPriceA =
+                        (a.price * (100 - a.specialDiscount)) / 100;
+                    const specialDiscountPriceB =
+                        (b.price * (100 - b.specialDiscount)) / 100;
+                    return specialDiscountPriceB - specialDiscountPriceA;
+                });
+            } else if (sortBy === "ratingAsc") {
+                activities.sort((a, b) => a.rating - b.rating);
+            } else if (sortBy === "ratingDesc") {
+                activities.sort((a, b) => b.rating - a.rating);
+            }
+        }
+        const count = activities.length;
+        activities = activities.slice(toSkip, Math.min(toSkip + _limit, count));
+        return res.status(200).json({
+            result: activities,
+            totalPages: count > 0 ? Math.ceil(count / _limit) : 1,
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -1,7 +1,8 @@
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import Button from "../../components/Button";
 import { useState } from "react";
+import { DatePicker } from "antd";
+const { RangePicker } = DatePicker;
+import FlightSearchWithRecommendation from "./FlightSearchWithRecommendation";
 
 const FlightSearchFields = ({
     keyword,
@@ -12,7 +13,9 @@ const FlightSearchFields = ({
     setStartDate,
     returnDate,
     setReturnDate,
+    departureAirport,
     setDepartureAirport,
+    arrivalAirport,
     setArrivalAirport,
     adults,
     setAdults,
@@ -81,299 +84,55 @@ const FlightSearchFields = ({
         fetchSuggestions2(value); // Fetch suggestions based on input
     };
 
+    const handleRangeChange = (_, dateStrings) => {
+        setStartDate(dateStrings[0]);
+        setReturnDate(dateStrings[1]);
+    };
+
     return (
         <div>
             <div
                 style={{
-                    width: "91.5vw",
+                    width: "90%",
                     height: "15vh",
-                    backgroundColor: "#FDDDCE",
-                    margin: "2vh auto",
+                    backgroundColor: "#ECD1B4",
+                    margin: "0 auto",
                     padding: "2vh",
                     borderRadius: "1vw",
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "flex-end",
+                    justifyContent: "space-between",
                 }}
             >
                 {/* First Small Rectangle with "From" Label and Search Field */}
-                <div
-                    style={{
-                        width: "12vw",
-                        height: "11vh",
-                        backgroundColor: "white",
-                        marginRight: "1.5vw",
-                        borderRadius: "1vw", // Increased border radius for rounded edges
-                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
-                        position: "relative",
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "0 10px",
-                    }}
-                >
-                    <span
-                        style={{
-                            position: "absolute",
-                            top: "1.5vh",
-                            left: "1vw",
-                            fontWeight: "bold",
-                            color: "#B4B4B8",
-                        }}
-                    >
-                        From
-                    </span>
-                    <span
-                        style={{
-                            position: "absolute",
-                            top: "1.9vh",
-                            left: "3.7vw", // Adjust to position it next to "From"
-                            fontWeight: "bold",
-                            color: "red",
-                        }}
-                    >
-                        *
-                    </span>
-
-                    {/* Search Input Field */}
-                    <input
-                        type="text"
-                        value={keyword} // This will now show both the city name and IATA code
-                        onChange={handleInputChange} // Call handleInputChange on each input change
-                        onFocus={() => keyword && fetchSuggestions(keyword)} // Refetch suggestions on focus if keyword exists
-                        placeholder="City or Airport"
-                        style={{
-                            width: "10vw",
-                            padding: "1vh",
-                            paddingTop: "6vh",
-                            borderRadius: "0.5vw",
-                            border: "0.1vw solid transparent",
-                            outline: "none",
-                        }}
+                <div style={flightPageSearch}>
+                    <FlightSearchWithRecommendation
+                        query={keyword}
+                        setQuery={setKeyword}
+                        chosenCity={departureAirport}
+                        setChosenCity={setDepartureAirport}
+                        message="From (city or airport)"
                     />
-
-                    {/* Display dropdown of suggestions if there are any */}
-                    {suggestions.length > 0 && (
-                        <div
-                            style={{
-                                position: "absolute",
-                                top: "9vh", // Position it below the input field
-                                left: "0",
-                                width: "100%",
-                                backgroundColor: "white",
-                                boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
-                                maxHeight: "20vh", // Limit height for scrollable dropdown
-                                overflowY: "scroll",
-                                borderRadius: "0.5vw",
-                                zIndex: "1",
-                            }}
-                        >
-                            {suggestions.map((suggestion, index) => (
-                                <div
-                                    key={index}
-                                    style={{
-                                        padding: "0.5vh",
-                                        cursor: "pointer",
-                                    }}
-                                    onClick={() => {
-                                        // Set keyword with city name and IATA code format
-                                        setKeyword(
-                                            `${suggestion.name} (${suggestion.iataCode})`
-                                        );
-                                        setDepartureAirport(suggestion.iataCode);
-                                        setSuggestions([]); // Clear suggestions to close dropdown
-                                    }}
-                                >
-                                    {suggestion.name} ({suggestion.iataCode})
-                                </div>
-                            ))}
-                        </div>
-                    )}
                 </div>
 
                 {/* Second Small Rectangle with "To" Label */}
-                <div
-                    style={{
-                        width: "12vw",
-                        height: "11vh",
-                        backgroundColor: "white",
-                        marginRight: "1.5vw",
-                        borderRadius: "1vw", // Increased border radius for rounded edges
-                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
-                        position: "relative",
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "0 10px",
-                    }}
-                >
-                    <span
-                        style={{
-                            position: "absolute",
-                            top: "1.5vh",
-                            left: "1vw",
-                            fontWeight: "bold",
-                            color: "#B4B4B8",
-                        }}
-                    >
-                        To
-                    </span>
-                    <span
-                        style={{
-                            position: "absolute",
-                            top: "1.9vh",
-                            left: "2.4vw", // Adjust to position it next to "From"
-                            fontWeight: "bold",
-                            color: "red",
-                        }}
-                    >
-                        *
-                    </span>
-                    {/* Second Search Input Field */}
-                    <input
-                        type="text"
-                        value={keyword2} // Bind input field to keyword2 state
-                        onChange={handleInputChange2} // Call handleInputChange2 on each input change
-                        onFocus={() => keyword2 && fetchSuggestions2(keyword2)} // Refetch suggestions on focus if keyword2 exists
-                        placeholder="City or Airport"
-                        style={{
-                            width: "10vw",
-                            padding: "1vh",
-                            paddingTop: "6vh",
-                            borderRadius: "0.5vw",
-                            border: "0.1vw solid transparent",
-                            outline: "none",
-                        }}
+                <div className="hotels-controls-search">
+                    <FlightSearchWithRecommendation
+                        query={keyword2}
+                        setQuery={setKeyword2}
+                        chosenCity={arrivalAirport}
+                        setChosenCity={setArrivalAirport}
+                        message="To (city or airport)"
                     />
-
-                    {/* Display dropdown of suggestions if there are any for the second input field */}
-                    {suggestions2.length > 0 && (
-                        <div
-                            style={{
-                                position: "absolute",
-                                top: "9vh", // Position it below the input field
-                                left: "0",
-                                width: "100%",
-                                backgroundColor: "white",
-                                boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
-                                maxHeight: "20vh", // Limit height for scrollable dropdown
-                                overflowY: "scroll",
-                                borderRadius: "0.5vw",
-                                zIndex: "1",
-                            }}
-                        >
-                            {suggestions2.map((suggestion2, index) => (
-                                <div
-                                    key={index}
-                                    style={{
-                                        padding: "0.5vh",
-                                        cursor: "pointer",
-                                    }}
-                                    onClick={() => {
-                                        // Set keyword2 with city name and IATA code format
-                                        setKeyword2(
-                                            `${suggestion2.name} (${suggestion2.iataCode})`
-                                        );
-                                        setArrivalAirport(suggestion2.iataCode);
-                                        setSuggestions2([]); // Clear suggestions to close dropdown
-                                    }}
-                                >
-                                    {suggestion2.name} ({suggestion2.iataCode})
-                                </div>
-                            ))}
-                        </div>
-                    )}
                 </div>
 
                 {/* third Small Rectangle */}
-                <div
-                    style={{
-                        width: "12vw",
-                        height: "11vh",
-                        backgroundColor: "white",
-                        marginRight: "1.5vw",
-                        borderRadius: "1vw", // Increased border radius for rounded edges
-                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
-                        position: "relative",
-                        display: "flex",
-                        flexDirection: "column", // Stack label and input vertically
-                        justifyContent: "center", // Center vertically within the container
-                        padding: "0 10px",
-                    }}
-                >
-                    <span
-                        style={{
-                            fontWeight: "bold",
-                            color: "#B4B4B8",
-                            marginBottom: "1vh", // Reduced margin to keep it compact
-                        }}
-                    >
-                        Departure
-                    </span>
-                    <span
-                        style={{
-                            position: "absolute",
-                            top: "1.9vh",
-                            left: "5.8vw", // Adjust to position it next to "From"
-                            fontWeight: "bold",
-                            color: "red",
-                        }}
-                    >
-                        *
-                    </span>
-                    <DatePicker
-                        selected={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        dateFormat="dd/MM/yyyy" // Day, month, year format
-                        placeholderText="Select date" // Placeholder text here
-                        style={{
-                            width: "7vw",
-                            padding: "1vh", // Adjusted padding to fit in the container
-                            borderRadius: "0.5vw",
-                            border: "0.1vw solid transparent",
-                            outline: "none", // Removes blue outline on focus
-                        }}
-                    />
+                <div className="hotels-controls-date">
+                    <RangePicker onChange={handleRangeChange} />
                 </div>
 
                 {/* fourth Small Rectangle */}
-                <div
-                    style={{
-                        width: "12vw",
-                        height: "11vh",
-                        backgroundColor: "white",
-                        marginRight: "1.5vw",
-                        borderRadius: "1vw", // Increased border radius for rounded edges
-                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
-                        position: "relative",
-                        display: "flex",
-                        flexDirection: "column", // Stack label and input vertically
-                        justifyContent: "center", // Center vertically within the container
-                        padding: "0 10px",
-                    }}
-                >
-                    <span
-                        style={{
-                            fontWeight: "bold",
-                            color: "#B4B4B8",
-                            marginBottom: "1vh", // Reduced margin to keep it compact
-                        }}
-                    >
-                        Return
-                    </span>
-                    <DatePicker
-                        selected={returnDate}
-                        onChange={(date) => setReturnDate(date)}
-                        dateFormat="dd/MM/yyyy"
-                        placeholderText="Select date"
-                        style={{
-                            width: "7vw",
-                            padding: "1vh",
-                            borderRadius: "0.5vw",
-                            border: "0.1vw solid transparent",
-                            outline: "none",
-                        }}
-                    />
-                </div>
 
                 {/* fifth Small Rectangle */}
                 <div
@@ -487,6 +246,16 @@ const FlightSearchFields = ({
             </p>
         </div>
     );
+};
+
+const flightPageSearch = {
+    flex: "3",
+    backgroundColor: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    border: "1px solid #898686",
+    borderRadius: "40px",
 };
 
 export default FlightSearchFields;

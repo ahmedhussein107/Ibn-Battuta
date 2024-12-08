@@ -35,6 +35,8 @@ const touristSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+touristSchema.index({ createdAt: 1 });
+
 touristSchema.pre("save", async function (next) {
     try {
         const { username, email, notifications, cart, preferences, wishlist } = this;

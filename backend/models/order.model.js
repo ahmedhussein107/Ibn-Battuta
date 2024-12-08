@@ -40,10 +40,16 @@ const orderSchema = new mongoose.Schema(
 orderSchema.pre("save", async function (next) {
     try {
         const { buyer, product } = this;
+        try {
+            const { buyer, product } = this;
 
-        await validateReference(buyer, "Tourist", next);
-        // await validateReference(product, "Product", next);
+            await validateReference(buyer, "Tourist", next);
+            // await validateReference(product, "Product", next);
 
+            next();
+        } catch (error) {
+            next(error);
+        }
         next();
     } catch (error) {
         next(error);

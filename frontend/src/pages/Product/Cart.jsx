@@ -177,7 +177,8 @@ const Cart = () => {
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                        boxShadow: "0 2px 2px rgba(0, 0, 0, 0.1)", // Add shadow here
+                        boxShadow:
+                            "2px 2px 2px rgba(0, 0, 0, 0.1), -2px -2px 2px rgba(0, 0, 0, 0.1)", // Add shadow here
                     }}
                 >
                     {cart.map((element, index) => (

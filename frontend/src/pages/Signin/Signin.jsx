@@ -42,12 +42,12 @@ const SigninComponent = () => {
                 const userType = Cookies.get("userType");
                 window.location.reload();
 
-                if (userType === "Tourist") {
-                    navigate("/");
-                    return;
-                }
+                // if (userType === "Tourist") {
+                // 	navigate("/");
+                // 	return;
+                // }
                 console.log("userType", userType.toLowerCase());
-                navigate(`/${userType.toLowerCase()}`);
+                // navigate(`/${userType.toLowerCase()}`);
             }, 1000);
         } catch (err) {
             console.log(err);
@@ -103,19 +103,22 @@ const SigninComponent = () => {
                 }}
                 required={true}
             ></TextField>
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                    marginTop: "10px",
-                    color: "var(--accent-color)",
-                    cursor: "pointer",
-                }}
-                onClick={() => {}}
-            >
-                <div>Forgot your password? </div>
-            </div>
+
+            <label htmlFor="terms">
+                <Link to={"/forgot-your-password"}>
+                    <p
+                        style={{
+                            width: "100%",
+                            //textDecoration: "underline",
+                            marginTop: "2%",
+                            marginLeft: "50%",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        Forgot your password?
+                    </p>
+                </Link>
+            </label>
             <div
                 style={{
                     display: "flex",

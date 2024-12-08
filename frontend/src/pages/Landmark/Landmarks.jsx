@@ -4,7 +4,7 @@ import "react-datetime/css/react-datetime.css";
 import SideBar from "../../components/SideBar/SideBar";
 import SearchField from "../../components/SearchField/SearchField";
 import CheckboxList from "../../components/CheckBoxList";
-import NavBar from "../../components/NavBar";
+import PaginationComponent from "../../components/Pagination";
 import Footer from "../../components/Footer";
 import landmarkbackground from "../../assets/backgrounds/landmarksBackground.png";
 import CardLandmark from "../../components/CardLandmark";
@@ -20,6 +20,10 @@ const Landmarks = () => {
     const [searchedTag, setSearchedTag] = useState("");
     const [searchedCategory, setSearchedCategory] = useState("");
     const [location, setLocation] = useState("");
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const itemsPerPage = 6;
 
     const fetchTags = async () => {
         try {
@@ -51,10 +55,15 @@ const Landmarks = () => {
         try {
             console.log("query", query);
             const response = await axiosInstance.get(`/landmark/allLandmarks/`, {
-                params: query,
+                params: {
+                    ...query,
+                    page: currentPage,
+                    limit: itemsPerPage,
+                },
             });
             console.log("response", response.data);
-            setLandmarks(response.data);
+            setTotalPages(response.data.totalPages);
+            setLandmarks(response.data.result);
         } catch (error) {
             console.error("Error fetching Activities:", error);
         }
@@ -67,8 +76,14 @@ const Landmarks = () => {
 
     useEffect(() => {
         const query = buildQuery();
+        setCurrentPage(1);
         fetchLandmarks(query);
     }, [searchedTag, searchedCategory, selectedTags, selectedCategories, name, location]);
+
+    useEffect(() => {
+        const query = buildQuery();
+        fetchLandmarks(query);
+    }, [currentPage]);
 
     const buildQuery = () => {
         let query = {};
@@ -148,13 +163,33 @@ const Landmarks = () => {
             <div
                 style={{
                     width: "100vw",
-                    height: "30vh",
-                    backgroundImage: `url(${landmarkbackground})`,
+                    height: "35vh",
+                    color: "#FAE2B6",
+                    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${landmarkbackground})`,
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
                 }}
-            ></div>
+            >
+                <div style={{ marginLeft: "5%", marginBottom: "2%" }}>
+                    <p
+                        style={{
+                            fontSize: "2.5rem",
+                            marginBottom: "1rem",
+                            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+                            color: "white",
+                            fontWeight: "500",
+                            userSelect: "none",
+                        }}
+                    >
+                        LandMarks
+                    </p>
+                </div>
+            </div>
 
             <div
                 style={{
@@ -177,19 +212,6 @@ const Landmarks = () => {
                         titles={titles}
                     />
                 </div>
-                <div
-                    style={{
-                        position: "absolute",
-                        top: "14vh",
-                        left: "8vw",
-                        fontSize: "8vh",
-                        color: "white",
-                        pointerEvents: "none",
-                        fontFamily: "serif", // Try "" or "serif" for other options
-                    }}
-                >
-                    LandMarks
-                </div>
                 <div style={{ width: "70vw" }}>
                     {landmarks.map((landmark) => {
                         return (
@@ -211,6 +233,15 @@ const Landmarks = () => {
                         );
                     })}
                 </div>
+            </div>
+            <div style={{ paddingBottom: "1%" }}>
+                <PaginationComponent
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    onChange={(event, newPage) => {
+                        setCurrentPage(newPage);
+                    }}
+                />
             </div>
             <Footer />
         </div>

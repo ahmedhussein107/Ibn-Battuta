@@ -104,21 +104,39 @@ export const updateTourist = async (req, res) => {
         let ID = req.user.userId;
         const admin = await Admin.findById(req.user.userId);
         if (admin) {
-            ID = req.query.userId;
+            ID = req.query.userId; // Admin can update any tourist
         }
+
         const tourist = await Tourist.findById(ID);
         if (!tourist) {
             return res.status(404).json({ e: "Tourist not found" });
         }
+
         if (req.body.email) {
-            await Email.findByIdAndDelete(tourist.email);
-            await Email.create({
-                _id: req.body.email,
-            });
+            // Check if the email already exists
+            const existingEmail = await Email.findById(req.body.email);
+            if (existingEmail) {
+                return res.status(400).json({ e: "Email already exists." });
+            }
+
+            // Proceed to update the email
+            await Email.findByIdAndDelete(tourist.email); // Remove the old email
+            try {
+                await Email.create({
+                    _id: req.body.email, // Create the new email
+                });
+            } catch (e) {
+                await Email.create({
+                    _id: tourist.email,
+                });
+                res.status(400).json({ e: e.message });
+            }
         }
+
         if (req.body.password) {
-            req.body.password = await bcrypt.hash(req.body.password, 10);
+            req.body.password = await bcrypt.hash(req.body.password, 10); // Hash the new password
         }
+
         const touristUpdated = await Tourist.findByIdAndUpdate(ID, req.body, {
             new: true,
         });
@@ -126,6 +144,9 @@ export const updateTourist = async (req, res) => {
         res.cookie("currency", touristUpdated.currency, {
             maxAge: 60 * 60 * 24 * 1000,
         })
+            .cookie("email", touristUpdated.email, {
+                maxAge: 60 * 60 * 24 * 1000,
+            })
             .status(200)
             .json({ message: "Tourist updated", tourist: touristUpdated });
     } catch (e) {
@@ -269,11 +290,15 @@ export const addToWishlist = async (req, res) => {
             return res.status(400).json({ e: "Item is required" });
         }
         if (tourist.wishlist.includes(item)) {
-            return res.status(400).json({ e: "Item already exists in wishlist" });
+            return res
+                .status(400)
+                .json({ e: "Item already exists in wishlist" });
         }
         tourist.wishlist.push(item);
         await tourist.save();
-        res.status(200).json({ message: "Item added to wishlist successfully" });
+        res.status(200).json({
+            message: "Item added to wishlist successfully",
+        });
     } catch (e) {
         res.status(400).json({ e: e.message });
     }
@@ -287,11 +312,15 @@ export const removeFromWishlist = async (req, res) => {
         const { item } = req.body;
         const index = tourist.wishlist.indexOf(item);
         if (index === -1) {
-            return res.status(400).json({ e: "Item does not exist in wishlist" });
+            return res
+                .status(400)
+                .json({ e: "Item does not exist in wishlist" });
         }
         tourist.wishlist.splice(index, 1);
         await tourist.save();
-        res.status(200).json({ message: "Item removed from wishlist successfully" });
+        res.status(200).json({
+            message: "Item removed from wishlist successfully",
+        });
     } catch (e) {
         res.status(400).json({ e: e.message });
     }
@@ -323,7 +352,9 @@ export const changeTouristPassword = async (req, res) => {
     try {
         // Validate the input fields
         if (!oldPassword || !newPassword) {
-            return res.status(400).json("Both old and new passwords are required");
+            return res
+                .status(400)
+                .json("Both old and new passwords are required");
         }
 
         // Find the tourist by ID
@@ -346,6 +377,8 @@ export const changeTouristPassword = async (req, res) => {
         return res.status(200).json("Password changed successfully!");
     } catch (err) {
         console.error("Error changing password:", err);
-        return res.status(500).json("An error occurred while changing the password");
+        return res
+            .status(500)
+            .json("An error occurred while changing the password");
     }
 };

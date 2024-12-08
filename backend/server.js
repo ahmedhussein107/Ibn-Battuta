@@ -32,6 +32,7 @@ import amadeusHotelsRouter from "./services/hotels.js";
 import amadeusFlightsRouter from "./services/flights.js";
 import touristCartRouter from "./routes/touristCart.router.js";
 import touristWishlistRouter from "./routes/touristWishlist.router.js";
+import analyticsRouter from "./routes/analytics.router.js";
 
 import { setupPromoCodeScheduledJobs } from "./controllers/promocode.controller.js";
 
@@ -45,23 +46,23 @@ import { sendNotificationCountToUser, setupWebSocketRoutes } from "./routes/ws.r
 const app = expressWs(express()).app;
 
 connect(MONGO_URI)
-    .then(() => {
-        app.listen(PORT, () => {
-            console.log(`Connected to DB`);
-            console.log(`Listening to port ${PORT}`);
-        });
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+	.then(() => {
+		app.listen(PORT, () => {
+			console.log(`Connected to DB`);
+			console.log(`Listening to port ${PORT}`);
+		});
+	})
+	.catch((err) => {
+		console.log(err);
+	});
 
 setupWebSocketRoutes(app);
 setupPromoCodeScheduledJobs();
 
 app.use(cookieParser());
 const corsOptions = {
-    origin: "http://localhost:5173",
-    credentials: true,
+	origin: "http://localhost:5173",
+	credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -98,3 +99,4 @@ app.use("/api/bookmark", touristBookmarkRouter);
 app.use("/api/general", generalRouter);
 app.use("/api/cart", touristCartRouter);
 app.use("/api/wishlist", touristWishlistRouter);
+app.use("/api/analytics", analyticsRouter);
