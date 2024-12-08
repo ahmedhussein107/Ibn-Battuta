@@ -23,6 +23,7 @@ const Bookings = () => {
     const [flights, setFlights] = useState([]);
     const [hotels, setHotels] = useState([]);
     const [filter, setFilter] = useState("All");
+    const [error, setError] = useState("");
 
     const [popupOpen, setPopupOpen] = useState(false);
     const [popupContent, setPopupContent] = useState(null);
