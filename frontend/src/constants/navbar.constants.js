@@ -39,14 +39,14 @@ export const tourGuideNavbarItems = [
     { Home: "/tourGuide" },
     { Browse: [{ Activites: "/activities" }, { Itineraries: "/itineraries" }] },
     { Assigned: "/tourguide/assigned" },
-    { Analytics: "/analytics" },
+    { Analytics: "/tourguide/analytics" },
 ];
 
 export const advertiserNavbarItems = [
     { Home: "/advertiser" },
     { Browse: "/activities" },
     { Assigned: "/advertiser/assigned" },
-    { Analytics: "analytics" },
+    { Analytics: "/advertiser/analytics" },
 ];
 
 export const governorNavbarItems = [{ Home: "/governor" }, { Browse: "/landmarks" }];
@@ -67,6 +67,7 @@ export const adminNavbarItems = [
             { Itineraries: "/admin/itineraries" },
             { Landmarks: "/landmarks" },
             { Products: "/shop" },
+            { Analytics: "/admin/analytics" },
         ],
     },
     { Categorization: [{ Tags: "/admin/tags" }, { Category: "/admin/categories" }] },
