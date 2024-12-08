@@ -13,6 +13,8 @@ export default function ShareAndMark({
     mode = "card",
     isBookmarked = false,
     showBookmark = false,
+    icon = "markIcon",
+    scale = 1,
 }) {
     const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
@@ -38,6 +40,27 @@ export default function ShareAndMark({
         window.open(mailtoLink, "_blank");
     };
 
+    function scaleValue(input, scale) {
+        // Use a regular expression to separate the number and the unit
+        const match = input.match(/^([+-]?\d*\.?\d+)([a-z%]+)$/i);
+
+        if (!match) {
+            throw new Error(
+                "Invalid input format. Must be a number followed by units, e.g., '10vh'."
+            );
+        }
+
+        const number = parseFloat(match[1]); // Extract and parse the numeric part
+        const unit = match[2]; // Extract the unit part
+
+        const scaledNumber = number * scale; // Scale the number
+
+        return `${scaledNumber}${unit}`; // Concatenate scaled number with the unit
+    }
+
+    const secondIconWidth = scaleValue(width, scale);
+    const secondIconHeight = scaleValue(height, scale);
+
     return (
         <div
             className="icon-dropdown-container"
@@ -47,9 +70,13 @@ export default function ShareAndMark({
             {showBookmark && (
                 <div className="icon" onClick={onSecondIconClick}>
                     <img
-                        src={isBookmarked ? "/markIconFilled.png" : "/markIcon.png"}
+                        src={isBookmarked ? `/${icon}Filled.png` : `/${icon}.png`}
                         alt="Second Icon"
-                        style={mode === "card" ? { width: width, height: height } : {}}
+                        style={
+                            mode === "card"
+                                ? { width: secondIconWidth, height: secondIconHeight }
+                                : {}
+                        }
                     />
                 </div>
             )}

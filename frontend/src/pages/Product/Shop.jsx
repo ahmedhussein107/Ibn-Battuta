@@ -410,14 +410,16 @@ const Shop = () => {
                                 fontSize="1.2rem"
                                 firstLineButtons={[
                                     <ShareAndMark
-                                        width="1.2vw"
-                                        height="1.2vw"
+                                        width="1.2rem"
+                                        height="1.2rem"
                                         styles={{ padding: "0.5vh" }}
                                         isBookmarked={wishlistStatus[product.id]}
                                         showBookmark={userType === "Tourist"}
                                         onSecondIconClick={() =>
                                             handleAddToWishlist(product.id)
                                         }
+                                        icon={"loveIcon"}
+                                        scale={1.3}
                                     />,
                                 ]}
                                 controlButtons={[
