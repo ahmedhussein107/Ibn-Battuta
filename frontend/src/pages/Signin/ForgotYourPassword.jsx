@@ -3,7 +3,7 @@ import "../../styles/SignUpPage.css";
 import axiosInstance from "../../api/axiosInstance";
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField } from "@mui/material";
+import { Alert, TextField } from "@mui/material";
 import PopUpSuccess from "../../components/PopUpsGeneric/PopUpSuccess";
 
 const ForgotYourPassword = () => {
@@ -12,7 +12,9 @@ const ForgotYourPassword = () => {
     const [step, setStep] = useState(1);
     const [sendingOTP, setSendingOTP] = useState(false);
     const [usernameError, setUsernameError] = useState("");
+    const [verifyingOTP, setVerifyingOTP] = useState(false);
     const [verificationError, setVerificationError] = useState("");
+    const [resentOTP, setResentOTP] = useState("");
     const [password, setPassword] = useState("");
     const [reenteredPassword, setReenteredPassword] = useState("");
     const [passwordMatchError, setPasswordMatchError] = useState("");
@@ -24,8 +26,14 @@ const ForgotYourPassword = () => {
     const inputs = useRef([]);
 
     const handleNext = async () => {
+        if (!username) {
+            setUsernameError("Please enter a username");
+            return;
+        }
+
         try {
             setSendingOTP(true);
+            setUsernameError("");
             const response = await axiosInstance.post("/general/createOTP", {
                 username,
             });
@@ -40,6 +48,8 @@ const ForgotYourPassword = () => {
     };
 
     const handleResend = async () => {
+        setVerificationError("");
+        setResentOTP(true);
         try {
             const response = await axiosInstance.post("/general/createOTP", {
                 username,
@@ -94,6 +104,9 @@ const ForgotYourPassword = () => {
     const handleVerify = async () => {
         const enteredOTP = otp.join("");
         console.log(enteredOTP);
+        setVerifyingOTP(true);
+        setVerificationError("");
+        setResentOTP(false);
         try {
             const response = await axiosInstance.post("/general/verifyOTP", {
                 username,
@@ -104,6 +117,8 @@ const ForgotYourPassword = () => {
         } catch (err) {
             console.log(err);
             setVerificationError(err.response.data.message);
+        } finally {
+            setVerifyingOTP(false);
         }
     };
 
@@ -133,77 +148,109 @@ const ForgotYourPassword = () => {
     };
 
     return (
-        <div className="container">
+        <div style={signupContainer}>
             <div style={formContainerStyle}>
                 <div style={elementsStyle}>
-                    <h1 style={{ textAlign: "center" }}>Change your password</h1>
+                    <h1 style={{ color: "#9C4F21" }}>Change password</h1>
 
                     {step === 1 && (
-                        <div style={elementsStyle}>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                //justifyContent: "center",
+                                gap: "3vh",
+                                marginTop: "5vh",
+                            }}
+                        >
                             <p
                                 style={{
                                     textAlign: "center",
-                                    marginBottom: "5%",
-                                    marginTop: "15%",
+                                    fontSize: "1.2rem",
+                                    fontWeight: "bold",
                                 }}
                             >
-                                Enter the username associated with your account to change
-                                your password.
+                                Enter your username to change your password
                             </p>
 
-                            <div className="form-group">
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    //alignItems: "center",
+                                    gap: "2vh",
+                                    width: "100%",
+                                }}
+                            >
                                 <TextField
                                     id="username"
                                     variant="outlined"
-                                    placeholder={"Please enter your username"}
+                                    label="Username"
                                     onChange={(e) => {
                                         console.log("username", e.target.value);
                                         setUsername(e.target.value);
                                     }}
                                     required={true}
-                                    style={{ background: "white" }}
+                                    sx={{
+                                        backgroundColor: "white", // Set the background to white
+                                        borderRadius: "4px", // Optional: Add rounded corners
+                                    }}
                                 ></TextField>
+                                {usernameError && (
+                                    <Alert severity="error">{usernameError}</Alert>
+                                )}
                             </div>
 
-                            <p
-                                style={{
-                                    color: "#DC143C",
-                                    textAlign: "center",
-                                    marginTop: "2%",
-                                }}
-                            >
-                                {usernameError}
-                            </p>
-
-                            <Button
-                                text="Next"
-                                stylingMode="1"
-                                handleClick={() => {
-                                    console.log("Button clicked");
-                                    handleNext();
-                                }}
-                                customStyle={{ marginTop: "10%" }}
-                                isLoading={sendingOTP}
-                            />
+                            <div style={{ display: "flex", marginTop: "2vh" }}>
+                                <Button
+                                    text="Back"
+                                    stylingMode="always-light"
+                                    handleClick={() => {
+                                        navigate("/signin");
+                                    }}
+                                />
+                                <Button
+                                    text="Next"
+                                    stylingMode="always-dark"
+                                    handleClick={() => {
+                                        console.log("Button clicked");
+                                        handleNext();
+                                    }}
+                                    isLoading={sendingOTP}
+                                />
+                            </div>
                         </div>
                     )}
 
                     {step === 2 && (
-                        <div style={elementsStyle}>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: "3vh",
+                                marginTop: "5vh",
+                            }}
+                        >
                             <p
                                 style={{
                                     textAlign: "center",
-                                    marginBottom: "5%",
-                                    marginTop: "15%",
+                                    fontSize: "1.2rem",
+                                    fontWeight: "bold",
                                 }}
                             >
-                                We have sent an OTP to your email address. Please verify
+                                An OTP has been sent to your email address. Please verify
                                 it to change your password.
                             </p>
 
                             <div
                                 onPaste={handlePaste}
-                                style={{ display: "flex", gap: "10px" }}
+                                style={{
+                                    display: "flex",
+                                    gap: "3%",
+                                    justifyContent: "center",
+                                }}
                             >
                                 {otp.map((_, index) => (
                                     <input
@@ -217,24 +264,26 @@ const ForgotYourPassword = () => {
                                         onKeyDown={(e) => handleKeyDown(e, index)}
                                         ref={(el) => (inputs.current[index] = el)} // Assign refs dynamically
                                         style={{
-                                            width: "40px",
-                                            height: "40px",
+                                            width: "3vw",
+                                            height: "3vw",
                                             textAlign: "center",
-                                            fontSize: "18px",
+                                            fontSize: "1.5rem",
                                         }}
                                     />
                                 ))}
                             </div>
 
-                            <p
-                                style={{
-                                    color: "#DC143C",
-                                    textAlign: "center",
-                                    marginTop: "2%",
-                                }}
-                            >
-                                {verificationError}
-                            </p>
+                            {verificationError !== "" && (
+                                <Alert severity="error" style={{ width: "20vw" }}>
+                                    {verificationError}
+                                </Alert>
+                            )}
+
+                            {resentOTP && (
+                                <Alert severity="info" style={{ width: "20vw" }}>
+                                    {"Your OTP has been resent"}
+                                </Alert>
+                            )}
 
                             <button
                                 style={{
@@ -243,7 +292,8 @@ const ForgotYourPassword = () => {
                                     color: "#9C4F21",
                                     textDecoration: "underline",
                                     cursor: "pointer",
-                                    marginTop: "10%",
+                                    fontSize: "1.1rem",
+                                    fontWeight: "bold",
                                 }}
                                 onClick={() => {
                                     handleResend();
@@ -252,65 +302,119 @@ const ForgotYourPassword = () => {
                                 Resend OTP?
                             </button>
 
-                            <Button
-                                text="Verify"
-                                stylingMode="1"
-                                handleClick={() => {
-                                    console.log(otp);
-                                    handleVerify();
-                                }}
-                            />
+                            <div style={{ display: "flex" }}>
+                                <Button
+                                    text="Back"
+                                    stylingMode="always-light"
+                                    handleClick={() => {
+                                        setUsername("");
+                                        setResentOTP(false);
+                                        setVerificationError("");
+                                        setStep(1);
+                                    }}
+                                />
+                                <Button
+                                    text="Verify"
+                                    stylingMode="always-dark"
+                                    handleClick={() => {
+                                        console.log(otp);
+                                        handleVerify();
+                                    }}
+                                    isLoading={verifyingOTP}
+                                />
+                            </div>
                         </div>
                     )}
 
                     {step === 3 && (
-                        <div style={{ ...elementsStyle, marginTop: "5%" }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: "3vh",
+                                marginTop: "5vh",
+                                width: "50%",
+                            }}
+                        >
                             <div
-                                className="form-group"
-                                style={{ marginTop: "10%", gap: "50%" }}
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "2vh",
+                                    width: "100%",
+                                }}
                             >
-                                <label>Enter your new password </label>
+                                <p
+                                    style={{
+                                        textAlign: "center",
+                                        fontSize: "1.2rem",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Enter you new password
+                                </p>
+
                                 <TextField
                                     id="password"
                                     variant="outlined"
+                                    label="New Password"
                                     type="password"
-                                    placeholder={"New password"}
                                     onChange={(e) => {
                                         console.log("password", e.target.value);
                                         setPassword(e.target.value);
                                     }}
                                     required={true}
+                                    sx={{
+                                        backgroundColor: "white", // Set the background to white
+                                        borderRadius: "4px", // Optional: Add rounded corners
+                                    }}
                                 ></TextField>
                             </div>
 
-                            <div className="form-group">
-                                <label>Re-enter your new password </label>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "2vh",
+                                    width: "100%",
+                                }}
+                            >
+                                <p
+                                    style={{
+                                        textAlign: "center",
+                                        fontSize: "1.2rem",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Re-enter you new password
+                                </p>
                                 <TextField
                                     id="password"
                                     variant="outlined"
                                     type="password"
-                                    placeholder={"Confirm new password"}
+                                    label="Confirm new password"
                                     onChange={(e) => {
                                         console.log("reentered password", e.target.value);
                                         setReenteredPassword(e.target.value);
                                     }}
                                     required={true}
+                                    sx={{
+                                        backgroundColor: "white", // Set the background to white
+                                        borderRadius: "4px", // Optional: Add rounded corners
+                                    }}
                                 ></TextField>
                             </div>
 
-                            <p
-                                style={{
-                                    color: "#DC143C",
-                                    textAlign: "center",
-                                    marginTop: "2%",
-                                }}
-                            >
-                                {passwordMatchError}
-                            </p>
+                            {passwordMatchError && (
+                                <Alert severity="error" style={{ width: "89%" }}>
+                                    {passwordMatchError}
+                                </Alert>
+                            )}
 
                             <Button
                                 text="Confirm"
-                                stylingMode="1"
+                                stylingMode="always-dark"
                                 handleClick={() => {
                                     console.log("Button clicked");
                                     handleConfirm();
@@ -338,14 +442,30 @@ const ForgotYourPassword = () => {
     );
 };
 
+const signupContainer = {
+    color: "var(--text-color)",
+    margin: "0",
+    width: "100vw" /* Full viewport width */,
+    height: "100vh" /* Full viewport height */,
+    backgroundImage: `url(/auth.png)`,
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center" /* Center vertically */,
+    justifyContent: "center" /* Center horizontally */,
+    overflow: "visible",
+};
+
 const formContainerStyle = {
     background: "rgba(255, 255, 255, 0.8)" /* White background with transparency */,
     padding: "var(--spacing-large)",
     borderRadius: "var(--border-radius)" /* Rounded corners */,
     boxShadow:
         "0 4px 8px rgba(0, 0, 0, var(--opacity-transparent))" /* Slight shadow for depth */,
-    width: "60%" /* Width relative to the parent div */,
-    height: "55%",
+    width: "40%" /* Width relative to the parent div */,
+    height: "fit-content",
     display: "flex",
     flexDirection: "column" /* Stack children vertically */,
 };
@@ -355,6 +475,7 @@ const elementsStyle = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    gap: "10%",
 };
 
 export default ForgotYourPassword;

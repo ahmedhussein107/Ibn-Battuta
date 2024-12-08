@@ -2,7 +2,7 @@
     color: var(--text-color);
     margin: 0;
     width: 100vw; /* Full viewport width */
-    height: 100vh; /* Full viewport height */
+    height: auto; /* Full viewport height */
     background-image: url("/auth.png"); /* Replace with the path to your image */
     background-size: cover;
     background-repeat: no-repeat;

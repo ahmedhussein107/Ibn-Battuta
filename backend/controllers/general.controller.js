@@ -101,7 +101,7 @@ export const verifyOTP = async (req, res) => {
         ) {
             userName.otp = null;
             await userName.save();
-            return res.status(400).json({ message: "OTP has expired" });
+            return res.status(400).json({ message: "Your OTP has expired" });
         }
 
         const otpMatch = await bcrypt.compare(otp, userName.otp);

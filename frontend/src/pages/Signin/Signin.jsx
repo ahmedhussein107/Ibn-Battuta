@@ -120,20 +120,6 @@ const SigninComponent = () => {
                     </p>
                 </Link>
             </label>
-
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                    marginTop: "10px",
-                    color: "var(--accent-color)",
-                    cursor: "pointer",
-                }}
-                onClick={() => {}}
-            >
-                <div>Forgot your password? </div>
-            </div>
             <div
                 style={{
                     display: "flex",
