@@ -1,6 +1,7 @@
 import FlightSearchFields from "./FlightSearchFields";
 import FlightCard from "./FlightCard";
 import FlightList from "./FlightList";
+import FlightControls from "./FlightControls";
 const FlightSearchPage = ({
     keyword,
     setKeyword,
@@ -10,7 +11,9 @@ const FlightSearchPage = ({
     setStartDate,
     returnDate,
     setReturnDate,
+    departureAirport,
     setDepartureAirport,
+    arrivalAirport,
     setArrivalAirport,
     adults,
     setAdults,
@@ -25,26 +28,29 @@ const FlightSearchPage = ({
 }) => {
     return (
         <div>
-            <FlightSearchFields
-                keyword={keyword}
-                setKeyword={setKeyword}
-                keyword2={keyword2}
-                setKeyword2={setKeyword2}
-                startDate={startDate}
-                setStartDate={setStartDate}
-                returnDate={returnDate}
-                setReturnDate={setReturnDate}
-                setDepartureAirport={setDepartureAirport}
-                setArrivalAirport={setArrivalAirport}
-                adults={adults}
-                setAdults={setAdults}
-                children={children}
-                setChildren={setChildren}
-                handleSearch={handleSearch}
-                isLoading={isLoading}
-                error={error}
-            />
-
+            <div style={{ width: "95%", margin: "2vh auto" }}>
+                <FlightControls
+                    keyword={keyword}
+                    setKeyword={setKeyword}
+                    keyword2={keyword2}
+                    setKeyword2={setKeyword2}
+                    startDate={startDate}
+                    setStartDate={setStartDate}
+                    returnDate={returnDate}
+                    setReturnDate={setReturnDate}
+                    departureAirport={departureAirport}
+                    setDepartureAirport={setDepartureAirport}
+                    arrivalAirport={arrivalAirport}
+                    setArrivalAirport={setArrivalAirport}
+                    adults={adults}
+                    setAdults={setAdults}
+                    children={children}
+                    setChildren={setChildren}
+                    handleSearch={handleSearch}
+                    isLoading={isLoading}
+                    error={error}
+                />
+            </div>
             <FlightList
                 flightOffers={flightOffers}
                 airlines={airlines}
