@@ -117,8 +117,6 @@ amadeusHotelsRouter.get("/search/hotel-offers", async (req, res) => {
     }
 });
 
-//TODO: add booking to tourist
-
 amadeusHotelsRouter.post("/book-hotel", isAuthenticated, async (req, res) => {
     const offer = req.body.offer;
     console.log("offer is of hotel booking", offer);
@@ -127,9 +125,6 @@ amadeusHotelsRouter.post("/book-hotel", isAuthenticated, async (req, res) => {
         const tourist = await Tourist.findById(touristId);
         if (!tourist) {
             return res.status(404).send({ error: "Tourist not found" });
-        }
-        if (tourist.wallet < offer.totalPrice) {
-            return res.status(400).send({ error: "Not enough money" });
         }
         const randomId = Math.floor(Math.random() * 10000000000000);
         offer.bookingId = randomId;

@@ -6,7 +6,7 @@ import SearchField from "../../components/SearchField/SearchField";
 import Sorter from "../../components/Sorter";
 import PriceRange from "../../components/PriceRange";
 import CheckboxList from "../../components/CheckBoxList";
-import itineraryBackground from "../../assets/images/Itinerariesbackground.png";
+import itineraryBackground from "../../assets/backgrounds/itineraries.png";
 import PaginationComponent from "../../components/Pagination.jsx";
 import Footer from "../../components/Footer";
 import CardItinerary from "../../components/CardItinerary";
@@ -221,12 +221,32 @@ const Itineraries = () => {
                 style={{
                     width: "100vw",
                     height: "30vh",
+                    color: "#FAE2B6",
                     backgroundImage: `url(${itineraryBackground})`,
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
                 }}
-            ></div>
+            >
+                <div style={{ marginLeft: "5%", marginBottom: "2%" }}>
+                    <p
+                        style={{
+                            fontSize: "2.5rem",
+                            marginBottom: "1rem",
+                            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+                            color: "white",
+                            fontWeight: "bold",
+                            userSelect: "none",
+                        }}
+                    >
+                        Itineraries
+                    </p>
+                </div>
+            </div>
 
             <div
                 style={{
@@ -248,19 +268,6 @@ const Itineraries = () => {
                         nonCollapsibleItems={nonCollapsibleItems}
                         titles={titles}
                     />
-                </div>
-                <div
-                    style={{
-                        position: "absolute",
-                        top: "14vh",
-                        left: "8vw",
-                        fontSize: "8vh",
-                        color: "white",
-                        pointerEvents: "none",
-                        fontFamily: "serif", // Try "" or "serif" for other options
-                    }}
-                >
-                    Itineraries
                 </div>
                 <div style={{ width: "75vw" }}>
                     {itineraries.map((itinerary, index) => (
@@ -291,7 +298,7 @@ const Itineraries = () => {
                                                 `/itinerary-details/${itinerary.id}`
                                             ),
                                         type: "always-dark",
-                                        width: "50%",
+                                        width: "60%",
                                     },
                                 ]}
                             />

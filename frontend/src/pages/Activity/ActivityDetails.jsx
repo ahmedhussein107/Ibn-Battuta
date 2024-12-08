@@ -16,7 +16,6 @@ import ActivityPhotos from "../../components/ActivityPhotos.jsx";
 import DateRangeDisplay from "../../components/DateRangeDisplay.jsx";
 import DiscountCard from "../../components/DiscountCard.jsx";
 
-import convert from "../../api/convert";
 import Cookies from "js-cookie";
 
 // Itinerary-related components
@@ -41,7 +40,6 @@ export default function ActivityDetails() {
     const [pointsAdded, setPointsAdded] = useState(0);
     const [advertiserName, setAdvertiserName] = useState("");
     const [ticketCount, setTicketCount] = useState(0);
-
     const [isBookmarked, setIsBookmarked] = useState(false);
 
     //To retrieve user type from browser

@@ -26,6 +26,8 @@ import generalRouter from "./routes/general.router.js";
 import touristBookmarkRouter from "./routes/touristBookmark.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+
+// services
 import amadeusHotelsRouter from "./services/hotels.js";
 import amadeusFlightsRouter from "./services/flights.js";
 import touristCartRouter from "./routes/touristCart.router.js";
@@ -34,6 +36,8 @@ import touristWishlistRouter from "./routes/touristWishlist.router.js";
 
 import { setupPromoCodeScheduledJobs } from "./controllers/promocode.controller.js";
 
+import stripeRouter from "./services/stripe.js";
+// environment variables
 import { PORT, MONGO_URI } from "./config/config.js";
 
 import expressWs from "express-ws";
@@ -42,28 +46,30 @@ import { sendNotificationCountToUser, setupWebSocketRoutes } from "./routes/ws.r
 const app = expressWs(express()).app;
 
 connect(MONGO_URI)
-	.then(() => {
-		app.listen(PORT, () => {
-			console.log(`Connected to DB`);
-			console.log(`Listening to port ${PORT}`);
-		});
-	})
-	.catch((err) => {
-		console.log(err);
-	});
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Connected to DB`);
+            console.log(`Listening to port ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
 setupWebSocketRoutes(app);
 setupPromoCodeScheduledJobs();
 
 app.use(cookieParser());
 const corsOptions = {
-	origin: "http://localhost:5173",
-	credentials: true,
+    origin: "http://localhost:5173",
+    credentials: true,
 };
 
 app.use(cors(corsOptions));
+app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
 app.use(express.json());
 
+app.use("/api/payment", stripeRouter);
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);
 app.use("/api/admin", adminRouter);

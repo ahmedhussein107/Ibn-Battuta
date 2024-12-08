@@ -69,7 +69,10 @@ const Last = () => {
                                 }}
                             >
                                 <FacebookIcon
-                                    style={{ fontSize: "2.5vh", color: "#393193" }}
+                                    style={{
+                                        fontSize: "2.5vh",
+                                        color: "#393193",
+                                    }}
                                 />
                             </div>
                         </a>
@@ -90,7 +93,10 @@ const Last = () => {
                                 }}
                             >
                                 <TwitterIcon
-                                    style={{ fontSize: "2.5vh", color: "#393193" }}
+                                    style={{
+                                        fontSize: "2.5vh",
+                                        color: "#393193",
+                                    }}
                                 />
                             </div>
                         </a>
@@ -111,7 +117,10 @@ const Last = () => {
                                 }}
                             >
                                 <InstagramIcon
-                                    style={{ fontSize: "2.5vh", color: "#393193" }}
+                                    style={{
+                                        fontSize: "2.5vh",
+                                        color: "#393193",
+                                    }}
                                 />
                             </div>
                         </a>
@@ -132,7 +141,10 @@ const Last = () => {
                                 }}
                             >
                                 <LinkedInIcon
-                                    style={{ fontSize: "2.5vh", color: "#393193" }}
+                                    style={{
+                                        fontSize: "2.5vh",
+                                        color: "#393193",
+                                    }}
                                 />
                             </div>
                         </a>
@@ -153,7 +165,10 @@ const Last = () => {
                                 }}
                             >
                                 <YouTubeIcon
-                                    style={{ fontSize: "2.5vh", color: "#393193" }}
+                                    style={{
+                                        fontSize: "2.5vh",
+                                        color: "#393193",
+                                    }}
                                 />
                             </div>
                         </a>

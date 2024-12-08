@@ -6,13 +6,11 @@ export default function ItineraryAndActivityHeader({
     mode = "activity",
     isOpen = false,
     category = "Balabizo",
-
     bookmark = () => {
         console.log("Bookmark not working");
     },
     isBookmarked = false,
     showBookmark = false,
-
 }) {
     return (
         <div className="itinerary-and-activity-header-container">
@@ -46,7 +44,6 @@ export default function ItineraryAndActivityHeader({
                 isBookmarked={isBookmarked}
                 showBookmark={showBookmark}
             />
-
         </div>
     );
 }
