@@ -67,8 +67,6 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
 				borderRadius: "1vw",
 				padding: "3vh 2vw",
 				boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-				width: "60%",
-				height: "70%",
 			}}
 		>
 			<div

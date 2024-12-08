@@ -156,38 +156,36 @@ const UpdateActivityPage = () => {
                         isOpenForBooking: response.data.isOpenForBooking,
                     });
 
-                    const fetchedStartDate = new Date(response.data.startDate);
-                    const fetchedEndDate = new Date(response.data.endDate);
+                    const fetchedStartDate = new Date(response.data.startDate); // this includes time
+                    const fetchedEndDate = new Date(response.data.endDate); // this includes time
+
+                    // Set start date and end date for display
                     setStartDate(fetchedStartDate);
                     setEndDate(fetchedEndDate);
                     setFormattedDate(
                         `${fetchedStartDate.toLocaleDateString()} to ${fetchedEndDate.toLocaleDateString()}`
                     );
 
-                    const startTime = new Date(response.data.startTime); // Your API method for getting start time
-                    const endTime = new Date(response.data.endTime); // Your API method for getting end time
+                    // Extract and format the time from the fetched dates
+                    const startHours = fetchedStartDate.getHours();
+                    const startMinutes = fetchedStartDate.getMinutes();
+                    const endHours = fetchedEndDate.getHours();
+                    const endMinutes = fetchedEndDate.getMinutes();
 
+                    // Format and set times as "HH:MM" string
                     setStartTime(
-                        startTime.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        })
+                        `${startHours.toString().padStart(2, "0")}:${startMinutes
+                            .toString()
+                            .padStart(2, "0")}`
                     );
                     setEndTime(
-                        endTime.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        })
+                        `${endHours.toString().padStart(2, "0")}:${endMinutes
+                            .toString()
+                            .padStart(2, "0")}`
                     );
-                    setFormattedTime(
-                        `${startTime.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        })} to ${endTime.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        })}`
-                    );
+
+                    // Set formatted time string
+                    setFormattedTime(`${startTime} to ${endTime}`);
 
                     setSelectedCurrency(response.data.currency); // Set the selected currency
 
@@ -415,23 +413,30 @@ const UpdateActivityPage = () => {
                                         />
                                     </div>
                                     <div style={{ position: "relative", width: "100%" }}>
-                                        <input
-                                            type="text"
-                                            value={formattedTime}
-                                            readOnly
-                                            onClick={() => setShowTimeModal(true)}
-                                            //placeholder="Select Time"
-                                            style={{
-                                                fontSize: "1.125rem",
-                                                width: "100%",
-                                                height: "3rem",
-                                                paddingLeft: "1rem",
-                                                paddingRight: "2.5rem",
-                                                border: "1px solid #ddd",
-                                                borderRadius: "0.375rem",
-                                                cursor: "pointer",
-                                            }}
-                                        />
+                                        <InputGroup>
+                                            <Label>Start Time</Label>
+                                            <TextField
+                                                name="startTime"
+                                                variant="outlined"
+                                                value={startTime} // Show the extracted start time
+                                                readOnly
+                                                style={inputStyles}
+                                                onClick={() => setShowTimeModal(true)} // For selecting new start time
+                                            />
+                                        </InputGroup>
+
+                                        <InputGroup>
+                                            <Label>End Time</Label>
+                                            <TextField
+                                                name="endTime"
+                                                variant="outlined"
+                                                value={endTime} // Show the extracted end time
+                                                readOnly
+                                                style={inputStyles}
+                                                onClick={() => setShowTimeModal(true)} // For selecting new end time
+                                            />
+                                        </InputGroup>
+
                                         <AccessTimeIcon
                                             style={{
                                                 position: "absolute",

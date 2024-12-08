@@ -95,7 +95,7 @@
 }
 
 strong {
-    color: #333;
+    color: var(--accent-color);
 }
 .show-more-div {
     display: flex;

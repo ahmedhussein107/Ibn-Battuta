@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axiosInstance from "../../api/axiosInstance";
 
-const ReviewsSection = ({ ratingIds, width, height, fontSize }) => {
+const ReviewsSection = ({ ratingIds, width, height, fontSize, reviewsPerPage = 3 }) => {
     const [reviews, setReviews] = useState([]);
     const [showReviews, setShowReviews] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
-    const reviewsPerPage = 3;
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -19,12 +18,12 @@ const ReviewsSection = ({ ratingIds, width, height, fontSize }) => {
                         );
                         const rating = ratingResponse.data;
 
-                       if(rating === undefined) return
+                        if (rating === undefined) return;
                         const tourist = rating.touristID;
-                       
+
                         // Construct review object
                         return {
-                            reviewer: (tourist &&tourist.name) || "Anonymous User",
+                            reviewer: (tourist && tourist.name) || "Anonymous User",
                             profilePic: (tourist && tourist.profilePic) || null,
                             rating: rating.rating,
                             comment: rating.comment,
@@ -117,7 +116,9 @@ const ReviewsSection = ({ ratingIds, width, height, fontSize }) => {
                                             />
                                         ) : (
                                             <DefaultProfilePic>
-                                                {(review.reviewer?.[0] || 'A').toUpperCase()}
+                                                {(
+                                                    review.reviewer?.[0] || "A"
+                                                ).toUpperCase()}
                                             </DefaultProfilePic>
                                         )}
                                     </ProfilePic>
@@ -134,7 +135,11 @@ const ReviewsSection = ({ ratingIds, width, height, fontSize }) => {
                                         .map((_, i) => (
                                             <Star
                                                 key={i}
-                                                $filled={i < Math.floor(review.rating) ? "t" : "f"}
+                                                $filled={
+                                                    i < Math.floor(review.rating)
+                                                        ? "t"
+                                                        : "f"
+                                                }
                                             >
                                                 ★
                                             </Star>
@@ -151,10 +156,16 @@ const ReviewsSection = ({ ratingIds, width, height, fontSize }) => {
                     </ToggleReviewsButton>
                     {showReviews && (
                         <Pagination>
-                            <PaginationButton onClick={handlePrevPage} disabled={currentPage === 0}>
+                            <PaginationButton
+                                onClick={handlePrevPage}
+                                disabled={currentPage === 0}
+                            >
                                 Backward
                             </PaginationButton>
-                            <PaginationButton onClick={handleNextPage} disabled={currentPage === totalPages - 1}>
+                            <PaginationButton
+                                onClick={handleNextPage}
+                                disabled={currentPage === totalPages - 1}
+                            >
                                 Forward
                             </PaginationButton>
                         </Pagination>
@@ -189,7 +200,7 @@ const AverageRating = styled.div`
 `;
 
 const Star = styled.span`
-    color: ${({ $filled }) => ($filled == "t"? "#ffa500" : "#ccc")};
+    color: ${({ $filled }) => ($filled == "t" ? "#ffa500" : "#ccc")};
     font-size: ${({ size }) => size || "1.5em"};
 `;
 
@@ -247,9 +258,8 @@ const ReviewsList = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1.5em;
-    min-height: calc(3 * 12vh + 3 * 1.5em); 
+    min-height: calc(3 * 12vh + 3 * 1.5em);
 `;
-
 
 const ReviewItem = styled.div`
     background-color: #fff;

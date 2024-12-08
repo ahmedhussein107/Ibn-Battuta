@@ -1,4 +1,5 @@
 import Category from "../models/category.model.js";
+import { buildFilter } from "../utilities/searchUtils.js";
 
 export const createCategory = async (req, res) => {
 	try {
@@ -63,5 +64,15 @@ export const deleteCategory = async (req, res) => {
 		}
 	} catch (e) {
 		res.status(400).json({ error: e.message });
+	}
+};
+
+export const searchCategories = async (req, res) => {
+	try {
+		const query = buildFilter(req.query);
+		const categories = await Category.find(query);
+		res.status(200).json(categories);
+	} catch (error) {
+		res.status(500).json({ message: error.message });
 	}
 };
