@@ -1059,16 +1059,18 @@ export default function TouristProfilePage() {
                                 </>
                             )}
                         </ProfileDetailsContainer>
-                        <EditIcon
-                            onClick={handleEditProfileSubmit} // Add the click functionality
-                            style={{
-                                cursor: "pointer", // Make it look clickable
-                                fontSize: "24px", // Adjust the size as needed
-                                color: "#000", // Optional: Customize the color
-                                margin: "10px", // Optional: Add spacing
-                            }}
-                            titleAccess="Edit Profile" // Optional: Add tooltip for accessibility
-                        />
+                        {!isEditing && ( // Render EditIcon only when not in editing mode
+                            <EditIcon
+                                onClick={handleEditProfileSubmit} // Add the click functionality
+                                style={{
+                                    cursor: "pointer", // Make it look clickable
+                                    fontSize: "24px", // Adjust the size as needed
+                                    color: "#000", // Optional: Customize the color
+                                    margin: "10px", // Optional: Add spacing
+                                }}
+                                titleAccess="Edit Profile" // Optional: Add tooltip for accessibility
+                            />
+                        )}
                     </ProfileDetailsBox>
                     <PreferenceTagsBox>
                         <h3>Preference Tags</h3>
