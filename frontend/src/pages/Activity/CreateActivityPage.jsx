@@ -13,6 +13,8 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
+import LocationAdder from "../../components/LocationAdder.jsx";
+import MapPopUp from "../../components/MapPopUp.jsx";
 
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
@@ -312,7 +314,7 @@ const CreateActivityPage = () => {
                                             value={formattedDate}
                                             readOnly
                                             onClick={() => setShowDateModal(true)}
-                                            placeholder="Select start Date"
+                                            placeholder="Select Date"
                                             style={{
                                                 fontSize: "1.125rem",
                                                 width: "100%",
@@ -343,7 +345,7 @@ const CreateActivityPage = () => {
                                             value={formattedTime}
                                             readOnly
                                             onClick={() => setShowTimeModal(true)}
-                                            placeholder="Select start Time"
+                                            placeholder="Select Time"
                                             style={{
                                                 fontSize: "1.125rem",
                                                 width: "100%",
