@@ -68,7 +68,9 @@ const Activities = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await axiosInstance.get(`/category/allCategories/`);
+            const response = await axiosInstance.get(
+                `/category/allCategories/`
+            );
             let categs = [];
             for (let category of response.data) {
                 categs.push(category._id);
@@ -103,14 +105,17 @@ const Activities = () => {
     const fetchActivities = async (query) => {
         try {
             console.log("query", query);
-            const response = await axiosInstance.get(`/activity/getUpcomingActivities/`, {
-                params: {
-                    ...query,
-                    page: currentPage,
-                    limit: itemsPerPage,
-                    sortBy,
-                },
-            });
+            const response = await axiosInstance.get(
+                `/activity/getUpcomingActivities/`,
+                {
+                    params: {
+                        ...query,
+                        page: currentPage,
+                        limit: itemsPerPage,
+                        sortBy,
+                    },
+                }
+            );
             setActivities(response.data.result);
             setTotalPages(response.data.totalPages);
         } catch (error) {
@@ -260,7 +265,10 @@ const Activities = () => {
             setSearchText={setLocation}
         />,
         <PriceRange priceRange={priceRange} setPriceRange={setPriceRange} />,
-        <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
+        <RatingRange
+            ratingRange={ratingRange}
+            setRatingRange={setRatingRange}
+        />,
         <RangePicker
             onChange={(_, dateStrings) => {
                 setStartDate(dateStrings[0]);
@@ -368,7 +376,9 @@ const Activities = () => {
                                         height="1.2vw"
                                         styles={{ padding: "0.5vh" }}
                                         direction={`/activity-details/${activity.id}`}
-                                        isBookmarked={bookmarkStatus[activity.id]}
+                                        isBookmarked={
+                                            bookmarkStatus[activity.id]
+                                        }
                                         showBookmark={userType === "Tourist"}
                                         onSecondIconClick={() =>
                                             handleBookmark(activity.id)
@@ -377,9 +387,16 @@ const Activities = () => {
                                 ]}
                                 bottomButtons={[
                                     {
-                                        text: "Book Now",
+                                        text:
+                                            userType !== "Tourist" &&
+                                            userType !== "Guest"
+                                                ? "View Details"
+                                                : "Book Now",
+
                                         onClick: () =>
-                                            navigate(`/activity-details/${activity.id}`),
+                                            navigate(
+                                                `/activity-details/${activity.id}`
+                                            ),
                                         type: "always-dark",
                                         width: "50%",
                                         styles: {
