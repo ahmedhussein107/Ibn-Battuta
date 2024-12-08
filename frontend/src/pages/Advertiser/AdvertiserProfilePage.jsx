@@ -576,6 +576,7 @@ const AdvertiserProfilePage = () => {
                                                 border: "0.1vh solid #9c4f21",
                                                 color: "#9c4f21",
                                                 marginRight: "10px",
+                                                cursor: "pointer",
                                             }}
                                             onClick={() => setIsEditing(false)} // Function to handle cancel action
                                         >
@@ -588,6 +589,8 @@ const AdvertiserProfilePage = () => {
                                                 color: "white",
                                                 border: "none",
                                                 borderRadius: "20px",
+                                                width: "45%",
+                                                height: "5vh",
                                                 cursor: "pointer",
                                                 marginTop: "10px",
                                             }}
@@ -653,14 +656,16 @@ const AdvertiserProfilePage = () => {
                                     <p style={{ marginBottom: "16px" }}>
                                         <button
                                             style={{
+                                                width: "45%",
+                                                height: "5vh",
                                                 background: "white",
                                                 borderRadius: "20vh",
+                                                cursor: "pointer",
                                                 border: "0.1vh solid #9c4f21",
                                                 color: "#9c4f21",
+                                                marginRight: "10px",
                                             }}
-                                            onClick={() => {
-                                                setIsEditing1(false); // Set editing mode to false
-                                            }} // Function to handle cancel action
+                                            onClick={() => setIsEditing1(false)} // Function to handle cancel action
                                         >
                                             Cancel
                                         </button>
@@ -671,6 +676,8 @@ const AdvertiserProfilePage = () => {
                                                 color: "white",
                                                 border: "none",
                                                 borderRadius: "20px",
+                                                width: "45%",
+                                                height: "5vh",
                                                 cursor: "pointer",
                                                 marginTop: "10px",
                                             }}

@@ -1004,6 +1004,8 @@ export default function TouristProfilePage() {
                                                 color: "white",
                                                 border: "none",
                                                 borderRadius: "20px",
+                                                width: "45%",
+                                                height: "5vh",
                                                 cursor: "pointer",
                                                 marginTop: "10px",
                                             }}
@@ -1011,7 +1013,6 @@ export default function TouristProfilePage() {
                                         >
                                             Save Changes
                                         </button>
-                                        {/* Cancel Button */}
                                     </p>
                                 </div>
                             ) : (
