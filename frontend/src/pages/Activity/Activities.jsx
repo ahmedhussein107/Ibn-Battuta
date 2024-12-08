@@ -6,7 +6,7 @@ import SearchField from "../../components/SearchField/SearchField";
 import Sorter from "../../components/Sorter";
 import PriceRange from "../../components/PriceRange";
 import RatingRange from "../../components/RatingRange";
-import DatePicker from "../../components/DatePicker";
+// import DatePicker from "../../components/DatePicker";
 import CheckboxList from "../../components/CheckBoxList";
 import Footer from "../../components/Footer";
 import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
@@ -16,6 +16,8 @@ import PaginationComponent from "../../components/Pagination.jsx";
 import { useNavigate } from "react-router-dom";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 import { CircularProgress } from "@mui/material";
+import { DatePicker } from "antd";
+const { RangePicker } = DatePicker;
 import Cookies from "js-cookie";
 
 const Activities = () => {
@@ -257,15 +259,14 @@ const Activities = () => {
             searchText={location}
             setSearchText={setLocation}
         />,
-        <PriceRange // TODO: change the slider
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-        />,
+        <PriceRange priceRange={priceRange} setPriceRange={setPriceRange} />,
         <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
-        <div style={{ display: "flex", flexDirection: "column" }}>
-            <DatePicker label="Start Date" setValue={setStartDate} />
-            <DatePicker label="End Date" setValue={setEndDate} />
-        </div>,
+        <RangePicker
+            onChange={(_, dateStrings) => {
+                setStartDate(dateStrings[0]);
+                setEndDate(dateStrings[1]);
+            }}
+        />,
         <CheckboxList
             items={tags}
             checkedItems={selectedTags}

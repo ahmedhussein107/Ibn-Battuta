@@ -19,7 +19,9 @@ const CollapsibleSection = ({ title, children }) => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    marginTop: "1vh",
                     padding: "1vh 0",
+                    backgroundColor: "#FFFBF3",
                 }}
             >
                 <strong>{title}</strong>
@@ -47,7 +49,7 @@ const SideBar = ({ collapsibleItems, nonCollapsibleItems, titles }) => {
             style={{
                 width: "80%",
                 padding: "1vw 3vh",
-                boxShadow: "2px 4px 8px rgba(156, 79, 33, 0.2)",
+                boxShadow: "2px 4px 4px rgba(156, 79, 33, 0.2)",
                 borderRadius: "8px",
                 backgroundColor: "white",
             }}
