@@ -23,11 +23,13 @@ import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
 import Book from "../../components/ItineraryDetails/Book.jsx";
 import AvailableDates from "../../components/ItineraryDetails/AvailableDates.jsx";
 import ItineraryTimeline from "../../components/ItineraryTimline.jsx";
+import DateRangeDisplay from "../../components/DateRangeDisplay.jsx";
 
 // Styles
 import "../../styles/ItineraryDetails.css";
 import Button from "../../components/Button";
-
+import Alert from "@mui/material/Alert";
+import LanguageIcon from "@mui/icons-material/Language";
 const ItineraryDetails = () => {
     const navigate = useNavigate();
     const [userType, setUserType] = useState(null);
@@ -52,10 +54,21 @@ const ItineraryDetails = () => {
     const [freeSpots, setFreeSpots] = useState(Number.MAX_VALUE); // Initialize with maximum number
     const [isBookmarked, setIsBookmarked] = useState(false);
     const totalPrice = itinerary ? itinerary.price * ticketCount : 0;
+    const [alert, setAlert] = useState({ open: false, severity: "info", message: "" });
 
     //For mangaing page logic
     const [BookPopUp, setBookPopUp] = useState(false);
     const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
+
+    // Add this check for bookingID
+    const hasBookingID = location.state?.id;
+
+    const showAlert = (severity, message) => {
+        setAlert({ open: true, severity, message });
+        // setTimeout(() => {
+        //     setAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+        // }, 8000); // Alert will close after 5 seconds
+    };
 
     useEffect(() => {
         const fetchItinerary = async () => {
@@ -69,6 +82,7 @@ const ItineraryDetails = () => {
                 setTourGuidePicture(itineraryResponse.data.tourguideID.picture);
             } catch (err) {
                 console.error("Error fetching itinerary:", err);
+                showAlert("error", "Error fetching itinerary:", err);
             }
         };
         fetchItinerary();
@@ -90,6 +104,7 @@ const ItineraryDetails = () => {
                 setIsBookmarked(response.data[itinerary._id]);
             } catch (error) {
                 console.error("Error fetching is bookmarked:", error);
+                showAlert("error", "Error fetching is bookmarked:", error);
             }
         };
         fetchIsBookmarked();
@@ -106,6 +121,7 @@ const ItineraryDetails = () => {
                 setFreeSpots(response.data);
             } catch (error) {
                 console.error("Error fetching free spots:", error);
+                showAlert("error", "Error fetching free spots:", error);
             }
         };
         fetchFreeSpots();
@@ -130,6 +146,7 @@ const ItineraryDetails = () => {
             setIsBookmarked(!isBookmarked);
         } catch (error) {
             console.error("Error bookmarking itinerary:", error);
+            showAlert("error", "Error bookmarking itinerary:", error);
         }
     };
 
@@ -164,6 +181,7 @@ const ItineraryDetails = () => {
             }
         } catch (error) {
             console.error("Booking failed:", error);
+            showAlert("error", "Booking failed:", error);
             // Handle error here, like displaying a notification to the user
             if (error.response) {
                 // The request was made and the server responded with a status code outside the 2xx range
@@ -242,6 +260,7 @@ const ItineraryDetails = () => {
                 setActivities(activitiesData);
             } catch (error) {
                 console.error("Error fetching activities: ", error);
+                showAlert("error", "Error fetching activities:", error);
             }
         };
 
@@ -262,9 +281,9 @@ const ItineraryDetails = () => {
             />
 
             <div className="language-container">
-                <div className="language-header" style={{ fontSize: "0.8em" }}>
-                    <img src="/languageIcon.png" alt="" className="language-icon" />
-                    <span>Language: {itinerary.language}</span>
+                <div className="language-header">
+                    <LanguageIcon fontSize="large" className="language-icon" />
+                    <span> Language: {itinerary.language}</span>
                 </div>
             </div>
 
@@ -352,36 +371,63 @@ const ItineraryDetails = () => {
                                         style={{
                                             color: "green",
                                             fontWeight: "bold",
+                                            marginBottom: "10px",
                                             textAlign: "center", // Optional: Align text to the center
                                         }}
                                     >
                                         {`${freeSpots} Available Seats`}
                                     </div>
                                 )}
-                                <AvailableDates
-                                    date={itinerary.availableDatesAndTimes}
+                                {/* <AvailableDates
+                                    date={[itinerary.startDate, itinerary.endDate]}
                                     width="18vw"
                                     fontSize={"0.8em"}
+                                /> */}
+
+                                <DateRangeDisplay
+                                    startDate={itinerary.startDate}
+                                    endDate={itinerary.endDate}
+                                    width="100%"
+                                    height="100%"
                                 />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div>
+            <div style={{ display: "flex", gap: "1rem" }}>
                 <Button
                     text="Back"
-                    stylingMode="2"
+                    stylingMode="always-light"
                     handleClick={() => window.history.back()}
                     customStyle={{ marginBottom: "3vh" }}
                 />
-                <Button
-                    text="Book"
-                    stylingMode="1"
-                    handleClick={() => setBookPopUp(true)} // Set popup to open
-                    customStyle={{ marginBottom: "3vh" }}
-                />
+                {!hasBookingID && (
+                    <Button
+                        text="Book"
+                        stylingMode="always-dark"
+                        handleClick={() => setBookPopUp(true)} // Set popup to open
+                        customStyle={{ marginBottom: "3vh" }}
+                    />
+                )}
             </div>
+            {alert.open && (
+                <Alert
+                    severity={alert.severity}
+                    onClose={() => setAlert({ ...alert, open: false })}
+                    style={{
+                        alignItems: "center",
+                        marginTop: "1vh",
+                        width: "80vw",
+                        marginLeft: "8vw",
+                        marginBottom: "2vh",
+                        fontSize: "22px",
+                        textAlign: "center",
+                    }}
+                >
+                    {alert.message}
+                </Alert>
+            )}
 
             <Footer />
         </div>

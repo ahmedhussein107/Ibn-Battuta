@@ -101,7 +101,7 @@ const ItineraryTimeline = ({
             backgroundColor: "#DB9D6D",
         },
         activityIcon: {
-            backgroundColor: "#9C4F21",
+            backgroundColor: "#DB9D6D",
         },
         timelineLine: {
             width: "6px",
