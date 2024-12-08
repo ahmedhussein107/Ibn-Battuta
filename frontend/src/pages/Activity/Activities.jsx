@@ -249,7 +249,7 @@ const Activities = () => {
                 "Price (Low to High)",
                 "Price (High to Low)",
                 "Rating (Low to High)",
-                "Rating (How to High)",
+                "Rating (How to Low)",
             ]}
             value={sortBy}
             setValue={setSortBy}
