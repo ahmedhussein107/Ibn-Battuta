@@ -10,7 +10,7 @@ import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import axiosInstance from "../../api/axiosInstance";
-import bookingsBackground from "../../assets/backgrounds/checkoutbg.png";
+import checkoutBackground from "../../assets/backgrounds/checkoutbg.png";
 import Button from "../../components/Button";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
 import { useNavigate } from "react-router-dom";
@@ -258,7 +258,7 @@ const Checkout = () => {
                     state: {
                         amount,
                         currency,
-                        headerImage: bookingsBackground,
+                        headerImage: checkoutBackground,
                     },
                 });
             } else {
@@ -1186,7 +1186,7 @@ const Checkout = () => {
 const backgroundStyle = {
     width: "100vw",
     height: "30vh",
-    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bookingsBackground})`,
+    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${checkoutBackground})`,
     backgroundSize: "100% 100%",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",

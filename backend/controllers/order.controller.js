@@ -43,6 +43,17 @@ export const createOrder = async (req, res) => {
     }
 };
 
+export const getOrderByID = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id).populate(
+            "purchases.product purchases.ratingID"
+        );
+        res.status(200).json(order);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};
+
 export const completeOrder = async (req, res) => {
     try {
         console.log("gowa completee order");
@@ -130,6 +141,30 @@ export const updateOrder = async (req, res) => {
         }
     } catch (err) {
         res.status(500).json({ message: err.message });
+    }
+};
+
+export const addRatingToProduct = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+        if (!order) {
+            return res.status(400).json({ message: "Order not found" });
+        }
+        console.log(order);
+
+        const { productID, ratingID } = req.body;
+        for (let purchase of order.purchases) {
+            if (purchase.product._id == productID) {
+                purchase.ratingID = ratingID;
+                await order.save();
+                return res
+                    .status(200)
+                    .json({ message: "rating added successfully", order });
+            }
+        }
+        return res.status(400).json({ message: "Product not found in order" });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
     }
 };
 
