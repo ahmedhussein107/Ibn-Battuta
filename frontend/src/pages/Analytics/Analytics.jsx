@@ -159,9 +159,7 @@ const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) =
         if (selectedMonth) {
             console.log(selectedMonth);
             const filteredData = initialTableData.filter((item) => {
-                const m = item.date.getMonth();
-                console.log("the m is ", _month[m], selectedMonth);
-                return _month[m] === selectedMonth;
+                return item.month === selectedMonth;
             });
             setCurrentTableData(filteredData);
         } else {
