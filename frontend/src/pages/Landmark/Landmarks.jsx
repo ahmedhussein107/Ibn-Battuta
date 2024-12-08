@@ -156,12 +156,32 @@ const Landmarks = () => {
 				style={{
 					width: "100vw",
 					height: "30vh",
+					color: "#FAE2B6",
 					backgroundImage: `url(${landmarkbackground})`,
 					backgroundSize: "100% 100%",
 					backgroundPosition: "center",
 					backgroundRepeat: "no-repeat",
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "flex-end",
+					alignItems: "center",
 				}}
-			></div>
+			>
+				<div style={{ marginLeft: "5%", marginBottom: "2%" }}>
+					<p
+						style={{
+							fontSize: "4rem",
+							marginBottom: "1rem",
+							textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+							color: "white",
+							fontFamily: "serif",
+							userSelect: "none",
+						}}
+					>
+						LandMarks
+					</p>
+				</div>
+			</div>
 
 			<div
 				style={{
@@ -183,19 +203,6 @@ const Landmarks = () => {
 						nonCollapsibleItems={nonCollapsibleItems}
 						titles={titles}
 					/>
-				</div>
-				<div
-					style={{
-						position: "absolute",
-						top: "14vh",
-						left: "8vw",
-						fontSize: "8vh",
-						color: "white",
-						pointerEvents: "none",
-						fontFamily: "serif", // Try "" or "serif" for other options
-					}}
-				>
-					LandMarks
 				</div>
 				<div style={{ width: "70vw" }}>
 					{landmarks.map((landmark) => {
