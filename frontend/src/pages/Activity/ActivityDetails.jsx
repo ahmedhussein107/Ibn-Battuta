@@ -22,6 +22,7 @@ import Cookies from "js-cookie";
 import ReviewsSection from "../Itinerary/ReviewsSection.jsx";
 import ProfileAndDescription from "../Itinerary/ProfileAndDescription.jsx";
 import Book from "../../components/ItineraryDetails/Book.jsx";
+import activityDefaultBackground from "../../assets/backgrounds/activity-details-background-temp.png";
 
 // Other components
 import Map from "../map.jsx";
@@ -30,7 +31,49 @@ import { CircularProgress } from "@mui/material";
 // Styles
 import "../../styles/ActivityDetails.css";
 
-export default function ActivityDetails() {
+const ImageSlideshow = ({ 
+    images, 
+    defaultImage, // Add defaultImage prop
+    interval = 5000 
+  }) => {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+    useEffect(() => {
+      if (!images || images.length === 0) return;
+  
+      const timer = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => 
+          prevIndex === images.length - 1 ? 0 : prevIndex + 1
+        );
+      }, interval);
+  
+      return () => clearInterval(timer);
+    }, [images, interval]);
+  
+    // Determine which image URL to use
+    const backgroundImageUrl = images && images.length > 0 
+      ? images[currentImageIndex] 
+      : defaultImage;
+  
+    return (
+        <div
+        style={{
+            width: "100vw",
+            height: "30vh",
+            color: "#FAE2B6",
+            backgroundImage: `url(${backgroundImageUrl})`,
+            backgroundSize: "100% 100%",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            alignItems: "center",
+        }}
+    ></div>
+    );
+  };
+const   ActivityDetails = () =>{
     const navigate = useNavigate();
     const [userType, setUserType] = useState(null);
     const [activityData, setActivityData] = useState(null);
@@ -164,6 +207,7 @@ export default function ActivityDetails() {
     }
     return (
         <div className="activity-details-container">
+            <ImageSlideshow  images={activityData.pictures} defaultImage={activityDefaultBackground}/>
             <NavBar />
 
             <PopUp
@@ -202,12 +246,7 @@ export default function ActivityDetails() {
                 isBookmarked={isBookmarked}
                 showBookmark={userType === "Tourist"}
             />
-            <ActivityPhotos
-                width="100%"
-                height={"70vh"}
-                interval={5000}
-                photos={activityData.pictures}
-            />
+        
             <div className="activity-info">
                 <div className="activity-info-left">
                     <ProfileAndDescription
@@ -284,3 +323,6 @@ export default function ActivityDetails() {
         </div>
     );
 }
+
+
+export default ActivityDetails;
