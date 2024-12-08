@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 import { sendEmail } from "./utilities/emailUtils.js";
 sendEmail("abdelrahim@gmail.com", "Testing", "this is me testing");
 */
-const sendEmail = async (toEmail, subject, body) => {
+const sendEmail = async (toEmail, subject, body, type = "text") => {
     if (!toEmail) {
         throw new Error("Your account does not have an email address");
     }
