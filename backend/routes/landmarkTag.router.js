@@ -21,6 +21,6 @@ landmarkTagRouter.delete("/deleteLandmarkTag/:id", deleteLandmarkTag);
 
 landmarkTagRouter.get("/getLandmarkTag/:id", getLandmarkTag);
 
-landmarkTagRouter.get("/searchLandmarkTags", searchLandmarkTags);
+landmarkTagRouter.get("/searchLandmarkTag", searchLandmarkTags);
 
 export default landmarkTagRouter;

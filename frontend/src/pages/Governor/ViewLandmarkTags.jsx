@@ -48,7 +48,7 @@ const ViewLandmarkTags = () => {
 	const fetchTags = async () => {
 		const query = tagName == "" ? {} : { _id: "~" + tagName };
 		await axiosInstance
-			.get("/landmarkTag/searchLandmarkTags/", {
+			.get("/landmarkTag/searchLandmarkTag", {
 				params: {
 					...query,
 				},

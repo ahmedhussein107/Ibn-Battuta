@@ -101,4 +101,4 @@ app.use("/api/general", generalRouter);
 app.use("/api/cart", touristCartRouter);
 app.use("/api/wishlist", touristWishlistRouter);
 app.use("/api/analytics", analyticsRouter);
-app.use("/api/landmarkTag", landmarkRouter);
+app.use("/api/landmarkTag", landmarkTagRouter);
