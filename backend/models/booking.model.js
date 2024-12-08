@@ -23,12 +23,14 @@ const bookingSchema = mongoose.Schema(
         totalPrice: { type: Number, required: true },
         pointsAdded: { type: Number, required: true },
         isInItinerary: { type: Boolean, default: false },
+        isComplete: { type: Boolean, default: false },
         ratingID: { type: mongoose.Schema.Types.ObjectId, ref: "Rating" },
         ratingTourGuideID: { type: mongoose.Schema.Types.ObjectId, ref: "Rating" },
         eventStartDate: Date,
     },
     { timestamps: true }
 );
+bookingSchema.index({ createdAt: 1 });
 
 bookingSchema.pre("save", async function (next) {
     try {
@@ -76,5 +78,7 @@ bookingSchema.pre("updateOne", validateUpdateReferences);
 bookingSchema.pre("findByIdAndUpdate", validateUpdateReferences);
 
 bookingSchema.index({ touristID: 1 });
+bookingSchema.index({ bookingType: 1 });
+bookingSchema.index({ typeId: 1 });
 
 export default mongoose.model("Booking", bookingSchema);

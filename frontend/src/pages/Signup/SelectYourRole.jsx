@@ -87,6 +87,9 @@ const SelectYourRoleComponent = ({ navigate }) => {
                 style={{
                     fontFamily: "Inter",
                     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
+                    marginTop: "3vh",
+                    marginBottom: "3vh",
+                    color: "var(--accent-color)",
                 }}
             >
                 Choose a role to sign up
@@ -110,7 +113,7 @@ const SelectYourRoleComponent = ({ navigate }) => {
                         }}
                     >
                         <Button
-                            stylingMode="2"
+                            stylingMode="dark-when-hovered"
                             text="Cancel"
                             width={"10vw"}
                             handleClick={() => {
@@ -118,7 +121,7 @@ const SelectYourRoleComponent = ({ navigate }) => {
                             }}
                         />
                         <Button
-                            stylingMode="1"
+                            stylingMode="always-dark"
                             text="Next"
                             width={"10vw"}
                             handleClick={() => {
@@ -137,12 +140,16 @@ const SelectYourRoleComponent = ({ navigate }) => {
                         {response}
                     </p>
                 </div>
-                <p style={{ marginLeft: "10%" }}>
+                <p style={{ marginLeft: "10%", marginTop: "2vh" }}>
                     Already have an account?{" "}
                     {
                         <Link
                             to={"/signin"}
-                            style={{ textDecoration: "underline", cursor: "pointer" }}
+                            style={{
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                                color: "var(--accent-color)",
+                            }}
                         >
                             Sign in
                         </Link>
@@ -180,7 +187,7 @@ const SelectYourRole = () => {
                 style={{
                     width: "55vw",
                     height: "100vh",
-                    backgroundImage: `url(${TravellerBackground})`,
+                    backgroundImage: `url("./auth.png")`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",

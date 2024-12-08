@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../../components/Pagination";
-import bookingsBackground from "../../assets/backgrounds/bookings_bg.png";
+import bookingsBackground from "../../assets/backgrounds/bookingsBackground.png";
 import Footer from "../../components/Footer";
-import NavBar from "../../components/NavBar";
-import GenericCard from "../../components/GenericCard";
 import CardBooking from "../../components/CardBooking";
 import TouristHotelBookings from "../../components/Hotels/TouristHotelBookings";
-import HotelList from "../../components/Hotels/HotelList";
 import FlightList from "../../components/Flights/FlightList";
 import FilterButtons from "../../components/FilterButtons";
+
+import { useLocation, useNavigate } from "react-router-dom";
+import PopUp from "../../components/PopUpsGeneric/PopUp";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import { CircularProgress, Alert } from "@mui/material";
 
 const Bookings = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -21,6 +23,40 @@ const Bookings = () => {
     const [flights, setFlights] = useState([]);
     const [hotels, setHotels] = useState([]);
     const [filter, setFilter] = useState("All");
+    const [error, setError] = useState("");
+
+    const [popupOpen, setPopupOpen] = useState(false);
+    const [popupContent, setPopupContent] = useState(null);
+
+    const navigate = useNavigate();
+
+    const handlePopupSubmit = () => {
+        setPopupOpen(false);
+    };
+
+    const location = useLocation();
+    console.log("state: ", location.state);
+
+    useEffect(() => {
+        if (location.state?.tab) setSelected(location.state.tab);
+        if (location.state?.hotel) {
+            const hotel = location.state.hotel;
+            if (location.state?.tab == "Hotels") {
+                setPopupOpen(true);
+                const content = `You are booking a flight to ${hotel.chosenCity.name}. 
+                                 Do you want to book a limousine to hotel ${hotel.name} for 1000 
+                                 ${hotel.currency}?`;
+                setPopupContent(content);
+            } else if (location.state?.tab == "Flights") {
+                setPopupOpen(true);
+                const content = `You can book a limousine with this flight to hotel ${hotel.name}
+                                 in ${hotel.chosenCity.name}. Do you want to book this package for 
+                                 1000 ${hotel.currency}?`;
+                setPopupContent(content);
+            }
+        }
+        // TODO: handle the refresh
+    }, []);
 
     const buttons = ["Itineraries", "Activities", "Flights", "Hotels"];
     const filterButtons = ["All", "Past", "Upcoming"];
@@ -57,8 +93,6 @@ const Bookings = () => {
                 withCredentials: true,
             });
             console.log("data ", response);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
             switch (selected) {
                 case "Itineraries": {
                     setItineraries(response.data.result);
@@ -89,8 +123,24 @@ const Bookings = () => {
         setCurrentPage(1);
     }, [selected, filter]);
 
+    const { isLoading } = useCurrencyConverter();
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
+
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+            {popupOpen && (
+                <PopUp
+                    isOpen={popupOpen}
+                    setIsOpen={setPopupOpen}
+                    headerText="Do you want to book a package?"
+                    handleSubmit={handlePopupSubmit}
+                >
+                    <p>{popupContent}</p>
+                </PopUp>
+            )}
             <div style={backgroundStyle}>
                 <h1 style={headerStyle}>My Bookings</h1>
             </div>
@@ -128,6 +178,8 @@ const Bookings = () => {
                                         booking={booking}
                                         width="46vw"
                                         height="34vh"
+                                        fontSize="1.2rem"
+                                        setError={setError}
                                     />
                                 </div>
                             ))}
@@ -141,6 +193,8 @@ const Bookings = () => {
                                         booking={booking}
                                         width="46vw"
                                         height="34vh"
+                                        fontSize="1.2rem"
+                                        setError={setError}
                                     />
                                 </div>
                             ))}
@@ -157,6 +211,11 @@ const Bookings = () => {
                     )}
                     {selected == "Hotels" && <TouristHotelBookings rooms={hotels} />}
                 </div>
+                {error && (
+                    <Alert severity="error" style={{ width: "90%", margin: "0 auto" }}>
+                        {error}
+                    </Alert>
+                )}
                 <PaginationComponent
                     totalPages={totalPages}
                     currentPage={currentPage}
@@ -171,7 +230,7 @@ const Bookings = () => {
 const backgroundStyle = {
     width: "100vw",
     height: "30vh",
-    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bookingsBackground})`,
+    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${bookingsBackground})`,
     backgroundSize: "100% 100%",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
@@ -192,7 +251,7 @@ const headerStyle = {
 const buttonGroupStyle = {
     display: "flex",
     gap: "10px",
-    marginLeft: "2%",
+    marginLeft: "1%",
 };
 
 const buttonStyle = {
@@ -217,6 +276,7 @@ const filterButtonsGroupStyle = {
     marginLeft: "8.5vw",
     display: "flex",
     justifyContent: "center",
+    marginRight: "2%",
 };
 
 const itemsContainerStyle = {

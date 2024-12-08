@@ -17,8 +17,21 @@ const DatePicker = ({ label, setValue }) => {
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]} sx={{ marginRight: "5%" }}>
-                <MUIDatePicker label={label} onChange={handleChange} />
+            <DemoContainer
+                components={["DatePicker"]}
+                sx={{
+                    marginRight: "5%",
+                }}
+            >
+                <MUIDatePicker
+                    label={label}
+                    onChange={handleChange}
+                    sx={{
+                        border: "2px solid var(--accent-color)",
+                        borderColor: "var(--accent-color)",
+                        borderRadius: "10px",
+                    }}
+                />
             </DemoContainer>
         </LocalizationProvider>
     );

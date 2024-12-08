@@ -80,7 +80,8 @@ export const createTourist = async (req, res) => {
                 "Tourist",
                 newTourist._id,
                 newTourist.picture,
-                newTourist.currency
+                newTourist.currency,
+                newTourist.email
             )
                 .status(201)
                 .json({ message: "Sign up successful" });
@@ -120,9 +121,16 @@ export const updateTourist = async (req, res) => {
 
             // Proceed to update the email
             await Email.findByIdAndDelete(tourist.email); // Remove the old email
-            await Email.create({
-                _id: req.body.email, // Create the new email
-            });
+            try {
+                await Email.create({
+                    _id: req.body.email, // Create the new email
+                });
+            } catch (e) {
+                await Email.create({
+                    _id: tourist.email,
+                });
+                res.status(400).json({ e: e.message });
+            }
         }
 
         if (req.body.password) {
@@ -136,6 +144,9 @@ export const updateTourist = async (req, res) => {
         res.cookie("currency", touristUpdated.currency, {
             maxAge: 60 * 60 * 24 * 1000,
         })
+            .cookie("email", touristUpdated.email, {
+                maxAge: 60 * 60 * 24 * 1000,
+            })
             .status(200)
             .json({ message: "Tourist updated", tourist: touristUpdated });
     } catch (e) {

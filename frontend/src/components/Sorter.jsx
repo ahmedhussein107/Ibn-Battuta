@@ -12,8 +12,8 @@ const Sorter = ({ values, labels, value, setValue }) => {
     return (
         <FormControl
             sx={{
-                backgroundColor: "#f3f6f9",
-                borderRadius: "4vh",
+                backgroundColor: "#FFFBF3",
+                borderRadius: "4px",
                 padding: "2vh",
                 width: "90%",
             }}

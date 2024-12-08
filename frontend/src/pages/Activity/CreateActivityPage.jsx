@@ -188,7 +188,7 @@ const CreateActivityPage = () => {
                 endDate: combinedEndDate.toISOString(),
                 pictures: uploadedFileUrls,
                 tags: selectedTags,
-                freeSpots: parseInt(formData.freeSpots) || 0,
+                initialFreeSpots: parseInt(formData.freeSpots) || 0,
                 specialDiscount: parseFloat(formData.specialDiscount) || 0,
                 price: parseFloat(formData.price) || 0,
                 Latitude: formData.Latitude ? parseFloat(formData.Latitude) : undefined,
@@ -652,13 +652,13 @@ const CreateActivityPage = () => {
                 >
                     <ButtonGroup>
                         <Button
-                            stylingMode="2"
+                            stylingMode="dark-when-hovered"
                             text="Cancel"
                             handleClick={() => navigate("/advertiser/assigned")}
                             width="auto"
                         />
                         <Button
-                            stylingMode="1"
+                            stylingMode="always-dark"
                             text="Create Activity"
                             handleClick={handleSubmit}
                             width="auto"

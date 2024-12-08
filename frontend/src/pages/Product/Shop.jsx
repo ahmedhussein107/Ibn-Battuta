@@ -7,6 +7,7 @@ import Sorter from "../../components/Sorter.jsx";
 import PriceRange from "../../components/PriceRange.jsx";
 import RatingRange from "../../components/RatingRange.jsx";
 import Footer from "../../components/Footer.jsx";
+import { useNavigate } from "react-router-dom"; //REMOVE
 import shopBackground from "../../assets/backgrounds/shopBackground.png";
 import ShareAndMark from "../../components/ShareAndMark.jsx";
 import CardProduct from "../../components/CardProduct.jsx";
@@ -28,22 +29,23 @@ const Shop = () => {
 	const { isLoading, convertPrice, formatPrice } = useCurrencyConverter(currency);
 
 	const minPrice = convertPrice(0, "EGP", currency);
-	const maxPrice = convertPrice(2000, "EGP", currency);
+	const maxPrice = convertPrice(1000000000, "EGP", currency);
 
-	const [products, setProducts] = useState([]);
-	const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-	const [ratingRange, setRatingRange] = useState([null, 5]);
-	const [sortBy, setSortBy] = useState("priceAsc");
-	const [name, setName] = useState("");
-	const [buyingPopUpOpen, setBuyingPopUpOpen] = useState(false);
-	const [selectedProduct, setSelectedProduct] = useState({
-		_id: "",
-		name: "",
-		description: "",
-		price: 0,
-		rating: 0,
-	});
-	const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const [products, setProducts] = useState([]);
+    const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
+    const [ratingRange, setRatingRange] = useState([null, 5]);
+    const [sortBy, setSortBy] = useState("priceAsc");
+    const [name, setName] = useState("");
+    const [buyingPopUpOpen, setBuyingPopUpOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState({
+        _id: "",
+        name: "",
+        description: "",
+        price: 0,
+        rating: 0,
+    });
+    const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const navigate = useNavigate(); //REMOVE
 
 	const [selectedPage, setSelectedPage] = useState("Shop");
 	const [wishlistStatus, setWishlistStatus] = useState({});
@@ -123,23 +125,22 @@ const Shop = () => {
 		}
 	}, [wishlistStatus]);
 
-	const handleBuyingPopUpOpen = async () => {
-		try {
-			await axiosInstance.post(
-				"/cart/updateCart",
-				{
-					productID: selectedProduct._id,
-					count: selectedQuantity,
-					price: selectedProduct.price * selectedQuantity,
-				},
-				{ withCredentials: true }
-			);
-			setBuyingPopUpOpen(false);
-		} catch (error) {
-			console.error("Error creating order:", error);
-			alert("Error creating order. Please try again.");
-		}
-	};
+    const handleBuyingPopUpOpen = async () => {
+        try {
+            await axiosInstance.post(
+                "/cart/updateCart",
+                {
+                    productID: selectedProduct._id,
+                    count: selectedQuantity,
+                },
+                { withCredentials: true }
+            );
+            setBuyingPopUpOpen(false);
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+            alert("Error adding to cart. Please try again.");
+        }
+    };
 
 	const buildQuery = () => {
 		let query = {};
@@ -172,180 +173,185 @@ const Shop = () => {
 		return query;
 	};
 
-	const nonCollapsibleItems = [
-		<SearchField placeholder="Search by name" searchText={name} setSearchText={setName} />,
-	];
-	const titles = ["Sort By", "Price Range", "Rating Range"];
-	const collapsibleItems = [
-		<Sorter
-			values={["priceAsc", "priceDesc", "ratingAsc", "ratingDesc"]}
-			labels={[
-				"Price (Low to High)",
-				"Price (High to Low)",
-				"Rating (Low to High)",
-				"Rating (How to High)",
-			]}
-			value={sortBy}
-			setValue={setSortBy}
-		/>,
-		<PriceRange
-			priceRange={priceRange}
-			setPriceRange={setPriceRange}
-			min={minPrice}
-			max={maxPrice}
-		/>,
-		<RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
-	];
+    const nonCollapsibleItems = [
+        <SearchField
+            placeholder="Search by name"
+            searchText={name}
+            setSearchText={setName}
+        />,
+    ];
+    const titles = ["Sort By", "Price Range", "Rating Range"];
+    const collapsibleItems = [
+        <Sorter
+            values={["priceAsc", "priceDesc", "ratingAsc", "ratingDesc"]}
+            labels={[
+                "Price (Low to High)",
+                "Price (High to Low)",
+                "Rating (Low to High)",
+                "Rating (How to High)",
+            ]}
+            value={sortBy}
+            setValue={setSortBy}
+        />,
+        <PriceRange
+            priceRange={priceRange}
+            setPriceRange={setPriceRange}
+            min={minPrice}
+            max={maxPrice}
+        />,
+        <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
+    ];
 
-	if (isLoading) {
-		return <CircularProgress />;
-	}
+    const handleAddToWishlist = async (productID) => {
+        try {
+            const response = await axiosInstance.post(
+                `wishlist/wishlist`,
+                {
+                    productID,
+                    isInWishlist: wishlistStatus[productID],
+                },
+                { withCredentials: true }
+            );
+            console.log("Wishlist response:", response.data);
+            const oldStatus = wishlistStatus[productID];
+            setWishlistStatus((prevStatus) => {
+                prevStatus[productID] = !oldStatus;
+                console.log(prevStatus);
+                return { ...prevStatus };
+            });
+        } catch (error) {
+            console.error("Error Add product to wishlist:", error);
+        }
+    };
 
-	const handleAddToWishlist = async (productID) => {
-		try {
-			const response = await axiosInstance.post(
-				`wishlist/wishlist`,
-				{
-					productID,
-					isInWishlist: wishlistStatus[productID],
-				},
-				{ withCredentials: true }
-			);
-			console.log("Wishlist response:", response.data);
-			const oldStatus = wishlistStatus[productID];
-			setWishlistStatus((prevStatus) => {
-				prevStatus[productID] = !oldStatus;
-				console.log(prevStatus);
-				return { ...prevStatus };
-			});
-		} catch (error) {
-			console.error("Error Add product to wishlist:", error);
-		}
-	};
+    if (isLoading) {
+         return <CircularProgress />;
+    }
 
-	return (
-		<div
-			style={{
-				width: "100vw",
-				position: "absolute",
-				top: "0",
-				left: "0",
-				display: "flex",
-				flexDirection: "column",
-				gap: "0.7rem",
-				overflowX: "hidden",
-			}}
-		>
-			<div
-				style={{
-					width: "100vw",
-					height: "30vh",
-					backgroundImage: `url(${shopBackground})`,
-					backgroundSize: "100% 100%",
-					backgroundPosition: "center",
-					backgroundRepeat: "no-repeat",
-					backgroundColor: "white",
-				}}
-			></div>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "row",
-					marginLeft: "28vw",
-				}}
-			>
-				<button
-					style={selectedPage == "Shop" ? selectedButtonStyle : buttonStyle}
-					onClick={() => setSelectedPage("Shop")}
-				>
-					<ShoppingBagIcon
-						style={{
-							width: "1rem",
-							height: "1rem",
-							color: "#9C4F21",
-							scale: "1.5",
-						}}
-					/>
-					<span
-						style={{
-							fontSize: "1.3rem",
-							color: "#9C4F21",
-						}}
-					>
-						Shop
-					</span>
-				</button>
-				<button
-					style={selectedPage == "wishlist" ? selectedButtonStyle : buttonStyle}
-					onClick={() => setSelectedPage("wishlist")}
-				>
-					<FavoriteBorderIcon
-						style={{
-							width: "1rem",
-							height: "1rem",
-							color: "#9C4F21",
-							scale: "1.5",
-						}}
-					/>
-					<span
-						style={{
-							fontSize: "1.3rem",
-							color: "#9C4F21",
-						}}
-					>
-						wishlist
-					</span>
-				</button>
-				<button
-					style={{
-						...buttonStyle,
-						marginLeft: "62%",
-					}}
-				>
-					<ShoppingCartIcon
-						style={{
-							width: "1rem",
-							height: "1rem",
-							color: "#9C4F21",
-							scale: "1.5",
-						}}
-					/>
-					<span
-						style={{
-							fontSize: "1.3rem",
-							color: "#9C4F21",
-						}}
-					>
-						Cart
-					</span>
-				</button>
-			</div>
+    return (
+        <div
+            style={{
+                width: "100vw",
+                position: "absolute",
+                top: "0",
+                left: "0",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.7rem",
+                overflowX: "hidden",
+            }}
+        >
+            <div
+                style={{
+                    width: "100vw",
+                    height: "30vh",
+                    backgroundImage: `url(${shopBackground})`,
+                    backgroundSize: "100% 100%",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundColor: "white",
+                }}
+            ></div>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: "28vw",
+                }}
+            >
+                <button
+                    style={selectedPage == "Shop" ? selectedButtonStyle : buttonStyle}
+                    onClick={() => setSelectedPage("Shop")}
+                >
+                    <ShoppingBagIcon
+                        style={{
+                            width: "1rem",
+                            height: "1rem",
+                            color: "#9C4F21",
+                            scale: "1.5",
+                        }}
+                    />
+                    <span
+                        style={{
+                            fontSize: "1.3rem",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        Shop
+                    </span>
+                </button>
+                <button
+                    style={selectedPage == "wishlist" ? selectedButtonStyle : buttonStyle}
+                    onClick={() => setSelectedPage("wishlist")}
+                >
+                    <FavoriteBorderIcon
+                        style={{
+                            width: "1rem",
+                            height: "1rem",
+                            color: "#9C4F21",
+                            scale: "1.5",
+                        }}
+                    />
+                    <span
+                        style={{
+                            fontSize: "1.3rem",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        Wishlist
+                    </span>
+                </button>
+                <button
+                    style={{
+                        ...buttonStyle,
+                        marginLeft: "62%",
+                    }}
+                    onClick={() => navigate("/tourist/cart")}
+                >
+                    <ShoppingCartIcon
+                        style={{
+                            width: "1rem",
+                            height: "1rem",
+                            color: "#9C4F21",
+                            scale: "1.5",
+                        }}
+                    />
+                    <span
+                        style={{
+                            fontSize: "1.3rem",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        Cart
+                    </span>
+                </button>
+            </div>
 
-			<PopUp
-				isOpen={buyingPopUpOpen}
-				setIsOpen={setBuyingPopUpOpen}
-				headerText={"Choose the quantity"}
-				handleSubmit={async () => {
-					await handleBuyingPopUpOpen();
-				}}
-				actionText="Buy"
-			>
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "column",
-						alignItems: "center",
-					}}
-				>
-					<p>{selectedProduct.name}</p>
-					<p>
-						Price:
-						{formatPrice(selectedProduct.price)}
-					</p>
-					<p>
-						Total Price:
-						{formatPrice(selectedProduct.price * selectedQuantity)}
-					</p>
+            <PopUp
+                isOpen={buyingPopUpOpen}
+                setIsOpen={setBuyingPopUpOpen}
+                headerText={"Choose the quantity"}
+                handleSubmit={async () => {
+                    await handleBuyingPopUpOpen();
+                }}
+                actionText="Add to cart"
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    <p>{selectedProduct.name}</p>
+                    <p>
+                        Price:
+                        {formatPrice(selectedProduct.price)}
+                    </p>
+                    <p>
+                        Total Price:
+                        {formatPrice(selectedProduct.price * selectedQuantity)}
+                    </p>
 
 					<QuantityControls
 						selectedQuantity={selectedQuantity}
@@ -356,7 +362,7 @@ const Shop = () => {
 			<div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
 				<div
 					style={{
-						width: "25vw",
+						width: "26vw",
 						borderRadius: "3vh",
 					}}
 				>
@@ -384,19 +390,21 @@ const Shop = () => {
 								fontSize="1.2rem"
 								firstLineButtons={[
 									<ShareAndMark
-										width="1.2vw"
-										height="1.2vw"
+										width="1.2rem"
+										height="1.2rem"
 										styles={{ padding: "0.5vh" }}
 										isBookmarked={wishlistStatus[product.id]}
 										showBookmark={userType === "Tourist"}
 										onSecondIconClick={() => handleAddToWishlist(product.id)}
+										icon={"loveIcon"}
+										scale={1.3}
 									/>,
 								]}
 								controlButtons={[
 									<div style={{ fontSize: "0.8rem" }}>
 										<CustomButton
 											text="Add to cart"
-											stylingMode="1"
+											stylingMode="always-dark"
 											handleClick={() => {
 												setSelectedProduct(product);
 												setSelectedQuantity(1);

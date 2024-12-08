@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Welcome from "../../components/Welcome";
 import { TextField } from "@mui/material";
 
-import TravellerBackground from "../../assets/backgrounds/travellerBackground.png";
 import Button from "../../components/Button";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
@@ -37,19 +36,18 @@ const SigninComponent = () => {
                 { withCredentials: true }
             );
             console.log(response.data);
-            localStorage.setItem("user", JSON.stringify(response.data.user));
             setResponseColor("#3CB371");
             setResponse("Login Successful! you will be redircted in a few seconds");
             setTimeout(() => {
                 const userType = Cookies.get("userType");
                 window.location.reload();
 
-                if (userType === "Tourist") {
-                    navigate("/");
-                    return;
-                }
+                // if (userType === "Tourist") {
+                // 	navigate("/");
+                // 	return;
+                // }
                 console.log("userType", userType.toLowerCase());
-                navigate(`/${userType.toLowerCase()}`);
+                // navigate(`/${userType.toLowerCase()}`);
             }, 1000);
         } catch (err) {
             console.log(err);
@@ -73,6 +71,7 @@ const SigninComponent = () => {
                     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
                     marginLeft: "20%",
                     fontWeight: "600",
+                    color: "var(--accent-color)",
                 }}
             >
                 Sign in
@@ -104,6 +103,22 @@ const SigninComponent = () => {
                 }}
                 required={true}
             ></TextField>
+
+            <label htmlFor="terms">
+                <Link to={"/forgot-your-password"}>
+                    <p
+                        style={{
+                            width: "100%",
+                            //textDecoration: "underline",
+                            marginTop: "2%",
+                            marginLeft: "50%",
+                            color: "#9C4F21",
+                        }}
+                    >
+                        Forgot your password?
+                    </p>
+                </Link>
+            </label>
             <div
                 style={{
                     display: "flex",
@@ -113,7 +128,7 @@ const SigninComponent = () => {
                 }}
             >
                 <Button
-                    stylingMode="1"
+                    stylingMode="always-dark"
                     text={"Sign in"}
                     handleClick={hanldeClick}
                     width={"10vw"}
@@ -130,7 +145,14 @@ const SigninComponent = () => {
                     {response}
                 </p>
             </div>
-            <p style={{ display: "flex", flexDirection: "row", marginLeft: "12%" }}>
+            <p
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: "12%",
+                    marginTop: "2vh",
+                }}
+            >
                 Don't have an account?{" "}
                 {
                     <Link to={"/select-your-role"}>
@@ -140,6 +162,7 @@ const SigninComponent = () => {
                                 textDecoration: "underline",
                                 marginTop: "-2%",
                                 marginLeft: "16%",
+                                color: "var(--accent-color)",
                             }}
                         >
                             Sign Up
@@ -177,7 +200,7 @@ const Signin = () => {
                 style={{
                     width: "55vw",
                     height: "100vh",
-                    backgroundImage: `url(${TravellerBackground})`,
+                    backgroundImage: `url("./auth.png")`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",

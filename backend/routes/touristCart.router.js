@@ -17,6 +17,10 @@ touristCartRouter.post("/updateCart", isAuthenticated, updateTouristCart);
 
 touristCartRouter.delete("/clearCart", isAuthenticated, deleteTouristCart);
 
-touristCartRouter.delete("/deleteProduct", isAuthenticated, deleteItemFromTouristCart);
+touristCartRouter.delete(
+    "/deleteProduct/:id",
+    isAuthenticated,
+    deleteItemFromTouristCart
+);
 
 export default touristCartRouter;

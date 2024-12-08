@@ -6,15 +6,18 @@ import SearchField from "../../components/SearchField/SearchField";
 import Sorter from "../../components/Sorter";
 import PriceRange from "../../components/PriceRange";
 import RatingRange from "../../components/RatingRange";
-import DatePicker from "../../components/DatePicker";
+// import DatePicker from "../../components/DatePicker";
 import CheckboxList from "../../components/CheckBoxList";
 import Footer from "../../components/Footer";
-import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
+import activitiesBackground from "../../assets/backgrounds/activities.png";
 import CardActivity from "../../components/CardActivity";
 import ShareAndMark from "../../components/ShareAndMark";
+import PaginationComponent from "../../components/Pagination.jsx";
 import { useNavigate } from "react-router-dom";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 import { CircularProgress } from "@mui/material";
+import { DatePicker } from "antd";
+const { RangePicker } = DatePicker;
 import Cookies from "js-cookie";
 
 const Activities = () => {
@@ -22,9 +25,11 @@ const Activities = () => {
     const currency = Cookies.get("currency") || "EGP";
     const { convertPrice, isLoading } = useCurrencyConverter();
 
-    // TODO: select better bounds
     const minPrice = convertPrice(0, "EGP", currency);
-    const maxPrice = convertPrice(2000, "EGP", currency);
+    const maxPrice = convertPrice(1000000000, "EGP", currency);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const itemsPerPage = 6;
 
     const [activities, setActivities] = useState([]);
     const [bookmarkStatus, setBookmarkStatus] = useState({});
@@ -95,37 +100,19 @@ const Activities = () => {
         }
     };
 
-    const sortActivities = (activities) => {
-        let sortedActivities = [...activities]; // Create a shallow copy
-        if (sortBy === "priceAsc") {
-            sortedActivities.sort(
-                (a, b) =>
-                    a.price * (1 - a.specialDiscount / 100) -
-                    b.price * (1 - b.specialDiscount / 100)
-            );
-        } else if (sortBy === "priceDesc") {
-            sortedActivities.sort(
-                (a, b) =>
-                    b.price * (1 - b.specialDiscount / 100) -
-                    a.price * (1 - a.specialDiscount / 100)
-            );
-        } else if (sortBy === "ratingAsc") {
-            sortedActivities.sort((a, b) => a.rating - b.rating);
-        } else if (sortBy === "ratingDesc") {
-            sortedActivities.sort((a, b) => b.rating - a.rating);
-        }
-        console.log("sortedActivities", sortedActivities);
-        setActivities(sortedActivities);
-    };
-
     const fetchActivities = async (query) => {
         try {
             console.log("query", query);
             const response = await axiosInstance.get(`/activity/getUpcomingActivities/`, {
-                params: query,
+                params: {
+                    ...query,
+                    page: currentPage,
+                    limit: itemsPerPage,
+                    sortBy,
+                },
             });
-            console.log("response", response.data);
-            sortActivities(response.data);
+            setActivities(response.data.result);
+            setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error("Error fetching Activities:", error);
         }
@@ -142,6 +129,7 @@ const Activities = () => {
 
     useEffect(() => {
         const query = buildQuery();
+        setCurrentPage(1);
         fetchActivities(query);
     }, [
         selectedTags,
@@ -152,11 +140,13 @@ const Activities = () => {
         endDate,
         name,
         location,
+        sortBy,
     ]);
 
     useEffect(() => {
-        sortActivities(activities);
-    }, [sortBy]);
+        const query = buildQuery();
+        fetchActivities(query);
+    }, [currentPage]);
 
     const buildQuery = () => {
         let query = {};
@@ -269,17 +259,14 @@ const Activities = () => {
             searchText={location}
             setSearchText={setLocation}
         />,
-        <PriceRange // TODO: change the slider
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-            min={minPrice}
-            max={maxPrice}
-        />,
+        <PriceRange priceRange={priceRange} setPriceRange={setPriceRange} />,
         <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
-        <div style={{ display: "flex", flexDirection: "column" }}>
-            <DatePicker label="Start Date" setValue={setStartDate} />
-            <DatePicker label="End Date" setValue={setEndDate} />
-        </div>,
+        <RangePicker
+            onChange={(_, dateStrings) => {
+                setStartDate(dateStrings[0]);
+                setEndDate(dateStrings[1]);
+            }}
+        />,
         <CheckboxList
             items={tags}
             checkedItems={selectedTags}
@@ -310,17 +297,44 @@ const Activities = () => {
                 style={{
                     width: "100vw",
                     height: "30vh",
+                    color: "#FAE2B6",
                     backgroundImage: `url(${activitiesBackground})`,
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
                 }}
-            ></div>
+            >
+                <div style={{ marginBottom: "2%" }}>
+                    <p
+                        style={{
+                            fontSize: "2.5rem",
+                            marginBottom: "1rem",
+                            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+                            color: "white",
+                            fontWeight: "bold",
+                            userSelect: "none",
+                        }}
+                    >
+                        Activities
+                    </p>
+                </div>
+            </div>
 
-            <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: "2%",
+                    width: "100%",
+                }}
+            >
                 <div
                     style={{
-                        width: "40vw",
+                        width: "30%",
                         borderRadius: "3vh",
                         marginTop: "1%",
                         marginBottom: "1%",
@@ -335,18 +349,18 @@ const Activities = () => {
                 <div
                     style={{
                         minHeight: "50vh",
-                        width: "100vw",
+                        width: "65%",
                         display: "flex",
                         flexDirection: "column",
                         flexWrap: "wrap",
-                        justifyContent: "space-evenly",
+                        justifyContent: "space-between",
                     }}
                 >
                     {activities.map((activity, index) => (
                         <div key={index} style={{ padding: "1.5vh" }}>
                             <CardActivity
                                 activity={activity}
-                                width={"60vw"}
+                                width={"90%"}
                                 height={"34vh"}
                                 firstLineButtons={[
                                     <ShareAndMark
@@ -366,7 +380,7 @@ const Activities = () => {
                                         text: "Book Now",
                                         onClick: () =>
                                             navigate(`/activity-details/${activity.id}`),
-                                        type: "1",
+                                        type: "always-dark",
                                         width: "50%",
                                         styles: {
                                             display: "flex",
@@ -380,6 +394,15 @@ const Activities = () => {
                         </div>
                     ))}
                 </div>
+            </div>
+            <div style={{ paddingBottom: "1%" }}>
+                <PaginationComponent
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    onChange={(event, newPage) => {
+                        setCurrentPage(newPage);
+                    }}
+                />
             </div>
             <Footer />
         </div>

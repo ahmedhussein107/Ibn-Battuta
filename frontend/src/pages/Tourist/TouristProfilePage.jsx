@@ -304,6 +304,9 @@ export default function TouristProfilePage() {
     });
     const navigate = useNavigate();
 
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+
     useEffect(() => {
         const message = localStorage.getItem("alertMessage");
         const severity = localStorage.getItem("alertSeverity");
@@ -684,6 +687,10 @@ export default function TouristProfilePage() {
                 ); // Use showAlert instead of alert
             });
     };
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
 
     return (
         <PageWrapper>

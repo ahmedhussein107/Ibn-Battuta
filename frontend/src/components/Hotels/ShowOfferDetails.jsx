@@ -10,12 +10,11 @@ import BathtubIcon from "@mui/icons-material/Bathtub";
 import Button from "../Button";
 import { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
-import { convertCurrency } from "../../api/currency";
 import Cookies from "js-cookie";
-import convert from "../../api/convert";
 import PopUp from "../PopUpsGeneric/PopUp";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import { useFunctionContext } from "../../contexts/FunctionContext";
 const ShowOfferDetails = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -24,47 +23,87 @@ const ShowOfferDetails = () => {
     const [bookingId, setBookingId] = useState(offer.bookingId);
     const [packagePopup, setPackagePopup] = useState(false);
     const [hotel, setHotel] = useState(null);
+
     const currency = Cookies.get("currency") || "EGP";
-    const { _isLoading, formatPrice } = useCurrencyConverter(currency);
-    if (_isLoading) {
+    const currencyConverter = useCurrencyConverter(currency);
+    const formatPrice = currencyConverter.formatPrice;
+    const isCurrencyLoading = currencyConverter.isLoading;
+    const convertPrice = currencyConverter.convertPrice;
+
+    const { setSuccess, setFailure } = useFunctionContext();
+
+    if (isCurrencyLoading) {
         return <CircularProgress />;
     }
     const handleOnAction = async () => {
         setIsLoading(true);
-        try {
+
+        const handleSuccess = async () => {
             const response = await axiosInstance.post(
                 "amadeus/hotels/book-hotel",
-                {
-                    offer,
-                },
+                { offer },
                 {
                     withCredentials: true,
                 }
             );
-            setBookingId(response.data.bookingId);
-            offer.bookingId = response.data.bookingId;
             const hotelResponse = await axiosInstance.get(
                 "/booking/checkPossiblePackageHotel",
                 {
                     withCredentials: true,
                 }
             );
-            console.log("hotelResponse ", hotelResponse.data);
-            if (hotelResponse.data && hotelResponse.data.hotel) {
-                setHotel(hotelResponse.data.hotel);
-            }
-            setPackagePopup(true);
-        } catch (err) {
-            console.error("Error booking hotel:", err);
-        } finally {
-            setIsLoading(false);
-        }
+            const state = { tab: "Hotels", hotel: hotelResponse?.data?.hotel };
+            navigate("/bookings", { state }); // TODO: change the uri to tourist/bookings
+        };
+
+        const handleFailure = async () => {};
+
+        setSuccess(handleSuccess);
+        setFailure(handleFailure);
+
+        navigate("/payment", {
+            state: {
+                amount: convertPrice(offer.totalPrice),
+                currency,
+                headerImage: offer.image,
+            },
+        });
+
+        // try {
+        //     const response = await axiosInstance.post(
+        //         "amadeus/hotels/book-hotel",
+        //         {
+        //             offer,
+        //         },
+        //         {
+        //             withCredentials: true,
+        //         }
+        //     );
+        //     setBookingId(response.data.bookingId);
+        //     offer.bookingId = response.data.bookingId;
+        //     const hotelResponse = await axiosInstance.get(
+        //         "/booking/checkPossiblePackageHotel",
+        //         {
+        //             withCredentials: true,
+        //         }
+        //     );
+        //     console.log("hotelResponse ", hotelResponse.data);
+        //     if (hotelResponse.data && hotelResponse.data.hotel) {
+        //         setHotel(hotelResponse.data.hotel);
+        //     }
+        //     setPackagePopup(true);
+        // } catch (err) {
+        //     console.error("Error booking hotel:", err);
+        // } finally {
+        //     setIsLoading(false);
+        // }
     };
 
     const handleSubmit = () => {
         setPackagePopup(false);
         setTimeout(() => navigate("/bookings"), 1000);
     };
+
     return (
         <div className="hotel-details-page-container">
             {packagePopup && (
@@ -171,7 +210,7 @@ const ShowOfferDetails = () => {
             </div>
             {!bookingId ? (
                 <Button
-                    stylingMode="submit"
+                    stylingMode="always-dark"
                     text="Book Now"
                     handleClick={handleOnAction}
                     disabled={isLoading}

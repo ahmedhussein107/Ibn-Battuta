@@ -10,9 +10,18 @@ const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
             <div className="form-group">
                 <label htmlFor="photoInput" className="custom-icon-label">
                     {image ? (
-                        <img src={image} alt="Preview" className="uploaded-image" />
+                        <img
+                            src={image}
+                            alt="Preview"
+                            className="uploaded-image"
+                            style={{ width: "100%", height: "100%" }}
+                        />
                     ) : (
-                        <AddAPhotoIcon sx={{ color: "#f86624", fontSize: 50 }} />
+                        <img
+                            src="./add-image.png"
+                            style={{ width: "100%", height: "100%" }}
+                        ></img>
+                        // <AddAPhotoIcon sx={{ color: "#f86624", fontSize: 50 }} />
                     )}
                 </label>
                 <input
@@ -24,7 +33,9 @@ const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
             </div>
             {/* Name Input */}
             <div className="form-group">
-                <label>Name </label>
+                <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
+                    Name{" "}
+                </label>
                 <input
                     type="text"
                     name="name"
@@ -36,7 +47,9 @@ const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
             </div>
             {/* Username Input */}
             <div className="form-group">
-                <label>Username</label>
+                <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
+                    Username*
+                </label>
                 <input
                     type="text"
                     name="username"
@@ -48,7 +61,9 @@ const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
             </div>
             {/* Email Input */}
             <div className="form-group">
-                <label>Email</label>
+                <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
+                    Email*
+                </label>
 
                 <input
                     type="email"
@@ -61,7 +76,9 @@ const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
             </div>
             {/* Password Input */}
             <div className="form-group">
-                <label>Password</label>
+                <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
+                    Password*
+                </label>
                 <input
                     type="password"
                     name="password"
@@ -71,12 +88,16 @@ const CommonFormStep = ({ userData, onChange, handleImageChange, image }) => {
                     required
                 />
             </div>
-            <p style={{ marginLeft: "10%" }}>
+            <p style={{ marginLeft: "10%", marginTop: "2vh" }}>
                 Already have an account?{" "}
                 {
                     <Link
                         to={"/signin"}
-                        style={{ textDecoration: "underline", cursor: "pointer" }}
+                        style={{
+                            textDecoration: "underline",
+                            cursor: "pointer",
+                            color: "var(--accent-color)",
+                        }}
                     >
                         Sign in
                     </Link>

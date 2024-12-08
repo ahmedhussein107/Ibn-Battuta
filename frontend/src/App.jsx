@@ -1,4 +1,5 @@
 import "./App.css";
+import "./index.css";
 
 import {
     BrowserRouter as Router,
@@ -10,8 +11,8 @@ import {
 
 import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
-
 import { HeaderProvider } from "./components/Header/HeaderContext";
+import { FunctionProvider } from "./contexts/FunctionContext.jsx";
 import Header from "./components/Header/Header";
 import NavBar from "./components/NavBar.jsx";
 
@@ -50,37 +51,39 @@ function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <HeaderProvider>
-                <Router>
-                    <Header />
+                <FunctionProvider>
+                    <Router>
+                        <Header />
 
-                    <Routes>
-                        {returnUserRoutes(authRoutes)}
+                        <Routes>
+                            {returnUserRoutes(authRoutes)}
 
-                        <Route element={<LayoutWithNav />}>
-                            {returnUserRoutes(publicRoutes)}
-                            {returnUserRoutes(adminRoutes, "Admin")}
-                            {returnUserRoutes(advertiserRoutes, "Advertiser")}
-                            {returnUserRoutes(governorRoutes, "Governor")}
-                            {returnUserRoutes(sellerRoutes, "Seller")}
-                            {returnUserRoutes(tourguideRoutes, "TourGuide")}
-                            {returnUserRoutes(touristRoutes, "Tourist")}
+                            <Route element={<LayoutWithNav />}>
+                                {returnUserRoutes(publicRoutes)}
+                                {returnUserRoutes(adminRoutes, "Admin")}
+                                {returnUserRoutes(advertiserRoutes, "Advertiser")}
+                                {returnUserRoutes(governorRoutes, "Governor")}
+                                {returnUserRoutes(sellerRoutes, "Seller")}
+                                {returnUserRoutes(tourguideRoutes, "TourGuide")}
+                                {returnUserRoutes(touristRoutes, "Tourist")}
 
-                            <Route
-                                path="/products/:productId"
-                                element={<ViewProductPage />}
-                            />
+                                <Route
+                                    path="/products/:productId"
+                                    element={<ViewProductPage />}
+                                />
 
-                            {/* doesn't exist */}
-                            <Route
-                                path="/landmark/landmark/"
-                                element={<LandmarkPage />}
-                            />
+                                {/* doesn't exist */}
+                                <Route
+                                    path="/landmark/landmark/"
+                                    element={<LandmarkPage />}
+                                />
 
-                            {/* Default route */}
-                            <Route path="*" element={<Navigate to="/signin" />} />
-                        </Route>
-                    </Routes>
-                </Router>
+                                {/* Default route */}
+                                <Route path="*" element={<Navigate to="/signin" />} />
+                            </Route>
+                        </Routes>
+                    </Router>
+                </FunctionProvider>
             </HeaderProvider>
         </QueryClientProvider>
     );

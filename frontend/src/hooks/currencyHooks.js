@@ -1,15 +1,16 @@
 import { useQuery, QueryClient } from "@tanstack/react-query";
 import { getExchangeRates } from "../api/currency";
 
-// Create a client
+// Create a client with persistent caching
 export const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            staleTime: 24 * 60 * 60 * 1000, // Consider data fresh for 24 hours
-            cacheTime: 24 * 60 * 60 * 1000, // Keep unused data in cache for 24 hours
+            staleTime: 24 * 60 * 60 * 1000, // Data is fresh for 24 hours
+            gcTime: 24 * 60 * 60 * 1000, // Keep data in cache for 24 hours
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
+            retry: 1, // Retry once on failure
         },
     },
 });
@@ -17,8 +18,14 @@ export const queryClient = new QueryClient({
 // Custom hook for currency conversion
 export const useCurrencyConverter = (selectedCurrency = "EGP") => {
     const { data, isLoading, error, refetch } = useQuery({
-        queryKey: ["exchangeRates"],
+        // Add a timestamp to ensure unique key but minimal refetching
+        queryKey: ["exchangeRates", new Date().toDateString()],
         queryFn: getExchangeRates,
+        // Use persistent storage to maintain rates across sessions
+        persistence: {
+            name: "exchangeRates",
+            storage: localStorage,
+        },
     });
 
     const convertPrice = (
@@ -29,13 +36,13 @@ export const useCurrencyConverter = (selectedCurrency = "EGP") => {
         if (!data) return amount;
 
         const rates = data;
-        const scaledAmount = 10000 * amount;
+        const scaledAmount = 100 * 100 * amount;
         // Convert to EGP first (if not already in EGP)
         const inEGP =
             fromCurrency === "EGP" ? scaledAmount : scaledAmount / rates[fromCurrency];
 
         // Convert from USD to target currency
-        return Math.floor((inEGP * rates[toCurrency]) / 100) / 100;
+        return Math.round((inEGP * rates[toCurrency]) / 100) / 100;
     };
 
     const formatPriceHelper = (amount, currency = selectedCurrency) => {
