@@ -40,7 +40,6 @@ export default function ActivityDetails() {
     const [pointsAdded, setPointsAdded] = useState(0);
     const [advertiserName, setAdvertiserName] = useState("");
     const [ticketCount, setTicketCount] = useState(0);
-
     const [isBookmarked, setIsBookmarked] = useState(false);
 
     //To retrieve user type from browser

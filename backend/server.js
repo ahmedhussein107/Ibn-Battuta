@@ -38,6 +38,7 @@ import { PORT, MONGO_URI } from "./config/config.js";
 
 import expressWs from "express-ws";
 import { sendNotificationCountToUser, setupWebSocketRoutes } from "./routes/ws.router.js";
+import stripeRouter from "./services/stripe.js";
 
 const app = expressWs(express()).app;
 
@@ -62,8 +63,10 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
 app.use(express.json());
 
+app.use("/api/payment", stripeRouter);
 app.use("/api/tourist", touristRouter);
 app.use("/api/username", usernameRouter);
 app.use("/api/admin", adminRouter);
