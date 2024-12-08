@@ -5,29 +5,28 @@ import Booking from "../models/booking.model.js";
 import Product from "../models/product.model.js";
 import Itinerary from "../models/itinerary.model.js";
 import Order from "../models/order.model.js";
-
-export default getAnalytics = async (req, res) => {
+export const getAnalytics = async (req, res) => {
     const userId = req.user.userId;
     const userType = req.user.userType;
 
     let result = { message: "Success" };
 
     if (req.user.userType === "Tourguide" || req.user.userType === "Advertiser") {
-        const eventDateRevenue = await getEventDatePriceData(
+        const data = await getEventsData(
             userId,
             userType,
-            eventType === "Tourguide" ? "Itinerary" : "Ac tivity"
+            userType === "Tourguide" ? "Itinerary" : "Activity"
         );
-        result = { ...result, eventDateRevenue };
+        result = { ...result, data };
     } else {
-        const productDateRevenue = await getProductDatePriceData(userId, userType);
-        result = { ...result, productDateRevenue };
+        const data = await getProductsData(userId, userType);
+        result = { ...result, data };
     }
-    if (req.user.userType === "Admin") {
-        const touristData = await getTouristsData();
-        result = { ...result, touristData };
-    }
-
+    // if (req.user.userType === "Admin") {
+    //     const touristData = await getTouristsData();
+    //     result = { ...result, touristData };
+    // }
+    console.log("analytics sent successfully");
     res.status(200).json(result);
     try {
     } catch (err) {
@@ -35,65 +34,30 @@ export default getAnalytics = async (req, res) => {
     }
 };
 
-const getBookingData = (productType = "Itinerary") => {
-    // returns : 1- list (date,totalprice in this date)
-    //           2- list of (_id, capacity, enrolled, revenue)
-    //           3- list of (productTypeID, totaltickets, solddtickets)
-};
-const getOrderData = () => {
-    // returns : 1- list (date,totalprice in this date)
-    //           2- list of (_id, capacity, enrolled, revenue)
-    //           3- list of (productTypeID, totaltickets, solddtickets)
-};
-
-const getEventNameWithData = async (eventType = "Activity", userId, userType) => {
-    const events = await mongoose.model(eventType).find({
-        [`${userType.toLowerCase()}ID`]: userId,
-    });
-
-    return events.map(async (event) => {
-        const bookedTickets = await Booking.find({
-            bookingType: eventType,
-            typeId: event._id,
-        }).countDocuments();
-        const revenue = await Booking.aggregate([
-            {
-                $match: { bookingType: eventType, typeId: event._id },
-            },
-            {
-                $group: {
-                    _id: null,
-                    totalRevenue: { $sum: "$totalPrice" },
-                },
-            },
-        ]);
-
-        const totalRevenue = revenue.length > 0 ? revenue[0].totalRevenue : 0; // case with no matching documents
-        let _event = {
-            id: event._id,
-            name: event.name,
-            totalTickets: event?.initialFreeSpots,
-            startDate: event.startDate,
-            bookedTickets: bookedTickets,
-            revenue: totalRevenue,
-        };
-        return _event;
-    });
-};
-
-const getProductDatePriceData = async (userId, userType) => {
+const getProductsData = async (userId, userType) => {
     // TODO: update when order becomes a list of product
     try {
-        const products = Product.find({
-            ownerID: mongoose.Types.ObjectId(userId),
+        const products = await Product.find({
+            ownerID: userId,
             ownerType: userType,
         });
 
-        const revenueData = await Order.aggregate([
+        const salesData = await Order.aggregate([
             {
                 $match: {
-                    product: { $in: products.map((_product) => _product._id) },
+                    product: { $in: products.map((product) => product._id) },
                 },
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "product",
+                    foreignField: "_id",
+                    as: "productDetails",
+                },
+            },
+            {
+                $unwind: "$productDetails",
             },
             {
                 $addFields: {
@@ -105,31 +69,72 @@ const getProductDatePriceData = async (userId, userType) => {
             {
                 $group: {
                     _id: "$formattedDate",
-                    totalRevenue: { $sum: "$price" },
+                    products: {
+                        $push: {
+                            productId: "$product",
+                            productName: "$productDetails.name",
+                            numberOfSales: { $sum: "$count" },
+                            revenue: { $sum: "$price" },
+                        },
+                    },
+                    tourists: { $addToSet: "$buyer" },
                 },
             },
             {
-                $sort: { _id: 1 },
+                $unwind: "$products",
+            },
+            {
+                $addFields: {
+                    numberOfTourists: { $size: { $ifNull: ["$tourists", []] } }, // Calculate size of the array
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        date: "$_id",
+                        productId: "$products.productId",
+                        productName: "$products.productName",
+                    },
+                    numberOfSales: { $sum: "$products.numberOfSales" },
+                    revenue: { $sum: "$products.revenue" },
+                    numberOfTourists: { $first: "$numberOfTourists" },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    date: "$_id.date",
+                    id: "$_id.productId",
+                    name: "$_id.productName",
+                    numberOfSales: 1,
+                    revenue: 1,
+                    numberOfTourists: 1,
+                },
+            },
+            {
+                $sort: { date: 1 },
             },
         ]);
 
-        return revenueData.map((item) => ({ date: item._id, price: item.totalRevenue }));
+        console.log("Sales data after aggregation:", salesData);
+
+        return salesData;
     } catch (error) {
-        console.error("Error fetching revenue data:", error);
+        console.error("Error fetching product sales data:", error);
         throw error;
     }
 };
-const getEventDatePriceData = async (userId, userType, eventType = "Itinerary") => {
+const getEventsData = async (userId, userType, eventType = "Itinerary") => {
     try {
         const events = await mongoose
             .model(eventType)
-            .find({ [`${userType.toLowerCase()}ID`]: mongoose.Types.ObjectId(userId) });
+            .find({ [`${userType.toLowerCase()}ID`]: userId });
 
         const revenueData = await Booking.aggregate([
             {
                 $match: {
                     typeId: { $in: events.map((event) => event._id) },
-                    bookingType: { $eq: eventType },
+                    bookingType: eventType,
                 },
             },
             {
@@ -140,17 +145,46 @@ const getEventDatePriceData = async (userId, userType, eventType = "Itinerary") 
                 },
             },
             {
-                $group: {
-                    _id: "$formattedDate",
-                    totalRevenue: { $sum: "$totalPrice" },
+                $lookup: {
+                    from: `${eventType.toLowerCase().slice(0, -1)}ies`,
+                    localField: "typeId",
+                    foreignField: "_id",
+                    as: "eventDetails",
                 },
             },
             {
-                $sort: { _id: 1 },
+                $unwind: "$eventDetails",
+            },
+            {
+                $group: {
+                    _id: {
+                        date: "$formattedDate",
+                        eventId: "$typeId",
+                        eventName: "$eventDetails.name",
+                    },
+                    totalRevenue: { $sum: "$totalPrice" },
+                    totalBookings: { $sum: 1 },
+                    totalTourists: { $addToSet: "$touristID" },
+                },
+            },
+            {
+                $addFields: {
+                    numberOfTourists: { $size: "$totalTourists" },
+                },
+            },
+            {
+                $sort: { "_id.date": 1 },
             },
         ]);
 
-        return revenueData.map((item) => ({ date: item._id, price: item.totalRevenue }));
+        return revenueData.map((item) => ({
+            date: item._id.date,
+            id: item._id.eventId,
+            name: item._id.eventName,
+            revenue: item.totalRevenue,
+            numberOfSales: item.totalBookings,
+            numberOfTourists: item.numberOfTourists,
+        }));
     } catch (error) {
         console.error("Error fetching revenue data:", error);
         throw error;
@@ -186,8 +220,8 @@ const getTouristsData = async () => {
             {
                 $group: {
                     _id: {
-                        year: { $year: "$date" },
-                        month: { $month: "$date" },
+                        year: { $year: "$createdAt" },
+                        month: { $month: "$createdAt" },
                     },
                     count: { $sum: 1 },
                 },
@@ -208,17 +242,19 @@ const getTouristsData = async () => {
             }
         });
 
-        return monthlyCounts.map((count, index) => {
+        const touristData = monthlyCounts.map((count, index) => {
             const monthDate = new Date(
                 lastYearStart.getFullYear(),
                 lastYearStart.getMonth() + index
             );
-            return [
-                monthDate.toLocaleString("default", { month: "long" }), // Month name
-                count,
-            ];
+            return {
+                month: monthDate.toLocaleString("default", { month: "long" }), // Month name
+                tourists: count,
+            };
         });
         // [{month,count},..]
+        touristData.sort((a, b) => b.tourists - a.tourists);
+        return touristData;
     } catch (error) {
         console.error("Error during aggregation:", error);
         throw error;
