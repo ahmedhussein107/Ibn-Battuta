@@ -17,13 +17,18 @@ const CurrencyDropdown = ({ selectedCurrency, setSelectedCurrency }) => {
         <Select
             value={selectedCurrency}
             onChange={(e) => setSelectedCurrency(e.target.value)}
+            displayEmpty
             style={{
                 width: "100%", // Adjust the width to fit your layout
-                maxWidth: "300px", // Optional: Set a max width
+                height: "3rem", // Adjust the height to fit your layout
+                maxWidth: "400px", // Optional: Set a max width
                 padding: "0.5rem",
             }}
+            renderValue={(value) => (value ? value : "Select a currency")} // Placeholder display logic
         >
-            <MenuItem value="">Select a currency</MenuItem>
+            <MenuItem value="" disabled>
+                Select a currency
+            </MenuItem>
             {rates &&
                 Object.keys(rates).map((currency) => (
                     <MenuItem key={currency} value={currency}>
