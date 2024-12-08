@@ -230,11 +230,13 @@ const Checkout = () => {
             };
 
             const handleSuccess = async () => {
-                await axiosInstance.post(
-                    "promocode/applyPromoCode",
-                    { promoCodeId: promoCode, totalAmount: location.state.price },
-                    { withCredentials: true }
-                );
+                if (promoCode != "") {
+                    await axiosInstance.post(
+                        "promocode/applyPromoCode",
+                        { promoCodeId: promoCode, totalAmount: location.state.price },
+                        { withCredentials: true }
+                    );
+                }
                 await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
                     isWalletUsed: isWalletUsed,
                     finalPrice: location.state.price - promoCodeDiscount,
@@ -492,15 +494,16 @@ const Checkout = () => {
                             </div>
                             <select
                                 name="address"
-                                value={formData.selectedAddress}
-                                onChange={(e) => {
-                                    // Check if the selected value is "addNew"
+                                value={formData.selectedAddress || "addNew"} // Default to "addNew" if no address is selected
+                                onClick={(e) => {
+                                    console.log("Selected value:", e.target.value);
                                     if (e.target.value === "addNew") {
-                                        console.log("Opening the address popup..."); // Debugging line
-                                        setIsAdressPopUpOpen(true); // Open the popup
-                                    } else {
-                                        handleSelectAddress(e); // Handle selecting an existing address
+                                        console.log("Opening popup...");
+                                        setIsAdressPopUpOpen(true);
                                     }
+                                }}
+                                onChange={(e) => {
+                                    handleSelectAddress(e); // Existing address selection
                                 }}
                                 style={{
                                     width: "25vw",
@@ -514,27 +517,25 @@ const Checkout = () => {
                                     marginLeft: "1vw",
                                 }}
                             >
-                                <option
-                                    value="addNew"
-                                    onChange={(e) => {
-                                        // Check if the selected value is "addNew"
-                                        if (e.target.value === "addNew") {
-                                            console.log("Opening the address popup..."); // Debugging line
-                                            setIsAdressPopUpOpen(true); // Open the popup
-                                        } else {
-                                            handleSelectAddress(e); // Handle selecting an existing address
-                                        }
-                                    }}
-                                >
-                                    Add new Address
-                                </option>{" "}
-                                {/* Correctly set this value */}
                                 {formData.address.map((address, index) => (
                                     <option key={index} value={address.name}>
                                         {address.name}
                                     </option>
                                 ))}
+
+                                <option value="addNew">Add new Address</option>
                             </select>
+
+                            {/* Popup component */}
+                            {isAdressPopUpOpen && (
+                                <PopUp
+                                    isOpen={isAdressPopUpOpen}
+                                    setIsOpen={setIsAdressPopUpOpen}
+                                    headerText={"Add Address"}
+                                    actionText={"Add"}
+                                    handleSubmit={handleAddAddress}
+                                />
+                            )}
 
                             {isAdressPopUpOpen && (
                                 <PopUp

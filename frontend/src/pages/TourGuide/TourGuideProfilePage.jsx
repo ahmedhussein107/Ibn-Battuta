@@ -3,17 +3,21 @@ import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import Navbar from "../../components/NavBar";
 import Footer from "../../components/Footer";
-import bg from "../../assets/images/bg.jpg";
 import ProfileButton from "../../components/ProfileButtons";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { uploadFile } from "../../api/firebase.js";
+import Button from "../../components/Button";
+import Alert from "@mui/material/Alert";
+import profileBackground from "../../assets/backgrounds/profile_bg.jpeg";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import EditIcon from "@mui/icons-material/Edit";
 
 const TourguideProfilePage = () => {
     const [response, setResponse] = useState(null);
@@ -29,6 +33,12 @@ const TourguideProfilePage = () => {
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const [value, setValue] = React.useState(null);
+    const [alert, setAlert] = useState({ open: false, severity: "info", message: "" });
+    const [popupAlert, setPopupAlert] = useState({
+        open: false,
+        severity: "info",
+        message: "",
+    });
     const [formData, setFormData] = useState({
         name: "",
         username: "",
@@ -225,6 +235,24 @@ const TourguideProfilePage = () => {
         setFormData((prev) => ({ ...prev, previousWork: updatedPreviousWork }));
     };
 
+    const showAlert = (severity, message) => {
+        setAlert({ open: true, severity, message });
+        setTimeout(() => {
+            setAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+        }, 8000); // Alert will close after 5 seconds
+    };
+
+    const showPopUpAlert = (severity, message) => {
+        setPopupAlert({ open: true, severity, message });
+        setTimeout(() => {
+            setPopupAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+        }, 8000); // Alert will close after 5 seconds
+    };
+
+    const handleCancelChanges = () => {
+        setIsEditing(false);
+    };
+
     return (
         <>
             <div
@@ -239,7 +267,7 @@ const TourguideProfilePage = () => {
                     style={{
                         width: "100vw",
                         height: "30vh",
-                        backgroundImage: `url(${bg})`,
+                        backgroundImage: `url(${profileBackground})`,
                         backgroundSize: "100% 100%",
                         backgroundPosition: "center",
                         backgroundRepeat: "no-repeat",
@@ -567,7 +595,7 @@ const TourguideProfilePage = () => {
                         actionText={"Confirm"}
                         handleSubmit={handleDeleteAccountConfirm}
                     ></PopUp>
-                    {isEditing ? (
+                    {/* {isEditing ? (
                         <ProfileButton
                             buttonType="saveProfile"
                             onClick={handleSaveChanges}
@@ -577,7 +605,7 @@ const TourguideProfilePage = () => {
                             buttonType="editProfile"
                             onClick={handleEditProfileSubmit}
                         />
-                    )}
+                    )} */}
                 </div>
             </div>
             <div style={{ position: "fixed", top: 0, left: "9%" }}>
