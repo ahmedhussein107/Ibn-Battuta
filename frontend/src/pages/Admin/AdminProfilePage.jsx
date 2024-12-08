@@ -106,6 +106,7 @@ const AdminProfilePage = () => {
                 Cookies.remove("userType");
                 setUserType("Guest");
                 navigate("/");
+
                 window.location.reload();
             })
             .catch((error) => {
@@ -184,7 +185,9 @@ const AdminProfilePage = () => {
                     }));
 
                     console.log("Updated Admin Picture:", response.data.picture);
-                    window.location.reload();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 5000); // Alert will close after 5 seconds
                 })
                 .catch((error) => {
                     console.error("Error uploading picture:", error);
@@ -563,24 +566,26 @@ const AdminProfilePage = () => {
             </div>
             <div>
                 {alert.open && (
-                    <Alert
-                        severity={alert.severity}
-                        onClose={() => setAlert({ ...alert, open: false })}
+                    <div
                         style={{
-                            alignItems: "center",
-                            marginTop: "1vh",
-                            width: "80vw",
-                            marginLeft: "8vw",
-                            marginBottom: "2vh",
-                            fontSize: "22px",
-                            textAlign: "center",
+                            position: "fixed",
+                            top: "50%", // Center vertically
+                            right: "20px", // You can adjust this value to move it left/right
+                            transform: "translateY(-50%)", // Center the alert vertically
+                            zIndex: 1000, // Ensure it's above other content
+                            width: "30vw", // Set a suitable width
+                            fontSize: "30px",
                         }}
                     >
-                        {alert.message}
-                    </Alert>
+                        <Alert
+                            severity={alert.severity}
+                            onClose={() => setAlert({ ...alert, open: false })}
+                        >
+                            {alert.message}
+                        </Alert>
+                    </div>
                 )}
             </div>
-
             <Footer />
         </div>
     );
