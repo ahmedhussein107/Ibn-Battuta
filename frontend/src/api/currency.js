@@ -11,8 +11,3 @@ export const getExchangeRates = async () => {
         console.error("Error fetching exchange rates:", error);
     }
 };
-
-export const convertCurrency = async (amount, from, to) => {
-    const rates = await getExchangeRates(from);
-    return Math.round(amount * rates[to] * 100) / 100;
-};

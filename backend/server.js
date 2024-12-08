@@ -30,7 +30,7 @@ import amadeusHotelsRouter from "./services/hotels.js";
 import amadeusFlightsRouter from "./services/flights.js";
 import touristCartRouter from "./routes/touristCart.router.js";
 import touristWishlistRouter from "./routes/touristWishlist.router.js";
-import analyticsRouter from "./routes/analytics.router.js";
+// import analyticsRouter from "./routes/analytics.router.js";
 
 import { setupPromoCodeScheduledJobs } from "./controllers/promocode.controller.js";
 
@@ -93,4 +93,4 @@ app.use("/api/bookmark", touristBookmarkRouter);
 app.use("/api/general", generalRouter);
 app.use("/api/cart", touristCartRouter);
 app.use("/api/wishlist", touristWishlistRouter);
-app.use("/api/analytics", analyticsRouter);
+// app.use("/api/analytics", analyticsRouter);
