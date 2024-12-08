@@ -22,10 +22,10 @@ export const getAnalytics = async (req, res) => {
         const data = await getProductsData(userId, userType);
         result = { ...result, data };
     }
-    // if (req.user.userType === "Admin") {
-    //     const touristData = await getTouristsData();
-    //     result = { ...result, touristData };
-    // }
+    if (req.user.userType === "Admin") {
+        const touristData = await getTouristsData();
+        result = { ...result, touristData };
+    }
     console.log("analytics sent successfully");
     res.status(200).json(result);
     try {
