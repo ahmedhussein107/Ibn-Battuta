@@ -10,7 +10,7 @@ function MyButton({ text, fontSize = "14px", onClick }) {
         color: "#000", // Black text
         border: "2px solid #000",
         borderRadius: "20px",
-        padding: "5px 15px",
+        padding: "3px 15px",
         fontSize,
         cursor: "pointer",
         textTransform: "none",
@@ -63,6 +63,9 @@ const LocationAdder = ({ title, styles, location, setLocation, setMapFunction })
                 }}
                 variant="outlined"
                 placeholder="No location added"
+                style={{
+                    width: "100%", // Adjust width to fit the container
+                }}
             />
         </Box>
     );

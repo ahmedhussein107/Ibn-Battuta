@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+
 const ItineraryTimeline = ({
     pickUpLocation,
     pickUpTime,
@@ -7,6 +8,8 @@ const ItineraryTimeline = ({
     activities,
 }) => {
     const navigate = useNavigate();
+
+    // Format time for display
     const formatTime = (date) => {
         const options = {
             hour: "numeric",
@@ -17,25 +20,27 @@ const ItineraryTimeline = ({
     };
     const pickupTime = formatTime(pickUpTime);
 
+    // Handle navigation for "See More"
     const handleSeeMoreClick = (Data) => {
         window.open(`/activity-details/${Data._id}`, "_blank");
     };
 
+    // Map activities into timeline-friendly data
     const tempActivities = !activities
         ? []
         : activities.map((activityObj) => {
-              const isCutom = activityObj.activityType != "Activity";
+              const isCustom = activityObj.activityType !== "Activity";
               const type = "activity";
-              const title = !isCutom
-                  ? activityObj.activityData.name
-                  : activityObj.activityData.title;
+              const title = isCustom
+                  ? activityObj.activityData.title
+                  : activityObj.activityData.name;
               const details = `${activityObj.startTime} - ${activityObj.endTime} (Duration: ${activityObj.duration})`;
 
               return {
                   type,
                   title,
                   details,
-                  seeMore: !isCutom ? (
+                  seeMore: !isCustom ? (
                       <span
                           style={{
                               color: "blue",
@@ -49,6 +54,8 @@ const ItineraryTimeline = ({
                   ) : null,
               };
           });
+
+    // Combine all items into the itinerary
     const itinerary = [
         { type: "pickup", time: pickupTime, location: pickUpLocation },
         ...tempActivities,
@@ -57,6 +64,8 @@ const ItineraryTimeline = ({
             details: dropOffLocation,
         },
     ];
+
+    // Styles for the timeline
     const styles = {
         timelineContainer: {
             display: "flex",
@@ -65,11 +74,18 @@ const ItineraryTimeline = ({
             padding: "20px",
             borderRadius: "10px",
         },
-        timelineItem: {
+        timelineItemContainer: {
             display: "flex",
             alignItems: "flex-start",
-            marginBottom: "20px",
             position: "relative",
+            marginBottom: "20px",
+        },
+        iconWithLine: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            position: "relative",
+            marginRight: "15px",
         },
         timelineIcon: {
             width: "30px",
@@ -80,51 +96,55 @@ const ItineraryTimeline = ({
             fontWeight: "bold",
             textAlign: "center",
             lineHeight: "30px",
-            marginRight: "15px",
-            position: "relative",
         },
         specialIcon: {
-            backgroundColor: "#f84f3e",
+            backgroundColor: "#DB9D6D",
         },
         activityIcon: {
-            backgroundColor: "#1c294d",
+            backgroundColor: "#9C4F21",
+        },
+        timelineLine: {
+            width: "6px",
+            backgroundColor: "#9C4F21",
+            height: "40px", // Adjust spacing between circles
+            marginTop: "10px",
+            marginBottom: "-10px",
         },
         timelineContent: {
-            borderLeft: "3px solid #f84f3e",
+            flex: 1,
             paddingLeft: "15px",
-            marginTop: "-5px",
-        },
-        specialItem: {
-            // Empty object to allow additional styling if needed in future
         },
     };
 
+    // JSX structure
     return (
         <div style={styles.timelineContainer}>
             {itinerary.map((item, index) => (
-                <div
-                    key={index}
-                    style={{
-                        ...styles.timelineItem,
-                        ...(item.type === "pickup" || item.type === "dropoff"
-                            ? styles.specialItem
-                            : {}),
-                    }}
-                >
-                    <div
-                        style={{
-                            ...styles.timelineIcon,
-                            ...(item.type === "pickup" || item.type === "dropoff"
-                                ? styles.specialIcon
-                                : styles.activityIcon),
-                        }}
-                    >
-                        {item.type === "pickup"
-                            ? "P"
-                            : item.type === "dropoff"
-                            ? "G"
-                            : "★"}
+                <div key={index} style={styles.timelineItemContainer}>
+                    {/* Icon with line */}
+                    <div style={styles.iconWithLine}>
+                        <div
+                            style={{
+                                ...styles.timelineIcon,
+                                ...(item.type === "pickup" || item.type === "dropoff"
+                                    ? styles.specialIcon
+                                    : styles.activityIcon),
+                            }}
+                        >
+                            {item.type === "pickup"
+                                ? "P"
+                                : item.type === "dropoff"
+                                ? "G"
+                                : "★"}
+                        </div>
+
+                        {/* Line between icons */}
+                        {index < itinerary.length - 1 && (
+                            <div style={styles.timelineLine}></div>
+                        )}
                     </div>
+
+                    {/* Content */}
                     <div style={styles.timelineContent}>
                         {item.type === "pickup" && (
                             <div>
@@ -145,7 +165,6 @@ const ItineraryTimeline = ({
                             <div>
                                 <strong>Drop-off</strong>
                                 <p>{`Location: ${item.details}`}</p>
-                                <p>{item.more}</p>
                             </div>
                         )}
                     </div>

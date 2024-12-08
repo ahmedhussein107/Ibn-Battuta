@@ -26,6 +26,7 @@ import ItineraryTimeline from "../../components/ItineraryTimline.jsx";
 
 // Styles
 import "../../styles/ItineraryDetails.css";
+import Button from "../../components/Button";
 
 const ItineraryDetails = () => {
     const navigate = useNavigate();
@@ -250,6 +251,8 @@ const ItineraryDetails = () => {
     if (!itinerary) return null;
     return (
         <div className="itinerary-details-container">
+            <CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
+
             <ItineraryAndActivityHeader
                 mode="itinerary"
                 title={itinerary.name}
@@ -257,7 +260,13 @@ const ItineraryDetails = () => {
                 isBookmarked={isBookmarked}
                 showBookmark={userType === "Tourist"}
             />
-            <CyclicPhotoDisplay photos={photoList} width="95%" height="70vh" />
+
+            <div className="language-container">
+                <div className="language-header" style={{ fontSize: "0.8em" }}>
+                    <img src="/languageIcon.png" alt="" className="language-icon" />
+                    <span>Language: {itinerary.language}</span>
+                </div>
+            </div>
 
             <PopUp
                 isOpen={BookPopUp}
@@ -306,19 +315,6 @@ const ItineraryDetails = () => {
                     ></ProfileAndDescription>
                     <div className="refo-container">
                         <div className="accessiblity-tags-reviewssection">
-                            <div className="language-container">
-                                <div
-                                    className="language-header"
-                                    style={{ fontSize: "0.8em" }}
-                                >
-                                    <img
-                                        src="/languageIcon.png"
-                                        alt=""
-                                        className="language-icon"
-                                    />
-                                    <span>Language: {itinerary.language}</span>
-                                </div>
-                            </div>
                             <Accessibility
                                 accessibilities={itinerary.accessibility}
                                 fontSize={"0.8em"}
@@ -333,7 +329,7 @@ const ItineraryDetails = () => {
 
                         {/* Done */}
                         <div className="book-availabledates">
-                            {(!userType ||
+                            {/* {(!userType ||
                                 userType == "Tourist" ||
                                 userType == "Guest") && (
                                 <Book
@@ -348,16 +344,43 @@ const ItineraryDetails = () => {
                                         setBookPopUp(true);
                                     }}
                                 />
-                            )}
+                            )} */}
 
-                            <AvailableDates
-                                date={itinerary.availableDatesAndTimes}
-                                width="18vw"
-                                fontSize={"0.8em"}
-                            />
+                            <div>
+                                {freeSpots !== undefined && (
+                                    <div
+                                        style={{
+                                            color: "green",
+                                            fontWeight: "bold",
+                                            textAlign: "center", // Optional: Align text to the center
+                                        }}
+                                    >
+                                        {`${freeSpots} Available Seats`}
+                                    </div>
+                                )}
+                                <AvailableDates
+                                    date={itinerary.availableDatesAndTimes}
+                                    width="18vw"
+                                    fontSize={"0.8em"}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div>
+                <Button
+                    text="Back"
+                    stylingMode="2"
+                    handleClick={() => window.history.back()}
+                    customStyle={{ marginBottom: "3vh" }}
+                />
+                <Button
+                    text="Book"
+                    stylingMode="1"
+                    handleClick={() => setBookPopUp(true)} // Set popup to open
+                    customStyle={{ marginBottom: "3vh" }}
+                />
             </div>
 
             <Footer />

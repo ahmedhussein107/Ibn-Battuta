@@ -3,13 +3,14 @@ import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import Navbar from "../../components/NavBar";
 import Footer from "../../components/Footer";
-import bg from "../../assets/images/bg.jpg";
+import bg from "../../assets/images/profilesBackground.png";
 import ProfileButton from "../../components/ProfileButtons";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { uploadFile } from "../../api/firebase.js";
+
 import axios from "axios";
 
 const AdvertiserProfilePage = () => {
@@ -204,7 +205,7 @@ const AdvertiserProfilePage = () => {
                     }}
                 ></div>
                 <div>
-                    <div
+                    {/* <div
                         style={{
                             width: "10vw",
                             height: "10vw",
@@ -219,7 +220,7 @@ const AdvertiserProfilePage = () => {
                             cursor: "pointer", // Add cursor pointer to indicate clickability
                         }}
                         onClick={handleImageClick} // Add onClick to trigger file input
-                    ></div>
+                    ></div> */}
 
                     {/* Hidden File Input for Profile Image Upload */}
                     <input
@@ -280,160 +281,217 @@ const AdvertiserProfilePage = () => {
                     />
                     <div
                         style={{
-                            width: "60%",
-                            textAlign: "left",
-                            marginTop: "-2vw",
-                            padding: "3vw",
-                            marginBottom: "5vw",
+                            display: "flex", // Ensures the rectangles are side by side
+                            gap: "2vw", // Adds space between rectangles
+                            justifyContent: "space-between", // Adds space between them
+                            alignItems: "flex-start", // Aligns items at the top
+                            width: "100%", // Ensures the container spans full width
+                            padding: "2vw",
+                            boxSizing: "border-box", // Includes padding in width calculation
                         }}
                     >
-                        <h3>About The Company</h3>
-                        {isEditing ? (
-                            <textarea
-                                name="companyProfile"
-                                value={formData.companyProfile}
-                                onChange={handleChange}
+                        {/* Left Rectangle */}
+                        <div
+                            style={{
+                                flex: 1,
+                                width: "20vw", // Explicit width
+                                height: "10vw", // Matching height for a square
+                                backgroundColor: "#FFFFFF",
+                                padding: "2vw",
+                                borderRadius: "20px",
+                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)",
+                                display: "flex", // Enables Flexbox
+                                alignItems: "center", // Vertically centers content
+                                justifyContent: "flex-start", // Aligns the content to the left
+                            }}
+                        >
+                            {/* Left Image */}
+                            <div
                                 style={{
-                                    width: "100%",
-                                    height: "150px",
-                                    padding: "10px",
-                                    borderRadius: "5px",
-                                    border: "1px solid #ccc",
-                                    fontSize: "16px",
-                                    resize: "vertical",
+                                    width: "10vw", // Set image container width
+                                    height: "10vw", // Set image container height
+                                    borderRadius: "50%", // Makes the image circular
+                                    overflow: "hidden", // Ensures the image stays within the circle
+                                    backgroundImage: `url(${image})`, // Use the image as a background
+                                    backgroundSize: "cover",
+                                    backgroundPosition: "center",
+                                    marginRight: "4vw", // Adds space between image and text
+                                    cursor: "pointer", // Add cursor pointer to indicate clickability
                                 }}
-                            />
-                        ) : (
-                            <p>
-                                {response?.companyProfile ||
-                                    "No company profile provided"}
-                            </p>
-                        )}
+                                onClick={handleImageClick} // Add onClick to trigger file input
+                            ></div>
 
-                        <h3>Profile Details</h3>
-                        <p>
-                            <strong>Email:</strong>{" "}
+                            {/* Right Content */}
+                            <div>
+                                <h3>Profile Details</h3>
+                                <p>
+                                    <strong>Email:</strong>{" "}
+                                    {isEditing ? (
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                        />
+                                    ) : (
+                                        response?.email || "No email provided"
+                                    )}
+                                </p>
+                                <p>
+                                    <strong>Company Website:</strong>{" "}
+                                    {isEditing ? (
+                                        <input
+                                            type="text"
+                                            name="website"
+                                            value={formData.website}
+                                            onChange={handleChange}
+                                        />
+                                    ) : (
+                                        response?.website || "No company website provided"
+                                    )}
+                                </p>
+                                <p>
+                                    <strong>Hotline:</strong>{" "}
+                                    {isEditing ? (
+                                        <input
+                                            type="text"
+                                            name="hotline"
+                                            value={formData.hotline}
+                                            onChange={handleChange}
+                                        />
+                                    ) : (
+                                        response?.hotline || "No hotline provided"
+                                    )}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Right Rectangle */}
+                        <div
+                            style={{
+                                flex: 1,
+                                width: "20vw", // Explicit width
+                                height: "10vw", // Matching height for a squar
+                                backgroundColor: "#FFFFFF",
+                                padding: "2vw",
+                                borderRadius: "20px",
+                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)",
+                            }}
+                        >
+                            <h3>About The Company</h3>
                             {isEditing ? (
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
+                                <textarea
+                                    name="companyProfile"
+                                    value={formData.companyProfile}
                                     onChange={handleChange}
+                                    style={{
+                                        width: "100%",
+                                        height: "150px",
+                                        padding: "10px",
+                                        borderRadius: "5px",
+                                        border: "1px solid #ccc",
+                                        fontSize: "16px",
+                                        resize: "vertical",
+                                    }}
                                 />
                             ) : (
-                                response?.email || "No email provided"
+                                <p>
+                                    {response?.companyProfile ||
+                                        "No company profile provided"}
+                                </p>
                             )}
-                        </p>
-                        <p>
-                            <strong>Company Website:</strong>{" "}
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="website"
-                                    value={formData.website}
-                                    onChange={handleChange}
-                                />
-                            ) : (
-                                response?.website || "No company website provided"
-                            )}
-                        </p>
-                        <p>
-                            <strong>Hotline:</strong>{" "}
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="hotline"
-                                    value={formData.hotline}
-                                    onChange={handleChange}
-                                />
-                            ) : (
-                                response?.hotline || "No hotline provided"
-                            )}
-                        </p>
+                        </div>
                     </div>
                 </div>
                 <div>
-                    <ProfileButton
-                        buttonType="changePassword"
-                        onClick={() => handleChangePassword()}
-                    />
-                    <PopUp
-                        isOpen={isPopUpOpen}
-                        setIsOpen={setIsPopUpOpen}
-                        headerText={"Change Password"}
-                        actionText={"Confirm"}
-                        handleSubmit={PopUpAction}
-                    >
-                        <label>Current Password:</label>
-                        <input
-                            type="password"
-                            name="Current Password"
-                            placeholder="Current Password"
-                            onChange={handleCurrentPasswordChange}
-                            value={currentPassword}
-                            style={{
-                                width: "80%", // Full width
-                                padding: "1vw", // Padding for better spacing
-                                marginBottom: "1vw", // Space between inputs
-                                border: "1px solid #ccc", // Border style
-                                borderRadius: "4px", // Rounded corners
-                                alignItems: "center", // Align text to center
-                            }}
+                    <div>
+                        <ProfileButton
+                            buttonType="changePassword"
+                            onClick={() => handleChangePassword()}
                         />
-                        <label>New Password:</label>
-                        <input
-                            type="password"
-                            name="New Password"
-                            placeholder="Current Password"
-                            onChange={handleNewPasswordChange}
-                            value={newPassword}
-                            style={{
-                                width: "80%", // Full width
-                                padding: "1vw", // Padding for better spacing
-                                marginBottom: "1vw", // Space between inputs
-                                border: "1px solid #ccc", // Border style
-                                borderRadius: "4px", // Rounded corners
-                            }}
-                        />
-                        <label>Confirm New Password:</label>
-                        <input
-                            type="password"
-                            name="Confirm New Password"
-                            placeholder="Current Password"
-                            onChange={handleConfirmNewPasswordChange}
-                            value={confirmNewPassword}
-                            style={{
-                                width: "80%", // Full width
-                                padding: "1vw", // Padding for better spacing
-                                marginBottom: "1vw", // Space between inputs
-                                border: "1px solid #ccc", // Border style
-                                borderRadius: "4px", // Rounded corners
-                            }}
-                        />
-                    </PopUp>
+                        <PopUp
+                            isOpen={isPopUpOpen}
+                            setIsOpen={setIsPopUpOpen}
+                            headerText={"Change Password"}
+                            actionText={"Confirm"}
+                            handleSubmit={PopUpAction}
+                        >
+                            <label>Current Password:</label>
+                            <input
+                                type="password"
+                                name="Current Password"
+                                placeholder="Current Password"
+                                onChange={handleCurrentPasswordChange}
+                                value={currentPassword}
+                                style={{
+                                    width: "80%", // Full width
+                                    padding: "1vw", // Padding for better spacing
+                                    marginBottom: "1vw", // Space between inputs
+                                    border: "1px solid #ccc", // Border style
+                                    borderRadius: "4px", // Rounded corners
+                                    alignItems: "center", // Align text to center
+                                }}
+                            />
+                            <label>New Password:</label>
+                            <input
+                                type="password"
+                                name="New Password"
+                                placeholder="Current Password"
+                                onChange={handleNewPasswordChange}
+                                value={newPassword}
+                                style={{
+                                    width: "80%", // Full width
+                                    padding: "1vw", // Padding for better spacing
+                                    marginBottom: "1vw", // Space between inputs
+                                    border: "1px solid #ccc", // Border style
+                                    borderRadius: "4px", // Rounded corners
+                                }}
+                            />
+                            <label>Confirm New Password:</label>
+                            <input
+                                type="password"
+                                name="Confirm New Password"
+                                placeholder="Current Password"
+                                onChange={handleConfirmNewPasswordChange}
+                                value={confirmNewPassword}
+                                style={{
+                                    width: "80%", // Full width
+                                    padding: "1vw", // Padding for better spacing
+                                    marginBottom: "1vw", // Space between inputs
+                                    border: "1px solid #ccc", // Border style
+                                    borderRadius: "4px", // Rounded corners
+                                }}
+                            />
+                        </PopUp>
+                    </div>
 
-                    <ProfileButton
-                        buttonType="deleteAccount"
-                        onClick={handleDeleteAccount}
-                    />
-                    <PopUp
-                        isOpen={isDeleteConfirmationOpen}
-                        setIsOpen={setIsDeleteConfirmationOpen}
-                        headerText={"Are you sure you want to delete your account?"}
-                        actionText={"Confirm"}
-                        handleSubmit={handleDeleteAccountConfirm}
-                    ></PopUp>
-                    {isEditing ? (
+                    <div>
                         <ProfileButton
-                            buttonType="saveProfile"
-                            onClick={handleSaveChanges}
+                            buttonType="deleteAccount"
+                            onClick={handleDeleteAccount}
                         />
-                    ) : (
-                        <ProfileButton
-                            buttonType="editProfile"
-                            onClick={handleEditProfileSubmit}
-                        />
-                    )}
+                        <PopUp
+                            isOpen={isDeleteConfirmationOpen}
+                            setIsOpen={setIsDeleteConfirmationOpen}
+                            headerText={"Are you sure you want to delete your account?"}
+                            actionText={"Confirm"}
+                            handleSubmit={handleDeleteAccountConfirm}
+                        ></PopUp>
+                    </div>
+
+                    <div>
+                        {isEditing ? (
+                            <ProfileButton
+                                buttonType="saveProfile"
+                                onClick={handleSaveChanges}
+                            />
+                        ) : (
+                            <ProfileButton
+                                buttonType="editProfile"
+                                onClick={handleEditProfileSubmit}
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
             <div style={{ position: "fixed", top: 0, left: "9vw" }}>

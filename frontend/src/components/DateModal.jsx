@@ -98,7 +98,7 @@ const DatePickerContainer = styled.div`
     label {
         display: block;
         font-size: 1.4vh;
-        color: #ff6b6b;
+        color: #9c4f21;
         margin-bottom: 5px;
     }
 `;
@@ -106,7 +106,7 @@ const DatePickerContainer = styled.div`
 const DateSeparator = styled.div`
     margin-top: 3vh;
     padding: 2em;
-    color: #ff6b6b;
+    color: #9c4f21;
     font-size: 1.6vh;
     text-align: center;
 `;
@@ -149,14 +149,14 @@ const DatePickerStyles = () => (
         }
 
         .react-datepicker__day--in-range {
-            background-color: #ffe8e8; /* Light orange for in-range */
+            background-color: #EDC294; /* Light orange for in-range */
             color: #333;
         }
 
         .react-datepicker__day--selected,
         .react-datepicker__day--range-start,
         .react-datepicker__day--range-end {
-            background-color: #ff6b6b; /* Match selected color */
+            background-color: #9C4F21; /* Match selected color */
             color: white;
         }
 
