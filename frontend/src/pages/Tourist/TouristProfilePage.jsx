@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
 import { uploadFile } from "../../api/firebase";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import { CircularProgress } from "@mui/material";
+
 const PageWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -244,10 +246,10 @@ export default function TouristProfilePage() {
         address: [],
         currency: "",
     });
+    const navigate = useNavigate();
+
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         axiosInstance
@@ -565,6 +567,10 @@ export default function TouristProfilePage() {
                 alert("Old password is incorrect. Please try again.");
             });
     };
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
 
     return (
         <PageWrapper>

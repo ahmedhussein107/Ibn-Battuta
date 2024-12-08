@@ -6,6 +6,8 @@ import {
     getOrders,
     getOrdersByUser,
     updateOrder,
+    completeOrder,
+    deleteOrder,
 } from "../controllers/order.controller.js";
 const orderRouter = express.Router();
 
@@ -14,6 +16,10 @@ orderRouter.post("/createOrder", isAuthenticated, createOrder);
 orderRouter.get("/getOrders", isAuthenticated, getOrders);
 
 orderRouter.patch("/updateOrder/:id", updateOrder);
+
+orderRouter.patch("/completeOrder/:id", completeOrder);
+
+orderRouter.delete("/deleteOrder/:id", deleteOrder);
 
 orderRouter.get("/getMyOrders", isAuthenticated, getOrdersByUser);
 

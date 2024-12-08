@@ -17,11 +17,6 @@ const FlightBookingDetails = () => {
                 <h1 style={headerStyle}>{`Booking ID: ${bookingNumber}`}</h1>
             </div>
 
-            {/* NavBar */}
-            <div style={{ position: "fixed", top: 0, left: "9%" }}>
-                <NavBar />
-            </div>
-
             <div
                 style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
             >

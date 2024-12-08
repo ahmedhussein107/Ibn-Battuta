@@ -14,9 +14,6 @@ const Button = styled("button")({
 
 // Specific Button Styles
 const ChangePassword = styled(Button)({
-    position: "absolute",
-    top: "23vw",
-    right: "12vw",
     height: 50,
     background: "white",
     borderRadius: 100,
@@ -25,36 +22,11 @@ const ChangePassword = styled(Button)({
 });
 
 const DeleteAccount = styled(Button)({
-    position: "absolute",
-    top: "23vw",
-    right: "0vw",
     height: 50,
     background: "white",
     borderRadius: 100,
     border: "1px #D00C09 solid",
     color: "red",
-});
-
-const EditProfile = styled(Button)({
-    position: "absolute",
-    height: 50,
-    top: "43vw",
-    right: "10vw",
-    background: "white",
-    borderRadius: 100,
-    border: "1px black solid",
-    color: "black",
-});
-
-const SaveProfile = styled(Button)({
-    position: "absolute",
-    height: 50,
-    top: "43vw",
-    right: "10vw",
-    background: "white",
-    borderRadius: 100,
-    border: "1px black solid",
-    color: "black",
 });
 
 // Main Button Component that conditionally renders based on buttonType prop

@@ -36,7 +36,6 @@ const SigninComponent = () => {
                 { withCredentials: true }
             );
             console.log(response.data);
-            localStorage.setItem("user", JSON.stringify(response.data.user));
             setResponseColor("#3CB371");
             setResponse("Login Successful! you will be redircted in a few seconds");
             setTimeout(() => {
