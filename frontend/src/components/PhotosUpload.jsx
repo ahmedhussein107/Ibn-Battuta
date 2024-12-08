@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const PhotosUpload = ({ label, imagePreviews, onImageAdd, onImageRemove }) => {
     const handleFileChange = (e) => {
@@ -12,21 +12,18 @@ const PhotosUpload = ({ label, imagePreviews, onImageAdd, onImageRemove }) => {
                     resolve({
                         id: Date.now() + Math.random(),
                         url: reader.result,
-                        file: file
+                        file: file,
                     });
                 };
                 reader.readAsDataURL(file);
             });
         };
 
+        Promise.all(files.map(processFile)).then((processedImages) => {
+            onImageAdd(processedImages);
+        });
 
-
-        Promise.all(files.map(processFile))
-            .then(processedImages => {
-                onImageAdd(processedImages);
-            });
-
-        e.target.value = '';
+        e.target.value = "";
     };
 
     const getGridColumns = (count) => {
@@ -57,7 +54,7 @@ const PhotosUpload = ({ label, imagePreviews, onImageAdd, onImageRemove }) => {
                     </PreviewsGrid>
                 ) : (
                     <PlaceholderIcon viewBox="0 0 24 24">
-                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
                     </PlaceholderIcon>
                 )}
 
@@ -65,7 +62,7 @@ const PhotosUpload = ({ label, imagePreviews, onImageAdd, onImageRemove }) => {
                     type="file"
                     accept="image/*"
                     onChange={handleFileChange}
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                     id="photo-file-input"
                     multiple
                 />
@@ -73,7 +70,7 @@ const PhotosUpload = ({ label, imagePreviews, onImageAdd, onImageRemove }) => {
 
             <UploadButton
                 type="button"
-                onClick={() => document.getElementById('photo-file-input').click()}
+                onClick={() => document.getElementById("photo-file-input").click()}
             >
                 Choose Files
             </UploadButton>
@@ -83,10 +80,10 @@ const PhotosUpload = ({ label, imagePreviews, onImageAdd, onImageRemove }) => {
 
 const PhotoUploadSection = styled.div`
     text-align: center;
-    background: #FAF4F4;
+    background: #ffffff;
     padding: clamp(1em, 3vw, 2em);
     border-radius: 1em;
-    box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.3);
     margin-bottom: 2em;
 `;
 
@@ -101,7 +98,7 @@ const UploadArea = styled.div`
     background-color: #f5f5f5;
     border-radius: 0.5em;
     height: 15vh;
-    min-height: ${props => props.isEmpty ? '10em' : '15em'};
+    min-height: ${(props) => (props.isEmpty ? "10em" : "15em")};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -113,7 +110,7 @@ const UploadArea = styled.div`
 
 const PreviewsGrid = styled.div`
     display: grid;
-    grid-template-columns: repeat(${props => props.columns}, 1fr);
+    grid-template-columns: repeat(${(props) => props.columns}, 1fr);
     gap: 0.5em;
     width: 100%;
     height: 100%;
@@ -173,8 +170,8 @@ const UploadButton = styled.button`
     font-weight: 500;
     cursor: pointer;
     background-color: transparent;
-    border: 0.0625em solid #f28b82;
-    color: #f28b82;
+    border: 0.0625em solid #9c4f21;
+    color: #9c4f21;
     transition: background-color 0.2s;
 
     &:hover {

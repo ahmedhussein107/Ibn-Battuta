@@ -12,6 +12,7 @@ import Map from "../map";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
 
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
@@ -233,6 +234,11 @@ const CreateActivityPage = () => {
         setImagePreviews((prev) => prev.filter((image) => image.id !== idToRemove));
     };
 
+    const inputStyles = {
+        width: "100%", // Or a specific value like "20rem"
+        height: "3rem",
+    };
+
     usePageHeader(
         "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzB8fHNvdXZlbmlyJTIwc2hvcHxlbnwwfHwwfHx8MA%3D%3D",
         "Create a New Activity"
@@ -254,139 +260,117 @@ const CreateActivityPage = () => {
                         <FormSection>
                             <InputGroup>
                                 <Label>Title</Label>
-                                <Input
-                                    type="text"
-                                    name="name"
-                                    placeholder="Insert title here..."
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Insert title here..."
+                                    variant="outlined"
                                     value={formData.name}
                                     onChange={handleInputChange}
+                                    style={inputStyles}
                                 />
                             </InputGroup>
 
                             <InputGroup>
                                 <Label>Description</Label>
-                                <TextArea
-                                    name="description"
-                                    placeholder="Insert description here...."
+
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Insert description here...."
+                                    variant="outlined"
                                     value={formData.description}
                                     onChange={handleInputChange}
+                                    style={inputStyles}
                                 />
                             </InputGroup>
-                        </FormSection>
 
-                        <FormSection>
-                            <FlexGroup>
-                                <Label>Price</Label>
-                                <Input
-                                    type="number"
-                                    name="price"
-                                    placeholder="Insert Price here..."
-                                    value={formData.price}
-                                    onChange={handleInputChange}
-                                    style={{ marginLeft: "11em" }}
-                                />
-                            </FlexGroup>
-
-                            <FlexGroup>
-                                <Label>Discount Percentage (%)</Label>
-                                <Input
-                                    type="number"
-                                    name="specialDiscount"
-                                    placeholder="Insert discount here..."
-                                    value={formData.specialDiscount}
-                                    onChange={handleInputChange}
-                                    style={{ marginLeft: "0.8em" }}
-                                />
-                            </FlexGroup>
-                        </FormSection>
-
-                        <FormSection>
                             <Label>Date & Time</Label>
                             <div
                                 style={{
                                     display: "flex",
-                                    alignItems: "center",
                                     gap: "2rem",
                                     marginTop: "1rem",
                                 }}
                             >
+                                {/* First Date & Time Section */}
                                 <div
                                     style={{
-                                        position: "relative",
-                                        display: "inline-block",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
                                         width: "16rem",
                                     }}
                                 >
-                                    <input
-                                        type="text"
-                                        value={formattedDate}
-                                        readOnly
-                                        onClick={() => setShowDateModal(true)}
-                                        placeholder="Select Date"
+                                    <div
                                         style={{
-                                            fontSize: "1.125rem",
-                                            width: "14vw",
-                                            height: "3rem",
-                                            paddingLeft: "1rem",
-                                            paddingRight: "2.5rem",
-                                            border: "1px solid #ddd",
-                                            borderRadius: "0.375rem",
-                                            cursor: "pointer",
+                                            position: "relative",
+                                            width: "100%",
+                                            marginBottom: "1rem",
                                         }}
-                                    />
-                                    <CalendarTodayIcon
-                                        style={{
-                                            position: "absolute",
-                                            right: "-1rem",
-                                            top: "50%",
-                                            transform: "translateY(-50%)",
-                                            cursor: "pointer",
-                                            fontSize: "1.2em",
-                                            color: "#888",
-                                        }}
-                                        onClick={() => setShowDateModal(true)}
-                                    />
-                                </div>
-
-                                <div
-                                    style={{
-                                        marginLeft: "2vw",
-                                        position: "relative",
-                                        display: "inline-block",
-                                        width: "16rem",
-                                    }}
-                                >
-                                    <input
-                                        type="text"
-                                        value={formattedTime}
-                                        readOnly
-                                        onClick={() => setShowTimeModal(true)}
-                                        placeholder="Select Time"
-                                        style={{
-                                            fontSize: "1.125rem",
-                                            width: "14vw",
-                                            height: "3rem",
-                                            paddingLeft: "1rem",
-                                            paddingRight: "2.5rem",
-                                            border: "1px solid #ddd",
-                                            borderRadius: "0.375rem",
-                                            cursor: "pointer",
-                                        }}
-                                    />
-                                    <AccessTimeIcon
-                                        style={{
-                                            position: "absolute",
-                                            right: "-1rem",
-                                            top: "50%",
-                                            transform: "translateY(-50%)",
-                                            cursor: "pointer",
-                                            fontSize: "1.2em",
-                                            color: "#888",
-                                        }}
-                                        onClick={() => setShowTimeModal(true)}
-                                    />
+                                    >
+                                        <input
+                                            type="text"
+                                            value={formattedDate}
+                                            readOnly
+                                            onClick={() => setShowDateModal(true)}
+                                            placeholder="Select start Date"
+                                            style={{
+                                                fontSize: "1.125rem",
+                                                width: "100%",
+                                                height: "3rem",
+                                                paddingLeft: "1rem",
+                                                paddingRight: "2.5rem",
+                                                border: "1px solid #ddd",
+                                                borderRadius: "0.375rem",
+                                                cursor: "pointer",
+                                            }}
+                                        />
+                                        <CalendarTodayIcon
+                                            style={{
+                                                position: "absolute",
+                                                left: "15vw",
+                                                top: "50%",
+                                                transform: "translateY(-50%)",
+                                                cursor: "pointer",
+                                                fontSize: "1.2em",
+                                                color: "#9C4F21",
+                                            }}
+                                            onClick={() => setShowDateModal(true)}
+                                        />
+                                    </div>
+                                    <div style={{ position: "relative", width: "100%" }}>
+                                        <input
+                                            type="text"
+                                            value={formattedTime}
+                                            readOnly
+                                            onClick={() => setShowTimeModal(true)}
+                                            placeholder="Select start Time"
+                                            style={{
+                                                fontSize: "1.125rem",
+                                                width: "100%",
+                                                height: "3rem",
+                                                paddingLeft: "1rem",
+                                                paddingRight: "2.5rem",
+                                                border: "1px solid #ddd",
+                                                borderRadius: "0.375rem",
+                                                cursor: "pointer",
+                                            }}
+                                        />
+                                        <AccessTimeIcon
+                                            style={{
+                                                position: "absolute",
+                                                left: "15vw",
+                                                top: "50%",
+                                                transform: "translateY(-50%)",
+                                                cursor: "pointer",
+                                                fontSize: "1.2em",
+                                                color: "#9C4F21",
+                                            }}
+                                            onClick={() => setShowTimeModal(true)}
+                                        />
+                                    </div>
                                 </div>
                             </div>
+
                             <DateModal
                                 isOpen={showDateModal}
                                 onClose={() => setShowDateModal(false)}
@@ -401,9 +385,45 @@ const CreateActivityPage = () => {
                                 endTime={endTime}
                                 onTimesChange={handleTimesChange}
                             />
-                        </FormSection>
+                            <InputGroup>
+                                <div style={{ marginBottom: "3vh" }}>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            marginBottom: "0.5rem",
+                                        }}
+                                    >
+                                        <Label style={{ marginRight: "1rem" }}>
+                                            Location
+                                        </Label>
+                                        <Button
+                                            text="Locate"
+                                            stylingMode="always-light"
+                                            handleClick={() => navigate("/home")}
+                                            customStyle={{
+                                                padding: "0.5rem 1rem",
+                                                fontSize: "0.875rem",
+                                                backgroundColor: "#ECD1B4",
+                                                border: "none",
+                                                borderRadius: "0.375rem",
+                                                cursor: "pointer",
+                                                marginLeft: "auto",
+                                            }}
+                                        />
+                                    </div>
 
-                        <FormSection>
+                                    <TextField
+                                        id="outlined-basic"
+                                        label="No location added"
+                                        variant="outlined"
+                                        // value={formData}
+                                        onChange={handleInputChange}
+                                        style={inputStyles}
+                                    />
+                                </div>
+                            </InputGroup>
+
                             <FlexGroup>
                                 <Label>Category</Label>
                                 <Select
@@ -464,7 +484,7 @@ const CreateActivityPage = () => {
                                             disabled={!selectedTag}
                                             style={{
                                                 padding: "1vh 2vh",
-                                                backgroundColor: "#f4cfbf",
+                                                backgroundColor: "#ECD1B4",
                                                 border: "none",
                                                 borderRadius: "0.5vh",
                                                 cursor: selectedTag
@@ -475,11 +495,11 @@ const CreateActivityPage = () => {
                                             }}
                                             onMouseEnter={(e) => {
                                                 e.target.style.backgroundColor =
-                                                    "#edbdaa";
+                                                    "#EDC294";
                                             }}
                                             onMouseLeave={(e) => {
                                                 e.target.style.backgroundColor =
-                                                    "#f4cfbf";
+                                                    "#ECD1B4";
                                             }}
                                         >
                                             Add
@@ -500,7 +520,7 @@ const CreateActivityPage = () => {
                                                 onClick={(e) => removeTag(tag, e)}
                                                 style={{
                                                     padding: "0.5vh 1vh",
-                                                    backgroundColor: "#f4cfbf",
+                                                    backgroundColor: "#ECD1B4",
                                                     borderRadius: "0.5vh",
                                                     cursor: "pointer",
                                                 }}
@@ -521,7 +541,7 @@ const CreateActivityPage = () => {
                             onImageRemove={handleImageRemove}
                         />
 
-                        <FormSection style={{ height: "41vh" }}>
+                        {/* <FormSection style={{ height: "41vh" }}>
                             <Label style={{ marginLeft: "2em" }}>
                                 Pin Activity Location on Map
                             </Label>
@@ -534,11 +554,11 @@ const CreateActivityPage = () => {
                                     });
                                 }}
                             />
-                        </FormSection>
+                        </FormSection> */}
 
                         <FormSection>
                             <FlexGroup>
-                                <Label>Booking</Label>
+                                <Label>Open for Booking</Label>
                                 <div
                                     style={{
                                         display: "flex",
@@ -566,7 +586,7 @@ const CreateActivityPage = () => {
                                                 ? "#a83232"
                                                 : "#333",
                                             backgroundColor: formData.isOpenForBooking
-                                                ? "#fcd8d8"
+                                                ? "#ECD1B4"
                                                 : "transparent",
                                             borderRadius: "3em",
                                             transition: "all 0.3s ease",
@@ -592,7 +612,7 @@ const CreateActivityPage = () => {
                                                 ? "#a83232"
                                                 : "#333",
                                             backgroundColor: !formData.isOpenForBooking
-                                                ? "#fcd8d8"
+                                                ? "#ECD1B4"
                                                 : "transparent", // Matching background color
                                             borderRadius: "1em",
                                             transition: "all 0.3s ease",
@@ -603,7 +623,7 @@ const CreateActivityPage = () => {
                                 </div>
                             </FlexGroup>
                             <FlexGroup>
-                                <Label>Capacity</Label>
+                                <Label>Number of seats</Label>
                                 <StockControl>
                                     <StockButton
                                         type="button"
@@ -638,6 +658,29 @@ const CreateActivityPage = () => {
                                         +
                                     </StockButton>
                                 </StockControl>
+                            </FlexGroup>
+                            <FlexGroup>
+                                <Label>Price</Label>
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Insert Price here..."
+                                    variant="outlined"
+                                    value={formData.price}
+                                    onChange={handleInputChange}
+                                    style={inputStyles}
+                                />
+                            </FlexGroup>
+
+                            <FlexGroup>
+                                <Label>Discount (%)</Label>
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Insert discount here..."
+                                    variant="outlined"
+                                    value={formData.specialDiscount}
+                                    onChange={handleInputChange}
+                                    style={inputStyles}
+                                />
                             </FlexGroup>
                         </FormSection>
                     </div>
@@ -726,10 +769,10 @@ const FormContainer = styled.div`
 `;
 
 const FormSection = styled.div`
-    background: #faf4f4;
+    background: #ffffff;
     padding: clamp(1em, 3vw, 2em);
     border-radius: 1em;
-    box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.3);
     margin-bottom: 2em;
 `;
 
@@ -747,6 +790,8 @@ const FlexGroup = styled.div`
 
 const Label = styled.label`
     display: block;
+    width: 10em; /* Set a fixed width */
+    text-align: left; /* Ensure alignment */
     font-size: 1.1em;
     font-weight: 500;
     margin-bottom: 0.5em;
@@ -784,7 +829,7 @@ const StockControl = styled.div`
 `;
 
 const StockButton = styled.button`
-    background-color: #f28b82;
+    background-color: #ecd1b4;
     color: #fff;
     padding: 0.5rem;
     font-size: 1.2rem;
