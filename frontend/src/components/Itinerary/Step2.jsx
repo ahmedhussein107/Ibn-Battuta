@@ -171,6 +171,7 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                 setIsOpen={setShowMorePopupOpen}
                 headerText={showMoreCustomActivty.name}
                 containsFooter={false}
+                width={"1vw"}
             >
                 <div
                     style={{
