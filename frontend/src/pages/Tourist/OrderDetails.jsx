@@ -7,6 +7,8 @@ import axiosInstance from "../../api/axiosInstance";
 import OrderEntry from "../../components/OrderEntry";
 import Cookies from "js-cookie";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import Button from "../../components/Button";
+import { CircularProgress } from "@mui/material";
 
 const OrderDetails = () => {
     const [order, setOrder] = useState(null);
@@ -31,7 +33,7 @@ const OrderDetails = () => {
     const getColour = (status) => {
         switch (status) {
             case "pending":
-                return "#ed964e";
+                return "#000000";
             case "canceled":
                 return "#D41414";
             case "delivered":
@@ -54,9 +56,13 @@ const OrderDetails = () => {
         }
     };
 
+    if (isLoading) {
+        return <CircularProgress />;
+    }
+
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+            <div style={{ width: "100vw", top: "0", left: "0" }}>
                 <div style={backgroundStyle}>
                     <h1 style={headerStyle}>Order Details</h1>
                 </div>
@@ -67,9 +73,10 @@ const OrderDetails = () => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: "3vh",
+                    gap: "2vh",
                     width: "100%",
-                    marginTop: "10%",
+                    marginTop: "2%",
+                    marginBottom: "2%",
                 }}
             >
                 {order && (
@@ -79,7 +86,6 @@ const OrderDetails = () => {
                             flexDirection: "column",
                             alignItems: "center",
                             width: "100%",
-                            marginTop: "3vh",
                         }}
                     >
                         <div
@@ -172,7 +178,7 @@ const OrderDetails = () => {
                                 style={{
                                     display: "flex",
                                     width: "95%",
-                                    alignContent: "center",
+                                    alignItems: "center",
                                     justifyContent: "space-between",
                                     marginBottom: "1%",
                                 }}
@@ -223,6 +229,25 @@ const OrderDetails = () => {
                                             {order.method}
                                         </span>{" "}
                                     </span>
+                                    <span>
+                                        <span
+                                            style={{
+                                                fontSize: "1.2rem",
+                                                fontWeight: "bold",
+                                                color: "#9C4F21",
+                                            }}
+                                        >
+                                            Address:{" "}
+                                        </span>
+                                        <span
+                                            style={{
+                                                fontSize: "1.2rem",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            {order.address}
+                                        </span>{" "}
+                                    </span>
                                 </div>
                                 <span>
                                     <span
@@ -247,6 +272,11 @@ const OrderDetails = () => {
                         </div>
                     </div>
                 )}
+                <Button
+                    stylingMode="dark-when-hovered"
+                    text="Back to Home"
+                    handleClick={() => {}}
+                />
             </div>
 
             <Footer />
