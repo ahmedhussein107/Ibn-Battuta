@@ -15,6 +15,7 @@ import SuccessfulBooking from "../../components/SuccessfulBooking.jsx";
 import ActivityPhotos from "../../components/ActivityPhotos.jsx";
 import DateRangeDisplay from "../../components/DateRangeDisplay.jsx";
 import DiscountCard from "../../components/DiscountCard.jsx";
+import Button from "../../components/Button.jsx";
 
 import Cookies from "js-cookie";
 
@@ -169,13 +170,16 @@ export default function ActivityDetails() {
             <PopUp
                 isOpen={BookPopUp}
                 setIsOpen={setBookPopUp}
-                headerText={"Please fill in the following to complete your booking"}
+                headerText={
+                    "Please fill in the following to complete your booking"
+                }
                 containsActionButton={ticketCount > 0}
                 handleSubmit={handleBooking}
             >
                 <TicketCounter
                     pricePerPerson={
-                        activityData.price * (1 - activityData.specialDiscount / 100)
+                        activityData.price *
+                        (1 - activityData.specialDiscount / 100)
                     }
                     maxCount={activityData.freeSpots}
                     currentCount={ticketCount}
@@ -192,24 +196,39 @@ export default function ActivityDetails() {
             >
                 <SuccessfulBooking points={pointsAdded} />
             </PopUp>
-
-            <ItineraryAndActivityHeader
-                mode="activity"
-                title={activityData.name}
-                category={activityData.category}
-                isOpen={activityData.isOpenForBooking}
-                bookmark={handleBookmark}
-                isBookmarked={isBookmarked}
-                showBookmark={userType === "Tourist"}
-            />
             <ActivityPhotos
                 width="100%"
-                height={"70vh"}
+                height={"50vh"}
                 interval={5000}
                 photos={activityData.pictures}
             />
-            <div className="activity-info">
+
+            <div
+                className="activity-info"
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    backgroundColor: "#fff",
+                    minHeight: "100vh" /* Full viewport height */,
+                    padding: 0,
+                    position: "relative",
+                    width: "100vw" /* Full viewport width */,
+                    top: 0,
+                    left: 0,
+                    marginBottom: "4vh",
+                }}
+            >
                 <div className="activity-info-left">
+                    <ItineraryAndActivityHeader
+                        mode="activity"
+                        title={activityData.name}
+                        category={activityData.category}
+                        isOpen={activityData.isOpenForBooking}
+                        bookmark={handleBookmark}
+                        isBookmarked={isBookmarked}
+                        showBookmark={userType === "Tourist"}
+                    />
                     <ProfileAndDescription
                         mode="Activity"
                         name={advertiserName}
@@ -218,27 +237,25 @@ export default function ActivityDetails() {
                         width={"80%"}
                         fontSize={"1.2em"}
                     ></ProfileAndDescription>
-
-                    <Tags tags={activityData.tags} fontSize={"0.85em"} />
-                    {/* Put a map Here */}
-                    <div className="activity-location-on-map">
-                        <div className="activity-location">
-                            <img src="/mapMarkerIcon.png" alt="" />
-                            <span>Activity Location</span>
-                        </div>
-                        <Map
-                            setMarkerPosition={(position) => {}}
-                            defaultPosition={
-                                activityData.Latitude
-                                    ? {
-                                          lat: activityData.Latitude,
-                                          lng: activityData.Longitude,
-                                      }
-                                    : null
-                            }
-                            customStyles={{ height: "70vh", width: "50vw" }}
-                        />
-                    </div>
+                    <Tags tags={activityData.tags} fontSize={"1em"} />{" "}
+                    {/* Increased font size */}
+                    <img src="/mapMarkerIcon.png" alt="" />
+                    <span style={{ fontSize: "1.6em" }}>
+                        Activity Location
+                    </span>{" "}
+                    {/* Increased font size */}
+                    <Map
+                        setMarkerPosition={(position) => {}}
+                        defaultPosition={
+                            activityData.Latitude
+                                ? {
+                                      lat: activityData.Latitude,
+                                      lng: activityData.Longitude,
+                                  }
+                                : null
+                        }
+                        customStyles={{ height: "70vh", width: "50vw" }}
+                    />
                 </div>
                 <div className="activity-info-right">
                     {/* <AvailableDates
@@ -253,7 +270,9 @@ export default function ActivityDetails() {
                         height="10%"
                     />
 
-                    {(!userType || userType == "Tourist" || userType == "Guest") && (
+                    {(!userType ||
+                        userType == "Tourist" ||
+                        userType == "Guest") && (
                         <DiscountCard
                             availableSeats={activityData.freeSpots}
                             price={activityData.price}
@@ -278,6 +297,18 @@ export default function ActivityDetails() {
                         fontSize={"12px"}
                     />
                 </div>
+            </div>
+            <div
+                style={{
+                    marginRight: "80%",
+                    marginBottom: "4vh",
+                }}
+            >
+                <Button
+                    stylingMode="always-light"
+                    text="Back"
+                    handleClick={() => navigate("/activities")}
+                />
             </div>
 
             <Footer />

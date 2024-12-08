@@ -275,7 +275,9 @@ const getHotelsByCoordinates = (query, callback) => {
             const hotels = parseData?.result?.map((hotel) => {
                 return {
                     name: hotel?.hotel_name || room.name,
-                    image: hotel?.main_image_url || room.image,
+                    image:
+                        hotel?.main_image_url ||
+                        `/room${Math.floor(Math.random() * 6) + 1}.jpeg`,
                     totalPrice:
                         (hotel?.price_breakdown?.all_inclusive_price || room.totalPrice) *
                         50,
