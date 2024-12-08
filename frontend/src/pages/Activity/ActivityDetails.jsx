@@ -12,7 +12,6 @@ import Footer from "../../components/Footer.jsx";
 import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
 import TicketCounter from "../../components/TicketCounter.jsx";
 import SuccessfulBooking from "../../components/SuccessfulBooking.jsx";
-import ActivityPhotos from "../../components/ActivityPhotos.jsx";
 import DateRangeDisplay from "../../components/DateRangeDisplay.jsx";
 import DiscountCard from "../../components/DiscountCard.jsx";
 
@@ -21,7 +20,6 @@ import Cookies from "js-cookie";
 // Itinerary-related components
 import ReviewsSection from "../Itinerary/ReviewsSection.jsx";
 import ProfileAndDescription from "../Itinerary/ProfileAndDescription.jsx";
-import Book from "../../components/ItineraryDetails/Book.jsx";
 import activityDefaultBackground from "../../assets/backgrounds/activity-details-background-temp.png";
 
 // Other components
@@ -73,6 +71,187 @@ const ImageSlideshow = ({
     ></div>
     );
   };
+
+
+const BookingPopUp = ({price, specialDiscount, freeSpots, ticketCount, setTicketCount}) =>{
+
+    return (
+        <TicketCounter
+        pricePerPerson={
+            price * (1 - specialDiscount / 100)
+        }
+        maxCount={freeSpots}
+        currentCount={ticketCount}
+        setCount={setTicketCount}
+    />
+    );
+   
+
+}
+
+const BookingPayment = () => {
+    const [ticketCount, setTicketCount] = useState(2);
+    const [useWallet, setUseWallet] = useState(true);
+    const [promoCode, setPromoCode] = useState('');
+    const [redeemedPoints, setRedeemedPoints] = useState(0);
+  
+    const walletBalance = 24;
+    const points = 90000;
+    const basePrice = 60.16; // per ticket
+  
+    const handleRedeem = () => {
+      // Example conversion: 10K points = 100 EGP
+      const convertedAmount = Math.floor(points / 10000) * 100;
+      setRedeemedPoints(convertedAmount);
+    };
+  
+    const calculateTotal = () => {
+      const itemsPrice = basePrice * ticketCount;
+      const tax = itemsPrice * 0.069; // 6.9% tax
+      return {
+        itemsPrice: itemsPrice.toFixed(2),
+        tax: tax.toFixed(2),
+        promocode: '0.00',
+        wallet: '0.00',
+        total: (itemsPrice + tax).toFixed(2)
+      };
+    };
+  
+    const priceDetails = calculateTotal();
+  
+    return (
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md mx-auto">
+        {/* Number of Tickets */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-lg font-semibold">Number of Tickets</span>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setTicketCount(Math.max(1, ticketCount - 1))}
+                className="bg-brown-600 text-white w-6 h-6 rounded-full"
+              >
+                -
+              </button>
+              <span className="text-xl">{ticketCount}</span>
+              <button
+                onClick={() => setTicketCount(ticketCount + 1)}
+                className="bg-brown-600 text-white w-6 h-6 rounded-full"
+              >
+                +
+              </button>
+            </div>
+          </div>
+  
+          {/* Use Wallet Balance */}
+          <div className="flex items-center gap-2 mb-4">
+            <input
+              type="checkbox"
+              checked={useWallet}
+              onChange={(e) => setUseWallet(e.target.checked)}
+              className="w-4 h-4"
+            />
+            <span>Use Wallet Balance</span>
+          </div>
+  
+          {/* Wallet Details */}
+          <div className="border rounded-lg p-4 mb-4">
+            <div className="flex justify-between mb-4">
+              <div>
+                <h3 className="font-semibold">Wallet Details</h3>
+                <p>Balance: {walletBalance} $</p>
+              </div>
+              <div>
+                <h3 className="font-semibold">My Points</h3>
+                <p>Points: {points}</p>
+              </div>
+            </div>
+  
+            <div className="border-t pt-4">
+              <p className="mb-2">Redeem My Points</p>
+              <p className="text-sm text-gray-600">10K points → 100 EGP</p>
+              <div className="flex items-center gap-2 mt-2">
+                <input
+                  type="text"
+                  value={points}
+                  readOnly
+                  className="border rounded px-2 py-1 w-24"
+                />
+                →
+                <input
+                  type="text"
+                  value={redeemedPoints}
+                  readOnly
+                  className="border rounded px-2 py-1 w-24"
+                />
+                <button
+                  onClick={handleRedeem}
+                  className="bg-brown-600 text-white px-4 py-1 rounded"
+                >
+                  Redeem
+                </button>
+              </div>
+            </div>
+          </div>
+  
+          {/* Promo Code */}
+          <div className="mb-4">
+            <p className="mb-2">Promo code</p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
+                placeholder="Promo code"
+                className="border rounded px-3 py-2 flex-grow"
+              />
+              <button className="bg-brown-600 text-white px-6 py-2 rounded">
+                Apply
+              </button>
+            </div>
+          </div>
+  
+          {/* Price Details */}
+          <div className="bg-brown-600 text-white p-3 mb-4">
+            <h3 className="font-semibold mb-2">Price Details</h3>
+          </div>
+          <div className="space-y-2 mb-4">
+            <div className="flex justify-between">
+              <span>Items price</span>
+              <span>$ {priceDetails.itemsPrice}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Tax and service fees</span>
+              <span>$ {priceDetails.tax}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Promocode</span>
+              <span>$ {priceDetails.promocode}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Wallet</span>
+              <span>$ {priceDetails.wallet}</span>
+            </div>
+            <div className="flex justify-between font-semibold pt-2 border-t">
+              <span>Total</span>
+              <span>$ {priceDetails.total}</span>
+            </div>
+          </div>
+  
+          {/* Action Buttons */}
+          <div className="flex justify-between">
+            <button className="border border-brown-600 text-brown-600 px-6 py-2 rounded">
+              cancel
+            </button>
+            <button className="bg-brown-600 text-white px-6 py-2 rounded">
+              Book Now
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+
 const   ActivityDetails = () =>{
     const navigate = useNavigate();
     const [userType, setUserType] = useState(null);
@@ -252,7 +431,7 @@ const   ActivityDetails = () =>{
                     <ProfileAndDescription
                         mode="Activity"
                         name={advertiserName}
-                        // picture={tourGuidePicture}
+                        picture={activityData.advertiserID.picture}
                         description={activityData.description}
                         width={"80%"}
                         fontSize={"1.2em"}
@@ -262,7 +441,7 @@ const   ActivityDetails = () =>{
                     {/* Put a map Here */}
                     <div className="activity-location-on-map">
                         <div className="activity-location">
-                            <img src="/mapMarkerIcon.png" alt="" />
+                            <img src="/mapMarkerIcon.png" alt="" className="map-marker-icon" />
                             <span>Activity Location</span>
                         </div>
                         <Map
