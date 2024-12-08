@@ -16,6 +16,7 @@ import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
 import usePageHeader from "../Header/UseHeaderPage";
 import { useFunctionContext } from "../../contexts/FunctionContext";
+import { MapWrapper } from "../MapWrapper";
 const ShowOfferDetails = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -223,12 +224,14 @@ const ShowOfferDetails = () => {
                 </div>
                 <div className="hotel-booking">
                     <h4 style={{ color: "var(--accent-color)" }}>Show On Map</h4>
-                    <MapComponent
-                        markerPosition={{
-                            lat: offer.lat || 31.3244,
-                            lng: offer.lng || 42.3242,
-                        }}
-                    />
+                    <MapWrapper>
+                        <MapComponent
+                            markerPosition={{
+                                lat: offer.lat || 31.3244,
+                                lng: offer.lng || 42.3242,
+                            }}
+                        />
+                    </MapWrapper>
                 </div>
             </div>
             {bookingId && (
