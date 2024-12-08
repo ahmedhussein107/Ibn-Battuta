@@ -7,6 +7,7 @@ import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import { styled } from "@mui/material/styles";
 import Alert from "@mui/material/Alert";
+import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import axiosInstance from "../../api/axiosInstance";
 import bookingsBackground from "../../assets/backgrounds/checkoutbg.png";
@@ -47,6 +48,7 @@ const Checkout = () => {
     const { setSuccess, setFailure } = useFunctionContext();
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    const [promoCodeDiscount, setPromoCodeDiscount] = useState(0);
 
     useEffect(() => {
         axiosInstance
@@ -59,7 +61,7 @@ const Checkout = () => {
                     selectedAddress:
                         response.data.address.length > 0
                             ? response.data.address[0].name
-                            : "",
+                            : "No Saved Address",
                 });
             })
             .catch((error) => {
@@ -85,9 +87,9 @@ const Checkout = () => {
 
     const showAlert = (severity, message) => {
         setAlert({ open: true, severity, message });
-        // setTimeout(() => {
-        //     setAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
-        // }, 8000); // Alert will close after 5 seconds
+        setTimeout(() => {
+            setAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+        }, 8000); // Alert will close after 5 seconds
     };
 
     const showPopUpAlert = (severity, message) => {
@@ -115,8 +117,7 @@ const Checkout = () => {
                 console.log(response.data);
             })
             .catch((error) => {
-                console.error("Error updating tourist:", error);
-                showAlert("error", "An error occurred while updating your Profile.");
+                showAlert("error", error.res);
             });
     };
 
@@ -229,9 +230,16 @@ const Checkout = () => {
             };
 
             const handleSuccess = async () => {
+                await axiosInstance.post(
+                    "promocode/applyPromoCode",
+                    { promoCodeId: promoCode, totalAmount: location.state.price },
+                    { withCredentials: true }
+                );
                 await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
                     isWalletUsed: isWalletUsed,
+                    finalPrice: location.state.price - promoCodeDiscount,
                 });
+
                 if (
                     paymentMethod === "cash on delivery" ||
                     (paymentMethod === "card" &&
@@ -257,11 +265,8 @@ const Checkout = () => {
                 await handleSuccess();
             }
         } catch (error) {
-            showAlert(
-                "error",
-                error.response?.data?.e || "An error occurred while creating your order."
-            );
-            console.log(error.message);
+            showAlert("error", error.response.data.message);
+            console.log(error);
         }
     };
 
@@ -345,6 +350,41 @@ const Checkout = () => {
     const handleCompleteOrder = () => {
         setIsCompletionPopUpOpen(false);
         navigate("/tourist/orders");
+    };
+
+    const handlePromoCodeChange = (event) => {
+        setPromoCode(event.target.value); // Update the state with the input value
+    };
+
+    const handlePromoCode = async (event) => {
+        // Get the value from the event
+        console.log(promoCode);
+        try {
+            const response = await axiosInstance.post(
+                "/promocode/validatePromoCode",
+                { promoCodeId: promoCode }, // Pass the promoCodeId in the data object
+                { withCredentials: true } // Set the configuration as the second argument
+            );
+
+            showAlert("success", response.data.message);
+
+            setPromoCodeDiscount(
+                location.state.price * (response.data.promoCodeDetails.discount / 100)
+            );
+        } catch (error) {
+            setPromoCodeDiscount(0);
+            const backendErrorMessage =
+                error.response?.data?.message ||
+                error.message ||
+                "An error occurred while validating promo code.";
+            showAlert("error", backendErrorMessage);
+            console.log(error.message);
+        }
+    };
+
+    const handleClearPromoCode = () => {
+        setPromoCode("");
+        setPromoCodeDiscount(0);
     };
 
     // if (isLoading) {
@@ -454,10 +494,12 @@ const Checkout = () => {
                                 name="address"
                                 value={formData.selectedAddress}
                                 onChange={(e) => {
+                                    // Check if the selected value is "addNew"
                                     if (e.target.value === "addNew") {
+                                        console.log("Opening the address popup..."); // Debugging line
                                         setIsAdressPopUpOpen(true); // Open the popup
                                     } else {
-                                        handleSelectAddress(e);
+                                        handleSelectAddress(e); // Handle selecting an existing address
                                     }
                                 }}
                                 style={{
@@ -472,7 +514,21 @@ const Checkout = () => {
                                     marginLeft: "1vw",
                                 }}
                             >
-                                <option value="addNew">Add new Address</option>
+                                <option
+                                    value="addNew"
+                                    onChange={(e) => {
+                                        // Check if the selected value is "addNew"
+                                        if (e.target.value === "addNew") {
+                                            console.log("Opening the address popup..."); // Debugging line
+                                            setIsAdressPopUpOpen(true); // Open the popup
+                                        } else {
+                                            handleSelectAddress(e); // Handle selecting an existing address
+                                        }
+                                    }}
+                                >
+                                    Add new Address
+                                </option>{" "}
+                                {/* Correctly set this value */}
                                 {formData.address.map((address, index) => (
                                     <option key={index} value={address.name}>
                                         {address.name}
@@ -667,7 +723,7 @@ const Checkout = () => {
                                                 backgroundColor: "#9c4f21",
                                                 color: "white",
                                                 "&:hover": {
-                                                    backgroundColor: "#9c4f21", // Change this to your preferred hover color
+                                                    backgroundColor: "#9c4f21",
                                                     color: "white",
                                                 },
                                             }}
@@ -686,14 +742,11 @@ const Checkout = () => {
                                     actionText={"Reedem"}
                                     handleSubmit={handleRedeemPoints}
                                 >
-                                    {/* The remaining contents of the popup go here */}
                                     <div
                                         style={{
                                             border: "1px solid #ccc",
                                             borderRadius: "8px",
                                             width: "30vw",
-                                            //marginTop: "-6vh",
-                                            // marginLeft: "2vw",
                                         }}
                                     >
                                         <div
@@ -787,8 +840,6 @@ const Checkout = () => {
                                                                 textAlign: "center",
                                                                 border: "1px solid #ccc",
                                                                 borderRadius: "4px",
-                                                                //marginRight: "10px",
-                                                                // marginLeft: "2vw",
                                                             }}
                                                         />
                                                         →
@@ -802,25 +853,11 @@ const Checkout = () => {
                                                                 textAlign: "center",
                                                                 border: "1px solid #ccc",
                                                                 borderRadius: "4px",
-                                                                //marginLeft: "10px",
                                                             }}
                                                         />
                                                     </div>
                                                 </div>
                                             </div>
-                                            {/* <button
-                                                style={{
-                                                    backgroundColor: "#9c4f21",
-                                                    color: "white",
-                                                    border: "none",
-                                                    borderRadius: "20px",
-                                                    marginTop: "3vh",
-                                                    cursor: "pointer",
-                                                }}
-                                                onClick={handleRedeemPoints}
-                                            >
-                                                Redeem
-                                            </button> */}
                                         </div>
                                     </div>
                                     {popupAlert.open && (
@@ -843,19 +880,6 @@ const Checkout = () => {
                                         </Alert>
                                     )}
                                 </PopUp>
-                                {/* <button
-                                    style={{
-                                        backgroundColor: "#9c4f21",
-                                        color: "white",
-                                        border: "none",
-                                        borderRadius: "20px",
-                                        marginTop: "-1vh",
-                                        cursor: "pointer",
-                                    }}
-                                    onClick={handleRedeemPoints}
-                                >
-                                    Redeem Points
-                                </button> */}
                             </div>
                         </div>
                     </div>
@@ -884,7 +908,6 @@ const Checkout = () => {
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        displaydirection: "row",
                                         gap: "2vw",
                                     }}
                                 >
@@ -902,17 +925,27 @@ const Checkout = () => {
                                             label="Promo Code"
                                             name="promoCode"
                                             value={promoCode}
+                                            onChange={handlePromoCodeChange}
                                             variant="outlined"
-                                            //onChange={(e) => setPromoCode(e.target.value)}
-                                            //onBlur={handleSubmit}
-                                            // onChange={handleChange}
                                             style={{
                                                 width: "25vw",
                                                 height: "4vh",
                                                 marginTop: "1vh",
                                             }}
+                                            InputProps={{
+                                                endAdornment: (
+                                                    <CloseIcon
+                                                        onClick={handleClearPromoCode}
+                                                        style={{
+                                                            color: "#9c4f21",
+                                                            cursor: "pointer",
+                                                        }}
+                                                    />
+                                                ),
+                                            }}
                                         />
                                     </Box>
+
                                     <Button
                                         stylingMode={"always-dark"}
                                         text="Apply"
@@ -923,11 +956,12 @@ const Checkout = () => {
                                             alignItems: "center",
                                             lineHeight: "1vh",
                                         }}
-                                        //handleClick={handle}
+                                        handleClick={handlePromoCode}
                                         width="8vw"
                                         height="5vh"
                                     />
                                 </div>
+
                                 <div>
                                     <div
                                         style={{
@@ -968,7 +1002,6 @@ const Checkout = () => {
                                                     justifyContent: "space-between",
                                                     margin: "0.5vh 0",
                                                     fontSize: "20px",
-                                                    padding: "0.5vh",
                                                 }}
                                             >
                                                 <span>Items price</span>
@@ -976,43 +1009,36 @@ const Checkout = () => {
                                                     {formatPrice(location.state.price)}
                                                 </span>
                                             </div>
-
-                                            {/* Tax and Fees Row */}
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                    margin: "0.5vh 0",
-                                                    fontSize: "20px",
-                                                    padding: "0.5vh",
-                                                }}
-                                            >
-                                                <span>Tax and service fees</span>
-                                                <span style={{ fontWeight: "bold" }}>
-                                                    {formatPrice(10)}
-                                                </span>
-                                            </div>
-
                                             {/* Promocode Row */}
+                                            {promoCodeDiscount > 0 && (
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent: "space-between",
+                                                        margin: "0.5vh 0",
+                                                        fontSize: "20px",
+
+                                                        width: "100%",
+                                                    }}
+                                                >
+                                                    <span>Promocode Discount</span>
+                                                    <span
+                                                        style={{
+                                                            fontWeight: "bold",
+                                                            color: "red",
+                                                        }}
+                                                    >
+                                                        - {formatPrice(promoCodeDiscount)}
+                                                    </span>
+                                                </div>
+                                            )}
+
                                             <div
                                                 style={{
                                                     display: "flex",
                                                     justifyContent: "space-between",
                                                     margin: "0.5vh 0",
                                                     fontSize: "20px",
-                                                    padding: "0.5vh",
-                                                }}
-                                            >
-                                                <span>Promocode Discount</span>
-                                                {/* <span>-${promoCode.toFixed(2)}</span> */}
-                                            </div>
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                    margin: "0.5vh 0",
-                                                    fontSize: "20px",
-                                                    padding: "0.5vh",
                                                 }}
                                             >
                                                 {isWalletUsed && (
@@ -1020,11 +1046,10 @@ const Checkout = () => {
                                                         style={{
                                                             display: "flex",
                                                             justifyContent:
-                                                                "space-between",
-                                                            //margin: "0.5vh 0",
+                                                                "space-between", //margin: "0.5vh 0",
                                                             fontSize: "20px",
-                                                            padding: "0.5vh",
-                                                            gap: "18vw",
+
+                                                            width: "100%",
                                                         }}
                                                     >
                                                         <span>
@@ -1036,11 +1061,12 @@ const Checkout = () => {
                                                                 fontWeight: "bold",
                                                             }}
                                                         >
-                                                            -
+                                                            -{" "}
                                                             {formatPrice(
                                                                 Math.min(
                                                                     tourist.wallet,
-                                                                    location.state.price
+                                                                    location.state.price -
+                                                                        promoCodeDiscount
                                                                 )
                                                             )}
                                                         </span>
@@ -1079,12 +1105,14 @@ const Checkout = () => {
                                                         ? formatPrice(
                                                               Math.max(
                                                                   location.state.price -
-                                                                      tourist.wallet,
+                                                                      tourist.wallet -
+                                                                      promoCodeDiscount,
                                                                   0
                                                               )
                                                           )
                                                         : formatPrice(
-                                                              location.state.price
+                                                              location.state.price -
+                                                                  promoCodeDiscount
                                                           )}
                                                 </span>
                                             </div>

@@ -47,10 +47,10 @@ export const completeOrder = async (req, res) => {
     try {
         console.log("gowa completee order");
         const order = await Order.findById(req.params.id).populate("purchases.product");
-        const { isWalletUsed } = req.body;
+        const { isWalletUsed, finalPrice } = req.body;
         const tourist = await Tourist.findById(order.buyer);
         if (isWalletUsed) {
-            tourist.wallet = Math.max(0, tourist.wallet - order.totalPrice);
+            tourist.wallet = Math.max(0, tourist.wallet - finalPrice);
             await tourist.save();
         }
         order.isComplete = true;

@@ -224,9 +224,9 @@ const Shop = () => {
         }
     };
 
-    if (isLoading) {
-        return <CircularProgress />;
-    }
+    // if (isLoading) {
+    //     return <CircularProgress />;
+    // }
 
     return (
         <div
