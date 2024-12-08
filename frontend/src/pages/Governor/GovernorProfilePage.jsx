@@ -138,7 +138,10 @@ const GovernorProfilePage = () => {
             )
             .then((response) => {
                 showPopUpAlert("success", "Password changed successfully");
-                setIsPopUpOpen(false);
+                setTimeout(() => {
+                    setIsPopUpOpen(false); // Close the popup after a delay
+                }, 5000);
+
                 // Clear input fields after submission
                 setCurrentPassword("");
                 setNewPassword("");
@@ -202,6 +205,10 @@ const GovernorProfilePage = () => {
         setTimeout(() => {
             setPopupAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
         }, 8000); // Alert will close after 5 seconds
+    };
+
+    const handleCancelChanges = () => {
+        setIsEditing(false);
     };
 
     return (
@@ -361,17 +368,41 @@ const GovernorProfilePage = () => {
                         onClick={handleEditProfileSubmit}
                     />
                 </div>
-                {isEditing && (
-                    <Button
-                        stylingMode="always-dark"
-                        text="Save Changes"
-                        width="10vw"
-                        customStyle={{
-                            marginLeft: "20vw",
-                        }}
-                        handleClick={handleSaveChanges}
-                    />
-                )}
+                <div
+                    style={{
+                        display: "flex",
+                        direction: "row",
+                        alignItems: "center",
+                        marginLeft: "13vw",
+                    }}
+                >
+                    {isEditing && (
+                        <Button
+                            stylingMode="always-light"
+                            text="Cancel"
+                            width="10vw"
+                            customStyle={
+                                {
+                                    // marginLeft: "20vw",
+                                }
+                            }
+                            handleClick={handleCancelChanges}
+                        />
+                    )}
+                    {isEditing && (
+                        <Button
+                            stylingMode="always-dark"
+                            text="Save Changes"
+                            width="10vw"
+                            customStyle={
+                                {
+                                    //marginLeft: "20vw",
+                                }
+                            }
+                            handleClick={handleSaveChanges}
+                        />
+                    )}
+                </div>
             </div>
 
             <hr
