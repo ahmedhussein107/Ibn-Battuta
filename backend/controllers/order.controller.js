@@ -87,6 +87,39 @@ export const completeOrder = async (req, res) => {
     }
 };
 
+export const completeOrder = async (req, res) => {
+    try {
+        console.log("gowa completee order");
+        const order = await Order.findById(req.params.id).populate("purchases.product");
+        const { isWalletUsed, finalPrice } = req.body;
+        const tourist = await Tourist.findById(order.buyer);
+        if (isWalletUsed) {
+            tourist.wallet = Math.max(0, tourist.wallet - finalPrice);
+            await tourist.save();
+        }
+        order.isComplete = true;
+        await order.save();
+
+        for (let purchase of order.purchases) {
+            const product = purchase.product;
+            if (product.quantity == 0) {
+                sendNotificationToEmailAndSystem(
+                    "Product out of stock",
+                    `Your Product ${product.name} is becoming popular on our shop!\n Now it is out of stock, you can restock it by visiting your product page on our website`,
+                    product.ownerID,
+                    product.ownerType,
+                    product._id,
+                    "Product"
+                );
+            }
+        }
+        const cart = await TouristCart.deleteMany({ touristID: tourist._id });
+        res.status(200).json({ message: "Order completed successfully", order });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
 export const getOrders = async (req, res) => {
     try {
         const orders = await Order.find().populate("buyer product");
@@ -171,7 +204,7 @@ export const addRatingToProduct = async (req, res) => {
 export const getOrdersByUser = async (req, res) => {
     try {
         const orders = await Order.find({ buyer: req.user.userId }).populate(
-            "product ratingID"
+            "purchases.product purchases.ratingID"
         );
         res.json(orders);
     } catch (err) {
