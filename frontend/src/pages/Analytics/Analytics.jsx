@@ -85,55 +85,35 @@ const customStyles = {
         },
     }),
 };
-const formatDate = (date) => {
-    const day = String(date.getDate()).padStart(2, "0"); // Ensure 2 digits
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-};
-const sampleTableData = [
-    { name: "Activity", date: new Date(), id: 1, numberOfTourists: 23, revenue: 23323 },
-    { name: "adf", date: new Date(), id: 1, numberOfTourists: 23, revenue: 23323 },
-    { name: "adgf", date: new Date(), id: 1, numberOfTourists: 23, revenue: 23323 },
-    { name: "sadfgf", date: new Date(), id: 1, numberOfTourists: 23, revenue: 23323 },
-    { name: "adsasfdsd", date: new Date(), id: 1, numberOfTourists: 23, revenue: 23323 },
-    { name: "Activity", date: new Date(), id: 1, numberOfTourists: 23, revenue: 23323 },
-    { name: "sdf", date: new Date(), id: 1, numberOfTourists: 23, revenue: 23323 },
-    { name: "itisdf", date: new Date(), id: 1, numberOfTourists: 23, revenue: 23323 },
-];
-const sampleAreaData = [
-    { name: "dfaf", value: 23 },
-    { name: "dfaf", value: 231 },
-    { name: "dfaf", value: 2243 },
-    { name: "dfaf", value: 2343 },
-    { name: "dfaf", value: 223 },
-    { name: "dfaf", value: 223 },
-];
-const sampleTouristData = [
-    { month: "September", tourists: 1000 },
-    { month: "October", tourists: 1200 },
-    { month: "November", tourists: 900 },
-    { month: "December", tourists: 800 },
-    { month: "September", tourists: 1000 },
-    { month: "October", tourists: 1200 },
-    { month: "November", tourists: 900 },
-    { month: "December", tourists: 800 },
-];
-const sampleData = {
-    January: [
-        { name: "Red", value: 80, color: "#FF6384" },
-        { name: "Blue", value: 65, color: "#36A2EB" },
-        { name: "Green", value: 50, color: "#4BC0C0" },
-        { name: "Purple", value: 40, color: "#9966FF" },
-    ],
-    February: [
-        { name: "Red", value: 70, color: "#FF6384" },
-        { name: "Blue", value: 75, color: "#36A2EB" },
-        { name: "Green", value: 55, color: "#4BC0C0" },
-        { name: "Purple", value: 45, color: "#9966FF" },
-    ],
-};
 
+const groupDataByMonth = (data) => {
+    const groupedData = {
+        January: [
+            { name: "number of tourists", value: 0, color: "brown" },
+
+            { name: "number of sales", value: 0, color: "var(--accent-color)" },
+        ],
+    };
+
+    console.log("to be groupd data", data);
+    data.forEach((item) => {
+        const { month, numberOfTourists, numberOfSales } = item;
+
+        // Initialize the month if it doesn't exist in the groupedData
+        if (!groupedData[month]) {
+            groupedData[month] = [
+                { name: "number of tourists", value: 0, color: "brown" },
+                { name: "number of sales", value: 0, color: "var(--accent-color)" },
+            ];
+        }
+
+        // Aggregate values
+        groupedData[month][0].value += numberOfTourists;
+        groupedData[month][1].value += numberOfSales;
+    });
+    console.log("grouped data", groupedData);
+    return groupedData;
+};
 const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) => {
     const [selectedMonth, setSelectedMonth] = useState(null);
     const [isAll, setIsAll] = useState(true);
@@ -294,10 +274,8 @@ const DrawTable = ({ data }) => {
                                 }}
                             >
                                 <td style={tableRowStyle}>{item.name}</td>
-                                <td style={tableRowStyle}>{formatDate(item.date)}</td>
-                                <td style={tableRowStyle}>
-                                    {_month[item.date.getMonth()]}
-                                </td>
+                                <td style={tableRowStyle}>{item.date}</td>
+                                <td style={tableRowStyle}>{item.month}</td>
                                 <td style={tableRowStyle}>{item.revenue}</td>
                                 <td style={tableRowStyle}>{item.numberOfTourists}</td>
                             </tr>
@@ -678,14 +656,68 @@ const DrawTouristsPerMonth = ({ data }) => {
 const Analytics = () => {
     usePageHeader("/analytics.png", "Analytics");
 
-    const [data, setData] = useState({});
+    const [data, setData] = useState([]);
+    const [touristData, setTouristData] = useState([]);
+    const [monthData, setMonthData] = useState([]);
+    const [revenuePerThing, setRevenuePerThing] = useState([]);
+    const [touristPerThing, setTouristPerThing] = useState([]);
+    const [radial, setRadial] = useState({
+        January: [
+            { name: "number of tourists", value: 0, color: "brown" },
+
+            { name: "number of sales", value: 0, color: "var(--accent-color)" },
+        ],
+    });
     useEffect(() => {
         console.log("i am here");
         axiosInstance
             .get("/analytics/getAnalytics", { withCredentials: true })
             .then((res) => {
+                setTouristData(res.data.touristData ? res.data.touristData : []);
                 console.log("result is :", res);
-                setData(res.data);
+                const updatedData = res.data.data.map((item) => {
+                    const month = new Date(item.date).getMonth();
+                    return {
+                        ...item,
+                        month: _month[month],
+                    };
+                });
+                setData(updatedData);
+                // to get the total revenue per month
+                setMonthData(
+                    Object.entries(
+                        updatedData.reduce((acc, item) => {
+                            if (!acc[item.month]) {
+                                acc[item.month] = 0;
+                            }
+                            acc[item.month] += item.revenue;
+                            return acc;
+                        }, {})
+                    ).map(([name, value]) => ({ name, value }))
+                );
+                setRevenuePerThing(
+                    Object.entries(
+                        updatedData.reduce((acc, item) => {
+                            if (!acc[item.name]) {
+                                acc[item.name] = 0;
+                            }
+                            acc[item.name] += item.revenue;
+                            return acc;
+                        }, {})
+                    ).map(([name, value]) => ({ name, value }))
+                );
+                setTouristPerThing(
+                    Object.entries(
+                        updatedData.reduce((acc, item) => {
+                            if (!acc[item.name]) {
+                                acc[item.name] = 0;
+                            }
+                            acc[item.name] += item.numberOfTourists;
+                            return acc;
+                        }, {})
+                    ).map(([name, value]) => ({ name, value }))
+                );
+                setRadial(groupDataByMonth(updatedData));
             });
     }, []);
     return (
@@ -698,8 +730,8 @@ const Analytics = () => {
                 width: "100%",
             }}
         >
-            <DrawTable data={sampleTableData} />
-            <DrawAreaChart data={data} />
+            <DrawTable data={data} />
+            <DrawAreaChart data={monthData} />
 
             <div
                 style={{
@@ -710,8 +742,26 @@ const Analytics = () => {
                     width: "80%",
                 }}
             >
-                <DrawBarChart data={data} title="Total Revenue Per Month" />
-                <DrawBarChart data={data} title="Total Revenue Per Month" />
+                <DrawBarChart
+                    data={revenuePerThing}
+                    title={`Total Revenue Per ${
+                        Cookies.get("userType") === "Advertiser"
+                            ? "Activity"
+                            : Cookies.get("userType") === "TourGuide"
+                            ? "Itinerary"
+                            : "Product"
+                    }`}
+                />
+                <DrawBarChart
+                    data={touristPerThing}
+                    title={`Total Tourists Per ${
+                        Cookies.get("userType") === "Advertiser"
+                            ? "Activity"
+                            : Cookies.get("userType") === "TourGuide"
+                            ? "Itinerary"
+                            : "Product"
+                    }`}
+                />
             </div>
 
             <div
@@ -723,9 +773,9 @@ const Analytics = () => {
                 }}
             >
                 {Cookies.get("userType") === "Admin" && (
-                    <DrawTouristsPerMonth data={data.touristData} />
+                    <DrawTouristsPerMonth data={touristData} />
                 )}
-                <DrawRadialBarChart data={sampleData} title="Total Revenue Per Month" />
+                <DrawRadialBarChart data={radial} title="Total Revenue Per Month" />
             </div>
         </div>
     );

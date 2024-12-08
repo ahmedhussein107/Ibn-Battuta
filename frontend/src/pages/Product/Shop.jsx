@@ -28,7 +28,7 @@ const Shop = () => {
     const { isLoading, convertPrice, formatPrice } = useCurrencyConverter(currency);
 
     const minPrice = convertPrice(0, "EGP", currency);
-    const maxPrice = convertPrice(2000, "EGP", currency);
+    const maxPrice = convertPrice(1000000000, "EGP", currency);
 
     const [products, setProducts] = useState([]);
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
@@ -192,12 +192,7 @@ const Shop = () => {
             value={sortBy}
             setValue={setSortBy}
         />,
-        <PriceRange
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-            min={minPrice}
-            max={maxPrice}
-        />,
+        <PriceRange priceRange={priceRange} setPriceRange={setPriceRange} />,
         <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
     ];
 
@@ -243,67 +238,94 @@ const Shop = () => {
             <div
                 style={{
                     width: "100vw",
-                    height: "30vh",
+                    height: "35vh",
                     backgroundImage: `url(${shopBackground})`,
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
                     backgroundColor: "white",
-                }}
-            ></div>
-            <div
-                style={{
                     display: "flex",
-                    flexDirection: "row",
-                    marginLeft: "28vw",
+                    justifyContent: "center",
+                    alignItems: "center",
                 }}
             >
-                <button
-                    style={selectedPage == "Shop" ? selectedButtonStyle : buttonStyle}
-                    onClick={() => setSelectedPage("Shop")}
+                <p
+                    style={{
+                        position: "relative",
+                        fontSize: "2rem",
+                        fontWeight: "bold",
+                        marginTop: "5%",
+                        color: "White",
+                    }}
                 >
-                    <ShoppingBagIcon
-                        style={{
-                            width: "1rem",
-                            height: "1rem",
-                            color: "#9C4F21",
-                            scale: "1.5",
-                        }}
-                    />
-                    <span
-                        style={{
-                            fontSize: "1.3rem",
-                            color: "#9C4F21",
-                        }}
-                    >
-                        Shop
-                    </span>
-                </button>
-                <button
-                    style={selectedPage == "wishlist" ? selectedButtonStyle : buttonStyle}
-                    onClick={() => setSelectedPage("wishlist")}
+                    Shop
+                </p>
+            </div>
+            <div
+                style={{
+                    marginLeft: "30%",
+                    width: "65%",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                }}
+            >
+                <div
+                    style={{
+                        width: "30%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                    }}
                 >
-                    <FavoriteBorderIcon
-                        style={{
-                            width: "1rem",
-                            height: "1rem",
-                            color: "#9C4F21",
-                            scale: "1.5",
-                        }}
-                    />
-                    <span
-                        style={{
-                            fontSize: "1.3rem",
-                            color: "#9C4F21",
-                        }}
+                    <button
+                        style={selectedPage == "Shop" ? selectedButtonStyle : buttonStyle}
+                        onClick={() => setSelectedPage("Shop")}
                     >
-                        wishlist
-                    </span>
-                </button>
+                        <ShoppingBagIcon
+                            style={{
+                                width: "1rem",
+                                height: "1rem",
+                                color: "#9C4F21",
+                                scale: "1.5",
+                            }}
+                        />
+                        <span
+                            style={{
+                                fontSize: "1.3rem",
+                                color: "#9C4F21",
+                            }}
+                        >
+                            Shop
+                        </span>
+                    </button>
+                    <button
+                        style={
+                            selectedPage == "wishlist" ? selectedButtonStyle : buttonStyle
+                        }
+                        onClick={() => setSelectedPage("wishlist")}
+                    >
+                        <FavoriteBorderIcon
+                            style={{
+                                width: "1rem",
+                                height: "1rem",
+                                color: "#9C4F21",
+                                scale: "1.5",
+                            }}
+                        />
+                        <span
+                            style={{
+                                fontSize: "1.3rem",
+                                color: "#9C4F21",
+                            }}
+                        >
+                            wishlist
+                        </span>
+                    </button>
+                </div>
                 <button
                     style={{
                         ...buttonStyle,
-                        marginLeft: "62%",
+                        // marginLeft: "45%",
                     }}
                 >
                     <ShoppingCartIcon
@@ -360,7 +382,7 @@ const Shop = () => {
             <div style={{ display: "flex", flexDirection: "row", marginLeft: "2%" }}>
                 <div
                     style={{
-                        width: "25vw",
+                        width: "26vw",
                         borderRadius: "3vh",
                     }}
                 >

@@ -8,9 +8,9 @@ const RatingRange = ({ ratingRange, setRatingRange }) => {
         <Box
             sx={{
                 "& > legend": { mt: 2 },
-                backgroundColor: "#f3f6f9",
+                backgroundColor: "#FCF3E2",
                 padding: "2vh",
-                borderRadius: "4vh",
+                borderRadius: "4px",
             }}
         >
             <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>

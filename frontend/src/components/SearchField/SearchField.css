@@ -10,11 +10,10 @@
 
 .search-field .MuiOutlinedInput-root {
     border-radius: 5vh;
-    background-color: #f3f6f9;
+    background-color: #fcf3e2;
 }
 
 .search-field .MuiInputBase-input {
-    width: 80%;
     padding: 1vw 5vh;
     background-color: white;
     border-radius: 5vh;

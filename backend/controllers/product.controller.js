@@ -75,6 +75,15 @@ export const deleteProduct = async (req, res) => {
     }
 };
 
+export const deleteProducts = async (req, res) => {
+    try {
+        await Product.deleteMany(req.body);
+        res.json({ message: "deleted successfully" });
+    } catch (e) {
+        res.status(400).json({ e: e.message });
+    }
+};
+
 export const searchProducts = async (req, res) => {
     try {
         const { rating, sortBy, page, limit, ...rest } = req.query;

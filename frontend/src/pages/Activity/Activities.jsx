@@ -12,6 +12,7 @@ import Footer from "../../components/Footer";
 import activitiesBackground from "../../assets/backgrounds/activitiesBackground.png";
 import CardActivity from "../../components/CardActivity";
 import ShareAndMark from "../../components/ShareAndMark";
+import PaginationComponent from "../../components/Pagination.jsx";
 import { useNavigate } from "react-router-dom";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 import { CircularProgress } from "@mui/material";
@@ -22,9 +23,11 @@ const Activities = () => {
     const currency = Cookies.get("currency") || "EGP";
     const { convertPrice, isLoading } = useCurrencyConverter();
 
-    // TODO: select better bounds
     const minPrice = convertPrice(0, "EGP", currency);
-    const maxPrice = convertPrice(2000, "EGP", currency);
+    const maxPrice = convertPrice(1000000000, "EGP", currency);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const itemsPerPage = 6;
 
     const [activities, setActivities] = useState([]);
     const [bookmarkStatus, setBookmarkStatus] = useState({});
@@ -95,37 +98,19 @@ const Activities = () => {
         }
     };
 
-    const sortActivities = (activities) => {
-        let sortedActivities = [...activities]; // Create a shallow copy
-        if (sortBy === "priceAsc") {
-            sortedActivities.sort(
-                (a, b) =>
-                    a.price * (1 - a.specialDiscount / 100) -
-                    b.price * (1 - b.specialDiscount / 100)
-            );
-        } else if (sortBy === "priceDesc") {
-            sortedActivities.sort(
-                (a, b) =>
-                    b.price * (1 - b.specialDiscount / 100) -
-                    a.price * (1 - a.specialDiscount / 100)
-            );
-        } else if (sortBy === "ratingAsc") {
-            sortedActivities.sort((a, b) => a.rating - b.rating);
-        } else if (sortBy === "ratingDesc") {
-            sortedActivities.sort((a, b) => b.rating - a.rating);
-        }
-        console.log("sortedActivities", sortedActivities);
-        setActivities(sortedActivities);
-    };
-
     const fetchActivities = async (query) => {
         try {
             console.log("query", query);
             const response = await axiosInstance.get(`/activity/getUpcomingActivities/`, {
-                params: query,
+                params: {
+                    ...query,
+                    page: currentPage,
+                    limit: itemsPerPage,
+                    sortBy,
+                },
             });
-            console.log("response", response.data);
-            sortActivities(response.data);
+            setActivities(response.data.result);
+            setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error("Error fetching Activities:", error);
         }
@@ -142,6 +127,7 @@ const Activities = () => {
 
     useEffect(() => {
         const query = buildQuery();
+        setCurrentPage(1);
         fetchActivities(query);
     }, [
         selectedTags,
@@ -152,11 +138,13 @@ const Activities = () => {
         endDate,
         name,
         location,
+        sortBy,
     ]);
 
     useEffect(() => {
-        sortActivities(activities);
-    }, [sortBy]);
+        const query = buildQuery();
+        fetchActivities(query);
+    }, [currentPage]);
 
     const buildQuery = () => {
         let query = {};
@@ -272,8 +260,6 @@ const Activities = () => {
         <PriceRange // TODO: change the slider
             priceRange={priceRange}
             setPriceRange={setPriceRange}
-            min={minPrice}
-            max={maxPrice}
         />,
         <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -380,6 +366,15 @@ const Activities = () => {
                         </div>
                     ))}
                 </div>
+            </div>
+            <div style={{ paddingBottom: "1%" }}>
+                <PaginationComponent
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    onChange={(event, newPage) => {
+                        setCurrentPage(newPage);
+                    }}
+                />
             </div>
             <Footer />
         </div>
