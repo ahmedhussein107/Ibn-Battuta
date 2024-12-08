@@ -129,7 +129,7 @@ const Timeline = ({
 
 const useStyles = createUseStyles({
     leftPanel: {
-        width: "30vw",
+        width: "50%",
     },
     container: {
         padding: "2vh",
@@ -139,8 +139,6 @@ const useStyles = createUseStyles({
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
     },
     timelineLine: {
-        top: "8vh",
-        left: "3vw",
         width: "0.8vw",
         backgroundColor: "#ff5b24",
         borderRadius: "0.3vw",

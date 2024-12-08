@@ -8,7 +8,7 @@ import axiosInstance from "../../api/axiosInstance";
 import Footer from "../../components/Footer";
 
 const CreateItineraryPage = ({ isEdit = false }) => {
-    const [step, setStep] = useState(2); // TODO: step1 should be the default
+    const [step, setStep] = useState(1); // TODO: step1 should be the default
     const [timelineActivities, setTimelineActivities] = useState([]);
 
     const itineraryId = isEdit ? useParams().itineraryId : null;

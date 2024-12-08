@@ -24,7 +24,14 @@ function MyButton({ text, fontSize = "14px", onClick }) {
 }
 
 // LocationAdder component
-const LocationAdder = ({ title, styles, location, setLocation, setMapFunction }) => {
+const LocationAdder = ({
+    title,
+    styles,
+    location,
+    setLocation,
+    setMapFunction,
+    fontWeight = "bold",
+}) => {
     const handleAddLocation = () => {
         const mapFunction = (location) => setLocation(location);
         setMapFunction(() => mapFunction);
@@ -47,7 +54,7 @@ const LocationAdder = ({ title, styles, location, setLocation, setMapFunction })
                     alignItems: "center",
                 }}
             >
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                <Typography variant="h6" sx={{ fontWeight }}>
                     {title}
                 </Typography>
                 {/* Add Location Button */}
