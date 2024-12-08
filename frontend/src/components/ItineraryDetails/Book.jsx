@@ -1,6 +1,5 @@
 import "../../styles/Book.css";
 import Button from "../Button.jsx";
-import convert from "../../api/convert.js";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";

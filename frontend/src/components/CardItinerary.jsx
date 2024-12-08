@@ -7,7 +7,6 @@ import GenericCard from "./GenericCard";
 import TitleAndButtons from "./TitleAndButtons";
 import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
-import convert from "../api/convert";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
@@ -114,7 +113,8 @@ const CardItinerary = ({
         <div
             style={{
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: "column",
+                alignItems: "center",
                 width: "100%",
             }}
         >
@@ -124,7 +124,7 @@ const CardItinerary = ({
                     stylingMode={type}
                     width={width}
                     handleClick={onClick}
-                    customStyle={styles}
+                    customStyle={{ ...styles, alignSelf: "center" }}
                     height="6vh"
                 />
             ))}

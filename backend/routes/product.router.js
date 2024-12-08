@@ -4,6 +4,7 @@ import {
     updateProduct,
     getAllProducts,
     deleteProduct,
+    deleteProducts,
     getProduct,
     searchProducts,
     archeiveProduct,
@@ -23,6 +24,8 @@ productRouter.get("/getProduct/:id", getProduct);
 productRouter.patch("/updateProduct/:id", updateProduct);
 
 productRouter.delete("/deleteProduct/:id", deleteProduct);
+
+productRouter.delete("/deleteProducts", deleteProducts);
 
 productRouter.get("/search", searchProducts);
 

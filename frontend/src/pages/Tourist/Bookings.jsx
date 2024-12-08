@@ -11,7 +11,7 @@ import HotelList from "../../components/Hotels/HotelList";
 import FlightList from "../../components/Flights/FlightList";
 import FilterButtons from "../../components/FilterButtons";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Alert } from "@mui/material";
 
 const Bookings = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -23,6 +23,8 @@ const Bookings = () => {
     const [flights, setFlights] = useState([]);
     const [hotels, setHotels] = useState([]);
     const [filter, setFilter] = useState("All");
+
+    const [error, setError] = useState(null);
 
     const buttons = ["Itineraries", "Activities", "Flights", "Hotels"];
     const filterButtons = ["All", "Past", "Upcoming"];
@@ -137,6 +139,7 @@ const Bookings = () => {
                                         width="46vw"
                                         height="34vh"
                                         fontSize="1.2rem"
+                                        setError={setError}
                                     />
                                 </div>
                             ))}
@@ -151,6 +154,7 @@ const Bookings = () => {
                                         width="46vw"
                                         height="34vh"
                                         fontSize="1.2rem"
+                                        setError={setError}
                                     />
                                 </div>
                             ))}
@@ -167,6 +171,11 @@ const Bookings = () => {
                     )}
                     {selected == "Hotels" && <TouristHotelBookings rooms={hotels} />}
                 </div>
+                {error && (
+                    <Alert severity="error" style={{ width: "90%", margin: "0 auto" }}>
+                        {error}
+                    </Alert>
+                )}
                 <PaginationComponent
                     totalPages={totalPages}
                     currentPage={currentPage}

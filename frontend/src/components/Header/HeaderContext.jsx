@@ -1,8 +1,7 @@
 import React, { createContext, useState, useContext } from "react";
 import { useCallback } from "react";
 const HeaderContext = createContext();
-import { getExchangeRates } from "../../api/currency";
-import { useEffect } from "react";
+
 export const HeaderProvider = ({ children }) => {
     const [headerData, setHeaderDataState] = useState({
         imageSrc: null,
@@ -12,13 +11,6 @@ export const HeaderProvider = ({ children }) => {
     });
     const setHeaderData = useCallback((data) => {
         setHeaderDataState(data);
-    }, []);
-
-    const [currencyRates, setCurrencyRates] = useState({});
-    useEffect(() => {
-        getExchangeRates().then((rates) => {
-            setCurrencyRates(rates);
-        });
     }, []);
 
     const clearHeader = useCallback(() => {
@@ -36,8 +28,6 @@ export const HeaderProvider = ({ children }) => {
                 headerData,
                 setHeaderData,
                 clearHeader,
-                currencyRates,
-                setCurrencyRates,
             }}
         >
             {children}

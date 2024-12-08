@@ -6,7 +6,6 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import PopUp from "./PopUpsGeneric/PopUp";
 import { styled } from "@mui/system";
 import axiosInstance from "../api/axiosInstance";
-import convert from "../api/convert";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";

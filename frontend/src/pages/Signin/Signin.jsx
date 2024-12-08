@@ -43,12 +43,12 @@ const SigninComponent = () => {
                 const userType = Cookies.get("userType");
                 window.location.reload();
 
-                if (userType === "Tourist") {
-                    navigate("/");
-                    return;
-                }
+                // if (userType === "Tourist") {
+                // 	navigate("/");
+                // 	return;
+                // }
                 console.log("userType", userType.toLowerCase());
-                navigate(`/${userType.toLowerCase()}`);
+                // navigate(`/${userType.toLowerCase()}`);
             }, 1000);
         } catch (err) {
             console.log(err);

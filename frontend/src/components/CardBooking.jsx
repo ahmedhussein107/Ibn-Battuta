@@ -13,7 +13,7 @@ import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
 import { useNavigate } from "react-router-dom";
 
-const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
+const CardBooking = ({ booking, width, height, fontSize = "1.5rem", setError }) => {
     const navigate = useNavigate();
 
     const [rating, setRating] = useState(booking.ratingID ? booking.ratingID.rating : 0);
@@ -232,12 +232,14 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                 console.log("Booking cancelled successfully");
             } else {
                 console.error("Failed to cancel booking");
+                setError("Failed to cancel booking");
             }
+            window.location.reload();
         } catch (error) {
             console.error("Error:", error);
+            setError(error.response.data.message);
         } finally {
             setCancelPopup(false);
-            window.location.reload();
         }
     };
 
@@ -279,7 +281,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem" }) => {
                         width: "40%",
                     }}
                 >
-                    {differenceInDays >= 2 ? (
+                    {differenceInDays >= 0 ? (
                         <CustomButton
                             stylingMode="dark-when-hovered"
                             width="40%"
