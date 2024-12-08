@@ -5,11 +5,9 @@ import styled from "styled-components";
 import { fetchAllTags } from "../../pages/Tag/fetchAllTags";
 import Footer from "../../components/Footer";
 import bg from "../../assets/images/bg.jpg";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
 import { uploadFile } from "../../api/firebase";
-import convert from "../../api/convert";
 import EditIcon from "@mui/icons-material/Edit";
 //import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -19,7 +17,9 @@ import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton"; // Ensure this is imported for the close button
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "../../components/Button";
-
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
 const PageWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -283,6 +283,8 @@ export default function TouristProfilePage() {
     const [alertOpen, setAlertOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const [alertSeverity, setAlertSeverity] = useState("info");
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
     const showAlert = (message, severity = "info") => {
         setAlertMessage(message);
@@ -303,9 +305,6 @@ export default function TouristProfilePage() {
         currency: "",
     });
     const navigate = useNavigate();
-
-    const currency = Cookies.get("currency") || "EGP";
-    const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
     useEffect(() => {
         const message = localStorage.getItem("alertMessage");
@@ -549,10 +548,6 @@ export default function TouristProfilePage() {
         }
 
         // If no fields have changed, show an alert and return
-        if (Object.keys(editedFields).length === 0) {
-            showAlert("No changes detected.", "info");
-            return;
-        }
 
         axiosInstance
             .put("/tourist/updateTourist", editedFields, {
@@ -1127,7 +1122,7 @@ export default function TouristProfilePage() {
 
                         <PointsSection>
                             <h3>Wallet Details</h3>
-                            <p>Balance: {convert(tourist?.wallet || 0)}</p>
+                            <p>Balance: {formatPrice(tourist?.wallet || 0)}</p>
                             <h3>My Points</h3>
                             <p>Points: {tourist?.loyalityPoints || 0}</p>
                             Level: {currentLevel}
@@ -1159,7 +1154,7 @@ export default function TouristProfilePage() {
                             <LevelContainer>
                                 {" "}
                                 <Button
-                                    stylingMode="1"
+                                    stylingMode="always-dark"
                                     text="Redeem"
                                     handleClick={handleRedeemPoints}
                                 ></Button>
