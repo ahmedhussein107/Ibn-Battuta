@@ -492,10 +492,10 @@ const Checkout = () => {
                             </div>
                             <select
                                 name="address"
-                                value={formData.selectedAddress}
+                                value={formData.selectedAddress || "addNew"} // Default to "addNew" if no address is selected
                                 onChange={(e) => {
-                                    // Check if the selected value is "addNew"
                                     if (e.target.value === "addNew") {
+                                        // Check for value, not name
                                         console.log("Opening the address popup..."); // Debugging line
                                         setIsAdressPopUpOpen(true); // Open the popup
                                     } else {
@@ -514,27 +514,31 @@ const Checkout = () => {
                                     marginLeft: "1vw",
                                 }}
                             >
-                                <option
-                                    value="addNew"
-                                    onChange={(e) => {
-                                        // Check if the selected value is "addNew"
-                                        if (e.target.value === "addNew") {
-                                            console.log("Opening the address popup..."); // Debugging line
-                                            setIsAdressPopUpOpen(true); // Open the popup
-                                        } else {
-                                            handleSelectAddress(e); // Handle selecting an existing address
-                                        }
-                                    }}
-                                >
-                                    Add new Address
-                                </option>{" "}
-                                {/* Correctly set this value */}
-                                {formData.address.map((address, index) => (
-                                    <option key={index} value={address.name}>
-                                        {address.name}
+                                <option value="addNew">Add new Address</option>{" "}
+                                {/* No need for extra options if there are none */}
+                                {formData.address.length > 0 ? (
+                                    formData.address.map((address, index) => (
+                                        <option key={index} value={address.name}>
+                                            {address.name}
+                                        </option>
+                                    ))
+                                ) : (
+                                    <option value="" disabled>
+                                        No addresses available
                                     </option>
-                                ))}
+                                )}
                             </select>
+
+                            {/* Popup component */}
+                            {isAdressPopUpOpen && (
+                                <PopUp
+                                    isOpen={isAdressPopUpOpen}
+                                    setIsOpen={setIsAdressPopUpOpen}
+                                    headerText={"Add Address"}
+                                    actionText={"Add"}
+                                    handleSubmit={handleAddAddress}
+                                />
+                            )}
 
                             {isAdressPopUpOpen && (
                                 <PopUp
