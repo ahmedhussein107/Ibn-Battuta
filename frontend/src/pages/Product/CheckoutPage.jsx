@@ -230,11 +230,13 @@ const Checkout = () => {
             };
 
             const handleSuccess = async () => {
-                await axiosInstance.post(
-                    "promocode/applyPromoCode",
-                    { promoCodeId: promoCode, totalAmount: location.state.price },
-                    { withCredentials: true }
-                );
+                if (promoCode != "") {
+                    await axiosInstance.post(
+                        "promocode/applyPromoCode",
+                        { promoCodeId: promoCode, totalAmount: location.state.price },
+                        { withCredentials: true }
+                    );
+                }
                 await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
                     isWalletUsed: isWalletUsed,
                     finalPrice: location.state.price - promoCodeDiscount,
