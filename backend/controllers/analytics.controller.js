@@ -35,23 +35,33 @@ export const getAnalytics = async (req, res) => {
 };
 
 const getProductsData = async (userId, userType) => {
-    // TODO: update when order becomes a list of product
     try {
+        // Fetch products for the given owner
         const products = await Product.find({
             ownerID: userId,
             ownerType: userType,
         });
+        console.log("products length", products.length, products);
 
+        // Aggregate sales data from orders
         const salesData = await Order.aggregate([
             {
                 $match: {
-                    product: { $in: products.map((product) => product._id) },
+                    "purchases.product": { $in: products.map((product) => product._id) },
+                },
+            },
+            {
+                $unwind: "$purchases", // Unwind the purchases array
+            },
+            {
+                $match: {
+                    "purchases.product": { $in: products.map((product) => product._id) }, // Filter purchases
                 },
             },
             {
                 $lookup: {
                     from: "products",
-                    localField: "product",
+                    localField: "purchases.product",
                     foreignField: "_id",
                     as: "productDetails",
                 },
@@ -68,36 +78,19 @@ const getProductsData = async (userId, userType) => {
             },
             {
                 $group: {
-                    _id: "$formattedDate",
-                    products: {
-                        $push: {
-                            productId: "$product",
-                            productName: "$productDetails.name",
-                            numberOfSales: { $sum: "$count" },
-                            revenue: { $sum: "$price" },
-                        },
+                    _id: {
+                        date: "$formattedDate",
+                        productId: "$purchases.product",
+                        productName: "$productDetails.name",
                     },
+                    numberOfSales: { $sum: "$purchases.count" },
+                    revenue: { $sum: "$purchases.price" },
                     tourists: { $addToSet: "$buyer" },
                 },
             },
             {
-                $unwind: "$products",
-            },
-            {
                 $addFields: {
-                    numberOfTourists: { $size: { $ifNull: ["$tourists", []] } }, // Calculate size of the array
-                },
-            },
-            {
-                $group: {
-                    _id: {
-                        date: "$_id",
-                        productId: "$products.productId",
-                        productName: "$products.productName",
-                    },
-                    numberOfSales: { $sum: "$products.numberOfSales" },
-                    revenue: { $sum: "$products.revenue" },
-                    numberOfTourists: { $first: "$numberOfTourists" },
+                    numberOfTourists: { $size: { $ifNull: ["$tourists", []] } },
                 },
             },
             {
@@ -124,6 +117,98 @@ const getProductsData = async (userId, userType) => {
         throw error;
     }
 };
+
+// const getProductsData = async (userId, userType) => {
+//     // TODO: update when order becomes a list of product
+//     try {
+//         const products = await Product.find({
+//             ownerID: userId,
+//             ownerType: userType,
+//         });
+//         console.log("products length", products.length, products);
+
+//         const salesData = await Order.aggregate([
+//             {
+//                 $match: {
+//                     product: { $in: products.map((product) => product._id) },
+//                 },
+//             },
+//             {
+//                 $lookup: {
+//                     from: "products",
+//                     localField: "product",
+//                     foreignField: "_id",
+//                     as: "productDetails",
+//                 },
+//             },
+//             {
+//                 $unwind: "$productDetails",
+//             },
+//             {
+//                 $addFields: {
+//                     formattedDate: {
+//                         $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+//                     },
+//                 },
+//             },
+//             {
+//                 $group: {
+//                     _id: "$formattedDate",
+//                     products: {
+//                         $push: {
+//                             productId: "$product",
+//                             productName: "$productDetails.name",
+//                             numberOfSales: { $sum: "$count" },
+//                             revenue: { $sum: "$price" },
+//                         },
+//                     },
+//                     tourists: { $addToSet: "$buyer" },
+//                 },
+//             },
+//             {
+//                 $unwind: "$products",
+//             },
+//             {
+//                 $addFields: {
+//                     numberOfTourists: { $size: { $ifNull: ["$tourists", []] } }, // Calculate size of the array
+//                 },
+//             },
+//             {
+//                 $group: {
+//                     _id: {
+//                         date: "$_id",
+//                         productId: "$products.productId",
+//                         productName: "$products.productName",
+//                     },
+//                     numberOfSales: { $sum: "$products.numberOfSales" },
+//                     revenue: { $sum: "$products.revenue" },
+//                     numberOfTourists: { $first: "$numberOfTourists" },
+//                 },
+//             },
+//             {
+//                 $project: {
+//                     _id: 0,
+//                     date: "$_id.date",
+//                     id: "$_id.productId",
+//                     name: "$_id.productName",
+//                     numberOfSales: 1,
+//                     revenue: 1,
+//                     numberOfTourists: 1,
+//                 },
+//             },
+//             {
+//                 $sort: { date: 1 },
+//             },
+//         ]);
+
+//         console.log("Sales data after aggregation:", salesData);
+
+//         return salesData;
+//     } catch (error) {
+//         console.error("Error fetching product sales data:", error);
+//         throw error;
+//     }
+// };
 const getEventsData = async (userId, userType, eventType = "Itinerary") => {
     try {
         const events = await mongoose
