@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import LocationAdder from "../../components/LocationAdder.jsx";
 import MapPopUp from "../../components/MapPopUp.jsx";
+import CurrencyDropdown from "../../components/CurrencyDropdownList.jsx";
 
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
@@ -31,6 +32,7 @@ const defaultData = {
     endDate: "",
     latitude: 0,
     longitude: 0,
+    location: "",
     category: "",
     tags: [],
     freeSpots: 0,
@@ -55,6 +57,19 @@ const CreateActivityPage = () => {
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [formattedTime, setFormattedTime] = useState("");
+    const [selectedCurrency, setSelectedCurrency] = useState("");
+
+    const [pickupLocation, setPickupLocation] = useState({
+        latitude: 0,
+        longitude: 0,
+        location: "",
+    });
+
+    const [isMapOpen, setIsMapOpen] = useState(false);
+    const [mapFunction, setMapFunction] = useState(null);
+    useEffect(() => {
+        if (mapFunction) setIsMapOpen(true);
+    }, [mapFunction]);
 
     const navigate = useNavigate();
 
@@ -389,7 +404,7 @@ const CreateActivityPage = () => {
                             />
                             <InputGroup>
                                 <div style={{ marginBottom: "3vh" }}>
-                                    <div
+                                    {/* <div
                                         style={{
                                             display: "flex",
                                             alignItems: "center",
@@ -422,6 +437,21 @@ const CreateActivityPage = () => {
                                         // value={formData}
                                         onChange={handleInputChange}
                                         style={inputStyles}
+                                    /> */}
+                                    {isMapOpen && (
+                                        <MapPopUp
+                                            popUpOpen={isMapOpen}
+                                            setPopUpOpen={setIsMapOpen}
+                                            mapFunction={mapFunction}
+                                        />
+                                    )}
+
+                                    <LocationAdder
+                                        title="Pickup Location"
+                                        styles={{ width: "100%" }}
+                                        location={pickupLocation}
+                                        setLocation={setPickupLocation}
+                                        setMapFunction={setMapFunction}
                                     />
                                 </div>
                             </InputGroup>
@@ -467,7 +497,7 @@ const CreateActivityPage = () => {
                                             }
                                             style={{
                                                 minWidth: "27vw",
-                                                marginLeft: "1.7vw",
+                                                marginLeft: "0vw",
                                                 padding: "1vh 1.5vh",
                                                 borderRadius: "0.5vh",
                                                 border: "0.1vh solid #ccc",
@@ -662,27 +692,62 @@ const CreateActivityPage = () => {
                                 </StockControl>
                             </FlexGroup>
                             <FlexGroup>
-                                <Label>Price</Label>
-                                <TextField
-                                    id="outlined-basic"
-                                    label="Insert Price here..."
-                                    variant="outlined"
-                                    value={formData.price}
-                                    onChange={handleInputChange}
-                                    style={inputStyles}
-                                />
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column", // Stacks children vertically
+                                        width: "100%", // Ensures the text field takes up the full width
+                                        gap: "1rem", // Adds spacing between elements
+                                    }}
+                                >
+                                    <Label>Price</Label>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column", // Stacks children vertically
+                                            width: "100%", // Ensures the text field takes up the full width
+                                            gap: "1rem", // Adds spacing between elements
+                                        }}
+                                    >
+                                        <CurrencyDropdown
+                                            selectedCurrency={selectedCurrency}
+                                            setSelectedCurrency={setSelectedCurrency}
+                                        />
+
+                                        <TextField
+                                            id="outlined-basic"
+                                            label="Insert Price here..."
+                                            variant="outlined"
+                                            value={formData.price}
+                                            onChange={handleInputChange}
+                                            style={{
+                                                ...inputStyles,
+                                                width: "100%", // Ensures the text field takes up the full width
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                             </FlexGroup>
 
                             <FlexGroup>
-                                <Label>Discount (%)</Label>
-                                <TextField
-                                    id="outlined-basic"
-                                    label="Insert discount here..."
-                                    variant="outlined"
-                                    value={formData.specialDiscount}
-                                    onChange={handleInputChange}
-                                    style={inputStyles}
-                                />
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column", // Stacks children vertically
+                                        width: "100%", // Ensures the text field takes up the full width
+                                        gap: "1rem", // Adds spacing between elements
+                                    }}
+                                >
+                                    <Label>Discount (%)</Label>
+                                    <TextField
+                                        id="outlined-basic"
+                                        label="Insert discount here..."
+                                        variant="outlined"
+                                        value={formData.specialDiscount}
+                                        onChange={handleInputChange}
+                                        style={inputStyles}
+                                    />
+                                </div>
                             </FlexGroup>
                         </FormSection>
                     </div>
