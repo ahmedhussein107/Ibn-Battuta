@@ -29,21 +29,21 @@ const MapComponent = ({
     console.log("markerPosition is ", markerPosition);
 
     return (
-        <LoadScript googleMapsApiKey={import.meta.env.VITE_MAP_API_KEY}>
-            <GoogleMap
-                mapContainerStyle={styles}
-                center={centerr}
-                zoom={7}
-                onClick={(event) =>
-                    onMapClick({
-                        lat: event.latLng.lat(),
-                        lng: event.latLng.lng(),
-                    })
-                }
-            >
-                {markerPosition && <Marker position={markerPosition} />}
-            </GoogleMap>
-        </LoadScript>
+        // <LoadScript googleMapsApiKey={import.meta.env.VITE_MAP_API_KEY}>
+        <GoogleMap
+            mapContainerStyle={styles}
+            center={centerr}
+            zoom={7}
+            onClick={(event) =>
+                onMapClick({
+                    lat: event.latLng.lat(),
+                    lng: event.latLng.lng(),
+                })
+            }
+        >
+            {markerPosition && <Marker position={markerPosition} />}
+        </GoogleMap>
+        // </LoadScript>
     );
 };
 
