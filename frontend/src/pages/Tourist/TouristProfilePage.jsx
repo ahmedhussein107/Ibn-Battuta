@@ -246,6 +246,9 @@ export default function TouristProfilePage() {
         address: [],
         currency: "",
     });
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
+
     const navigate = useNavigate();
 
     const currency = Cookies.get("currency") || "EGP";

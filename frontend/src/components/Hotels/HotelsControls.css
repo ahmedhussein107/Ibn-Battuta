@@ -5,12 +5,15 @@
     padding: 20px;
     width: 100%;
     margin: 0 auto;
+    background-color: #f1dbce;
+    border-radius: 10px;
 }
 
 .hotels-controls-search,
 .hotels-controls-date,
 .hotels-controls-adult-counter {
     flex: 3;
+    background-color: white;
 }
 .hotels-controls-search {
     display: flex;

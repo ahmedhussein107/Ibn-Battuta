@@ -48,12 +48,9 @@ const CardItinerary = ({
     );
 
     const description = (
-        <TruncatedText
-            text={itinerary.description}
-            width={"100%"}
-            height={"60%"}
-            fontSize={"2vh"}
-        />
+        <p style={{ width: "100%", height: "60%", fontSize: "1rem", overflow: "hidden" }}>
+            {itinerary.description}
+        </p>
     );
     const accessibility = (
         <div
@@ -116,7 +113,8 @@ const CardItinerary = ({
         <div
             style={{
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: "column",
+                alignItems: "center",
                 width: "100%",
             }}
         >
@@ -126,7 +124,7 @@ const CardItinerary = ({
                     stylingMode={type}
                     width={width}
                     handleClick={onClick}
-                    customStyle={styles}
+                    customStyle={{ ...styles, alignSelf: "center" }}
                     height="6vh"
                 />
             ))}
