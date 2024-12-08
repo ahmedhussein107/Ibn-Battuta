@@ -19,7 +19,7 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
         return <CircularProgress />;
     }
     const handleShowMore = () => {
-        navigate(`/hotel/offer-details/${offer._id}`, { state: { offer } });
+        navigate(`/tourist/hotel/offer-details/${offer._id}`, { state: { offer } });
         console.log("Show more clicked");
     };
 
@@ -44,7 +44,7 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
 
             {/* Hotel Image */}
             <div className="hotel-image">
-                <img src={offer.image} alt="Hotel Room" />
+                <img src="/room.png" alt="Hotel Room" style={{ borderRadius: "6px" }} />
             </div>
 
             {/* Room Info */}
