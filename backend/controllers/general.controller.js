@@ -9,9 +9,6 @@ import { incrementnotificationCount } from "../routes/ws.router.js";
 
 const secretKey =
     process.env.JWT_SECRET || "any key to cipher the password and decipher ";
-const secretKey =
-    process.env.JWT_SECRET || "any key to cipher the password and decipher ";
-
 export const changePassword = async (req, res) => {
     try {
         const { username, newPassword } = req.body;
