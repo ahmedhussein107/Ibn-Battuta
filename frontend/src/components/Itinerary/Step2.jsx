@@ -19,10 +19,10 @@ import { Alert } from "@mui/material";
 import Button from "../Button";
 import LocationAdder from "../LocationAdder";
 import MapPopUp from "../MapPopUp";
-import TimeModal from "../TimeModal";
-import DateModal from "../DateModal";
+import { TimeModalContent } from "../TimeModal";
+import { DateModalContent } from "../DateModal";
 
-const Step2 = ({ setStep, convertedDate,    Activities, setTimelineActivities }) => {
+const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActivities }) => {
     const [activeTab, setActiveTab] = useState("Activity");
     const [activities, setActivities] = useState([]);
     const [customActivities, setCustomActivities] = useState([]);
@@ -179,27 +179,70 @@ const Step2 = ({ setStep, convertedDate,    Activities, setTimelineActivities })
         const [startTime, setStartTime] = useState("");
         const [endTime, setEndTime] = useState("");
 
+        const [startDate, setStartDate] = useState(null);
+        const [endDate, setEndDate] = useState(null);
+
+        const convertTo24System = (timeObj) => {
+            const [time, period] = timeObj.split(" ");
+            let [hours, minutes] = time.split(":").map(Number);
+            if (period == "PM" && hours < 12) hours += 12;
+            if (period == "AM" && hours === 12) hours = 0;
+            return { hours, minutes };
+        };
+
+        const handleStartTimeChange = (start) => {
+            if (!startDate) return;
+            const parsedStartTime = convertTo24System(start);
+            let newStartDate = new Date(startDate);
+            newStartDate.setHours(parsedStartTime.hours, parsedStartTime.minutes);
+            setStartDate(newStartDate);
+            setStartTime(start);
+        };
+
+        const handleStartDateChange = (start) => {
+            let newStartDate = new Date(start);
+            if (startTime) {
+                const parsedStartTime = convertTo24System(startTime);
+                newStartDate.setHours(parsedStartTime.hours, parsedStartTime.minutes);
+            }
+            setStartDate(newStartDate);
+        };
+
+        const handleEndTimeChange = (end) => {
+            if (!endDate) return;
+            const parsedEndTime = convertTo24System(end);
+            let newEndDate = new Date(endDate);
+            newEndDate.setHours(parsedEndTime.hours, parsedEndTime.minutes);
+            setEndDate(newEndDate);
+            setEndTime(end);
+        };
+
+        const handleEndDateChange = (end) => {
+            let newEndDate = new Date(end);
+            if (endTime) {
+                const parsedEndTime = convertTo24System(endTime);
+                newEndDate.setHours(parsedEndTime.hours, parsedEndTime.minutes);
+            }
+            setEndDate(newEndDate);
+        };
+
         const handleSubmit = () => {
-            if (!startTime || !endTime) {
+            if (!startDate || !endDate) {
                 alert("select the time interval!!!!!");
                 return;
             }
-            let startDate = new Date(convertedDate);
-            startDate.setHours(startTime.getHours(), startTime.getMinutes());
-            let endDate = new Date(convertedDate);
-            endDate.setHours(endTime.getHours(), endTime.getMinutes());
-            if (endDate < startDate) {
-                endDate.setHours(endDate.getHours() + 24); // to handle night events
-            }
+
             console.log({
                 activityType: activeTab,
                 activity: selectedActivity,
                 startTime: startDate,
                 endTime: endDate,
             });
+
             if (activeTab === "Activity") {
                 const activityStartDate = new Date(selectedActivity.startDate);
                 const activityEndDate = new Date(selectedActivity.endDate);
+
                 if (startDate < activityStartDate || endDate > activityEndDate) {
                     alert("the selected time interval is not valid for this activity!");
                     setSelectTimeIntervalOpen(false);
@@ -217,6 +260,7 @@ const Step2 = ({ setStep, convertedDate,    Activities, setTimelineActivities })
                 alert("the activity would intersect with another activity!");
             }
             setSelectTimeIntervalOpen(false);
+            setStep(1);
         };
 
         return (
@@ -260,45 +304,75 @@ const Step2 = ({ setStep, convertedDate,    Activities, setTimelineActivities })
                         </p>
                     )}
                 </div>
-                <div
-                    style={{
-                        display: "flex",
-                        padding: "2em",
-                        width: "90%",
-                        overflowY: "auto",
-                        justifyContent: "center",
-                    }}
-                >
-                    <DateModal
-                        isOpen={showDateModal}
-                        onClose={() => setShowDateModal(false)}
-                        startDate={startDate}
-                        endDate={null}
-                        onDatesChange={handleDatesChange}
-                    />
-                    <TimeModal
-                        isOpen={showTimeModal}
-                        onClose={() => setShowTimeModal(false)}
-                        startTime={startTime}
-                        endTime={endTime}
-                        onTimesChange={handleTimesChange}
-                        title={"Select Pickup Time"}
-                        showEndTime={false}
-                    />
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            padding: "2em",
+                            width: "90%",
+                            overflowY: "auto",
+                            justifyContent: "center",
+                            gap: "2vh",
+                        }}
+                    >
+                        <DateModalContent
+                            startDate={startDate}
+                            endDate={null}
+                            onDatesChange={handleStartDateChange}
+                        />
+                        <TimeModalContent
+                            startTime={startTime}
+                            endTime={startTime}
+                            onTimesChange={handleStartTimeChange}
+                            title={"Select Start Time"}
+                            showEndTime={false}
+                            showButtons={false}
+                        />
+                    </div>
+
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            padding: "2em",
+                            width: "90%",
+                            overflowY: "auto",
+                            justifyContent: "center",
+                            gap: "2vh",
+                        }}
+                    >
+                        <DateModalContent
+                            startDate={endDate}
+                            endDate={null}
+                            onDatesChange={handleEndDateChange}
+                            placeholderText="End Date"
+                        />
+                        <TimeModalContent
+                            startTime={endTime}
+                            endTime={endTime}
+                            onTimesChange={handleEndTimeChange}
+                            title={"Select End Time"}
+                            showEndTime={false}
+                            showButtons={false}
+                        />
+                    </div>
                 </div>
             </PopUp>
         );
     };
 
+    const [actLocation, setActLocation] = useState({
+        latitude: 0,
+        longitude: 0,
+        location: "",
+    });
+
     const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
         const [name, setName] = useState("");
         const [description, setDescription] = useState("");
+        const [isLoading, setIsLoading] = useState(false);
 
-        const [location, setLocation] = useState({
-            latitude: 0,
-            longitude: 0,
-            location: "",
-        });
         const [imagePreviews, setImagePreviews] = useState([]);
 
         const handleSubmit = async () => {
@@ -306,10 +380,12 @@ const Step2 = ({ setStep, convertedDate,    Activities, setTimelineActivities })
                 const data = {
                     name,
                     description,
-                    Longitude: location.longitude,
-                    Latitude: location.latitude,
-                    location: location.location,
+                    Longitude: actLocation.longitude,
+                    Latitude: actLocation.latitude,
+                    location: actLocation.location,
                 };
+
+                setIsLoading(true);
 
                 const pictures = await uploadFiles(
                     imagePreviews.map((preview) => preview.file),
@@ -328,6 +404,8 @@ const Step2 = ({ setStep, convertedDate,    Activities, setTimelineActivities })
                 setPopUpOpen(false);
             } catch (err) {
                 console.log(err);
+            } finally {
+                setIsLoading(false);
             }
         };
         const handleImageAdd = (newImages) => {
@@ -350,75 +428,92 @@ const Step2 = ({ setStep, convertedDate,    Activities, setTimelineActivities })
                     <div
                         style={{
                             marginBottom: "2vh",
-                            width: "100%",
+                            width: "50vw",
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
-                            justifyContent: "center",
                         }}
                     >
-                        <PhotosUpload
-                            label="Activity Photos"
-                            imagePreviews={imagePreviews}
-                            onImageAdd={handleImageAdd}
-                            onImageRemove={handleImageRemove}
-                        />
-                        <label
+                        <div
                             style={{
-                                display: "block",
-                                marginBottom: "0.5vh",
-                                fontWeight: "bold",
+                                width: "80%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
                             }}
                         >
-                            Name*
-                        </label>
-                        <input
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="Insert title here..."
-                            style={{
-                                width: "100%",
-                                padding: "1vh",
-                                borderRadius: "1vh",
-                                border: "0.1vh solid #ccc",
-                            }}
-                        />
-                        <label
-                            style={{
-                                display: "block",
-                                marginBottom: "0.5vh",
-                                fontWeight: "bold",
-                            }}
-                        >
-                            Description*
-                        </label>
-                        <textarea
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Insert description here..."
-                            style={{
-                                width: "100%",
-                                padding: "1vh",
-                                borderRadius: "1vh",
-                                border: "0.1vh solid #ccc",
-                                resize: "vertical",
-                            }}
-                        />
-                        <div style={{ width: "100%" }}>
-                            <LocationAdder
-                                title={"activity location"}
-                                location={location}
-                                setLocation={setLocation}
-                                setMapFunction={setMapFunction}
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    width: "55%",
+                                }}
+                            >
+                                <label
+                                    style={{
+                                        display: "block",
+                                        marginBottom: "0.5vh",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Name*
+                                </label>
+                                <input
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Insert title here..."
+                                    style={{
+                                        width: "100%",
+                                        padding: "1vh",
+                                        borderRadius: "1vh",
+                                        border: "0.1vh solid #ccc",
+                                    }}
+                                />
+                                <label
+                                    style={{
+                                        display: "block",
+                                        marginBottom: "0.5vh",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Description*
+                                </label>
+                                <textarea
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    placeholder="Insert description here..."
+                                    style={{
+                                        width: "100%",
+                                        padding: "1vh",
+                                        borderRadius: "1vh",
+                                        border: "0.1vh solid #ccc",
+                                        resize: "vertical",
+                                    }}
+                                />
+                                <div style={{ width: "100%" }}>
+                                    <LocationAdder
+                                        title={"activity location"}
+                                        location={actLocation}
+                                        setLocation={setActLocation}
+                                        setMapFunction={setMapFunction}
+                                    />
+                                </div>
+                                <Button
+                                    stylingMode="always-dark"
+                                    text="Create Activity"
+                                    isLoading={isLoading}
+                                    customStyle={{ marginTop: "2vh" }}
+                                    handleClick={handleSubmit}
+                                />
+                            </div>
+                            <PhotosUpload
+                                label="Activity Photos"
+                                imagePreviews={imagePreviews}
+                                onImageAdd={handleImageAdd}
+                                onImageRemove={handleImageRemove}
                             />
                         </div>
-                        <Button
-                            stylingMode="always-dark"
-                            text="Create Activity"
-                            customStyle={{ marginTop: "2vh" }}
-                            handleClick={handleSubmit}
-                        />
                     </div>
                 </PopUp>
             </>
@@ -535,9 +630,13 @@ const Step2 = ({ setStep, convertedDate,    Activities, setTimelineActivities })
                 gap: "2vh",
             }}
         >
-            <MapPopUp  popUpOpen={mapPopupOpen} setPopUpOpen={setMapPopupOpen} mapFunction={mapFunction}  />
+            <MapPopUp
+                popUpOpen={mapPopupOpen}
+                setPopUpOpen={setMapPopupOpen}
+                mapFunction={mapFunction}
+            />
 
-            {createCustomActivityPopupOpen && !mapPopupOpen&& (
+            {createCustomActivityPopupOpen && !mapPopupOpen && (
                 <div style={{ width: "100%" }}>
                     <CreateCustomActivityPopup
                         popUpOpen={createCustomActivityPopupOpen}
