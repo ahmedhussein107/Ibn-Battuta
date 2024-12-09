@@ -13,8 +13,10 @@ export const createLandmark = async (req, res) => {
 
 export const getAllLandmarks = async (req, res) => {
     try {
-        const { page, limit, ...rest } = buildFilter(req.query);
+        const { page, limit, ...rest } = req.query;
+        console.log("rest", rest);
         const query = buildFilter(rest);
+        console.log("query", query);
         const _page = Math.max(1, parseInt(req.query.page) || 1);
         const _limit = Math.max(1, parseInt(req.query.limit) || 10);
         const toSkip = (_page - 1) * _limit;
