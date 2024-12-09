@@ -43,7 +43,8 @@ const ReviewsSection = ({ ratingIds, width, height, fontSize, reviewsPerPage = 3
     const totalPages = Math.ceil(reviews.length / reviewsPerPage);
 
     const averageRating = (
-        reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
+        reviews.reduce((acc, review) => acc + review.rating, 0) /
+        Math.max(reviews.length, 1)
     ).toFixed(1);
 
     const ratingCounts = [5, 4, 3, 2, 1].map((rating) => {
@@ -53,7 +54,7 @@ const ReviewsSection = ({ ratingIds, width, height, fontSize, reviewsPerPage = 3
         return {
             rating,
             count,
-            percentage: ((count / reviews.length) * 100).toFixed(1),
+            percentage: ((count / Math.max(reviews.length, 1)) * 100).toFixed(1),
         };
     });
 
@@ -82,7 +83,7 @@ const ReviewsSection = ({ ratingIds, width, height, fontSize, reviewsPerPage = 3
                     <h2>Reviews</h2>
                     <HeaderContent>
                         <AverageRating>
-                            {averageRating}
+                            {averageRating || 0}
                             <Star size="0.8em" $filled={"t"}>
                                 ★
                             </Star>
