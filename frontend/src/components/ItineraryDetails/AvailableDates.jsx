@@ -27,7 +27,6 @@ export default function AvailableDates({ date, width, height, fontSize }) {
             className="available-dates-and-times-container"
             style={{ width: width, height: height, fontSize: fontSize }}
         >
-            {/* <span>{ displayArray.length === 0 ? "No " :""} {`Available Date${dateArray.length > 1? "s":""} and time${dateArray.length > 1? "s":""}`}</span> */}
             <div className="dates-and-times-cards-container">
                 {displayArray.map((item, index) => (
                     <div key={index} className="card">

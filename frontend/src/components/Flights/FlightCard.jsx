@@ -48,6 +48,7 @@ const FlightCard = ({ trip, airlines, handleClick, mode = 1, bookingNumber }) =>
             fontSize: "1vw",
             fontWeight: "bold",
             marginBottom: "3vh",
+            color: "#9C4F21",
         },
         trips: {
             display: "flex",

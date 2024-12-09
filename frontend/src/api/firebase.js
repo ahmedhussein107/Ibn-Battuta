@@ -10,8 +10,6 @@ const FIREBASE_MESSAGING_SENDER_ID = import.meta.env.VITE_FIREBASE_MESSAGING_SEN
 const FIREBASE_APP_ID = import.meta.env.VITE_FIREBASE_APP_ID;
 const FIREBASE_MEASUREMENT_ID = import.meta.env.VITE_FIREBASE_MEASUREMENT_ID;
 
-console.log(import.meta.env);
-
 const firebaseConfig = {
     apiKey: FIREBASE_API_KEY,
     authDomain: FIREBASE_AUTH_DOMAIN,

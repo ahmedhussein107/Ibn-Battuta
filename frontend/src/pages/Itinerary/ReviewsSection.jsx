@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axiosInstance from "../../api/axiosInstance";
 
-const ReviewsSection = ({ ratingIds, width, height, fontSize }) => {
+const ReviewsSection = ({ ratingIds, width, height, fontSize, reviewsPerPage = 3 }) => {
     const [reviews, setReviews] = useState([]);
     const [showReviews, setShowReviews] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
-    const reviewsPerPage = 3;
 
     useEffect(() => {
         const fetchReviews = async () => {

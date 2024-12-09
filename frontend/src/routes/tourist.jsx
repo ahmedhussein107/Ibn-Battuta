@@ -10,9 +10,14 @@ import TouristProfilePage from "../pages/Tourist/TouristProfilePage";
 import Flights from "../pages/Flights/Flights";
 import FlightBookingDetails from "../pages/Flights/FlightBookingDetails";
 import Bookmarks from "../pages/Tourist/Bookmarks";
-
+import Payment from "../pages/Payment/Payment.jsx";
+import Checkout from "../pages/Product/CheckoutPage.jsx";
+import Cart from "../pages/Product/Cart.jsx";
+import OrderDetails from "../pages/Tourist/OrderDetails.jsx";
+import Demo from "../pages/Demo.jsx";
 const touristRoutes = [
     { path: "/tourist", element: <HomePage /> },
+    { path: "/tourist/demo", element: <Demo /> },
     {
         path: "/tourist/profile",
         element: <TouristProfilePage />,
@@ -36,6 +41,10 @@ const touristRoutes = [
         element: <FlightBookingDetails />,
     },
     { path: "tourist/bookmarks", element: <Bookmarks /> },
+    { path: "tourist/cart", element: <Cart /> },
+    { path: "tourist/checkout", element: <Checkout /> },
+    { path: "tourist/payment", element: <Payment /> },
+    { path: "tourist/order-details/:id", element: <OrderDetails /> },
 ];
 
 export default touristRoutes;

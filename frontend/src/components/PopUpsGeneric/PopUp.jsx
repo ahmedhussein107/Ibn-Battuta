@@ -4,20 +4,23 @@ import "./PopUp.css";
 import PopUpHeader from "./PopUpHeader";
 import PopUpFooter from "./PopUpFooter";
 import { useRef, useEffect } from "react";
-const customStyle = {
-    background: "white",
-    padding: "4vmin",
-    height: "auto",
-    borderRadius: "3vmin",
-    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+
+const stylesOfOverlay = {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
     display: "flex",
-    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
 };
+
 const PopUp = ({
     isOpen,
     setIsOpen,
     headerText,
-    width = "auto",
     containsFooter = true,
     containsActionButton = true,
     cancelText = "Cancel",
@@ -25,6 +28,7 @@ const PopUp = ({
     handleSubmit = () => {},
     handleOnClose = () => {},
     children = null,
+    zIndex = "1000",
 }) => {
     //     this part is for closing the popup when clicked outside
     const popupRef = useRef(null);
@@ -44,9 +48,10 @@ const PopUp = ({
     if (!isOpen) return null;
 
     return (
-        <div className="popup-overlay">
-            <div ref={popupRef} style={{ width, ...customStyle }}>
+        <div className="popup-overlay" style={{ ...stylesOfOverlay, zIndex }}>
+            <div className="popup" ref={popupRef}>
                 <PopUpHeader headerText={headerText} setIsOpen={setIsOpen} />
+
                 {children}
                 {containsFooter && (
                     <PopUpFooter

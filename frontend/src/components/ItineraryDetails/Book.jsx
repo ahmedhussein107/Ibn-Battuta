@@ -6,6 +6,9 @@ import { useCurrencyConverter } from "../../hooks/currencyHooks";
 export default function Book({ price, text, onClick, width, height }) {
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
+    if (isLoading) {
+        return <CircularProgress />;
+    }
     return (
         <div className="book-container" style={{ width: width, height: height }}>
             <span> {text}</span>

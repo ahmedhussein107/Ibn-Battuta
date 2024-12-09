@@ -26,11 +26,12 @@ export const touristNavbarItems = [
         ],
     },
     { Shop: "/shop" },
+    { Guide: "/tourist/demo" },
 ];
 
 export const sellerNavbarItems = [
     { Home: "/seller" },
-    { Browse: "seller/shop" },
+    { Browse: "/shop" },
     { Inventory: "seller/inventory" },
     { Analytics: "seller/analytics" },
 ];
@@ -49,7 +50,16 @@ export const advertiserNavbarItems = [
     { Analytics: "/advertiser/analytics" },
 ];
 
-export const governorNavbarItems = [{ Home: "/governor" }, { Browse: "/landmarks" }];
+export const governorNavbarItems = [
+    { Home: "/governor" },
+    { Browse: "/landmarks" },
+    {
+        Assigned: [
+            { Landmarks: "/governor/landmarks" },
+            { Tags: "/governor/landmarkTags" },
+        ],
+    },
+];
 
 export const adminNavbarItems = [
     { Dashboard: "/admin" },
@@ -70,5 +80,7 @@ export const adminNavbarItems = [
             { Analytics: "/admin/analytics" },
         ],
     },
-    { Categorization: [{ Tags: "/admin/tags" }, { Category: "/admin/categories" }] },
+    {
+        Categorization: [{ Tags: "/admin/tags" }, { Category: "/admin/categories" }],
+    },
 ];
