@@ -11,7 +11,7 @@ const advertiserRoutes = [
         element: <AdvertiserProfilePage />,
     },
     { path: "/advertiser/create-activity", element: <CreateActivityPage /> },
-    { path: "/advertiser/update-activity", element: <UpdateActivityPage /> },
+    { path: "/advertiser/update-activity/:id", element: <UpdateActivityPage /> },
     { path: "/advertiser/assigned", element: <MyActivity /> },
     { path: "/advertiser/analytics", element: <Analytics /> },
 ];

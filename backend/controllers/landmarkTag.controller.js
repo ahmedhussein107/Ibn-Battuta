@@ -1,4 +1,5 @@
-import LandmarkTag from "../models/landmarkTag.model";
+import LandmarkTag from "../models/landmarkTag.model.js";
+import { buildFilter } from "../utilities/searchUtils.js";
 
 export const createLandmarkTag = async (req, res) => {
 	try {
@@ -72,5 +73,15 @@ export const deleteLandmarkTag = async (req, res) => {
 		}
 	} catch (e) {
 		res.status(400).json({ error: e.message });
+	}
+};
+
+export const searchLandmarkTags = async (req, res) => {
+	try {
+		const query = buildFilter(req.query);
+		const landmarkTags = await LandmarkTag.find(query);
+		res.status(200).json(landmarkTags);
+	} catch (e) {
+		res.status(400).json({ e: e.message });
 	}
 };

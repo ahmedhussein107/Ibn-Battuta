@@ -1,5 +1,5 @@
 import MyItineraries from "../pages/TourGuide/TourGuideItineraries";
-import CreateItineraryPage from "../pages/Itinerary/CreateItineraryPage";
+import CreateItineraryPage from "../pages/TourGuide/CreateItineraryPage";
 import TourGuideProfilePage from "../pages/TourGuide/TourGuideProfilePage";
 import TourGuideHome from "../pages/TourGuide/TourGuideHome";
 import ChooseActivity from "../pages/Itinerary/ChooseActivity";

@@ -29,7 +29,7 @@ const room = {
 };
 
 const HotelList = () => {
-    usePageHeader("/room.png", "Welcome to the Hotels Page");
+    usePageHeader("/hotels.png", "Welcome to the Hotels Page");
 
     const [rooms, setRooms] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();

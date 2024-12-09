@@ -24,6 +24,7 @@ import landmarkRouter from "./routes/landmark.router.js";
 import customActivityRouter from "./routes/customActivity.router.js";
 import generalRouter from "./routes/general.router.js";
 import touristBookmarkRouter from "./routes/touristBookmark.router.js";
+import landmarkTagRouter from "./routes/landmarkTag.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -32,7 +33,7 @@ import amadeusHotelsRouter from "./services/hotels.js";
 import amadeusFlightsRouter from "./services/flights.js";
 import touristCartRouter from "./routes/touristCart.router.js";
 import touristWishlistRouter from "./routes/touristWishlist.router.js";
-// import analyticsRouter from "./routes/analytics.router.js";
+import analyticsRouter from "./routes/analytics.router.js";
 
 import { setupPromoCodeScheduledJobs } from "./controllers/promocode.controller.js";
 
@@ -99,4 +100,6 @@ app.use("/api/bookmark", touristBookmarkRouter);
 app.use("/api/general", generalRouter);
 app.use("/api/cart", touristCartRouter);
 app.use("/api/wishlist", touristWishlistRouter);
-// app.use("/api/analytics", analyticsRouter);
+app.use("/api/analytics", analyticsRouter);
+app.use("/api/landmarkTag", landmarkTagRouter);
+app.use("/api/notification", notificationRouter);

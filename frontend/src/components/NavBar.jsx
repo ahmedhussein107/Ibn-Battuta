@@ -102,7 +102,7 @@ const NavBar = () => {
                 const data = JSON.parse(event.data);
                 console.log("Message received:", data); // Log received data
                 if (data.type === "initialNotifications") {
-                    console.log("notifications are", data.notifications[0]);
+                    console.log("notifications are", data.notifications);
                     setUnreadNotificationCount(data.count);
                     setNotifications(data.notifications);
                 } else if (data.type === "onlineNotification") {

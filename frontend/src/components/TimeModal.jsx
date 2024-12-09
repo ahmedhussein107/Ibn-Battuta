@@ -122,7 +122,7 @@ const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
                                 style={{
                                     width: "3rem",
                                     height: "3rem",
-                                    border: "1px solid #ff4500",
+                                    border: "1px solid #9C4F21",
                                     borderRadius: "0.5rem",
                                     fontSize: "1.5rem",
                                     textAlign: "center",
@@ -159,10 +159,10 @@ const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
                                             borderRadius: "0.5rem",
                                             backgroundColor:
                                                 startPeriod === "AM"
-                                                    ? "#ffd7cc"
+                                                    ? "#FCF3E2"
                                                     : "white",
                                             color:
-                                                startPeriod === "AM" ? "#ff4500" : "#666",
+                                                startPeriod === "AM" ? "#9C4F21" : "#666",
                                             cursor: "pointer",
                                         }}
                                     >
@@ -177,10 +177,10 @@ const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
                                             borderRadius: "0.5rem",
                                             backgroundColor:
                                                 startPeriod === "PM"
-                                                    ? "#ffd7cc"
+                                                    ? "#FCF3E2"
                                                     : "white",
                                             color:
-                                                startPeriod === "PM" ? "#ff4500" : "#666",
+                                                startPeriod === "PM" ? "#9C4F21" : "#666",
                                             cursor: "pointer",
                                         }}
                                     >
@@ -227,7 +227,7 @@ const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
                                 style={{
                                     width: "3rem",
                                     height: "3rem",
-                                    border: "1px solid #ff4500",
+                                    border: "1px solid #9C4F21",
                                     borderRadius: "0.5rem",
                                     fontSize: "1.5rem",
                                     textAlign: "center",
@@ -263,9 +263,9 @@ const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
                                             border: "none",
                                             borderRadius: "0.5rem",
                                             backgroundColor:
-                                                endPeriod === "AM" ? "#ffd7cc" : "white",
+                                                endPeriod === "AM" ? "#FCF3E2" : "white",
                                             color:
-                                                endPeriod === "AM" ? "#ff4500" : "#666",
+                                                endPeriod === "AM" ? "#9C4F21" : "#666",
                                             cursor: "pointer",
                                         }}
                                     >
@@ -279,9 +279,9 @@ const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
                                             border: "none",
                                             borderRadius: "0.5rem",
                                             backgroundColor:
-                                                endPeriod === "PM" ? "#ffd7cc" : "white",
+                                                endPeriod === "PM" ? "#FCF3E2" : "white",
                                             color:
-                                                endPeriod === "PM" ? "#ff4500" : "#666",
+                                                endPeriod === "PM" ? "#9C4F21" : "#666",
                                             cursor: "pointer",
                                         }}
                                     >
@@ -308,7 +308,7 @@ const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
                             padding: "0.5rem 1rem",
                             border: "none",
                             backgroundColor: "transparent",
-                            color: "#ff4500",
+                            color: "#9C4F21",
                             cursor: "pointer",
                             fontSize: "1rem",
                         }}
@@ -324,7 +324,7 @@ const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
                             padding: "0.5rem 1rem",
                             border: "none",
                             backgroundColor: "transparent",
-                            color: "#ff4500",
+                            color: "#9C4F21",
                             cursor: "pointer",
                             fontSize: "1rem",
                         }}

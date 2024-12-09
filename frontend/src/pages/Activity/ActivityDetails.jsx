@@ -14,6 +14,7 @@ import TicketCounter from "../../components/TicketCounter.jsx";
 import SuccessfulBooking from "../../components/SuccessfulBooking.jsx";
 import DateRangeDisplay from "../../components/DateRangeDisplay.jsx";
 import DiscountCard from "../../components/DiscountCard.jsx";
+import Button from "../../components/Button.jsx";
 
 import Cookies from "js-cookie";
 
@@ -29,7 +30,6 @@ import { CircularProgress } from "@mui/material";
 // Styles
 import "../../styles/ActivityDetails.css";
 import { Flex } from "antd";
-import Button from "../../components/Button.jsx";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
 const ImageSlideshow = ({
 	images,
@@ -79,7 +79,8 @@ const BookingPayment = ({
 	maxTickets,
 	walletBalance,
 	totalPoints,
-}) => {
+}) =>
+   {
 	const [useWallet, setUseWallet] = useState(true);
 	const [points, setPoints] = useState(0);
 	const [promoCode, setPromoCode] = useState("");
@@ -713,13 +714,25 @@ const ActivityDetails = () => {
 						/>
 					)}
 
-					<ReviewsSection
-						ratingIds={activityData.ratings}
-						width={"100%"}
-						fontSize={"12px"}
-					/>
-				</div>
-			</div>
+                    <ReviewsSection
+                        ratingIds={activityData.ratings}
+                        width={"100%"}
+                        fontSize={"12px"}
+                    />
+                </div>
+            </div>
+            <div
+                style={{
+                    marginRight: "80%",
+                    marginBottom: "4vh",
+                }}
+            >
+                <Button
+                    stylingMode="always-light"
+                    text="Back"
+                    handleClick={() => navigate("/activities")}
+                />
+            </div>
 
 			<Footer />
 		</div>

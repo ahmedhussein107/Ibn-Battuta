@@ -1,23 +1,26 @@
 import express from "express";
 
 import {
-	createLandmarkTag,
-	getLandmarkTags,
-	updateLandmarkTag,
-	deleteLandmarkTag,
-	getLandmarkTag,
+    createLandmarkTag,
+    getLandmarkTags,
+    updateLandmarkTag,
+    deleteLandmarkTag,
+    getLandmarkTag,
+    searchLandmarkTags,
 } from "../controllers/landmarkTag.controller.js";
 
-const tagRouter = express.Router();
+const landmarkTagRouter = express.Router();
 
-tagRouter.post("/createLandmarkTag", createLandmarkTag);
+landmarkTagRouter.post("/createLandmarkTag", createLandmarkTag);
 
-tagRouter.get("/allLandmarkTags", getLandmarkTags);
+landmarkTagRouter.get("/allLandmarkTags", getLandmarkTags);
 
-tagRouter.put("/updateLandmarkTag/:id", updateLandmarkTag);
+landmarkTagRouter.put("/updateLandmarkTag/:id", updateLandmarkTag);
 
-tagRouter.delete("/deleteLandmarkTag/:id", deleteLandmarkTag);
+landmarkTagRouter.delete("/deleteLandmarkTag/:id", deleteLandmarkTag);
 
-tagRouter.get("/getLandmarkTag/:id", getLandmarkTag);
+landmarkTagRouter.get("/getLandmarkTag/:id", getLandmarkTag);
 
-export default tagRouter;
+landmarkTagRouter.get("/searchLandmarkTag", searchLandmarkTags);
+
+export default landmarkTagRouter;

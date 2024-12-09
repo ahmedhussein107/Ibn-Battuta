@@ -1,5 +1,5 @@
 import usePageHeader from "../../components/Header/UseHeaderPage";
-import backgroundImage from "../../assets/images/flightsBackgroundImage.png";
+import backgroundImage from "../../assets/backgrounds/flightsBackgroundImage.png";
 import Footer from "../../components/Footer";
 import React, { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
@@ -49,11 +49,11 @@ const Flights = () => {
         const query = {};
 
         if (departureAirport) {
-            query.originLocationCode = departureAirport;
+            query.originLocationCode = departureAirport.iataCode;
         }
 
         if (arrivalAirport) {
-            query.destinationLocationCode = arrivalAirport;
+            query.destinationLocationCode = arrivalAirport.iataCode;
         }
 
         if (startDate) {
@@ -113,10 +113,11 @@ const Flights = () => {
     };
 
     const handleView = (index) => {
-        flightOffers[index].departureCity = keyword.split(" ")[0];
-        flightOffers[index].arrivalCity = keyword2.split(" ")[0];
+        flightOffers[index].departureCity = departureAirport.name;
+        flightOffers[index].arrivalCity = arrivalAirport.name;
         flightOffers[index].departureDate = startDate;
         flightOffers[index].returnDate = returnDate;
+        console.log("flightOffers[index]", flightOffers[index]);
         setSelectedFlightOffer(flightOffers[index]);
         setStep(2);
     };
@@ -144,7 +145,7 @@ const Flights = () => {
                 }
             );
             const state = { tab: "Flights", hotel: response?.data?.hotel };
-            navigate("/bookings", { state }); // TODO: change the uri to tourist/bookings
+            navigate("/tourist/bookings", { state }); // TODO: change the uri to tourist/bookings
         };
 
         const handleFailure = async () => {};
@@ -152,7 +153,7 @@ const Flights = () => {
         setSuccess(handleSuccess);
         setFailure(handleFailure);
 
-        navigate("/payment", {
+        navigate("/tourist/payment", {
             state: {
                 amount: convertPrice(selectedFlightOffer.price.total),
                 currency,
@@ -215,7 +216,9 @@ const Flights = () => {
                     setStartDate={setStartDate}
                     returnDate={returnDate}
                     setReturnDate={setReturnDate}
+                    departureAirport={departureAirport}
                     setDepartureAirport={setDepartureAirport}
+                    arrivalAirport={arrivalAirport}
                     setArrivalAirport={setArrivalAirport}
                     adults={adults}
                     setAdults={setAdults}

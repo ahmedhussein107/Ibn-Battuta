@@ -14,11 +14,15 @@ import Cookies from "js-cookie";
 import PopUp from "../PopUpsGeneric/PopUp";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import usePageHeader from "../Header/UseHeaderPage";
 import { useFunctionContext } from "../../contexts/FunctionContext";
+import { MapWrapper } from "../MapWrapper";
 const ShowOfferDetails = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
     const { offer } = state || {};
+    usePageHeader(offer.image);
+
     const [isLoading, setIsLoading] = useState(false);
     const [bookingId, setBookingId] = useState(offer.bookingId);
     const [packagePopup, setPackagePopup] = useState(false);
@@ -53,7 +57,7 @@ const ShowOfferDetails = () => {
                 }
             );
             const state = { tab: "Hotels", hotel: hotelResponse?.data?.hotel };
-            navigate("/bookings", { state }); // TODO: change the uri to tourist/bookings
+            navigate("/tourist/bookings", { state }); // TODO: change the uri to tourist/bookings
         };
 
         const handleFailure = async () => {};
@@ -61,7 +65,7 @@ const ShowOfferDetails = () => {
         setSuccess(handleSuccess);
         setFailure(handleFailure);
 
-        navigate("/payment", {
+        navigate("/tourist/payment", {
             state: {
                 amount: convertPrice(offer.totalPrice),
                 currency,
@@ -119,12 +123,18 @@ const ShowOfferDetails = () => {
             )}
             <div className="hotel-details-container">
                 <div className="hotel-details-info">
-                    <h2 className="hotel-name">{offer.name} </h2>
+                    <h1 className="hotel-name" style={{ color: "var(--accent-color)" }}>
+                        {offer.name}{" "}
+                    </h1>
 
                     <div className="hotel-location">
                         <span className="icon-text">
                             <LocationOnIcon
-                                sx={{ varticalAlign: "middle", marginRight: "5px" }}
+                                sx={{
+                                    varticalAlign: "middle",
+                                    marginRight: "5px",
+                                    color: "var(--accent-color)",
+                                }}
                             />
                             <span className="city">{offer.city}</span>{" "}
                         </span>
@@ -137,84 +147,117 @@ const ShowOfferDetails = () => {
                     </div>
 
                     <div className="offer-description">
-                        <h2>Offer Description</h2>
-                        <p>{offer.description}</p>
+                        <h2 style={{ color: "var(--accent-color)" }}>
+                            Offer Description
+                        </h2>
+
+                        <div className="offer-description">
+                            <h3 className="room-title">{offer.miniDescription}</h3>
+                            <p style={{ marginLeft: "10px" }}>{offer.description}</p>
+
+                            <div className="room-info">
+                                <span className="icon-text">
+                                    <PersonIcon
+                                        sx={{
+                                            verticalAlign: "middle",
+                                            marginRight: "5px",
+                                            color: "var(--accent-color)",
+                                        }}
+                                    />
+                                    <span>
+                                        {offer.guests} adult{offer.guests > 1 ? "s" : ""}
+                                    </span>
+                                </span>
+                                <span className="icon-text">
+                                    <BedIcon
+                                        sx={{
+                                            verticalAlign: "middle",
+                                            marginRight: "5px",
+                                            color: "var(--accent-color)",
+                                        }}
+                                    />
+                                    <span>
+                                        {offer.beds} Bed{offer.beds > 1 ? "s" : ""}
+                                    </span>
+                                </span>
+                                <span className="icon-text">
+                                    <BathtubIcon
+                                        sx={{
+                                            verticalAlign: "middle",
+                                            marginLeft: "10px",
+                                            marginRight: "5px",
+                                            color: "var(--accent-color)",
+                                        }}
+                                    />
+                                    <span>
+                                        {offer.bathrooms} Bathroom
+                                        {offer.bathrooms > 1 ? "s" : ""}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="details-grid">
+                            <div className="check-dates">
+                                <p>
+                                    <strong>Check-In:</strong> {offer.checkIn}
+                                </p>
+                                <p>
+                                    <strong>Check-Out:</strong> {offer.checkOut}
+                                </p>
+                            </div>
+                            <div className="policy-price">
+                                <p>
+                                    <strong>Cancellation:</strong>{" "}
+                                    {offer.cancellationPolicy}
+                                </p>
+                                <p>
+                                    <strong>Payment:</strong> {offer.paymentMethod}
+                                </p>
+                                <p>
+                                    <strong>Total Price:</strong>{" "}
+                                    {formatPrice(offer.totalPrice)}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="hotel-booking">
-                    <h4>Show On Map</h4>
-                    {/* <MapComponent
-                        setMarkerPosition={(position) => {
-                            position.lat = offer.lat || "31.3244";
-                            position.lng = offer.lng || "42.3242";
-                        }}
-                    /> */}
-                    <div className="offer-description">
-                        <h3 className="room-title">{offer.miniDescription}</h3>
-                        <div className="room-info">
-                            <span className="icon-text">
-                                <PersonIcon
-                                    sx={{ verticalAlign: "middle", marginRight: "5px" }}
-                                />
-                                <span>
-                                    {offer.guests} adult{offer.guests > 1 ? "s" : ""}
-                                </span>
-                            </span>
-                            <span className="icon-text">
-                                <BedIcon
-                                    sx={{ verticalAlign: "middle", marginRight: "5px" }}
-                                />
-                                <span>
-                                    {offer.beds} Bed{offer.beds > 1 ? "s" : ""}
-                                </span>
-                            </span>
-                            <span className="icon-text">
-                                <BathtubIcon
-                                    sx={{
-                                        verticalAlign: "middle",
-                                        marginLeft: "10px",
-                                        marginRight: "5px",
-                                    }}
-                                />
-                                <span>
-                                    {offer.bathrooms} Bathroom
-                                    {offer.bathrooms > 1 ? "s" : ""}
-                                </span>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="details-grid">
-                        <div className="check-dates">
-                            <p>
-                                <strong>Check-In:</strong> {offer.checkIn}
-                            </p>
-                            <p>
-                                <strong>Check-Out:</strong> {offer.checkOut}
-                            </p>
-                        </div>
-                        <div className="policy-price">
-                            <p>
-                                <strong>Cancellation:</strong> {offer.cancellationPolicy}
-                            </p>
-                            <p>
-                                <strong>Payment:</strong> {offer.paymentMethod}
-                            </p>
-                            <p>
-                                <strong>Total Price:</strong>{" "}
-                                {formatPrice(offer.totalPrice)}
-                            </p>
-                        </div>
-                    </div>
+                    <h4 style={{ color: "var(--accent-color)" }}>Show On Map</h4>
+                    <MapWrapper>
+                        <MapComponent
+                            markerPosition={{
+                                lat: offer.lat || 31.3244,
+                                lng: offer.lng || 42.3242,
+                            }}
+                        />
+                    </MapWrapper>
                 </div>
             </div>
-            {!bookingId ? (
+            {bookingId && (
+                <div
+                    style={{
+                        border: "1px solid green",
+                        paddingRight: "50px",
+                        paddingLeft: "50px",
+                        borderRadius: "40px",
+                        height: "5vh",
+                        width: "fit-content",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: "3vh",
+                    }}
+                >
+                    <h3 style={{ color: "black" }}>Your Booking ID: {bookingId}</h3>
+                </div>
+            )}
+
+            <div style={{ display: "flex", gap: "5vw", marginTop: "7vh" }}>
                 <Button
-                    stylingMode="always-dark"
-                    text="Book Now"
-                    handleClick={handleOnAction}
-                    disabled={isLoading}
-                    isLoading={isLoading}
+                    stylingMode="dark-when-hovered"
+                    text="Back"
+                    handleClick={() => navigate(-1)}
                     customStyle={{
                         width: "173px",
                         height: "55px",
@@ -222,18 +265,22 @@ const ShowOfferDetails = () => {
                         borderRadius: "60px",
                     }}
                 />
-            ) : (
-                <div
-                    style={{
-                        border: "1px solid green",
-                        paddingRight: "50px",
-                        paddingLeft: "50px",
-                        borderRadius: "40px",
-                    }}
-                >
-                    <h3 style={{ color: "black" }}>Your Booking ID: {bookingId}</h3>
-                </div>
-            )}
+                {!bookingId && (
+                    <Button
+                        stylingMode="always-dark"
+                        text="Book Now"
+                        handleClick={handleOnAction}
+                        disabled={isLoading}
+                        isLoading={isLoading}
+                        customStyle={{
+                            width: "173px",
+                            height: "55px",
+                            minHieght: "70px",
+                            borderRadius: "60px",
+                        }}
+                    />
+                )}
+            </div>
         </div>
     );
 };

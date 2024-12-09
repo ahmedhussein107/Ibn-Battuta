@@ -22,8 +22,8 @@ const itinerarySchema = new mongoose.Schema(
                     refPath: "activityType",
                     required: true,
                 },
-                startTime: Date, // to be upadated
-                endTime: Date, // to be updated
+                startTime: Date,
+                endTime: Date,
             },
         ],
         language: { type: String, required: true },
@@ -36,6 +36,8 @@ const itinerarySchema = new mongoose.Schema(
         pickuplatitude: { type: Number, required: true },
         dropOfflongitude: { type: Number, required: true },
         dropOfflatitude: { type: Number, required: true },
+        pickupLocation: { type: String, default: "pickup location" },
+        dropOffLocation: { type: String, default: "drop off location" },
         tags: [{ type: String, ref: "Tag" }],
         description: { type: String, required: true },
         isActivated: { type: Boolean, default: true },

@@ -447,7 +447,7 @@ export const checkPossiblePackageFlight = async (req, res) => {
             }
         }
         res.status(200).json({});
-    } catch {
+    } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
