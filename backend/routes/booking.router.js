@@ -26,7 +26,7 @@ bookingRouter.get("/getBooking/:id", getBooking);
 
 bookingRouter.patch("/updateBooking/:id", updateBooking);
 
-bookingRouter.patch("/completeBooking/:id", completeBooking);
+bookingRouter.patch("/completeBooking/:id", isAuthenticated, completeBooking);
 
 bookingRouter.patch("/redeemPoints/:id", redeemPoints);
 
