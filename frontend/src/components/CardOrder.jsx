@@ -5,6 +5,7 @@ import { Rating, Chip } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import PopUp from "./PopUpsGeneric/PopUp";
 import { styled } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
@@ -21,11 +22,12 @@ const StatusLabel = styled(Chip)(({ theme, status }) => ({
 
 const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem" }) => {
 	const [rating, setRating] = useState(order?.ratingID ? order?.ratingID?.rating : 0);
-	const [orderStatus, setOrderStatus] = useState(order.status || "pending");
+	const orderStatus = order.status;
 	const [comment, setComment] = useState(order?.ratingID ? order?.ratingID?.comment : "");
 	const [isReadOnly, setIsReadOnly] = useState(!!order?.ratingID);
 	const [open, setOpen] = useState(false);
 
+	const navigate = useNavigate();
 	useEffect(() => {
 		if (!open && !isReadOnly) {
 			setRating(0);
@@ -52,13 +54,17 @@ const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem"
 				<div
 					style={{
 						display: "flex",
-						alignItems: "center",
+						flexDirection: "row",
+						justifyContent: "flex-end",
+						width: "100%",
 						fontSize: "0.8rem",
 						color: "#777",
 						marginRight: "1rem",
 					}}
 				>
-					<CalendarTodayIcon sx={{ marginRight: "0.3rem", fontSize: "1em" }} />
+					<CalendarTodayIcon
+						sx={{ marginRight: "0.3rem", marginTop: "0.2rem", fontSize: "1em" }}
+					/>
 					{new Date(order.createdAt).toLocaleString("en-US", {
 						day: "numeric",
 						month: "short",
@@ -86,25 +92,8 @@ const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem"
 
 	const handleSubmit = async (event, newValue) => {
 		try {
-			const response = await axiosInstance.post(
-				`/rating/rateProduct/${order.product._id}`,
-				{ rating, comment },
-				{ withCredentials: true }
-			);
-			if (response.status === 201) {
-				setIsReadOnly(true);
-				console.log("Rating added successfully");
-				const newOrder = await axiosInstance.patch(`/order/updateOrder/${order._id}`, {
-					ratingID: response.data._id,
-				});
-				if (newOrder.status === 200) {
-					console.log("Rating ID added to booking successfully");
-				} else {
-					console.error("Failed to add rating ID to booking");
-				}
-			} else {
-				console.error("Failed to add rating");
-			}
+			const response = await axiosInstance.delete(`/order/deleteOrder/${order._id}`);
+			// setOrderStatus("canceled");
 		} catch (error) {
 			console.error("Error:", error);
 		} finally {
@@ -136,46 +125,36 @@ const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem"
 					width: "100%",
 				}}
 			>
-				<div style={{ width: "60%" }}>
-					{orderStatus == "delivered" ? (
-						<Rating
-							name="rating"
-							value={rating}
-							onChange={(event, newValue) => {
-								setRating(newValue);
-								setOpen(true);
-							}}
-							readOnly={isReadOnly}
-						/>
-					) : (
-						<></>
-					)}
-				</div>
+				<div style={{ width: "50%" }}></div>
 				<div
 					style={{
 						display: "flex",
 						flexDirection: "row",
 						justifyContent: "space-between",
-						width: "40%",
+						width: "50%",
 					}}
 				>
 					{orderStatus == "pending" ? (
 						<Button
-							stylingMode="2"
-							width="50%"
+							stylingMode="dark-when-hovered"
+							width="40%"
 							text="cancel"
 							customStyle={{ padding: "0.8rem" }}
-							onClick={() => {}}
+							handleClick={() => {
+								setOpen(true);
+							}} // Add onClick
 						/>
 					) : (
 						<div></div>
 					)}
 					<Button
-						stylingMode="1"
-						width="50%"
+						stylingMode="always-dark"
+						width="40%"
 						text="view"
 						customStyle={{ padding: "0.8rem" }}
-						onClick={() => {}} // Add onClick
+						handleClick={() => {
+							navigate(`/tourist/order-details/${order._id}`);
+						}} // Add onClick
 					/>
 				</div>
 			</div>
@@ -187,57 +166,9 @@ const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem"
 			<PopUp
 				isOpen={open}
 				setIsOpen={setOpen}
-				headerText={`Rate Product`}
+				headerText={`Are you sure you want to cancel order?`}
 				handleSubmit={handleSubmit}
-			>
-				<div
-					style={{
-						display: "flex",
-						justifyContent: "center",
-						flexDirection: "column",
-						alignItems: "center",
-					}}
-				>
-					<div
-						style={{
-							width: "90%",
-							display: "flex",
-							justifyContent: "center",
-							paddingBottom: "4%",
-						}}
-					>
-						<Rating
-							name="rating"
-							value={rating}
-							readOnly={isReadOnly}
-							onChange={(event, newValue) => setRating(newValue)}
-							style={{ fontSize: "4rem" }}
-						/>
-					</div>
-					<div style={{ width: "90%" }}>
-						<label
-							style={{
-								display: "block",
-								marginBottom: "0.5vh",
-								fontWeight: "bold",
-							}}
-						>
-							Add your comment
-						</label>
-						<textarea
-							value={comment}
-							onChange={(e) => setComment(e.target.value)}
-							placeholder="Insert comment here..."
-							style={{
-								width: "100%",
-								padding: "1vh",
-								borderRadius: "1vh",
-								resize: "vertical",
-							}}
-						/>
-					</div>
-				</div>
-			</PopUp>
+			></PopUp>
 			<GenericCard
 				image={Picture}
 				aboveLine={aboveLine}
