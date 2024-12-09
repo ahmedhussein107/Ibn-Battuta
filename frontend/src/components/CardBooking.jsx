@@ -56,7 +56,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem", setError }) 
     const currentDate = new Date(Date.now());
     const date =
         booking.bookingType == "Itinerary"
-            ? booking.typeId?.availableDatesAndTimes[0]
+            ? booking.typeId?.availableDatesAndTimes?.[0]
             : booking.typeId?.startDate;
 
     const givenDate = new Date(date);

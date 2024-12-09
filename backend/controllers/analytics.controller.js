@@ -24,7 +24,9 @@ export const getAnalytics = async (req, res) => {
     }
     if (req.user.userType === "Admin") {
         const touristData = await getTouristsData();
-        result = { ...result, touristData };
+        const activityRevenue = 0.1 * (await getTotalRevenueForBookingType("Activity"));
+        const itineraryRevenue = 0.1 * (await getTotalRevenueForBookingType("Itinerary"));
+        result = { ...result, touristData, activityRevenue, itineraryRevenue };
     }
     console.log("analytics sent successfully");
     res.status(200).json(result);
@@ -342,6 +344,37 @@ const getTouristsData = async () => {
         return touristData;
     } catch (error) {
         console.error("Error during aggregation:", error);
+        throw error;
+    }
+};
+
+const getTotalRevenueForBookingType = async (bookingType) => {
+    if (!["Itinerary", "Activity"].includes(bookingType)) {
+        throw new Error("Invalid booking type. Must be 'Itinerary' or 'Activity'.");
+    }
+
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+    try {
+        const revenue = await Booking.aggregate([
+            {
+                $match: {
+                    bookingType,
+                    createdAt: { $gte: oneMonthAgo },
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalRevenue: { $sum: "$totalPrice" },
+                },
+            },
+        ]);
+
+        return revenue.length > 0 ? revenue[0].totalRevenue : 0;
+    } catch (error) {
+        console.error("Error calculating revenue:", error);
         throw error;
     }
 };
