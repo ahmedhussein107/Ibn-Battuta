@@ -4,7 +4,9 @@ import LocationAdder from "../../components/LocationAdder";
 import { TimePicker } from "antd";
 import MapPopUp from "../../components/MapPopUp";
 import axiosInstance from "../../api/axiosInstance";
+import { uploadFile } from "../../api/firebase";
 // Styled components
+import { useNavigate } from "react-router-dom";
 const FormWrapper = styled.div`
     width: 55%;
     margin: 20px auto;
@@ -126,6 +128,7 @@ const TimeSelect = styled(TimePicker)`
 `;
 
 export default function LandmarkForm() {
+    const navigate = useNavigate();
     const [landmark, setLandmark] = useState({
         name: "",
         description: "",
@@ -211,10 +214,22 @@ export default function LandmarkForm() {
         setLandmark({ ...landmark, pictures: [...landmark.pictures, ...files] });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(landmark);
-        // Perform API submission here
+        try {
+            console.log(landmark);
+            let _landmark = { ...landmark, locatoin: pickupLocation.location };
+            const uploadedPictures = [];
+            for (const file of landmark.pictures) {
+                const uploadedPath = await uploadFile(file, "yapath");
+                uploadedPictures.push(uploadedPath);
+            }
+            _landmark = { ..._landmark, pictures: uploadedPictures };
+            axiosInstance.post("/landmark/createLandmark", _landmark, {
+                withCredentials: true,
+            });
+            navigate(-1);
+        } catch (err) {}
     };
 
     const addTag = () => {
