@@ -28,9 +28,13 @@ const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
             );
 
             data.pictures = pictures;
-            await axiosInstance.post("/customActivity/createCustomActivity", data, {
-                withCredentials: true,
-            });
+            const response = await axiosInstance.post(
+                "/customActivity/createCustomActivity",
+                data,
+                {
+                    withCredentials: true,
+                }
+            );
             setPopUpOpen(false);
         } catch (err) {
             console.log(err);

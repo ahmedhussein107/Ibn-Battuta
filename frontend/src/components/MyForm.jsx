@@ -26,8 +26,8 @@ const Popup = ({ message, onClose, isError }) => (
 );
 
 const defaultData = {
-    startDate: "",
-    endDate: "",
+    startDate: null,
+    endDate: null,
     latitude: 0,
     longitude: 0,
     location: "",
@@ -37,116 +37,104 @@ const defaultData = {
     isOpenForBooking: false,
 };
 
-const MyForm = () => {
-    const [formData, setFormData] = useState(defaultData);
-    const [imagePreviews, setImagePreviews] = useState([]);
+const MyForm = ({
+    name,
+    setName,
+    price,
+    setPrice,
+    description,
+    setDescription,
+    pickupLocation,
+    setPickupLocation,
+    dropoffLocation,
+    setDropoffLocation,
+    startDate,
+    setStartDate,
+    tags,
+    setTags,
+    accessibility,
+    setAccessibility,
+    language,
+    setLanguage,
+    handleSubmit,
+}) => {
     const [popupMessage, setPopupMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [isErrorPopup, setIsErrorPopup] = useState(false);
-    const [categories, setCategories] = useState([]);
-    const [tags, setTags] = useState([]);
-    const [selectedTag, setSelectedTag] = useState("");
-    const [selectedTags, setSelectedTags] = useState([]);
     const [showDateModal, setShowDateModal] = useState(false);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [formattedDate, setFormattedDate] = useState("");
     const [showTimeModal, setShowTimeModal] = useState(false);
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [formattedTime, setFormattedTime] = useState("");
+    const [formattedDate, setFormattedDate] = useState("");
     const [selectedCurrency, setSelectedCurrency] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("");
+    const [allTags, setAllTags] = useState([]);
+    const [selectedTag, setSelectedTag] = useState("");
+
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice, convertPrice } = useCurrencyConverter(currency);
 
-    const [pickupLocation, setPickupLocation] = useState({
-        latitude: 0,
-        longitude: 0,
-        location: "",
-    });
-
     const [isMapOpen, setIsMapOpen] = useState(false);
     const [mapFunction, setMapFunction] = useState(null);
+
     useEffect(() => {
-        console.log(mapFunction);
         if (mapFunction) setIsMapOpen(true);
     }, [mapFunction]);
 
     const navigate = useNavigate();
 
-    const handleTimesChange = (start, end) => {
-        setStartTime(start);
-        setEndTime(end);
-        const startString = start || "";
-        const endString = end || "";
-        setFormattedTime(`${startString} to ${endString}`);
-    };
-
     const addTag = () => {
-        if (selectedTag && !selectedTags.includes(selectedTag)) {
-            setSelectedTags([...selectedTags, selectedTag]);
+        if (selectedTag && !tags.includes(selectedTag)) {
+            setTags([...tags, selectedTag]);
             setSelectedTag("");
         }
     };
 
     const removeTag = (tagToRemove, e) => {
         e.preventDefault();
-        setSelectedTags(selectedTags.filter((tag) => tag !== tagToRemove));
+        setTags(tags.filter((tag) => tag !== tagToRemove));
     };
 
-    const handleDatesChange = (start, end) => {
-        setStartDate(start);
-        setEndDate(end);
+    const convertTo24System = (timeObj) => {
+        const [time, period] = timeObj.split(" ");
+        let [hours, minutes] = time.split(":").map(Number);
+        if (period == "PM" && hours < 12) hours += 12;
+        if (period == "AM" && hours === 12) hours = 0;
+        return { hours, minutes };
+    };
+
+    const handleTimesChange = (start) => {
+        const parsedStartTime = convertTo24System(start);
+        let newStartDate = new Date(startDate);
+        newStartDate.setHours(parsedStartTime.hours, parsedStartTime.minutes);
+        setStartDate(newStartDate);
+        setStartTime(start);
+        const startString = start || "";
+        setFormattedTime(`${startString}`);
+    };
+    const handleDatesChange = (start) => {
+        let newStartDate = new Date(start);
+        if (startTime) {
+            const parsedStartTime = convertTo24System(startTime);
+            newStartDate.setHours(parsedStartTime.hours, parsedStartTime.minutes);
+        }
+        setStartDate(newStartDate);
         const startString = start ? start.toLocaleDateString() : "";
-        const endString = end ? end.toLocaleDateString() : "";
-        setFormattedDate(`${startString} to ${endString}`);
+        setFormattedDate(`${startString}`);
     };
 
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const response = await axiosInstance.get("category/allCategories");
-                setCategories(response.data);
-            } catch (error) {
-                console.error("Error fetching categories:", error);
-            }
-        };
-
         const fetchTags = async () => {
             try {
                 const response = await axiosInstance.get("tag/allTags");
-                setTags(response.data);
+                setAllTags(response.data);
             } catch (error) {
                 console.error("Error fetching tags:", error);
             }
         };
 
-        fetchCategories();
         fetchTags();
     }, []);
-
-    const handleInputChange = (e) => {
-        let { name, value, type, checked } = e.target;
-        console.log(name, value);
-        console.log(formData);
-        if (type === "number" && isNaN(value)) return;
-        if (type == "number") value = Math.max(value, 0);
-        if (name == "specialDiscount") value = Math.min(value, 100);
-        if (name === "tags") {
-            if (checked) {
-                setSelectedTags([...selectedTags, value]);
-            } else {
-                setSelectedTags(selectedTags.filter((tag) => tag !== value));
-            }
-            return;
-        }
-
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
-    };
 
     const showPopupMessage = (message, isError) => {
         setPopupMessage(message);
@@ -155,82 +143,22 @@ const MyForm = () => {
         setTimeout(() => setShowPopup(false), 3000);
     };
 
-    const handleSubmit = async (e) => {
+    const handleCreate = async (e) => {
         e.preventDefault();
-        console.log(formData);
 
-        if (
-            (!formData.name ||
-                !formData.description ||
-                !startDate ||
-                !endDate ||
-                !formData.price ||
-                !formData.category ||
-                imagePreviews.length === 0,
-            !formData.freeSpots)
-        ) {
+        if (!name || !description || !formattedDate || !formattedTime || !price) {
+            console.log("popup does not work");
             showPopupMessage("Please fill out all required details.", true);
             return;
         }
 
-        if (tags.length === 0 || selectedTags.length === 0) {
+        if (tags.length === 0) {
             showPopupMessage("Please select at least one tag.", true);
             return;
         }
 
         try {
-            const convertTo24System = (timeObj) => {
-                const [time, period] = timeObj.split(" ");
-                let [hours, minutes] = time.split(":").map(Number);
-                if (period == "PM" && hours < 12) hours += 12;
-                if (period == "AM" && hours === 12) hours = 0;
-                return { hours, minutes };
-            };
-
-            const combinedStartDate = new Date(startDate);
-            const combinedEndDate = new Date(endDate);
-            const startTime24 = convertTo24System(startTime);
-            const endTime24 = convertTo24System(endTime);
-            combinedStartDate.setHours(startTime24.hours, startTime24.minutes);
-            combinedEndDate.setHours(endTime24.hours, endTime24.minutes);
-
-            const files = imagePreviews.map((preview) => preview.file);
-            const uploadedFileUrls = await uploadFiles(files, "activities");
-
-            const finalFormData = {
-                ...formData,
-                startDate: combinedStartDate.toISOString(),
-                endDate: combinedEndDate.toISOString(),
-                pictures: uploadedFileUrls,
-                tags: selectedTags,
-                initialFreeSpots: parseInt(formData.freeSpots) || 0,
-                specialDiscount: parseFloat(formData.specialDiscount) || 0,
-                price:
-                    parseFloat(convertPrice(formData.price, selectedCurrency, "EGP")) ||
-                    0,
-                Latitude: pickupLocation.latitude
-                    ? parseFloat(pickupLocation.latitude)
-                    : undefined,
-                Longitude: pickupLocation.longitude
-                    ? parseFloat(pickupLocation.longitude)
-                    : undefined,
-                location: pickupLocation.location,
-            };
-
-            console.log(pickupLocation);
-
-            Object.keys(finalFormData).forEach(
-                (key) => finalFormData[key] === undefined && delete finalFormData[key]
-            );
-
-            const response = await axiosInstance.post(
-                "/activity/createActivity",
-                finalFormData,
-                {
-                    withCredentials: true,
-                }
-            );
-            console.log("Activity created:", response.data);
+            await handleSubmit();
 
             showPopupMessage("Activity created successfully!", false);
 
@@ -281,8 +209,10 @@ const MyForm = () => {
                                     id="outlined-basic"
                                     label="Insert title here..."
                                     variant="outlined"
-                                    value={formData.name}
-                                    onChange={handleInputChange}
+                                    value={name}
+                                    onChange={(e) => {
+                                        setName(e.target.value);
+                                    }}
                                     style={inputStyles}
                                 />
                             </InputGroup>
@@ -295,11 +225,42 @@ const MyForm = () => {
                                     id="outlined-basic"
                                     label="Insert description here...."
                                     variant="outlined"
-                                    value={formData.description}
-                                    onChange={handleInputChange}
+                                    value={description}
+                                    onChange={(e) => {
+                                        setDescription(e.target.value);
+                                    }}
                                     style={inputStyles}
                                 />
                             </InputGroup>
+
+                            <FlexGroup
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "flex-start",
+                                    minHeight: "9vh",
+                                }}
+                            >
+                                <Label
+                                    style={{
+                                        paddingTop: "1vh",
+                                    }}
+                                >
+                                    Language
+                                </Label>
+                                <GenericDropDown
+                                    options={[
+                                        { _id: "English" },
+                                        { _id: "Arabic" },
+                                        { _id: "French" },
+                                        { _id: "Spanish" },
+                                        { _id: "German" },
+                                    ]}
+                                    selectedItem={language}
+                                    setSelectedItem={setLanguage}
+                                    label="language"
+                                />
+                            </FlexGroup>
 
                             <Label>Date & Time</Label>
                             <div
@@ -393,7 +354,7 @@ const MyForm = () => {
                                 isOpen={showDateModal}
                                 onClose={() => setShowDateModal(false)}
                                 startDate={startDate}
-                                endDate={endDate}
+                                endDate={null}
                                 onDatesChange={handleDatesChange}
                             />
                             <TimeModal
@@ -402,9 +363,11 @@ const MyForm = () => {
                                 startTime={startTime}
                                 endTime={endTime}
                                 onTimesChange={handleTimesChange}
+                                title={"Select Pickup Time"}
+                                showEndTime={false}
                             />
                             <InputGroup>
-                                <div style={{ marginBottom: "3vh" }}>
+                                <div style={{ marginTop: "3vh" }}>
                                     {isMapOpen && (
                                         <MapPopUp
                                             popUpOpen={isMapOpen}
@@ -420,18 +383,16 @@ const MyForm = () => {
                                         setLocation={setPickupLocation}
                                         setMapFunction={setMapFunction}
                                     />
+
+                                    <LocationAdder
+                                        title="Dropoff Location"
+                                        styles={{ width: "100%" }}
+                                        location={dropoffLocation}
+                                        setLocation={setDropoffLocation}
+                                        setMapFunction={setMapFunction}
+                                    />
                                 </div>
                             </InputGroup>
-
-                            <FlexGroup>
-                                <Label>Category</Label>
-                                <GenericDropDown
-                                    options={categories}
-                                    selectedItem={selectedCategory}
-                                    setSelectedItem={setSelectedCategory}
-                                    label="category"
-                                />
-                            </FlexGroup>
 
                             <FlexGroup
                                 style={{
@@ -451,7 +412,7 @@ const MyForm = () => {
                                 <div style={{ flex: 1 }}>
                                     <div style={{ display: "flex", gap: "1vh" }}>
                                         <GenericDropDown
-                                            options={tags}
+                                            options={allTags}
                                             selectedItem={selectedTag}
                                             setSelectedItem={setSelectedTag}
                                             label="tag"
@@ -492,7 +453,7 @@ const MyForm = () => {
                                             marginLeft: "1.7vw",
                                         }}
                                     >
-                                        {selectedTags.map((tag, index) => (
+                                        {tags.map((tag, index) => (
                                             <Tag
                                                 key={index}
                                                 onClick={(e) => removeTag(tag, e)}
@@ -509,6 +470,20 @@ const MyForm = () => {
                                     </TagContainer>
                                 </div>
                             </FlexGroup>
+                            <InputGroup>
+                                <Label>Accessibility</Label>
+                                <TextField
+                                    name="name"
+                                    id="outlined-basic"
+                                    label="Insert title here..."
+                                    variant="outlined"
+                                    value={accessibility}
+                                    onChange={(e) => {
+                                        setAccessibility([e.target.value]);
+                                    }}
+                                    style={inputStyles}
+                                />
+                            </InputGroup>
                             <FlexGroup>
                                 <div
                                     style={{
@@ -538,8 +513,10 @@ const MyForm = () => {
                                             label="Insert Price here..."
                                             variant="outlined"
                                             type="number"
-                                            value={formData.price}
-                                            onChange={handleInputChange}
+                                            value={price}
+                                            onChange={(e) => {
+                                                setPrice(e.target.value);
+                                            }}
                                             style={{
                                                 width: "100%", // Ensures the text field takes up the full width
                                             }}
@@ -554,29 +531,22 @@ const MyForm = () => {
                         </FormSection>
                     </div>
                 </FormContainer>
-
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <ButtonGroup>
-                        <Button
-                            stylingMode="dark-when-hovered"
-                            text="Cancel"
-                            handleClick={() => navigate("/advertiser/assigned")}
-                            width="auto"
-                        />
-                        <Button
-                            stylingMode="always-dark"
-                            text="Create Activity"
-                            handleClick={handleSubmit}
-                            width="auto"
-                        />
-                    </ButtonGroup>
-                </div>
+                <ButtonGroup>
+                    <Button
+                        stylingMode="dark-when-hovered"
+                        text="Cancel"
+                        handleClick={() => {
+                            setStep(1);
+                        }}
+                        width="auto"
+                    />
+                    <Button
+                        stylingMode="always-dark"
+                        text="Create Activity"
+                        handleClick={handleCreate}
+                        width="auto"
+                    />
+                </ButtonGroup>
             </form>
         </PageContainer>
     );
@@ -621,16 +591,11 @@ const CloseButton = styled.button`
 `;
 
 const PageContainer = styled.div`
-    width: 90vw;
+    width: 100%;
     max-width: 75em;
-    padding: 2em;
 `;
 
 const FormContainer = styled.div`
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 4em;
-
     @media (max-width: 768px) {
         grid-template-columns: 1fr;
     }
@@ -646,6 +611,13 @@ const FormSection = styled.div`
 
 const InputGroup = styled.div`
     margin-bottom: 1.5em;
+`;
+
+const ButtonGroup = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    gap: 1em;
+    margin-top: 2em;
 `;
 
 const FlexGroup = styled.div`
@@ -677,13 +649,6 @@ const TagContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 1vh;
-`;
-
-const ButtonGroup = styled.div`
-    display: flex;
-    justify-content: flex-end;
-    gap: 1em;
-    margin-top: 2em;
 `;
 
 const Tag = styled.span`

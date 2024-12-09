@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TextField, Box, Typography } from "@mui/material";
 import { styled } from "@mui/system";
-import MapPopUp from "./MapPopUp";
 
 // Custom button component
 function MyButton({ text, fontSize = "14px", onClick }) {

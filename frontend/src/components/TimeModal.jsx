@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 
-const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
+const TimeModal = ({
+    isOpen,
+    onClose,
+    startTime,
+    endTime,
+    onTimesChange,
+    title = "ENTER START TIME",
+    showEndTime = true,
+}) => {
     const [startHour, setStartHour] = useState(
         startTime ? parseInt(startTime.split(":")[0]) : "1"
     );
@@ -95,7 +103,7 @@ const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
                             marginBottom: "1.5rem",
                         }}
                     >
-                        ENTER START TIME
+                        {title}
                     </h3>
 
                     <div
@@ -193,106 +201,119 @@ const TimeModal = ({ isOpen, onClose, startTime, endTime, onTimesChange }) => {
                 </div>
 
                 {/* End Time Section */}
-                <div>
-                    <h3
-                        style={{
-                            color: "#666",
-                            fontSize: "1rem",
-                            fontWeight: "400",
-                            marginBottom: "1.5rem",
-                        }}
-                    >
-                        ENTER END TIME
-                    </h3>
+                {showEndTime && (
+                    <div>
+                        <h3
+                            style={{
+                                color: "#666",
+                                fontSize: "1rem",
+                                fontWeight: "400",
+                                marginBottom: "1.5rem",
+                            }}
+                        >
+                            ENTER END TIME
+                        </h3>
 
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "flex-start",
-                            gap: "0.5rem",
-                        }}
-                    >
                         <div
                             style={{
                                 display: "flex",
-                                alignItems: "center",
+                                alignItems: "flex-start",
                                 gap: "0.5rem",
                             }}
                         >
-                            <input
-                                type="text"
-                                value={endHour}
-                                onChange={(e) => setEndHour(validateHour(e.target.value))}
-                                maxLength={2}
+                            <div
                                 style={{
-                                    width: "3rem",
-                                    height: "3rem",
-                                    border: "1px solid #9C4F21",
-                                    borderRadius: "0.5rem",
-                                    fontSize: "1.5rem",
-                                    textAlign: "center",
-                                    outline: "none",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "0.5rem",
                                 }}
-                            />
-                            <span style={{ fontSize: "1.5rem", color: "#333" }}>:</span>
-                            <input
-                                type="text"
-                                value={endMinute}
-                                onChange={(e) =>
-                                    setEndMinute(validateMinute(e.target.value))
-                                }
-                                maxLength={2}
-                                style={{
-                                    width: "3rem",
-                                    height: "3rem",
-                                    border: "none",
-                                    borderRadius: "0.5rem",
-                                    fontSize: "1.5rem",
-                                    textAlign: "center",
-                                    backgroundColor: "#f0f0f0",
-                                    outline: "none",
-                                }}
-                            />
-                            <div style={{ marginLeft: "1rem" }}>
-                                <div style={{ display: "flex", gap: "0.5rem" }}>
-                                    <button
-                                        type="button"
-                                        onClick={() => setEndPeriod("AM")}
-                                        style={{
-                                            padding: "0.5rem 1rem",
-                                            border: "none",
-                                            borderRadius: "0.5rem",
-                                            backgroundColor:
-                                                endPeriod === "AM" ? "#FCF3E2" : "white",
-                                            color:
-                                                endPeriod === "AM" ? "#9C4F21" : "#666",
-                                            cursor: "pointer",
-                                        }}
-                                    >
-                                        AM
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setEndPeriod("PM")}
-                                        style={{
-                                            padding: "0.5rem 1rem",
-                                            border: "none",
-                                            borderRadius: "0.5rem",
-                                            backgroundColor:
-                                                endPeriod === "PM" ? "#FCF3E2" : "white",
-                                            color:
-                                                endPeriod === "PM" ? "#9C4F21" : "#666",
-                                            cursor: "pointer",
-                                        }}
-                                    >
-                                        PM
-                                    </button>
+                            >
+                                <input
+                                    type="text"
+                                    value={endHour}
+                                    onChange={(e) =>
+                                        setEndHour(validateHour(e.target.value))
+                                    }
+                                    maxLength={2}
+                                    style={{
+                                        width: "3rem",
+                                        height: "3rem",
+                                        border: "1px solid #9C4F21",
+                                        borderRadius: "0.5rem",
+                                        fontSize: "1.5rem",
+                                        textAlign: "center",
+                                        outline: "none",
+                                    }}
+                                />
+                                <span style={{ fontSize: "1.5rem", color: "#333" }}>
+                                    :
+                                </span>
+                                <input
+                                    type="text"
+                                    value={endMinute}
+                                    onChange={(e) =>
+                                        setEndMinute(validateMinute(e.target.value))
+                                    }
+                                    maxLength={2}
+                                    style={{
+                                        width: "3rem",
+                                        height: "3rem",
+                                        border: "none",
+                                        borderRadius: "0.5rem",
+                                        fontSize: "1.5rem",
+                                        textAlign: "center",
+                                        backgroundColor: "#f0f0f0",
+                                        outline: "none",
+                                    }}
+                                />
+                                <div style={{ marginLeft: "1rem" }}>
+                                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setEndPeriod("AM")}
+                                            style={{
+                                                padding: "0.5rem 1rem",
+                                                border: "none",
+                                                borderRadius: "0.5rem",
+                                                backgroundColor:
+                                                    endPeriod === "AM"
+                                                        ? "#FCF3E2"
+                                                        : "white",
+                                                color:
+                                                    endPeriod === "AM"
+                                                        ? "#9C4F21"
+                                                        : "#666",
+                                                cursor: "pointer",
+                                            }}
+                                        >
+                                            AM
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setEndPeriod("PM")}
+                                            style={{
+                                                padding: "0.5rem 1rem",
+                                                border: "none",
+                                                borderRadius: "0.5rem",
+                                                backgroundColor:
+                                                    endPeriod === "PM"
+                                                        ? "#FCF3E2"
+                                                        : "white",
+                                                color:
+                                                    endPeriod === "PM"
+                                                        ? "#9C4F21"
+                                                        : "#666",
+                                                cursor: "pointer",
+                                            }}
+                                        >
+                                            PM
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
+                )}
                 {/* Action Buttons */}
                 <div
                     style={{

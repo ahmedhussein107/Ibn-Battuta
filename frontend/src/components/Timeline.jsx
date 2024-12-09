@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import { FaMapMarkerAlt, FaTrash, FaMapMarkerAlt as LocationIcon } from "react-icons/fa";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { createUseStyles } from "react-jss";
+import Button from "./Button";
 
 const Timeline = ({
+    setStep,
     timelineActivities,
     setTimelineActivities,
     pickupLocation = "pickup location",
     pickupTime,
     dropOffLocation = "drop off location",
+    setShowMorePopupOpen,
+    setShowMoreCustomActivity,
 }) => {
     const classes = useStyles();
 
@@ -42,14 +46,16 @@ const Timeline = ({
                         <p className={classes.details}>
                             {pickupLocation}
                             <br />
-                            {pickupTime.toLocaleString("en-US", {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                                hour: "numeric",
-                                minute: "2-digit",
-                                hour12: true,
-                            })}
+                            {pickupTime &&
+                                pickupTime.toLocaleString("en-US", {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                    hour: "numeric",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                })}
+                            {!pickupTime && "Not set"}
                         </p>
                     </div>
                 </div>
@@ -122,6 +128,15 @@ const Timeline = ({
                         <p className={classes.details}>{dropOffLocation}</p>
                     </div>
                 </div>
+
+                <Button
+                    stylingMode="always-light"
+                    text="Add Activity"
+                    handleClick={() => {
+                        setStep(2);
+                    }}
+                    width="auto"
+                />
             </div>
         </div>
     );
@@ -129,13 +144,16 @@ const Timeline = ({
 
 const useStyles = createUseStyles({
     leftPanel: {
-        width: "50%",
+        width: "100%",
     },
     container: {
         padding: "2vh",
         width: "100%",
         backgroundColor: "#f8f8f8",
         borderRadius: "10px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
     },
     timelineLine: {

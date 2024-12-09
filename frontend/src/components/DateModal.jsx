@@ -25,22 +25,28 @@ const DateModal = ({ isOpen, onClose, startDate, endDate, onDatesChange }) => {
                             />
                         </DatePickerContainer>
 
-                        <DateSeparator>to</DateSeparator>
+                        {endDate && (
+                            <>
+                                <DateSeparator>to</DateSeparator>
 
-                        <DatePickerContainer>
-                            <label>End Date</label>
-                            <DatePicker
-                                selected={endDate}
-                                onChange={(date) => onDatesChange(startDate, date)}
-                                selectsEnd
-                                startDate={startDate}
-                                endDate={endDate}
-                                minDate={startDate}
-                                placeholderText="End Date"
-                                dateFormat="MMM dd, yyyy"
-                                customInput={<CustomInput />}
-                            />
-                        </DatePickerContainer>
+                                <DatePickerContainer>
+                                    <label>End Date</label>
+                                    <DatePicker
+                                        selected={endDate}
+                                        onChange={(date) =>
+                                            onDatesChange(startDate, date)
+                                        }
+                                        selectsEnd
+                                        startDate={startDate}
+                                        endDate={endDate}
+                                        minDate={startDate}
+                                        placeholderText="End Date"
+                                        dateFormat="MMM dd, yyyy"
+                                        customInput={<CustomInput />}
+                                    />
+                                </DatePickerContainer>
+                            </>
+                        )}
                     </DateSelectionContainer>
 
                     <DatePickerStyles />

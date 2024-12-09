@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import PopUp from "../PopUpsGeneric/PopUp";
 import { createUseStyles } from "react-jss";
-
+import PhotosUpload from "../PhotosUpload";
 import axiosInstance from "../../api/axiosInstance";
+import { uploadFiles } from "../../api/firebase";
 import CardActivity from "../CardActivity";
 import CardCustomActivity from "../CardCustomActivity";
-import CreateCustomActivityPopup from "../CreateCustomActivityPopup";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
@@ -16,6 +16,11 @@ import Sorter from "../../components/Sorter";
 import RatingRange from "../../components/RatingRange";
 import CheckboxList from "../../components/CheckBoxList";
 import { Alert } from "@mui/material";
+import Button from "../Button";
+import LocationAdder from "../LocationAdder";
+import MapPopUp from "../MapPopUp";
+import TimeModal from "../TimeModal";
+import DateModal from "../DateModal";
 
 const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActivities }) => {
     const [activeTab, setActiveTab] = useState("Activity");
@@ -27,6 +32,12 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
     const [showMorePopupOpen, setShowMorePopupOpen] = useState(false);
     const [showMoreCustomActivty, setShowMoreCustomActivity] = useState(false);
     const [selectTimeIntervalOpen, setSelectTimeIntervalOpen] = useState(false);
+    const [mapPopupOpen, setMapPopupOpen] = useState(false);
+    const [mapFunction, setMapFunction] = useState(null);
+
+    useEffect(() => {
+        if (mapFunction) setMapPopupOpen(true);
+    }, [mapFunction]);
 
     const [selectedActivity, setSelectedActivity] = useState(null);
 
@@ -162,37 +173,6 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
         return false;
     };
 
-    const CustomActivityPopup = () => {
-        if (!showMoreCustomActivty) return null;
-
-        return (
-            <PopUp
-                isOpen={showMorePopupOpen}
-                setIsOpen={setShowMorePopupOpen}
-                headerText={showMoreCustomActivty.name}
-                containsFooter={false}
-                width={"1vw"}
-            >
-                <div
-                    style={{
-                        padding: "2em",
-                        width: "90%",
-                        maxHeight: "80vh",
-                        overflowY: "auto",
-                    }}
-                >
-                    <CardCustomActivity
-                        activity={showMoreCustomActivty}
-                        width="100%"
-                        height="50vh"
-                        firstLineButtons={[]}
-                        bottomButtons={[]}
-                    />
-                </div>
-            </PopUp>
-        );
-    };
-
     const SelectTimeInervalPopup = () => {
         if (!selectTimeIntervalOpen) return null;
 
@@ -289,26 +269,159 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                         justifyContent: "center",
                     }}
                 >
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoItem label="Start Time">
-                            <StaticTimePicker
-                                onChange={(e) => {
-                                    console.log("start Date:", e.$d);
-                                    setStartTime(e.$d);
-                                }}
-                            />
-                        </DemoItem>
-                        <DemoItem label="End Time">
-                            <StaticTimePicker
-                                onChange={(e) => {
-                                    console.log("end Date:", e.$d);
-                                    setEndTime(e.$d);
-                                }}
-                            />
-                        </DemoItem>
-                    </LocalizationProvider>
+                    <DateModal
+                        isOpen={showDateModal}
+                        onClose={() => setShowDateModal(false)}
+                        startDate={startDate}
+                        endDate={null}
+                        onDatesChange={handleDatesChange}
+                    />
+                    <TimeModal
+                        isOpen={showTimeModal}
+                        onClose={() => setShowTimeModal(false)}
+                        startTime={startTime}
+                        endTime={endTime}
+                        onTimesChange={handleTimesChange}
+                        title={"Select Pickup Time"}
+                        showEndTime={false}
+                    />
                 </div>
             </PopUp>
+        );
+    };
+
+    const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
+        const [name, setName] = useState("");
+        const [description, setDescription] = useState("");
+
+        const [location, setLocation] = useState({
+            latitude: 0,
+            longitude: 0,
+            location: "",
+        });
+        const [imagePreviews, setImagePreviews] = useState([]);
+
+        const handleSubmit = async () => {
+            try {
+                const data = {
+                    name,
+                    description,
+                    Longitude: location.longitude,
+                    Latitude: location.latitude,
+                    location: location.location,
+                };
+
+                const pictures = await uploadFiles(
+                    imagePreviews.map((preview) => preview.file),
+                    `customActivities/${name}`
+                );
+
+                data.pictures = pictures;
+                const response = await axiosInstance.post(
+                    "/customActivity/createCustomActivity",
+                    data,
+                    {
+                        withCredentials: true,
+                    }
+                );
+                setCustomActivities((prev) => [...prev, response.data]);
+                setPopUpOpen(false);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        const handleImageAdd = (newImages) => {
+            setImagePreviews((prev) => [...prev, ...newImages]);
+        };
+
+        const handleImageRemove = (idToRemove) => {
+            setImagePreviews((prev) => prev.filter((image) => image.id !== idToRemove));
+        };
+
+        return (
+            <>
+                <PopUp
+                    isOpen={popUpOpen}
+                    setIsOpen={setPopUpOpen}
+                    headerText={"Create new Custom Activity"}
+                    containsActionButton={false}
+                    containsFooter={false}
+                >
+                    <div
+                        style={{
+                            marginBottom: "2vh",
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <PhotosUpload
+                            label="Activity Photos"
+                            imagePreviews={imagePreviews}
+                            onImageAdd={handleImageAdd}
+                            onImageRemove={handleImageRemove}
+                        />
+                        <label
+                            style={{
+                                display: "block",
+                                marginBottom: "0.5vh",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            Name*
+                        </label>
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Insert title here..."
+                            style={{
+                                width: "100%",
+                                padding: "1vh",
+                                borderRadius: "1vh",
+                                border: "0.1vh solid #ccc",
+                            }}
+                        />
+                        <label
+                            style={{
+                                display: "block",
+                                marginBottom: "0.5vh",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            Description*
+                        </label>
+                        <textarea
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Insert description here..."
+                            style={{
+                                width: "100%",
+                                padding: "1vh",
+                                borderRadius: "1vh",
+                                border: "0.1vh solid #ccc",
+                                resize: "vertical",
+                            }}
+                        />
+                        <div style={{ width: "100%" }}>
+                            <LocationAdder
+                                title={"activity location"}
+                                location={location}
+                                setLocation={setLocation}
+                                setMapFunction={setMapFunction}
+                            />
+                        </div>
+                        <Button
+                            stylingMode="always-dark"
+                            text="Create Activity"
+                            customStyle={{ marginTop: "2vh" }}
+                            handleClick={handleSubmit}
+                        />
+                    </div>
+                </PopUp>
+            </>
         );
     };
 
@@ -414,7 +527,15 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
               ];
 
     return (
-        <>
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "2vh",
+            }}
+        >
+            {mapPopupOpen && <MapPopUp />}
             {createCustomActivityPopupOpen && (
                 <div style={{ width: "100%" }}>
                     <CreateCustomActivityPopup
@@ -549,7 +670,16 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                 </div>
             </div>
             {error && <Alert severity="error">{error}</Alert>}
-        </>
+            <Button
+                stylingMode="always-light"
+                text="Cancel"
+                handleClick={() => {
+                    setStep(1);
+                }}
+                width="10%"
+                customStyle={{ marginBottom: "2vh" }}
+            />
+        </div>
     );
 };
 

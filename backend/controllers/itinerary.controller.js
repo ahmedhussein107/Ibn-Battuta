@@ -4,6 +4,7 @@ import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 import { sendNotificationToEmailAndSystem } from "./general.controller.js";
 export const createItinerary = async (req, res) => {
     req.body.tourguideID = req.user.userId;
+    console.log(req.body);
     try {
         const itinerary = new Itinerary(req.body);
         await itinerary.save();

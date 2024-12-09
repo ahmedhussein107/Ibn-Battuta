@@ -27,9 +27,9 @@ const GenericDropDown = ({
                 {placeholder}
             </MenuItem>
             {options &&
-                Object.keys(options).map((option) => (
-                    <MenuItem key={option} value={option}>
-                        {option}
+                options.map((option, index) => (
+                    <MenuItem key={index} value={option._id}>
+                        {option._id}
                     </MenuItem>
                 ))}
         </Select>
