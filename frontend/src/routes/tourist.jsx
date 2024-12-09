@@ -14,9 +14,10 @@ import Payment from "../pages/Payment/Payment.jsx";
 import Checkout from "../pages/Product/CheckoutPage.jsx";
 import Cart from "../pages/Product/Cart.jsx";
 import OrderDetails from "../pages/Tourist/OrderDetails.jsx";
-
+import Demo from "../pages/Demo.jsx";
 const touristRoutes = [
     { path: "/tourist", element: <HomePage /> },
+    { path: "/tourist/demo", element: <Demo /> },
     {
         path: "/tourist/profile",
         element: <TouristProfilePage />,

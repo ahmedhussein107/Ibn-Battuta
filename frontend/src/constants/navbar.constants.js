@@ -26,6 +26,7 @@ export const touristNavbarItems = [
         ],
     },
     { Shop: "/shop" },
+    { Guide: "/tourist/demo" },
 ];
 
 export const sellerNavbarItems = [

@@ -81,11 +81,6 @@ export const completeOrder = async (req, res) => {
                 );
             }
         }
-        sendEmail(
-            tourist.email,
-            "Order Confirmation",
-            `Thank you for your order. Your order ID is ${order._id} and the total price is ${order.totalPrice}. We will deliver your order as soon as possible.`
-        );
         const cart = await TouristCart.deleteMany({ touristID: tourist._id });
         res.status(200).json({ message: "Order completed successfully", order });
     } catch (err) {

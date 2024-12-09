@@ -102,3 +102,4 @@ app.use("/api/cart", touristCartRouter);
 app.use("/api/wishlist", touristWishlistRouter);
 app.use("/api/analytics", analyticsRouter);
 app.use("/api/landmarkTag", landmarkTagRouter);
+app.use("/api/notification", notificationRouter);
