@@ -26,7 +26,8 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 const Shop = () => {
     const currency = Cookies.get("currency") || "EGP";
     const userType = Cookies.get("userType") || "Guest";
-    const { isLoading, convertPrice, formatPrice } = useCurrencyConverter(currency);
+    const { isLoading, convertPrice, formatPrice } =
+        useCurrencyConverter(currency);
 
     const minPrice = convertPrice(0, "EGP", currency);
     const maxPrice = convertPrice(1000000000, "EGP", currency);
@@ -199,7 +200,10 @@ const Shop = () => {
             min={minPrice}
             max={maxPrice}
         />,
-        <RatingRange ratingRange={ratingRange} setRatingRange={setRatingRange} />,
+        <RatingRange
+            ratingRange={ratingRange}
+            setRatingRange={setRatingRange}
+        />,
     ];
 
     const handleAddToWishlist = async (productID) => {
@@ -262,7 +266,9 @@ const Shop = () => {
                 >
                     <button
                         style={
-                            selectedPage === "Shop" ? selectedButtonStyle : buttonStyle
+                            selectedPage === "Shop"
+                                ? selectedButtonStyle
+                                : buttonStyle
                         }
                         onClick={() => setSelectedPage("Shop")}
                     >
@@ -283,31 +289,34 @@ const Shop = () => {
                             Shop
                         </span>
                     </button>
-                    <button
-                        style={
-                            selectedPage === "wishlist"
-                                ? selectedButtonStyle
-                                : buttonStyle
-                        }
-                        onClick={() => setSelectedPage("wishlist")}
-                    >
-                        <FavoriteBorderIcon
-                            style={{
-                                width: "1rem",
-                                height: "1rem",
-                                color: "#9C4F21",
-                                scale: "1.5",
-                            }}
-                        />
-                        <span
-                            style={{
-                                fontSize: "1.3rem",
-                                color: "#9C4F21",
-                            }}
+                    {userType === "Tourist" && (
+                        <button
+                            style={
+                                selectedPage === "wishlist"
+                                    ? selectedButtonStyle
+                                    : buttonStyle
+                            }
+                            onClick={() => setSelectedPage("wishlist")}
                         >
-                            Wishlist
-                        </span>
-                    </button>
+                            <FavoriteBorderIcon
+                                style={{
+                                    width: "1rem",
+                                    height: "1rem",
+                                    color: "#9C4F21",
+                                    scale: "1.5",
+                                }}
+                            />
+                            <span
+                                style={{
+                                    fontSize: "1.3rem",
+                                    color: "#9C4F21",
+                                }}
+                            >
+                                Wishlist
+                            </span>
+                        </button>
+                    )}
+
                     <button
                         style={{
                             ...buttonStyle,
@@ -407,7 +416,9 @@ const Shop = () => {
                                         width="1.2rem"
                                         height="1.2rem"
                                         styles={{ padding: "0.5vh" }}
-                                        isBookmarked={wishlistStatus[product.id]}
+                                        isBookmarked={
+                                            wishlistStatus[product.id]
+                                        }
                                         showBookmark={userType === "Tourist"}
                                         onSecondIconClick={() =>
                                             handleAddToWishlist(product.id)
@@ -417,7 +428,7 @@ const Shop = () => {
                                     />,
                                 ]}
                                 controlButtons={[
-                                    (userType === "Tourist" || userType === "Guest") && (
+                                    userType === "Tourist" && (
                                         <div style={{ fontSize: "0.8rem" }}>
                                             <CustomButton
                                                 text="Add to cart"
