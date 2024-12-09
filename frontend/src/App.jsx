@@ -78,11 +78,6 @@ function App() {
                                     element={<LandmarkPage />}
                                 />
 
-                                <Route
-                                    path="/checkoutpopup"
-                                    element={<CheckoutPopup price={1000} />}
-                                />
-
                                 {/* Default route */}
                                 <Route path="*" element={<Navigate to="/signin" />} />
                             </Route>
