@@ -585,7 +585,7 @@ export default function TouristProfilePage() {
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
     const handleAddAddress = () => {
-        if (newAddressName.trim() !== "" && newAddressLocation.trim() !== "") {
+        if (newAddressName.trim() !== "") {
             setFormData((prev) => ({
                 ...prev,
                 address: [
@@ -841,19 +841,6 @@ export default function TouristProfilePage() {
                                                             readOnly: true,
                                                         }}
                                                     />
-                                                    <TextField
-                                                        variant="outlined"
-                                                        size="small"
-                                                        fullWidth
-                                                        label="Address Location"
-                                                        value={address.location}
-                                                        style={{
-                                                            marginBottom: "4px",
-                                                        }}
-                                                        InputProps={{
-                                                            readOnly: true,
-                                                        }}
-                                                    />
                                                     <button
                                                         style={{
                                                             marginTop: "4px",
@@ -898,21 +885,6 @@ export default function TouristProfilePage() {
                                                     marginBottom: "8px",
                                                     width: "48%",
                                                     marginRight: "4%",
-                                                }}
-                                            />
-                                            <TextField
-                                                variant="outlined"
-                                                size="small"
-                                                label="New Address Location"
-                                                value={newAddressLocation}
-                                                onChange={(e) =>
-                                                    setNewAddressLocation(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                style={{
-                                                    marginBottom: "8px",
-                                                    width: "48%",
                                                 }}
                                             />
                                             <button
@@ -1044,8 +1016,8 @@ export default function TouristProfilePage() {
                                             ? tourist.address.map(
                                                   (addr, index) => (
                                                       <span key={index}>
-                                                          {addr.name} -{" "}
-                                                          {addr.location}
+                                                          {addr.name}
+
                                                           {index <
                                                               tourist.address
                                                                   .length -
