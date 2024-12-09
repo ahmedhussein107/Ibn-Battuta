@@ -1,42 +1,65 @@
-import React, { useState } from "react";
+import React, { useState,  useEffect} from "react";
 import styled, { keyframes } from "styled-components";
 import axiosInstance from "../../api/axiosInstance";
 import { uploadFiles } from "../../api/firebase";
 import PhotosUpload from "../../components/PhotosUpload.jsx";
 import Button from "../../components/Button.jsx";
 import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
-const Popup = ({ message, onClose, isError }) => (
-    <PopupContainer isError={isError}>
-        <PopupContent>
-            {message}
-            <CloseButton onClick={onClose}>×</CloseButton>
-        </PopupContent>
-    </PopupContainer>
-);
+import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
 
-const defaultData = {
-    pictures: [],
-    name: "",
-    price: 0,
-    description: "",
-    quantity: 1,
-    isArchived: false,
-};
-
-const CreateProductPage = () => {
-    const [formData, setFormData] = useState(defaultData);
+const EditProductPage = () => {
+    const { productId } = useParams(); // Get product ID from URL
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({});
     const [imagePreviews, setImagePreviews] = useState([]);
     const [popupMessage, setPopupMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [isErrorPopup, setIsErrorPopup] = useState(false);
-    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const response = await axiosInstance.get(`/product/getProduct/${productId}`, {
+                    withCredentials: true,
+                });
+                
+                const product = response.data;
+                
+                // Set form data from existing product
+                setFormData({
+                    name: product.name,
+                    price: product.price,
+                    description: product.description,
+                    quantity: product.quantity,
+                    isArchived: product.isArchived,
+                    pictures: product.pictures,
+                });
+
+                // Convert existing pictures to image preview format
+                const previews = product.pictures.map((url, index) => ({
+                    id: `existing-${index}`,
+                    url,
+                    isExisting: true
+                }));
+                setImagePreviews(previews);
+                
+
+            } catch (error) {
+                console.error("Error fetching product:", error);
+                showPopupMessage("Error loading product details.", true);
+                navigate(`/${Cookies.get("userType").toLowerCase()}/inventory`);
+            }
+        };
+
+        fetchProduct();
+    }, [productId, navigate]);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-
         if (name === "price" && isNaN(value)) return;
-
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -56,37 +79,49 @@ const CreateProductPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.name || !formData.description || imagePreviews.length === 0) {
+        if (!formData.name || !formData.description) {
             showPopupMessage("Please fill out all details.", true);
             return;
         }
 
         try {
-            const files = imagePreviews.map((preview) => preview.file);
-            const uploadedFileUrls = await uploadFiles(files, "products");
+            // Handle new file uploads
+            const newFiles = imagePreviews
+                .filter(preview => !preview.isExisting)
+                .map(preview => preview.file);
+            
+                setIsLoading(true);
+                
+            let uploadedFileUrls = [];
+            if (newFiles.length > 0) {
+                uploadedFileUrls = await uploadFiles(newFiles, "products");
+            }
+
+            // Combine existing and new picture URLs
+            const existingPictures = imagePreviews
+                .filter(preview => preview.isExisting)
+                .map(preview => preview.url);
 
             const finalFormData = {
                 ...formData,
-                pictures: uploadedFileUrls,
+                pictures: [...existingPictures, ...uploadedFileUrls],
             };
 
-            const response = await axiosInstance.post(
-                "/product/createProduct",
-                finalFormData,
-                {
-                    withCredentials: true,
-                }
+           
+            const response = await axiosInstance.patch(
+                `/product/updateProduct/${productId}`,
+                finalFormData
             );
-            console.log("Product created:", response.data);
+            console.log("Product updated:", response.data);
 
-            showPopupMessage("Product created successfully!", false);
+            showPopupMessage("Product updated successfully!", false);
             setTimeout(
                 () => navigate(`/${Cookies.get("userType").toLowerCase()}/inventory`),
                 1000
             );
         } catch (error) {
-            console.error("Error creating product:", error);
-            showPopupMessage("Error creating product. Please try again.", true);
+            console.error("Error updating product:", error);
+            showPopupMessage("Error updating product. Please try again.", true);
         }
     };
 
@@ -100,13 +135,15 @@ const CreateProductPage = () => {
 
     usePageHeader(
         "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzB8fHNvdXZlbmlyJTIwc2hvcHxlbnwwfHwwfHx8MA%3D%3D",
-        "Create a New Product"
+        "Edit Product"
     );
+
+    
 
     return (
         <PageContainer>
             {showPopup && (
-                <Popup
+                <PopUp
                     message={popupMessage}
                     onClose={() => setShowPopup(false)}
                     isError={isErrorPopup}
@@ -166,8 +203,7 @@ const CreateProductPage = () => {
                                         onChange={(e) =>
                                             setFormData({
                                                 ...formData,
-                                                quantity:
-                                                    parseInt(e.target.value, 10) || 0,
+                                                quantity: parseInt(e.target.value, 10) || 0,
                                             })
                                         }
                                         style={{
@@ -224,9 +260,7 @@ const CreateProductPage = () => {
                                             cursor: "pointer",
                                             fontSize: "1em",
                                             fontWeight: "500",
-                                            color: formData.isArchived
-                                                ? "#a83232"
-                                                : "#333",
+                                            color: formData.isArchived ? "#a83232" : "#333",
                                             backgroundColor: formData.isArchived
                                                 ? "#fcd8d8"
                                                 : "transparent",
@@ -248,9 +282,7 @@ const CreateProductPage = () => {
                                             cursor: "pointer",
                                             fontSize: "1em",
                                             fontWeight: "500",
-                                            color: !formData.isArchived
-                                                ? "#a83232"
-                                                : "#333",
+                                            color: !formData.isArchived ? "#a83232" : "#333",
                                             backgroundColor: !formData.isArchived
                                                 ? "#fcd8d8"
                                                 : "transparent",
@@ -270,17 +302,15 @@ const CreateProductPage = () => {
                     <Button
                         stylingMode="dark-when-hovered"
                         text="Cancel"
-                        handleClick={() => {
-                            setFormData(defaultData);
-                            setImagePreviews([]);
-                        }}
+                        handleClick={() => navigate(`/${Cookies.get("userType").toLowerCase()}/inventory`)}
                         width="auto"
                     />
                     <Button
                         stylingMode="always-dark"
-                        text="Create Product"
+                        text="Save Changes"
                         handleClick={handleSubmit}
                         width="auto"
+                        isLoading={isLoading}
                     />
                 </ButtonGroup>
             </form>
@@ -422,4 +452,4 @@ const StockButton = styled.button`
     }
 `;
 
-export default CreateProductPage;
+export default EditProductPage;

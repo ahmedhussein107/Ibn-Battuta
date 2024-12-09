@@ -18,7 +18,7 @@ const IOSSwitch = styled((props) => (
             transform: "translateX(16px)",
             color: "#fff",
             "& + .MuiSwitch-track": {
-                backgroundColor: "#65C466",
+                backgroundColor: "#9c4f21",
                 opacity: 1,
                 border: 0,
                 ...theme.applyStyles("dark", {
@@ -64,10 +64,11 @@ const IOSSwitch = styled((props) => (
     },
 }));
 
-export const mySwitch = ({ label, value, setValue }) => {
+export const MySwitch = ({ label, value, setValue }) => {
     return (
         <FormGroup>
             <FormControlLabel
+                label={label}
                 control={
                     <IOSSwitch
                         sx={{ m: 1 }}
@@ -75,7 +76,6 @@ export const mySwitch = ({ label, value, setValue }) => {
                         onChange={() => setValue(!value)}
                     />
                 }
-                label={label}
             />
         </FormGroup>
     );

@@ -48,11 +48,7 @@ const TimelineN = ({ date, time }) => {
         if (!convertedDate) return;
 
         const startDate = new Date(convertedDate);
-        const endDate = new Date(convertedDate);
-        endDate.setHours(startDate.getHours() + 23);
-        endDate.setMinutes(startDate.getMinutes() + 59);
-        endDate.setSeconds(startDate.getSeconds() + 59);
-        const dateRange = startDate.toISOString() + "€" + endDate.toISOString();
+        const dateRange = startDate.toISOString() + "€";
 
         const fetchActivities = async () => {
             try {
@@ -142,34 +138,6 @@ const TimelineN = ({ date, time }) => {
             }
         }
         return false;
-    };
-
-    const handleDeleteActivity = (index) => {
-        const curActivity = timelineActivities[index];
-        setTimelineActivities(timelineActivities.filter((_, ind) => ind !== index));
-        if (curActivity.activityType == "Activity") {
-            setActivities((prevActivities) => [...prevActivities, curActivity.activity]);
-        } else if (curActivity.activityType == "CustomActivity") {
-            setCustomActivities((prevActivities) => [
-                ...prevActivities,
-                curActivity.activity,
-            ]);
-        } else {
-            console.log("What is this ??!!");
-        }
-    };
-
-    const handleShowMore = (index) => {
-        const curActivity = timelineActivities[index];
-        if (curActivity.activityType == "Activity") {
-            // navigate("activity-datails", { state: { activity: curActivity.activity } });
-            window.open(`/activity-details/${curActivity.activity._id}`, "_blank");
-        } else if (curActivity.activityType == "CustomActivity") {
-            setShowMoreCustomActivity(curActivity.activity);
-            setShowMorePopupOpen(true);
-        } else {
-            console.log("What is this ??!!");
-        }
     };
 
     const CustomActivityPopup = () => {
@@ -806,7 +774,7 @@ const useStyles = createUseStyles({
         ".scale-enter-active": {
             opacity: 1,
             transform: "translateY(0)",
-            transition: "opacity 300ms ease-out, transform 300ms ease-out",
+            transition: "opacity 100ms ease-out, transform 100ms ease-out",
         },
         ".scale-exit": {
             opacity: 1,
@@ -815,7 +783,7 @@ const useStyles = createUseStyles({
         ".scale-exit-active": {
             opacity: 0,
             transform: "translateY(2vh)",
-            transition: "opacity 300ms ease-in, transform 300ms ease-in",
+            transition: "opacity 100ms ease-in, transform 100ms ease-in",
         },
     },
 });

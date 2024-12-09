@@ -100,20 +100,25 @@ export const getAdvertiserActivities = async (req, res) => {
 };
 
 export const getUpcomingActivities = async (req, res) => {
-	try {
-		const { rating, price, page, limit, sortBy, ...rest } = req.query;
-		const _page = Math.max(1, parseInt(req.query.page) || 1);
-		const _limit = Math.max(1, parseInt(req.query.limit) || 10);
-		const toSkip = (_page - 1) * _limit;
-		const filter = buildFilter(rest);
+    try {
+        const { rating, price, page, limit, sortBy, ...rest } = req.query;
+        const _page = Math.max(1, parseInt(req.query.page) || 1);
+        const _limit = Math.max(1, parseInt(req.query.limit) || 10000);
+        const toSkip = (_page - 1) * _limit;
+        const filter = buildFilter(rest);
 
-		let activities = await Activity.find({
-			isFlagged: false, // activities that are flagged do not appear to the user according to requirement (33)
-			startDate: { $gt: Date.now() },
-			...filter,
-		})
-			.populate("advertiserID")
-			.populate("ratings");
+        console.log("filter", filter);
+        console.log("rating", rating);
+        console.log("price", price);
+        console.log("sortBy", sortBy);
+
+        let activities = await Activity.find({
+            isFlagged: false, // activities that are flagged do not appear to the user according to requirement (33)
+            startDate: { $gt: Date.now() },
+            ...filter,
+        })
+            .populate("advertiserID")
+            .populate("ratings");
 
 		if (rating) {
 			const bounds = rating.split("-");

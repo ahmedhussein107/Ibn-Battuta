@@ -1,16 +1,14 @@
 import React from "react";
-import BookingPopUp from "./BookingPopUp";
-
 import { useState } from "react";
-import HotelCard from "./Hotels/HotelCard";
-import HotelList from "./Hotels/HotelList";
-import MyReservations from "./Hotels/MyReservations";
+
+import CheckoutPopup from "./CheckoutPopup";
+
 const Test = () => {
     const [isOpen, setIsOpen] = useState(true);
-    return (
-        <div>
-            <HotelList />
-        </div>
-    );
+    const items = [
+        { title: "Item 1", price: 10 },
+        { title: "Item 2", price: 20 },
+    ];
+    return <CheckoutPopup isOpen={isOpen} setIsOpen={setIsOpen} items={items} />;
 };
 export default Test;

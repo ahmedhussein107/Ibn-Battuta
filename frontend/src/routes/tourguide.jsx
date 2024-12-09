@@ -16,6 +16,10 @@ const tourguideRoutes = [
         path: "/tourguide/create-itinerary",
         element: <CreateItineraryPage />,
     },
+    {
+        path: "/tourguide/edit-itinerary/:itineraryId",
+        element: <CreateItineraryPage isEdit={true} />,
+    },
     { path: "/tourguide/choose-activity", element: <ChooseActivity /> },
     { path: "/tourguide/analytics", element: <Analytics /> },
 ];

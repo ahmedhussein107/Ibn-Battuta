@@ -22,7 +22,7 @@ const ItineraryTimeline = ({
 
     // Handle navigation for "See More"
     const handleSeeMoreClick = (Data) => {
-        navigate(`/activity-details/${Data._id}`, { state: { activityData: Data } });
+        window.open(`/activity-details/${Data._id}`, "_blank");
     };
 
     // Map activities into timeline-friendly data

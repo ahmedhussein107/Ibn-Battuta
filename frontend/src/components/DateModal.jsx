@@ -3,46 +3,63 @@ import React from "react";
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css"; // Ensure that DatePicker styles are imported
 
+export const DateModalContent = ({
+    startDate,
+    endDate,
+    onDatesChange,
+    placeholderText = "Start Date",
+}) => {
+    return (
+        <DateSelectionContainer>
+            <DatePickerContainer>
+                <label>{placeholderText}</label>
+                <DatePicker
+                    selected={startDate}
+                    onChange={(date) => onDatesChange(date, endDate)}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText={placeholderText}
+                    dateFormat="MMM dd, yyyy"
+                    customInput={<CustomInput />}
+                />
+            </DatePickerContainer>
+
+            {endDate && (
+                <>
+                    <DateSeparator>to</DateSeparator>
+
+                    <DatePickerContainer>
+                        <label>End Date</label>
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date) => onDatesChange(startDate, date)}
+                            selectsEnd
+                            startDate={startDate}
+                            endDate={endDate}
+                            minDate={startDate}
+                            placeholderText="End Date"
+                            dateFormat="MMM dd, yyyy"
+                            customInput={<CustomInput />}
+                        />
+                    </DatePickerContainer>
+                </>
+            )}
+        </DateSelectionContainer>
+    );
+};
+
 const DateModal = ({ isOpen, onClose, startDate, endDate, onDatesChange }) => {
     return (
         isOpen && (
             <ModalOverlay>
                 <ModalContent>
                     <CloseButton onClick={onClose}>✕</CloseButton>
-
-                    <DateSelectionContainer>
-                        <DatePickerContainer>
-                            <label>Start Date</label>
-                            <DatePicker
-                                selected={startDate}
-                                onChange={(date) => onDatesChange(date, endDate)}
-                                selectsStart
-                                startDate={startDate}
-                                endDate={endDate}
-                                placeholderText="Start Date"
-                                dateFormat="MMM dd, yyyy"
-                                customInput={<CustomInput />}
-                            />
-                        </DatePickerContainer>
-
-                        <DateSeparator>to</DateSeparator>
-
-                        <DatePickerContainer>
-                            <label>End Date</label>
-                            <DatePicker
-                                selected={endDate}
-                                onChange={(date) => onDatesChange(startDate, date)}
-                                selectsEnd
-                                startDate={startDate}
-                                endDate={endDate}
-                                minDate={startDate}
-                                placeholderText="End Date"
-                                dateFormat="MMM dd, yyyy"
-                                customInput={<CustomInput />}
-                            />
-                        </DatePickerContainer>
-                    </DateSelectionContainer>
-
+                    <DateModalContent
+                        startDate={startDate}
+                        endDate={endDate}
+                        onDatesChange={onDatesChange}
+                    />
                     <DatePickerStyles />
                 </ModalContent>
             </ModalOverlay>
