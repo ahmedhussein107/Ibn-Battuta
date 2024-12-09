@@ -116,7 +116,7 @@ export const createBooking = async (req, res) => {
 
 export const completeBooking = async (req, res) => {
     const { id } = req.params;
-    const { isWalletUsed } = req.body;
+    const { amountFromWallet } = req.body;
     try {
         const booking = await Booking.findById(id);
         if (!booking) {
@@ -134,8 +134,7 @@ export const completeBooking = async (req, res) => {
         );
         tourist.points += booking.pointsAdded;
         tourist.loyalityPoints += booking.pointsAdded;
-        if (isWalletUsed)
-            tourist.wallet = Math.max(0, tourist.wallet - booking.totalPrice);
+        tourist.wallet = Math.max(0, tourist.wallet - amountFromWallet);
         await tourist.save();
         await booking.save();
         res.status(200).json({ message: "Booking completed successfully" });
