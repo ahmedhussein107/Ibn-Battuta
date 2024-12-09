@@ -22,7 +22,7 @@ import MapPopUp from "../MapPopUp";
 import TimeModal from "../TimeModal";
 import DateModal from "../DateModal";
 
-const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActivities }) => {
+const Step2 = ({ setStep, convertedDate,    Activities, setTimelineActivities }) => {
     const [activeTab, setActiveTab] = useState("Activity");
     const [activities, setActivities] = useState([]);
     const [customActivities, setCustomActivities] = useState([]);
@@ -535,8 +535,9 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                 gap: "2vh",
             }}
         >
-            {mapPopupOpen && <MapPopUp />}
-            {createCustomActivityPopupOpen && (
+            <MapPopUp  popUpOpen={mapPopupOpen} setPopUpOpen={setMapPopupOpen} mapFunction={mapFunction}  />
+
+            {createCustomActivityPopupOpen && !mapPopupOpen&& (
                 <div style={{ width: "100%" }}>
                     <CreateCustomActivityPopup
                         popUpOpen={createCustomActivityPopupOpen}
@@ -545,7 +546,6 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                 </div>
             )}
 
-            <CustomActivityPopup />
             <SelectTimeInervalPopup />
             <div
                 style={{
