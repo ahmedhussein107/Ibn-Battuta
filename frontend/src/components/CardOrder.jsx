@@ -22,7 +22,7 @@ const StatusLabel = styled(Chip)(({ theme, status }) => ({
 
 const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem" }) => {
 	const [rating, setRating] = useState(order?.ratingID ? order?.ratingID?.rating : 0);
-	const orderStatus = order.status;
+	const [orderStatus, setOrderStatus] =useState(order.status);
 	const [comment, setComment] = useState(order?.ratingID ? order?.ratingID?.comment : "");
 	const [isReadOnly, setIsReadOnly] = useState(!!order?.ratingID);
 	const [open, setOpen] = useState(false);
@@ -93,7 +93,7 @@ const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem"
 	const handleSubmit = async (event, newValue) => {
 		try {
 			const response = await axiosInstance.delete(`/order/deleteOrder/${order._id}`);
-			// setOrderStatus("canceled");
+			setOrderStatus("canceled");
 		} catch (error) {
 			console.error("Error:", error);
 		} finally {
