@@ -269,6 +269,13 @@ const UpdateActivityPage = () => {
             showPopupMessage("Please fill out all required details.", true);
             return;
         }
+        const newImages = imagePreviews.filter((preview) => preview.file !== null);
+        const oldImages = imagePreviews.filter((preview) => preview.file === null);
+        const oldImageUrls = oldImages.map((preview) => preview.id);
+        const files = newImages.map((preview) => preview.file);
+        const uploadedFileUrls = await uploadFiles(files, "activities");
+
+        const urls = [...oldImageUrls, ...uploadedFileUrls];
 
         const convertTo24System = (timeObj) => {
             const [time, period] = timeObj.split(" ");
@@ -289,7 +296,7 @@ const UpdateActivityPage = () => {
             ...formData,
             startDate: combinedStartDate.toISOString(),
             endDate: combinedEndDate.toISOString(),
-            //pictures: uploadedFileUrls, // Ensure this is updated correctly
+            pictures: uploadedFileUrls, // Ensure this is updated correctly
             tags: selectedTags,
             latitude: pickupLocation.latitude,
             longitude: pickupLocation.longitude,
