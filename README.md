@@ -865,6 +865,62 @@ governorRouter.put("/updateGovernor", isAuthenticated, updateGovernor);
 governorRouter.put("/changeGovernorPassword", isAuthenticated, changeGovernorPassword);
 const orderRouter = express.Router();
 
+const itineraryRouter = express.Router();
+
+itineraryRouter.post("/createItinerary", isAuthenticated, createItinerary);
+
+itineraryRouter.patch("/updateItinerary/:id", updateItinerary);
+
+itineraryRouter.delete("/deleteItinerary/:id", deleteItinerary);
+
+itineraryRouter.get("/getAllItineraries", getItineraries);
+
+itineraryRouter.get("/getItinerary/:id", getItineraryById);
+
+itineraryRouter.get("/getUpcomingItineraries", getUpcomingItineraries);
+
+itineraryRouter.get("/getTourGuideItinerary/", isAuthenticated, getTourGuideItinerary);
+
+itineraryRouter.get("/searchItineraries", searchItineraries);
+
+itineraryRouter.delete("/", deleteItineraries);
+
+itineraryRouter.get("/getFreeSpots/:id", getFreeSpots);
+
+itineraryRouter.patch("/toggleFlag/:id", toggleFlaggedItineraries);
+
+itineraryRouter.patch("/toggleActive/:id", toggleActivatedItineraries);
+[6:00 am, 09/12/2024] Robekty ❤️‍🔥🥝🍊 🐯❤️‍🔥: import { isAuthenticated } from "../routers.middleware/authentication.js";
+
+const landmarkRouter = express.Router();
+
+landmarkRouter.post("/createLandmark", createLandmark);
+
+landmarkRouter.get("/allLandmarks", getAllLandmarks);
+
+landmarkRouter.get("/landmark/:id", getLandmarkById);
+
+landmarkRouter.get("/ticketPricesFromLandmark/:id", getTicketPricesFromLandmark);
+
+landmarkRouter.patch("/updateLandmark/:id", updateLandmark);
+
+landmarkRouter.delete("/deleteLandmark/:id", deleteLandmark);
+
+landmarkRouter.get("/getGovernorLandmarks", isAuthenticated, getGovernorLandmarks);
+const landmarkTagRouter = express.Router();
+
+landmarkTagRouter.post("/createLandmarkTag", createLandmarkTag);
+
+landmarkTagRouter.get("/allLandmarkTags", getLandmarkTags);
+
+landmarkTagRouter.put("/updateLandmarkTag/:id", updateLandmarkTag);
+
+landmarkTagRouter.delete("/deleteLandmarkTag/:id", deleteLandmarkTag);
+
+landmarkTagRouter.get("/getLandmarkTag/:id", getLandmarkTag);
+
+landmarkTagRouter.get("/searchLandmarkTag", searchLandmarkTags);
+
 orderRouter.post("/createOrder", isAuthenticated, createOrder);
 
 orderRouter.get("/getOrders", isAuthenticated, getOrders);
@@ -880,6 +936,150 @@ orderRouter.delete("/deleteOrder/:id", deleteOrder);
 orderRouter.get("/getMyOrders", isAuthenticated, getOrdersByUser);
 
 orderRouter.patch("/addRating/:id", addRatingToProduct);
+import { isAuthenticated } from "../routers.middleware/authentication.js";
+const productRouter = express.Router();
+
+productRouter.post("/createProduct", isAuthenticated, createProduct);
+
+productRouter.get("/getAllProducts", getAllProducts);
+
+productRouter.get("/getProduct/:id", getProduct);
+
+productRouter.patch("/updateProduct/:id", updateProduct);
+
+productRouter.delete("/deleteProduct/:id", deleteProduct);
+
+productRouter.delete("/deleteProducts", deleteProducts);
+
+productRouter.get("/search", searchProducts);
+
+productRouter.patch("/archiveProduct/:id", archeiveProduct);
+
+productRouter.patch("/unarchiveProduct/:id", unarcheiveProduct);
+
+productRouter.get("/getProductsById", isAuthenticated, getProductsById);
+promoCodeRouter.post("/validatePromoCode", isAuthenticated, validatePromoCode);
+promoCodeRouter.post("/applyPromoCode", isAuthenticated, applyPromoCode);
+promoCodeRouter.post("/createPromoCode", createGeneralPromoCode);
+const ratingRouter = express.Router();
+
+ratingRouter.post("/createRating", createRating);
+ratingRouter.get("/getRating/:id", getRatingById);
+ratingRouter.get("/getRatings", getRatings);
+ratingRouter.patch("/updateRating/:id", updateRating);
+ratingRouter.delete("/deleteRating/:id", deleteRating);
+ratingRouter.post("/rateProduct/:id", isAuthenticated, rateProduct);
+ratingRouter.post("/rateTourGuide/:id", isAuthenticated, rateTourGuide);
+ratingRouter.post("/rateItinerary/:id", isAuthenticated, rateItinerary);
+ratingRouter.post("/rateActivity/:id", isAuthenticated, rateActivity);
+const sellerRouter = express.Router();
+
+sellerRouter.post("/createSeller", createSeller);
+
+sellerRouter.get("/getSellers", getSellers);
+
+sellerRouter.get("/getSellerById", isAuthenticated, getSellerById);
+
+sellerRouter.put("/updateSeller", isAuthenticated, updateSeller);
+
+sellerRouter.delete("/deleteSeller", isAuthenticated, deleteSeller);
+
+sellerRouter.put("/changeSellerPassword", isAuthenticated, changeSellerPassword);
+
+sellerRouter.get("/documents", getSellersDocuments);
+const tagRouter = express.Router();
+
+tagRouter.post("/createTag", createTag);
+
+tagRouter.get("/allTags", getTag);
+
+tagRouter.put("/updateTag/:id", updateTag);
+
+tagRouter.delete("/deleteTag/:id", deleteTag);
+
+tagRouter.get("/getTagByID/:id", getTagByID);
+
+tagRouter.get("/searchTags", searchTags);
+const tourGuideRouter = express.Router();
+
+tourGuideRouter.post("/createTourGuide", createTourGuide);
+
+tourGuideRouter.get("/getTourGuides", getTourGuides);
+
+tourGuideRouter.get("/tourGuide", isAuthenticated, getTourGuideById);
+
+tourGuideRouter.put("/updateTourGuide", isAuthenticated, updateTourGuide);
+
+tourGuideRouter.delete("/deleteTourGuide", isAuthenticated, deleteTourGuide);
+
+tourGuideRouter.put("/changeTourguidePassword", isAuthenticated, changeTourguidePassword);
+
+tourGuideRouter.get("/documents", getTourGuidesDocuments);
+
+tourGuideRouter.get("/tourGuide/:id", getTourGuide);
+const touristRouter = express.Router();
+
+touristRouter.get("/getTourists", getTourists);
+
+touristRouter.post("/createTourist", createTourist);
+
+touristRouter.get("/tourist", isAuthenticated, getTouristById);
+
+touristRouter.put("/updateTourist", isAuthenticated, updateTourist);
+
+touristRouter.delete("/deleteTourist", isAuthenticated, deleteTourist);
+
+touristRouter.post("/redeemPoints", isAuthenticated, redeemPoints);
+
+touristRouter.post("/addPreference", isAuthenticated, addPreference);
+
+touristRouter.delete("/removePreference", isAuthenticated, removePreference);
+
+touristRouter.patch("/updatePassword", isAuthenticated, changeTouristPassword);
+const touristBookmarkRouter = express.Router();
+
+touristBookmarkRouter.post("/bookmark", isAuthenticated, toggleBookmark);
+
+touristBookmarkRouter.post("/getBookmarkStatus", isAuthenticated, getBookmarkStatus);
+
+touristBookmarkRouter.get("/getActivityBookmarks", isAuthenticated, getActivityBookmarks);
+
+touristBookmarkRouter.get(
+    "/getItineraryBookmarks",
+    isAuthenticated,
+    getItineraryBookmarks
+);
+mport { isAuthenticated } from "../routers.middleware/authentication.js";
+
+const touristCartRouter = express.Router();
+
+touristCartRouter.get("/getCart", isAuthenticated, getTouristCart);
+
+touristCartRouter.post("/updateCart", isAuthenticated, updateTouristCart);
+
+touristCartRouter.delete("/clearCart", isAuthenticated, deleteTouristCart);
+
+touristCartRouter.delete(
+    "/deleteProduct/:id",
+    isAuthenticated,
+    deleteItemFromTouristCart
+);
+const touristWishlistRouter = express.Router();
+
+touristWishlistRouter.post("/wishlist", isAuthenticated, toggleWishlist);
+
+touristWishlistRouter.post("/getProductsStatus", isAuthenticated, getProductsStatus);
+
+touristWishlistRouter.get("/getWishlistProducts", isAuthenticated, getWishlistProducts);
+const usernameRouter = express.Router();
+
+usernameRouter.post("/createUsername", createUsername);
+
+usernameRouter.get("/allUsernames", getUsernames);
+
+usernameRouter.put("/updateUsername", updateUsername);
+
+usernameRouter.delete("/deleteUsername", deleteUsername);
 
 ## Tests
 - We use Postman to manually test all our api references by making sure the response is as expected. We use it as some kind of sanity-check.
