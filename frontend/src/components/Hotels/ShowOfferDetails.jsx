@@ -57,7 +57,7 @@ const ShowOfferDetails = () => {
                 }
             );
             const state = { tab: "Hotels", hotel: hotelResponse?.data?.hotel };
-            navigate("/bookings", { state }); // TODO: change the uri to tourist/bookings
+            navigate("/tourist/bookings", { state }); // TODO: change the uri to tourist/bookings
         };
 
         const handleFailure = async () => {};
@@ -65,7 +65,7 @@ const ShowOfferDetails = () => {
         setSuccess(handleSuccess);
         setFailure(handleFailure);
 
-        navigate("/payment", {
+        navigate("/tourist/payment", {
             state: {
                 amount: convertPrice(offer.totalPrice),
                 currency,
