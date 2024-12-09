@@ -125,9 +125,9 @@ const Bookings = () => {
 
     const { isLoading } = useCurrencyConverter();
 
-    if (isLoading) {
-        return <CircularProgress />;
-    }
+    // if (isLoading) {
+    //     return <CircularProgress />;
+    // }
 
     return (
         <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>

@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import PopUp from "./PopUpsGeneric/PopUp";
 import Map from "../pages/map";
-import PhotosUpload from "./PhotosUpload";
-import axiosInstance from "../api/axiosInstance";
-import { uploadFiles } from "../api/firebase";
 import CustomButton from "./Button";
-const MapPopUp = ({ popUpOpen, setPopUpOpen, setLongitude, setLatitude }) => {
+
+import reverseGeocode from "../api/map";
+
+const MapPopUp = ({ popUpOpen, setPopUpOpen, mapFunction }) => {
     const [locationlongitude, setLocationlongitude] = useState(0);
     const [locationlatitude, setLocationlatitude] = useState(0);
     const handleSubmit = async () => {
         try {
-            setLongitude(locationlongitude);
-            setLatitude(locationlatitude);
+            const locationString = await reverseGeocode(
+                locationlatitude,
+                locationlongitude
+            );
+            mapFunction({
+                latitude: locationlatitude,
+                longitude: locationlongitude,
+                location: locationString === ", " ? "Unknown Location" : locationString,
+            });
             setPopUpOpen(false);
         } catch (err) {
             console.log(err);

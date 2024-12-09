@@ -3,13 +3,14 @@ import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import Navbar from "../../components/NavBar";
 import Footer from "../../components/Footer";
-import bg from "../../assets/images/bg.jpg";
+import bg from "../../assets/images/profilesBackground.png";
 import ProfileButton from "../../components/ProfileButtons";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { uploadFile } from "../../api/firebase.js";
+
 import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
 //import Box from "@mui/material/Box";
@@ -188,8 +189,7 @@ const AdvertiserProfilePage = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isEditing1, setIsEditing1] = useState(false);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
-        useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -294,10 +294,7 @@ const AdvertiserProfilePage = () => {
                 })
                 .catch((error) => {
                     console.error("Error updating profile:", error);
-                    showAlert(
-                        "An error occurred while updating the profile.",
-                        "error"
-                    ); // Use showAlert instead of alert
+                    showAlert("An error occurred while updating the profile.", "error"); // Use showAlert instead of alert
                 });
         } else {
             setIsEditing(false);
@@ -318,10 +315,7 @@ const AdvertiserProfilePage = () => {
                 })
                 .catch((error) => {
                     console.error("Error updating profile:", error);
-                    showAlert(
-                        "An error occurred while updating the profile.",
-                        "error"
-                    ); // Use showAlert instead of alert
+                    showAlert("An error occurred while updating the profile.", "error"); // Use showAlert instead of alert
                 });
         } else {
             setIsEditing1(false);
@@ -344,9 +338,7 @@ const AdvertiserProfilePage = () => {
             })
             .catch((error) => {
                 const errorMessage =
-                    error.response &&
-                    error.response.data &&
-                    error.response.data.message
+                    error.response && error.response.data && error.response.data.message
                         ? error.response.data.message
                         : "An error occurred while deleting the account. Please try again.";
 
@@ -359,11 +351,9 @@ const AdvertiserProfilePage = () => {
         setIsPopUpOpen(true);
     };
 
-    const handleCurrentPasswordChange = (e) =>
-        setCurrentPassword(e.target.value);
+    const handleCurrentPasswordChange = (e) => setCurrentPassword(e.target.value);
     const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
-    const handleConfirmNewPasswordChange = (e) =>
-        setConfirmNewPassword(e.target.value);
+    const handleConfirmNewPasswordChange = (e) => setConfirmNewPassword(e.target.value);
 
     const PopUpAction = () => {
         if (newPassword !== confirmNewPassword) {
@@ -386,9 +376,7 @@ const AdvertiserProfilePage = () => {
             })
             .catch((error) => {
                 const errorMessage =
-                    error.response &&
-                    error.response.data &&
-                    error.response.data.message
+                    error.response && error.response.data && error.response.data.message
                         ? error.response.data.message
                         : "An error occurred. Please try again.";
                 console.error("Error changing password:", error);
@@ -413,14 +401,8 @@ const AdvertiserProfilePage = () => {
                     withCredentials: true,
                 })
                 .then((response) => {
-                    showAlert(
-                        "Profile picture updated successfully!",
-                        "success"
-                    ); // Use showAlert instead of alert
-                    console.log(
-                        "Updated Advertiser Picture:",
-                        response.data.picture
-                    );
+                    showAlert("Profile picture updated successfully!", "success"); // Use showAlert instead of alert
+                    console.log("Updated Advertiser Picture:", response.data.picture);
 
                     // Ensure response.data contains the full URL of the picture
                     setResponse((prev) => ({
@@ -428,20 +410,14 @@ const AdvertiserProfilePage = () => {
                         picture: response.data.picture, // This should be a string URL
                     }));
 
-                    console.log(
-                        "Updated Advertiser Picture:",
-                        response.data.picture
-                    );
+                    console.log("Updated Advertiser Picture:", response.data.picture);
                     setTimeout(() => {
                         window.location.reload();
                     }, 5000); // Alert will close after 5 seconds
                 })
                 .catch((error) => {
                     console.error("Error uploading picture:", error);
-                    showAlert(
-                        "An error occurred while uploading the picture.",
-                        "error"
-                    ); // Use showAlert instead of alert
+                    showAlert("An error occurred while uploading the picture.", "error"); // Use showAlert instead of alert
                 });
         }
     };
@@ -474,9 +450,7 @@ const AdvertiserProfilePage = () => {
                         {/* Profile Image Section */}
                         <ProfileImageContainer>
                             <div
-                                onClick={
-                                    isEditing ? handleImageClick : undefined
-                                } // Clickable only when isEditing is true
+                                onClick={isEditing ? handleImageClick : undefined} // Clickable only when isEditing is true
                                 style={{
                                     width: "10vw",
                                     height: "10vw",
@@ -502,10 +476,7 @@ const AdvertiserProfilePage = () => {
                             <strong>
                                 <p> {response?.name || "name not provided"}</p>
                             </strong>
-                            <p>
-                                {" "}
-                                @{response?.username || "username not provided"}
-                            </p>
+                            <p> @{response?.username || "username not provided"}</p>
                         </ProfileImageContainer>
 
                         {/* Profile Details Section */}
@@ -635,9 +606,7 @@ const AdvertiserProfilePage = () => {
                         )}
                     </ProfileDetailsBox>
                     <ProfileDetailsBox>
-                        <ProfileDetailsContainer
-                            style={{ marginBottom: "100px" }}
-                        >
+                        <ProfileDetailsContainer style={{ marginBottom: "100px" }}>
                             <h2>About The Company</h2>
                             {isEditing1 ? (
                                 <div>
@@ -724,9 +693,7 @@ const AdvertiserProfilePage = () => {
                     <PopUp
                         isOpen={isDeleteConfirmationOpen}
                         setIsOpen={setIsDeleteConfirmationOpen}
-                        headerText={
-                            "Are you sure you want to delete your account?"
-                        }
+                        headerText={"Are you sure you want to delete your account?"}
                         actionText={"Confirm"}
                         handleSubmit={handleDeleteAccountConfirm}
                     ></PopUp>

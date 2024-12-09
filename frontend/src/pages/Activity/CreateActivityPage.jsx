@@ -12,6 +12,12 @@ import Map from "../map";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
+import LocationAdder from "../../components/LocationAdder.jsx";
+import MapPopUp from "../../components/MapPopUp.jsx";
+import CurrencyDropdown from "../../components/CurrencyDropdownList.jsx";
+import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
+import Cookies from "js-cookie";
 
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
@@ -23,11 +29,11 @@ const Popup = ({ message, onClose, isError }) => (
 );
 
 const defaultData = {
-    name: "",
     startDate: "",
     endDate: "",
     latitude: 0,
     longitude: 0,
+    location: "",
     category: "",
     tags: [],
     freeSpots: 0,
@@ -52,6 +58,22 @@ const CreateActivityPage = () => {
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [formattedTime, setFormattedTime] = useState("");
+    const [selectedCurrency, setSelectedCurrency] = useState("");
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice, convertPrice } = useCurrencyConverter(currency);
+
+    const [pickupLocation, setPickupLocation] = useState({
+        latitude: 0,
+        longitude: 0,
+        location: "",
+    });
+
+    const [isMapOpen, setIsMapOpen] = useState(false);
+    const [mapFunction, setMapFunction] = useState(null);
+    useEffect(() => {
+        console.log(mapFunction);
+        if (mapFunction) setIsMapOpen(true);
+    }, [mapFunction]);
 
     const navigate = useNavigate();
 
@@ -108,6 +130,8 @@ const CreateActivityPage = () => {
 
     const handleInputChange = (e) => {
         let { name, value, type, checked } = e.target;
+        console.log(name, value);
+        console.log(formData);
         if (type === "number" && isNaN(value)) return;
         if (type == "number") value = Math.max(value, 0);
         if (name == "specialDiscount") value = Math.min(value, 100);
@@ -190,14 +214,19 @@ const CreateActivityPage = () => {
                 tags: selectedTags,
                 initialFreeSpots: parseInt(formData.freeSpots) || 0,
                 specialDiscount: parseFloat(formData.specialDiscount) || 0,
-                price: parseFloat(formData.price) || 0,
-                Latitude: formData.Latitude ? parseFloat(formData.Latitude) : undefined,
-                Longitude: formData.Longitude
-                    ? parseFloat(formData.Longitude)
+                price:
+                    parseFloat(convertPrice(formData.price, selectedCurrency, "EGP")) ||
+                    0,
+                Latitude: pickupLocation.latitude
+                    ? parseFloat(pickupLocation.latitude)
                     : undefined,
+                Longitude: pickupLocation.longitude
+                    ? parseFloat(pickupLocation.longitude)
+                    : undefined,
+                location: pickupLocation.location,
             };
 
-            console.log(finalFormData);
+            console.log(pickupLocation);
 
             Object.keys(finalFormData).forEach(
                 (key) => finalFormData[key] === undefined && delete finalFormData[key]
@@ -233,6 +262,11 @@ const CreateActivityPage = () => {
         setImagePreviews((prev) => prev.filter((image) => image.id !== idToRemove));
     };
 
+    const inputStyles = {
+        width: "100%", // Or a specific value like "20rem"
+        height: "3rem",
+    };
+
     usePageHeader(
         "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzB8fHNvdXZlbmlyJTIwc2hvcHxlbnwwfHwwfHx8MA%3D%3D",
         "Create a New Activity"
@@ -248,145 +282,130 @@ const CreateActivityPage = () => {
                 />
             )}
 
-            <form style={{ marginTop: "35vh" }}>
+            <form
+                style={{ marginTop: "35vh" }}
+                onSubmit={(e) => {
+                    e.preventDefault();
+                }}
+            >
                 <FormContainer>
                     <div>
                         <FormSection>
                             <InputGroup>
                                 <Label>Title</Label>
-                                <Input
-                                    type="text"
+                                <TextField
                                     name="name"
-                                    placeholder="Insert title here..."
+                                    id="outlined-basic"
+                                    label="Insert title here..."
+                                    variant="outlined"
                                     value={formData.name}
                                     onChange={handleInputChange}
+                                    style={inputStyles}
                                 />
                             </InputGroup>
 
                             <InputGroup>
                                 <Label>Description</Label>
-                                <TextArea
+
+                                <TextField
                                     name="description"
-                                    placeholder="Insert description here...."
+                                    id="outlined-basic"
+                                    label="Insert description here...."
+                                    variant="outlined"
                                     value={formData.description}
                                     onChange={handleInputChange}
+                                    style={inputStyles}
                                 />
                             </InputGroup>
-                        </FormSection>
 
-                        <FormSection>
-                            <FlexGroup>
-                                <Label>Price</Label>
-                                <Input
-                                    type="number"
-                                    name="price"
-                                    placeholder="Insert Price here..."
-                                    value={formData.price}
-                                    onChange={handleInputChange}
-                                    style={{ marginLeft: "11em" }}
-                                />
-                            </FlexGroup>
-
-                            <FlexGroup>
-                                <Label>Discount Percentage (%)</Label>
-                                <Input
-                                    type="number"
-                                    name="specialDiscount"
-                                    placeholder="Insert discount here..."
-                                    value={formData.specialDiscount}
-                                    onChange={handleInputChange}
-                                    style={{ marginLeft: "0.8em" }}
-                                />
-                            </FlexGroup>
-                        </FormSection>
-
-                        <FormSection>
                             <Label>Date & Time</Label>
                             <div
                                 style={{
                                     display: "flex",
-                                    alignItems: "center",
                                     gap: "2rem",
                                     marginTop: "1rem",
                                 }}
                             >
+                                {/* First Date & Time Section */}
                                 <div
                                     style={{
-                                        position: "relative",
-                                        display: "inline-block",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
                                         width: "16rem",
                                     }}
                                 >
-                                    <input
-                                        type="text"
-                                        value={formattedDate}
-                                        readOnly
-                                        onClick={() => setShowDateModal(true)}
-                                        placeholder="Select Date"
+                                    <div
                                         style={{
-                                            fontSize: "1.125rem",
-                                            width: "14vw",
-                                            height: "3rem",
-                                            paddingLeft: "1rem",
-                                            paddingRight: "2.5rem",
-                                            border: "1px solid #ddd",
-                                            borderRadius: "0.375rem",
-                                            cursor: "pointer",
+                                            position: "relative",
+                                            width: "100%",
+                                            marginBottom: "1rem",
                                         }}
-                                    />
-                                    <CalendarTodayIcon
-                                        style={{
-                                            position: "absolute",
-                                            right: "-1rem",
-                                            top: "50%",
-                                            transform: "translateY(-50%)",
-                                            cursor: "pointer",
-                                            fontSize: "1.2em",
-                                            color: "#888",
-                                        }}
-                                        onClick={() => setShowDateModal(true)}
-                                    />
-                                </div>
-
-                                <div
-                                    style={{
-                                        marginLeft: "2vw",
-                                        position: "relative",
-                                        display: "inline-block",
-                                        width: "16rem",
-                                    }}
-                                >
-                                    <input
-                                        type="text"
-                                        value={formattedTime}
-                                        readOnly
-                                        onClick={() => setShowTimeModal(true)}
-                                        placeholder="Select Time"
-                                        style={{
-                                            fontSize: "1.125rem",
-                                            width: "14vw",
-                                            height: "3rem",
-                                            paddingLeft: "1rem",
-                                            paddingRight: "2.5rem",
-                                            border: "1px solid #ddd",
-                                            borderRadius: "0.375rem",
-                                            cursor: "pointer",
-                                        }}
-                                    />
-                                    <AccessTimeIcon
-                                        style={{
-                                            position: "absolute",
-                                            right: "-1rem",
-                                            top: "50%",
-                                            transform: "translateY(-50%)",
-                                            cursor: "pointer",
-                                            fontSize: "1.2em",
-                                            color: "#888",
-                                        }}
-                                        onClick={() => setShowTimeModal(true)}
-                                    />
+                                    >
+                                        <input
+                                            type="text"
+                                            value={formattedDate}
+                                            readOnly
+                                            onClick={() => setShowDateModal(true)}
+                                            placeholder="Select Date"
+                                            style={{
+                                                fontSize: "1.125rem",
+                                                width: "100%",
+                                                height: "3rem",
+                                                paddingLeft: "1rem",
+                                                paddingRight: "2.5rem",
+                                                border: "1px solid #ddd",
+                                                borderRadius: "0.375rem",
+                                                cursor: "pointer",
+                                            }}
+                                        />
+                                        <CalendarTodayIcon
+                                            style={{
+                                                position: "absolute",
+                                                left: "15vw",
+                                                top: "50%",
+                                                transform: "translateY(-50%)",
+                                                cursor: "pointer",
+                                                fontSize: "1.2em",
+                                                color: "#9C4F21",
+                                            }}
+                                            onClick={() => setShowDateModal(true)}
+                                        />
+                                    </div>
+                                    <div style={{ position: "relative", width: "100%" }}>
+                                        <input
+                                            type="text"
+                                            value={formattedTime}
+                                            readOnly
+                                            onClick={() => setShowTimeModal(true)}
+                                            placeholder="Select Time"
+                                            style={{
+                                                fontSize: "1.125rem",
+                                                width: "100%",
+                                                height: "3rem",
+                                                paddingLeft: "1rem",
+                                                paddingRight: "2.5rem",
+                                                border: "1px solid #ddd",
+                                                borderRadius: "0.375rem",
+                                                cursor: "pointer",
+                                            }}
+                                        />
+                                        <AccessTimeIcon
+                                            style={{
+                                                position: "absolute",
+                                                left: "15vw",
+                                                top: "50%",
+                                                transform: "translateY(-50%)",
+                                                cursor: "pointer",
+                                                fontSize: "1.2em",
+                                                color: "#9C4F21",
+                                            }}
+                                            onClick={() => setShowTimeModal(true)}
+                                        />
+                                    </div>
                                 </div>
                             </div>
+
                             <DateModal
                                 isOpen={showDateModal}
                                 onClose={() => setShowDateModal(false)}
@@ -401,9 +420,60 @@ const CreateActivityPage = () => {
                                 endTime={endTime}
                                 onTimesChange={handleTimesChange}
                             />
-                        </FormSection>
+                            <InputGroup>
+                                <div style={{ marginBottom: "3vh" }}>
+                                    {/* <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            marginBottom: "0.5rem",
+                                        }}
+                                    >
+                                        <Label style={{ marginRight: "1rem" }}>
+                                            Location
+                                        </Label>
+                                        <Button
+                                            text="Locate"
+                                            stylingMode="always-light"
+                                            handleClick={() => navigate("/home")}
+                                            customStyle={{
+                                                padding: "0.5rem 1rem",
+                                                fontSize: "0.875rem",
+                                                backgroundColor: "#ECD1B4",
+                                                border: "none",
+                                                borderRadius: "0.375rem",
+                                                cursor: "pointer",
+                                                marginLeft: "auto",
+                                            }}
+                                        />
+                                    </div>
 
-                        <FormSection>
+                                    <TextField
+                                        id="outlined-basic"
+                                        label="No location added"
+                                        variant="outlined"
+                                        // value={formData}
+                                        onChange={handleInputChange}
+                                        style={inputStyles}
+                                    /> */}
+                                    {isMapOpen && (
+                                        <MapPopUp
+                                            popUpOpen={isMapOpen}
+                                            setPopUpOpen={setIsMapOpen}
+                                            mapFunction={mapFunction}
+                                        />
+                                    )}
+
+                                    <LocationAdder
+                                        title="Pickup Location"
+                                        styles={{ width: "100%" }}
+                                        location={pickupLocation}
+                                        setLocation={setPickupLocation}
+                                        setMapFunction={setMapFunction}
+                                    />
+                                </div>
+                            </InputGroup>
+
                             <FlexGroup>
                                 <Label>Category</Label>
                                 <Select
@@ -445,7 +515,7 @@ const CreateActivityPage = () => {
                                             }
                                             style={{
                                                 minWidth: "27vw",
-                                                marginLeft: "1.7vw",
+                                                marginLeft: "0vw",
                                                 padding: "1vh 1.5vh",
                                                 borderRadius: "0.5vh",
                                                 border: "0.1vh solid #ccc",
@@ -464,7 +534,7 @@ const CreateActivityPage = () => {
                                             disabled={!selectedTag}
                                             style={{
                                                 padding: "1vh 2vh",
-                                                backgroundColor: "#f4cfbf",
+                                                backgroundColor: "#ECD1B4",
                                                 border: "none",
                                                 borderRadius: "0.5vh",
                                                 cursor: selectedTag
@@ -475,11 +545,11 @@ const CreateActivityPage = () => {
                                             }}
                                             onMouseEnter={(e) => {
                                                 e.target.style.backgroundColor =
-                                                    "#edbdaa";
+                                                    "#EDC294";
                                             }}
                                             onMouseLeave={(e) => {
                                                 e.target.style.backgroundColor =
-                                                    "#f4cfbf";
+                                                    "#ECD1B4";
                                             }}
                                         >
                                             Add
@@ -500,7 +570,7 @@ const CreateActivityPage = () => {
                                                 onClick={(e) => removeTag(tag, e)}
                                                 style={{
                                                     padding: "0.5vh 1vh",
-                                                    backgroundColor: "#f4cfbf",
+                                                    backgroundColor: "#ECD1B4",
                                                     borderRadius: "0.5vh",
                                                     cursor: "pointer",
                                                 }}
@@ -521,7 +591,7 @@ const CreateActivityPage = () => {
                             onImageRemove={handleImageRemove}
                         />
 
-                        <FormSection style={{ height: "41vh" }}>
+                        {/* <FormSection style={{ height: "41vh" }}>
                             <Label style={{ marginLeft: "2em" }}>
                                 Pin Activity Location on Map
                             </Label>
@@ -534,11 +604,11 @@ const CreateActivityPage = () => {
                                     });
                                 }}
                             />
-                        </FormSection>
+                        </FormSection> */}
 
                         <FormSection>
                             <FlexGroup>
-                                <Label>Booking</Label>
+                                <Label>Open for Booking</Label>
                                 <div
                                     style={{
                                         display: "flex",
@@ -566,7 +636,7 @@ const CreateActivityPage = () => {
                                                 ? "#a83232"
                                                 : "#333",
                                             backgroundColor: formData.isOpenForBooking
-                                                ? "#fcd8d8"
+                                                ? "#ECD1B4"
                                                 : "transparent",
                                             borderRadius: "3em",
                                             transition: "all 0.3s ease",
@@ -592,7 +662,7 @@ const CreateActivityPage = () => {
                                                 ? "#a83232"
                                                 : "#333",
                                             backgroundColor: !formData.isOpenForBooking
-                                                ? "#fcd8d8"
+                                                ? "#ECD1B4"
                                                 : "transparent", // Matching background color
                                             borderRadius: "1em",
                                             transition: "all 0.3s ease",
@@ -603,7 +673,7 @@ const CreateActivityPage = () => {
                                 </div>
                             </FlexGroup>
                             <FlexGroup>
-                                <Label>Capacity</Label>
+                                <Label>Number of seats</Label>
                                 <StockControl>
                                     <StockButton
                                         type="button"
@@ -638,6 +708,76 @@ const CreateActivityPage = () => {
                                         +
                                     </StockButton>
                                 </StockControl>
+                            </FlexGroup>
+                            <FlexGroup>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column", // Stacks children vertically
+                                        width: "100%", // Ensures the text field takes up the full width
+                                        gap: "1rem", // Adds spacing between elements
+                                    }}
+                                >
+                                    <Label>Price</Label>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column", // Stacks children vertically
+                                            width: "100%", // Ensures the text field takes up the full width
+                                            gap: "1rem", // Adds spacing between elements
+                                        }}
+                                    >
+                                        <CurrencyDropdown
+                                            selectedCurrency={selectedCurrency}
+                                            setSelectedCurrency={setSelectedCurrency}
+                                        />
+
+                                        <TextField
+                                            name="price"
+                                            id="outlined-basic"
+                                            label="Insert Price here..."
+                                            variant="outlined"
+                                            type="number"
+                                            value={formData.price}
+                                            onChange={handleInputChange}
+                                            style={{
+                                                width: "100%", // Ensures the text field takes up the full width
+                                            }}
+                                            inputProps={{
+                                                step: "0.01", // Allows decimal values if needed
+                                                min: "0", // Enforces a minimum value of 0
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </FlexGroup>
+
+                            <FlexGroup>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column", // Stacks children vertically
+                                        width: "100%", // Ensures the text field takes up the full width
+                                        gap: "1rem", // Adds spacing between elements
+                                    }}
+                                >
+                                    <Label>Discount (%)</Label>
+                                    <TextField
+                                        name="specialDiscount"
+                                        id="outlined-basic"
+                                        label="Insert discount here..."
+                                        variant="outlined"
+                                        type="number"
+                                        value={formData.specialDiscount}
+                                        onChange={handleInputChange}
+                                        inputProps={{
+                                            step: "0.01", // Allows decimals if required
+                                            min: "0", // Enforce a minimum discount of 0
+                                            max: "100", // Enforce a maximum discount of 100 (if it's a percentage)
+                                        }}
+                                        style={inputStyles}
+                                    />
+                                </div>
                             </FlexGroup>
                         </FormSection>
                     </div>
@@ -726,10 +866,10 @@ const FormContainer = styled.div`
 `;
 
 const FormSection = styled.div`
-    background: #faf4f4;
+    background: #ffffff;
     padding: clamp(1em, 3vw, 2em);
     border-radius: 1em;
-    box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.3);
     margin-bottom: 2em;
 `;
 
@@ -747,6 +887,8 @@ const FlexGroup = styled.div`
 
 const Label = styled.label`
     display: block;
+    width: 10em; /* Set a fixed width */
+    text-align: left; /* Ensure alignment */
     font-size: 1.1em;
     font-weight: 500;
     margin-bottom: 0.5em;
@@ -784,7 +926,7 @@ const StockControl = styled.div`
 `;
 
 const StockButton = styled.button`
-    background-color: #f28b82;
+    background-color: #ecd1b4;
     color: #fff;
     padding: 0.5rem;
     font-size: 1.2rem;

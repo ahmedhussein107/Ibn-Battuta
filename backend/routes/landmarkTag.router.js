@@ -1,12 +1,12 @@
 import express from "express";
 
 import {
-	createLandmarkTag,
-	getLandmarkTags,
-	updateLandmarkTag,
-	deleteLandmarkTag,
-	getLandmarkTag,
-	searchLandmarkTags,
+    createLandmarkTag,
+    getLandmarkTags,
+    updateLandmarkTag,
+    deleteLandmarkTag,
+    getLandmarkTag,
+    searchLandmarkTags,
 } from "../controllers/landmarkTag.controller.js";
 
 const landmarkTagRouter = express.Router();

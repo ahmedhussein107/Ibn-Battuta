@@ -1,7 +1,7 @@
 import GovernorLandmarks from "../pages/Governor/GovernorLandmarks";
 import CreateLandmarkPage from "../pages/Landmark/CreateLandmarkPage";
 import GovernorProfilePage from "../pages/Governor/GovernorProfilePage";
-import GovernorHome from "../pages/TourGuide/TourGuideHome";
+import GovernorHome from "../pages/Governor/GovernorHome";
 import ViewLandmarkTags from "../pages/Governor/ViewLandmarkTags";
 const governorRoutes = [
 	{ path: "/governor", element: <GovernorHome /> },

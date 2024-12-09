@@ -1,46 +1,29 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import "react-datetime/css/react-datetime.css";
-import SideBar from "../../components/SideBar/SideBar";
-import SearchField from "../../components/SearchField/SearchField";
-import CheckboxList from "../../components/CheckBoxList";
 import PaginationComponent from "../../components/Pagination";
 import Footer from "../../components/Footer";
 import landmarkbackground from "../../assets/backgrounds/landmarksBackground.png";
 import CardLandmark from "../../components/CardLandmark";
 import ShareAndMark from "../../components/ShareAndMark";
+import DeleteButton from "../../components/DeleteButton";
+import { Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router-dom";
 
 const governorLandmark = () => {
 	const [landmarks, setLandmarks] = useState([]);
-	const [tags, setTags] = useState([""]);
-	const [selectedTags, setSelectedTags] = useState([]);
-	const [name, setName] = useState("");
-	const [searchedTag, setSearchedTag] = useState("");
-	const [location, setLocation] = useState("");
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
 	const itemsPerPage = 6;
 
-	const fetchTags = async () => {
-		try {
-			const response = await axiosInstance.get(`/landmarkTag/allLandmarkTags/`);
-			let tags = [];
-			for (let tag of response.data) {
-				tags.push(tag._id);
-			}
-			setTags(tags);
-		} catch (error) {
-			console.error("Error fetching Tags:", error);
-		}
-	};
+	const navigate = useNavigate();
 
-	const fetchLandmarks = async (query) => {
+	const fetchLandmarks = async () => {
 		try {
-			console.log("query", query);
 			const response = await axiosInstance.get(`/landmark/allLandmarks/`, {
 				params: {
-					...query,
 					page: currentPage,
 					limit: itemsPerPage,
 				},
@@ -54,47 +37,8 @@ const governorLandmark = () => {
 	};
 
 	useEffect(() => {
-		fetchTags();
-	}, []);
-
-	useEffect(() => {
-		const query = buildQuery();
-		setCurrentPage(1);
-		fetchLandmarks(query);
-	}, [searchedTag, selectedTags, name, location]);
-
-	useEffect(() => {
-		const query = buildQuery();
-		fetchLandmarks(query);
+		fetchLandmarks();
 	}, [currentPage]);
-
-	const buildQuery = () => {
-		let query = {};
-
-		if (searchedTag) {
-			query.tags = searchedTag;
-		} else {
-			if (selectedTags && selectedTags.length > 0) {
-				query.tags = selectedTags.join("|");
-			} else {
-				delete query.tags;
-			}
-		}
-
-		if (name) {
-			query.name = "~" + name;
-		} else {
-			delete query.name;
-		}
-
-		if (location) {
-			query.location = "~" + location;
-		} else {
-			delete query.location;
-		}
-
-		return query;
-	};
 
 	return (
 		<div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
@@ -129,6 +73,25 @@ const governorLandmark = () => {
 				</div>
 			</div>
 
+			<Button
+				style={{
+					marginTop: "1vh",
+					marginLeft: "2vw",
+					borderRadius: "4vh",
+					minWidth: "1vw",
+					color: "black",
+					borderColor: "black",
+					maxHeight: "4.2vh",
+				}}
+				variant="outlined"
+				onClick={() => {
+					navigate("/governor/create-landmark");
+				}}
+			>
+				<AddIcon sx={{ fontSize: "3vh" }} />
+				<p style={{ marginLeft: ".3vw" }}>Add Landmark</p>
+			</Button>
+
 			<div
 				style={{
 					display: "flex",
@@ -147,14 +110,7 @@ const governorLandmark = () => {
 									landmark={landmark}
 									width={"95%"}
 									height={"40vh"}
-									firstLineButtons={[
-										<ShareAndMark
-											width="1.2vw"
-											height="1.2vw"
-											styles={{ padding: "0.5vh" }}
-											id={landmark.id}
-										/>,
-									]}
+									firstLineButtons={[<DeleteButton />]}
 								/>
 							</div>
 						);
