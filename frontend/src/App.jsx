@@ -30,8 +30,6 @@ import publicRoutes from "./routes/public.jsx";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./hooks/currencyHooks.js";
 
-import CheckoutPopup from "./components/CheckoutPopup.jsx";
-
 const returnUserRoutes = (routesList, userType) => {
     return (
         <>

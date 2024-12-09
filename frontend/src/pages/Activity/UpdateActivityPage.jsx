@@ -296,7 +296,7 @@ const UpdateActivityPage = () => {
             ...formData,
             startDate: combinedStartDate.toISOString(),
             endDate: combinedEndDate.toISOString(),
-            pictures: uploadedFileUrls, // Ensure this is updated correctly
+            //pictures: uploadedFileUrls, // Ensure this is updated correctly
             tags: selectedTags,
             latitude: pickupLocation.latitude,
             longitude: pickupLocation.longitude,
