@@ -39,7 +39,7 @@ const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem"
 	if (isLoading) {
 		return <CircularProgress />;
 	}
-	const Picture = order.purchases[0].product.pictures[0] || "";
+	const Picture =(order.purchases[0] && order.purchases[0].product.pictures[0] )|| "";
 	const aboveLine = (
 		<div>
 			<div
@@ -93,6 +93,8 @@ const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem"
 	const handleSubmit = async (event, newValue) => {
 		try {
 			const response = await axiosInstance.delete(`/order/deleteOrder/${order._id}`);
+			window.location.reload();
+			console.log("Order cancelled");
 			// setOrderStatus("canceled");
 		} catch (error) {
 			console.error("Error:", error);
