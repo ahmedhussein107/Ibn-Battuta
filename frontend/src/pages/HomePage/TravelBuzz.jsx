@@ -12,7 +12,13 @@ const TravelBuzz = () => {
     const [isHovered3, setHovered3] = useState(false);
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", position: "relative" }}>
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+            }}
+        >
             {/* <img
                 src={i1}
                 alt="Desert Background"
@@ -64,62 +70,44 @@ const TravelBuzz = () => {
                         <img src={im1} alt="Explore World" style={imageStyle} />
                         <h3 style={titleStyle}>Exp World Like Never Before</h3>
                         <p style={textStyle}>
-                            Discover our App activities, transforms travel planning into a
-                            breeze!
+                            Discover our App activities, transforms travel
+                            planning into a breeze!
                         </p>
-                        <button
-                            style={isHovered ? buttonHoverStyle : buttonStyle}
-                            onMouseEnter={() => setHovered(true)}
-                            onMouseLeave={() => setHovered(false)}
-                        >
-                            Learn
-                        </button>
                     </div>
                     {/* Card 2 */}
                     <div style={cardStyle}>
-                        <img src={im2} alt="Unleash Explorer" style={imageStyle} />
+                        <img
+                            src={im2}
+                            alt="Unleash Explorer"
+                            style={imageStyle}
+                        />
                         <h3 style={titleStyle}>Unleash Your Inner Explorer</h3>
                         <p style={textStyle}>
-                            Find itineraries and local favorites with just a tap!
+                            Find itineraries and local favorites with just a
+                            tap!
                         </p>
-                        <button
-                            style={isHovered1 ? buttonHoverStyle : buttonStyle}
-                            onMouseEnter={() => setHovered1(true)}
-                            onMouseLeave={() => setHovered1(false)}
-                        >
-                            Learn
-                        </button>
                     </div>
                     {/* Card 3 */}
                     <div style={cardStyle}>
-                        <img src={im3} alt="Upcoming Plans" style={imageStyle} />
+                        <img
+                            src={im3}
+                            alt="Upcoming Plans"
+                            style={imageStyle}
+                        />
                         <h3 style={titleStyle}>Explore our Upcoming plans</h3>
                         <p style={textStyle}>
-                            Say goodbye to overspending and hello to smart travel!
+                            Say goodbye to overspending and hello to smart
+                            travel!
                         </p>
-                        <button
-                            style={isHovered2 ? buttonHoverStyle : buttonStyle}
-                            onMouseEnter={() => setHovered2(true)}
-                            onMouseLeave={() => setHovered2(false)}
-                        >
-                            Learn
-                        </button>
                     </div>
                     {/* Card 4 */}
                     <div style={cardStyle}>
                         <img src={im4} alt="Gift Shop" style={imageStyle} />
                         <h3 style={titleStyle}>Gift Shop for Travel Lovers</h3>
                         <p style={textStyle}>
-                            Shop unique souvenirs that scream 'I traveled!' and make your
-                            friends jealous!
+                            Shop unique souvenirs that scream 'I traveled!' and
+                            make your friends jealous!
                         </p>
-                        <button
-                            style={isHovered3 ? buttonHoverStyle : buttonStyle}
-                            onMouseEnter={() => setHovered3(true)}
-                            onMouseLeave={() => setHovered3(false)}
-                        >
-                            Learn
-                        </button>
                     </div>
                 </div>
             </div>

@@ -25,7 +25,7 @@ const HeaderControls = ({ onFilterChange, selectedFilter, onSort, isSorted }) =>
                         ></Button>
                     ))}
                 </div>
-                {Cookies.get("userType") === "admin" ? (
+                {Cookies.get("userType") === "Admin" ? (
                     <div className="sort-div">
                         <Button
                             handleClick={onSort}

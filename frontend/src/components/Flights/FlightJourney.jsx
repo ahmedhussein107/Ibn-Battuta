@@ -93,7 +93,7 @@ const FlightJourney = ({ flight, airlineName }) => {
                                     style={{
                                         width: "48vw",
                                         height: "6vh",
-                                        backgroundColor: "white",
+
                                         display: "flex",
                                         alignItems: "center",
                                         paddingLeft: "3vw",
