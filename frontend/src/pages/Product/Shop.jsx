@@ -283,31 +283,34 @@ const Shop = () => {
                             Shop
                         </span>
                     </button>
-                    <button
-                        style={
-                            selectedPage === "wishlist"
-                                ? selectedButtonStyle
-                                : buttonStyle
-                        }
-                        onClick={() => setSelectedPage("wishlist")}
-                    >
-                        <FavoriteBorderIcon
-                            style={{
-                                width: "1rem",
-                                height: "1rem",
-                                color: "#9C4F21",
-                                scale: "1.5",
-                            }}
-                        />
-                        <span
-                            style={{
-                                fontSize: "1.3rem",
-                                color: "#9C4F21",
-                            }}
+                    {userType === "Tourist" && (
+                        <button
+                            style={
+                                selectedPage === "wishlist"
+                                    ? selectedButtonStyle
+                                    : buttonStyle
+                            }
+                            onClick={() => setSelectedPage("wishlist")}
                         >
-                            Wishlist
-                        </span>
-                    </button>
+                            <FavoriteBorderIcon
+                                style={{
+                                    width: "1rem",
+                                    height: "1rem",
+                                    color: "#9C4F21",
+                                    scale: "1.5",
+                                }}
+                            />
+                            <span
+                                style={{
+                                    fontSize: "1.3rem",
+                                    color: "#9C4F21",
+                                }}
+                            >
+                                Wishlist
+                            </span>
+                        </button>
+                    )}
+
                     <button
                         style={{
                             ...buttonStyle,
@@ -417,7 +420,7 @@ const Shop = () => {
                                     />,
                                 ]}
                                 controlButtons={[
-                                    (userType === "Tourist" || userType === "Guest") && (
+                                    userType === "Tourist" && (
                                         <div style={{ fontSize: "0.8rem" }}>
                                             <CustomButton
                                                 text="Add to cart"

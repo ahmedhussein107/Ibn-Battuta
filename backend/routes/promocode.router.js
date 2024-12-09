@@ -1,8 +1,8 @@
 import express from "express";
 import {
-	validatePromoCode,
-	applyPromoCode,
-	createGeneralPromoCode,
+    validatePromoCode,
+    applyPromoCode,
+    createGeneralPromoCode,
 } from "../controllers/promocode.controller.js";
 import { isAuthenticated } from "../routers.middleware/authentication.js";
 

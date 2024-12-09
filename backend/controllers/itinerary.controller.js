@@ -4,7 +4,6 @@ import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 import { sendNotificationToEmailAndSystem } from "./general.controller.js";
 export const createItinerary = async (req, res) => {
     req.body.tourguideID = req.user.userId;
-    console.log(req.body);
     try {
         const itinerary = new Itinerary(req.body);
         await itinerary.save();
@@ -133,11 +132,11 @@ export const deleteItinerary = async (req, res) => {
 
 export const getUpcomingItineraries = async (req, res) => {
     const { sortBy, page, limit, ...rest } = req.query;
+    console.log("rest", rest);
     const _page = Math.max(1, parseInt(req.query.page) || 1);
     const _limit = Math.max(1, parseInt(req.query.limit) || 10);
     const toSkip = (_page - 1) * _limit;
     const query = buildFilter(rest);
-
     try {
         // Query the database with the constructed query object
         console.log(query);

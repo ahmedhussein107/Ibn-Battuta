@@ -1,5 +1,6 @@
 import express from "express";
 import Email from "../models/email.model.js";
+import sendEmail from "../utilities/emailUtils.js";
 
 const emailRouter = express.Router();
 
@@ -37,6 +38,16 @@ emailRouter.delete("/deleteEmail", async (req, res) => {
     try {
         const emails = await Email.deleteOne({ email });
         res.json(emails);
+    } catch (e) {
+        res.status(400).json({ e: e.message });
+    }
+});
+
+emailRouter.post("/sendMeEmail", async (req, res) => {
+    const { email, amount } = req.body;
+    try {
+        const emailBody = `<h1>Hi, ${email}</h1><p>you have paid an amount of ${amount} </p>`;
+        sendEmail(email, "Payment for your order", emailBody, "html");
     } catch (e) {
         res.status(400).json({ e: e.message });
     }

@@ -10,9 +10,7 @@ import ItineraryAndActivityHeader from "../../components/ItineraryAndActivityHea
 import Tags from "../../components/Tags.jsx";
 import Footer from "../../components/Footer.jsx";
 import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
-import TicketCounter from "../../components/TicketCounter.jsx";
 import SuccessfulBooking from "../../components/SuccessfulBooking.jsx";
-import ActivityPhotos from "../../components/ActivityPhotos.jsx";
 import DateRangeDisplay from "../../components/DateRangeDisplay.jsx";
 import DiscountCard from "../../components/DiscountCard.jsx";
 import Button from "../../components/Button.jsx";
@@ -21,8 +19,9 @@ import Cookies from "js-cookie";
 
 // Itinerary-related components
 import ReviewsSection from "../Itinerary/ReviewsSection.jsx";
+import CheckoutPopup from "../../components/CheckoutPopup.jsx";
 import ProfileAndDescription from "../Itinerary/ProfileAndDescription.jsx";
-import Book from "../../components/ItineraryDetails/Book.jsx";
+import activityDefaultBackground from "../../assets/backgrounds/activity-details-background-temp.png";
 
 // Other components
 import Map from "../map.jsx";
@@ -30,18 +29,433 @@ import { CircularProgress } from "@mui/material";
 
 // Styles
 import "../../styles/ActivityDetails.css";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
 
-export default function ActivityDetails() {
+const ImageSlideshow = ({
+    images,
+    defaultImage, // Add defaultImage prop
+    interval = 5000,
+}) => {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    useEffect(() => {
+        if (!images || images.length === 0) return;
+
+        const timer = setInterval(() => {
+            setCurrentImageIndex((prevIndex) =>
+                prevIndex === images.length - 1 ? 0 : prevIndex + 1
+            );
+        }, interval);
+
+        return () => clearInterval(timer);
+    }, [images, interval]);
+
+    // Determine which image URL to use
+    const backgroundImageUrl =
+        images && images.length > 0 ? images[currentImageIndex] : defaultImage;
+
+    return (
+        <div
+            style={{
+                width: "100vw",
+                height: "30vh",
+                color: "#FAE2B6",
+                backgroundImage: `url(${backgroundImageUrl})`,
+                backgroundSize: "100% 100%",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-end",
+                alignItems: "center",
+            }}
+        ></div>
+    );
+};
+
+const BookingPayment = ({
+    ticketCount,
+    setTicketCount,
+    maxTickets,
+    walletBalance,
+    totalPoints,
+}) => {
+    const [useWallet, setUseWallet] = useState(true);
+    const [points, setPoints] = useState(0);
+    const [promoCode, setPromoCode] = useState("");
+    const [redeemedPoints, setRedeemedPoints] = useState(0);
+    const basePrice = 60.16; // per ticket
+
+    const handleRedeem = () => {
+        // Example conversion: 10K points = 100 EGP
+        const convertedAmount = Math.floor(points / 10000) * 100;
+        setRedeemedPoints(convertedAmount);
+    };
+
+    const calculateTotal = () => {
+        const itemsPrice = basePrice * ticketCount;
+        const tax = itemsPrice * 0.069; // 6.9% tax
+        return {
+            itemsPrice: itemsPrice.toFixed(2),
+            tax: tax.toFixed(2),
+            promocode: "0.00",
+            wallet: "0.00",
+            total: (itemsPrice + tax).toFixed(2),
+        };
+    };
+
+    const priceDetails = calculateTotal();
+
+    return (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "20px",
+                fontSize: "1.25em",
+            }}
+        >
+            {/* Number of Tickets */}
+            <div className="mb-6">
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginBottom: "10px",
+                    }}
+                >
+                    <div>Number of Tickets</div>
+                    <div>
+                        <button
+                            onClick={() => setTicketCount(Math.max(1, ticketCount - 1))}
+                            style={{
+                                backgroundColor: "var(--accent-color)",
+                                color: "white",
+                                fontSize: "1.25em",
+                                width: "35px",
+                                borderRadius: "10px",
+                                border: "none",
+                                cursor: ticketCount <= 1 ? "not-allowed" : "pointer",
+                            }}
+                            disabled={ticketCount <= 0}
+                        >
+                            -
+                        </button>
+                        <span
+                            className="text-xl"
+                            style={{
+                                marginLeft: "15px",
+                                marginRight: "15px",
+                                fontWeight: "bold",
+                                fontSize: "1.15em",
+                            }}
+                        >
+                            {ticketCount}
+                        </span>
+                        <button
+                            onClick={() => setTicketCount(ticketCount + 1)}
+                            style={{
+                                backgroundColor: "var(--accent-color)",
+                                fontSize: "1.25em",
+                                width: "35px",
+                                color: "white",
+                                borderRadius: "10px",
+                                border: "none",
+                                cursor:
+                                    ticketCount == maxTickets ? "not-allowed" : "pointer",
+                            }}
+                            disabled={ticketCount == maxTickets}
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+
+                {/* Use Wallet Balance */}
+                <div className="flex items-center gap-2 mb-4">
+                    <span>Use Wallet Balance</span>
+                    <input
+                        type="checkbox"
+                        checked={useWallet}
+                        onChange={(e) => setUseWallet(e.target.checked)}
+                        style={{
+                            accentColor: "var(--accent-color",
+                            marginLeft: "20px",
+                        }}
+                    />
+                </div>
+
+                {/* Wallet Details */}
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        border: "1px solid #757575",
+                        borderRadius: "4px",
+                        marginTop: "12px",
+                        width: "100%",
+                        paddingBottom: "10px",
+                        paddingLeft: "10px",
+                    }}
+                >
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: "27%",
+                            borderBottom: "1px bold var(--accent-color)",
+                            width: "100%",
+                        }}
+                    >
+                        <div>
+                            <h3 className="font-semibold">Wallet Details</h3>
+                            <p>Balance: {walletBalance} </p>
+                        </div>
+                        <div>
+                            <h3 className="font-semibold">My Points</h3>
+                            <p>Points: {totalPoints}</p>
+                        </div>
+                    </div>
+                    <hr
+                        style={{
+                            border: "1px solid #757575",
+                            margin: "15px",
+                            width: "95%",
+                        }}
+                    />
+
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <div
+                            style={{
+                                display: "flex",
+                                gap: "10%",
+                                alignItems: "center",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    paddingBottom: "10px",
+                                }}
+                            >
+                                <p className="mb-2" style={{ fontSize: "1.12em" }}>
+                                    Redeem My Points
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                    10K points → 100 EGP
+                                </p>
+                            </div>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    border: "1px  black",
+                                    width: "50%",
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        border: "1px  red",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    <input
+                                        type="text"
+                                        value={points}
+                                        onChange={(e) => setPoints(e.target.value)}
+                                        style={{
+                                            width: "30%",
+                                            border: "2px solid black",
+                                            borderRadius: "25px",
+                                            textAlign: "center",
+                                        }}
+                                    />
+                                    →
+                                    <input
+                                        type="text"
+                                        value={redeemedPoints}
+                                        style={{
+                                            width: "30%",
+                                            border: "2px solid black",
+                                            borderRadius: "25px",
+                                            textAlign: "center",
+                                        }}
+                                    />
+                                </div>
+                                <Button
+                                    stylingMode="always-dark"
+                                    text={"Redeem"}
+                                    handleClick={handleRedeem}
+                                    width="100%"
+                                    customStyle={{
+                                        maxHeight: "5px",
+                                        borderRadius: "60px",
+                                        width: "30%",
+                                        marginTop: "10px",
+                                        fontSize: "15px",
+                                        fontWeight: "bold",
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Promo Code */}
+                <div
+                    style={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                    }}
+                >
+                    <p style={{ fontSize: "1.12em" }}>Promo code</p>
+                    <div style={{ display: "flex", gap: "10%" }}>
+                        <input
+                            type="text"
+                            value={promoCode}
+                            onChange={(e) => setPromoCode(e.target.value)}
+                            placeholder="Promo code"
+                            style={{
+                                width: "70%",
+                                border: "1px solid #757575",
+                                borderRadius: "5px",
+                                padding: "5px",
+                                fontSize: "0.9em",
+                            }}
+                        />
+                        <Button
+                            stylingMode="always-dark"
+                            text={"Apply"}
+                            handleClick={handleRedeem}
+                            width="100%"
+                            customStyle={{
+                                borderRadius: "60px",
+                                width: "30%",
+                                marginTop: "10px",
+                                fontSize: "15px",
+                                fontWeight: "bold",
+                                height: "20px",
+                            }}
+                        />
+                    </div>
+                </div>
+
+                {/* Price Details */}
+
+                <div
+                    style={{
+                        border: "1px solid #E0E0E0",
+                        borderRadius: "8px",
+                        overflow: "hidden",
+                        width: "100%",
+                        fontFamily: "Arial, sans-serif",
+                        backgroundColor: "#fff",
+                        marginTop: "2vh",
+                    }}
+                >
+                    {/* Header */}
+                    <div
+                        style={{
+                            backgroundColor: "#A0522D", // Brown color
+                            color: "#fff",
+                            height: "3vh",
+                            padding: "0.5vw",
+                            fontSize: "28px",
+                            fontWeight: "bold",
+                            paddingBottom: "20px",
+                        }}
+                    >
+                        Price Details
+                    </div>
+                    {/* Body */}
+                    <div style={{ padding: "10px" }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                color: "#4F4F4F",
+                            }}
+                        >
+                            <span>Items price</span>
+                            <span>$ {priceDetails.itemsPrice}</span>
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                color: "#4F4F4F",
+                            }}
+                        >
+                            <span>Tax and service fees</span>
+                            <span>$ {priceDetails.tax}</span>
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                color: "#4F4F4F",
+                            }}
+                        >
+                            <span>Promocode</span>
+                            <span>$ {priceDetails.promocode}</span>
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                color: "#4F4F4F",
+                            }}
+                        >
+                            <span>Wallet</span>
+                            <span>$ {priceDetails.wallet}</span>
+                        </div>
+                        <hr style={{ color: "#E0E0E0", margin: "10px" }} />
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                color: "#4F4F4F",
+                            }}
+                        >
+                            <span>Total</span>
+                            <span>$ {priceDetails.total}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const ActivityDetails = () => {
     const navigate = useNavigate();
     const [userType, setUserType] = useState(null);
     const [activityData, setActivityData] = useState(null);
     const { activityId } = useParams();
     const [BookPopUp, setBookPopUp] = useState(false);
+    const [isCheckoutPopupOpen, setIsCheckoutPopupOpen] = useState(false);
     const [bookingDonePopUp, setBookingDonePopUp] = useState(false);
     const [pointsAdded, setPointsAdded] = useState(0);
     const [advertiserName, setAdvertiserName] = useState("");
     const [ticketCount, setTicketCount] = useState(0);
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const [points, setPoints] = useState(null);
+    const [walletBalance, setWalletBalance] = useState(null);
+
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
     //To retrieve user type from browser
     useEffect(() => {
@@ -95,6 +509,18 @@ export default function ActivityDetails() {
         fetchIsBookmarked();
     }, [activityData]);
 
+    useEffect(() => {
+        axiosInstance
+            .get("/tourist/tourist", { withCredentials: true })
+            .then((response) => {
+                setPoints(response.data.loyalityPoints || 0);
+                setWalletBalance(formatPrice(response.data?.wallet || 0));
+            })
+            .catch((error) => {
+                console.error("Error fetching tourist:", error);
+            });
+    }, []);
+
     const handleBookmark = async () => {
         if (!activityData) return;
         try {
@@ -116,8 +542,6 @@ export default function ActivityDetails() {
 
     const handleBooking = async () => {
         try {
-            // TODO: add different ways of payeen
-
             const bookingResponse = await axiosInstance.post(
                 "booking/createBooking",
                 {
@@ -163,27 +587,28 @@ export default function ActivityDetails() {
     if (!activityData) {
         return <CircularProgress />;
     }
+
     return (
         <div className="activity-details-container">
+            <ImageSlideshow
+                images={activityData.pictures}
+                defaultImage={activityDefaultBackground}
+            />
             <NavBar />
 
             <PopUp
                 isOpen={BookPopUp}
                 setIsOpen={setBookPopUp}
-                headerText={
-                    "Please fill in the following to complete your booking"
-                }
+                // headerText={"Please fill in the following to complete your booking"}
                 containsActionButton={ticketCount > 0}
                 handleSubmit={handleBooking}
             >
-                <TicketCounter
-                    pricePerPerson={
-                        activityData.price *
-                        (1 - activityData.specialDiscount / 100)
-                    }
-                    maxCount={activityData.freeSpots}
-                    currentCount={ticketCount}
-                    setCount={setTicketCount}
+                <BookingPayment
+                    ticketCount={ticketCount}
+                    setTicketCount={setTicketCount}
+                    maxTickets={activityData.freeSpots}
+                    walletBalance={walletBalance}
+                    totalPoints={points}
                 />
             </PopUp>
 
@@ -196,66 +621,101 @@ export default function ActivityDetails() {
             >
                 <SuccessfulBooking points={pointsAdded} />
             </PopUp>
-            <ActivityPhotos
-                width="100%"
-                height={"50vh"}
-                interval={5000}
-                photos={activityData.pictures}
+
+            <CheckoutPopup
+                isOpen={isCheckoutPopupOpen}
+                setIsOpen={setIsCheckoutPopupOpen}
+                items={[
+                    {
+                        title: activityData.name,
+                        price:
+                            activityData.price * (1 - activityData.specialDiscount / 100),
+                    },
+                ]}
+                successDirectUrl={"/tourist/bookings"}
+                headerImage={activityData.pictures[0]}
+                state={{ tab: "Activities" }}
+                handleOnMount={async () => {
+                    console.log("handleOnMount called");
+                    const response = await axiosInstance.post(
+                        "/booking/createBooking",
+                        {
+                            bookingType: "Activity",
+                            typeId: activityData._id,
+                            count: 1,
+                        },
+                        {
+                            withCredentials: true,
+                        }
+                    );
+                    localStorage.setItem("bookingId", response.data._id);
+                }}
+                handleOnSuccess={async (amountFromWallet) => {
+                    const response = await axiosInstance.patch(
+                        `/booking/completeBooking/${localStorage.getItem("bookingId")}`,
+                        {
+                            amountFromWallet,
+                        },
+                        {
+                            withCredentials: true,
+                        }
+                    );
+                }}
+                handleOnFailure={async () => {
+                    const response = await axiosInstance.delete(
+                        `/booking/deleteBooking/${localStorage.getItem("bookingId")}`,
+                        {
+                            withCredentials: true,
+                        }
+                    );
+                }}
             />
 
-            <div
-                className="activity-info"
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    backgroundColor: "#fff",
-                    minHeight: "100vh" /* Full viewport height */,
-                    padding: 0,
-                    position: "relative",
-                    width: "100vw" /* Full viewport width */,
-                    top: 0,
-                    left: 0,
-                    marginBottom: "4vh",
-                }}
-            >
+            <ItineraryAndActivityHeader
+                mode="activity"
+                title={activityData.name}
+                category={activityData.category}
+                isOpen={activityData.isOpenForBooking}
+                bookmark={handleBookmark}
+                isBookmarked={isBookmarked}
+                showBookmark={userType === "Tourist"}
+            />
+
+            <div className="activity-info">
                 <div className="activity-info-left">
-                    <ItineraryAndActivityHeader
-                        mode="activity"
-                        title={activityData.name}
-                        category={activityData.category}
-                        isOpen={activityData.isOpenForBooking}
-                        bookmark={handleBookmark}
-                        isBookmarked={isBookmarked}
-                        showBookmark={userType === "Tourist"}
-                    />
                     <ProfileAndDescription
                         mode="Activity"
                         name={advertiserName}
-                        // picture={tourGuidePicture}
+                        picture={activityData.advertiserID.picture}
                         description={activityData.description}
                         width={"80%"}
                         fontSize={"1.2em"}
                     ></ProfileAndDescription>
-                    <Tags tags={activityData.tags} fontSize={"1em"} />{" "}
-                    {/* Increased font size */}
-                    <img src="/mapMarkerIcon.png" alt="" />
-                    <span style={{ fontSize: "1.6em" }}>
-                        Activity Location
-                    </span>{" "}
-                    {/* Increased font size */}
-                    <Map
-                        setMarkerPosition={(position) => {}}
-                        defaultPosition={
-                            activityData.Latitude
-                                ? {
-                                      lat: activityData.Latitude,
-                                      lng: activityData.Longitude,
-                                  }
-                                : null
-                        }
-                        customStyles={{ height: "70vh", width: "50vw" }}
-                    />
+
+                    <Tags tags={activityData.tags} fontSize={"0.85em"} />
+                    {/* Put a map Here */}
+                    <div className="activity-location-on-map">
+                        <div className="activity-location">
+                            <img
+                                src="/mapMarkerIcon.png"
+                                alt=""
+                                className="map-marker-icon"
+                            />
+                            <span>Activity Location</span>
+                        </div>
+                        <Map
+                            setMarkerPosition={(position) => {}}
+                            defaultPosition={
+                                activityData.Latitude
+                                    ? {
+                                          lat: activityData.Latitude,
+                                          lng: activityData.Longitude,
+                                      }
+                                    : null
+                            }
+                            customStyles={{ height: "70vh", width: "50vw" }}
+                        />
+                    </div>
                 </div>
                 <div className="activity-info-right">
                     {/* <AvailableDates
@@ -270,9 +730,7 @@ export default function ActivityDetails() {
                         height="10%"
                     />
 
-                    {(!userType ||
-                        userType == "Tourist" ||
-                        userType == "Guest") && (
+                    {(!userType || userType == "Tourist" || userType == "Guest") && (
                         <DiscountCard
                             availableSeats={activityData.freeSpots}
                             price={activityData.price}
@@ -286,7 +744,8 @@ export default function ActivityDetails() {
                                     return;
                                 }
 
-                                setBookPopUp(true);
+                                // setBookPopUp(true);
+                                setIsCheckoutPopupOpen(true);
                             }}
                         />
                     )}
@@ -314,4 +773,6 @@ export default function ActivityDetails() {
             <Footer />
         </div>
     );
-}
+};
+
+export default ActivityDetails;

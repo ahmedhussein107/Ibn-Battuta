@@ -11,6 +11,7 @@ import {
 
 import LandmarkPage from "./pages/Landmark/LandmarkPage";
 import ViewProductPage from "./pages/Product/ViewProductPage";
+import Test from "./components/Test.jsx";
 import { HeaderProvider } from "./components/Header/HeaderContext";
 import { FunctionProvider } from "./contexts/FunctionContext.jsx";
 import Header from "./components/Header/Header";
@@ -77,6 +78,8 @@ function App() {
                                     path="/landmark/landmark/"
                                     element={<LandmarkPage />}
                                 />
+
+                                <Route path="/test" element={<Test />} />
 
                                 {/* Default route */}
                                 <Route path="*" element={<Navigate to="/signin" />} />

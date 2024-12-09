@@ -59,7 +59,7 @@ const UpdateActivityPage = () => {
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [formattedTime, setFormattedTime] = useState("");
-    const [selectedCurrency, setSelectedCurrency] = useState("");
+    const [selectedCurrency, setSelectedCurrency] = useState("EGP");
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice, convertPrice } = useCurrencyConverter(currency);
     const [isEditing, setisEditing] = useState(false);
@@ -172,24 +172,30 @@ const UpdateActivityPage = () => {
                     const endHours = fetchedEndDate.getHours();
                     const endMinutes = fetchedEndDate.getMinutes();
 
+                    const startTimeString = `${startHours
+                        .toString()
+                        .padStart(2, "0")}:${startMinutes.toString().padStart(2, "0")}`;
+
+                    convertPrice;
+
+                    const endTimeString = `${endHours
+                        .toString()
+                        .padStart(2, "0")}:${endMinutes.toString().padStart(2, "0")}`;
+
                     // Format and set times as "HH:MM" string
-                    setStartTime(
-                        `${startHours.toString().padStart(2, "0")}:${startMinutes
-                            .toString()
-                            .padStart(2, "0")}`
-                    );
-                    setEndTime(
-                        `${endHours.toString().padStart(2, "0")}:${endMinutes
-                            .toString()
-                            .padStart(2, "0")}`
-                    );
+                    setStartTime(startTimeString);
+                    setEndTime(endTimeString);
 
                     // Set formatted time string
-                    setFormattedTime(`${startTime} to ${endTime}`);
+                    setFormattedTime(`${startTimeString} to ${endTimeString}`);
 
                     setSelectedCurrency(response.data.currency); // Set the selected currency
 
                     setImagePreviews(
+                        response.data.pictures.map((url) => ({ id: url, file: null }))
+                    );
+                    console.log("Image Previews:", imagePreviews);
+                    console.log(
                         response.data.pictures.map((url) => ({ id: url, file: null }))
                     );
                     setSelectedTags(response.data.tags);
@@ -263,18 +269,42 @@ const UpdateActivityPage = () => {
             showPopupMessage("Please fill out all required details.", true);
             return;
         }
+        const newImages = imagePreviews.filter((preview) => preview.file !== null);
+        const oldImages = imagePreviews.filter((preview) => preview.file === null);
+        const oldImageUrls = oldImages.map((preview) => preview.id);
+        const files = newImages.map((preview) => preview.file);
+        const uploadedFileUrls = await uploadFiles(files, "activities");
 
+        const urls = [...oldImageUrls, ...uploadedFileUrls];
+
+        const convertTo24System = (timeObj) => {
+            const [time, period] = timeObj.split(" ");
+            let [hours, minutes] = time.split(":").map(Number);
+            if (period == "PM" && hours < 12) hours += 12;
+            if (period == "AM" && hours === 12) hours = 0;
+            return { hours, minutes };
+        };
+
+        const combinedStartDate = new Date(startDate);
+        const combinedEndDate = new Date(endDate);
+        const startTime24 = convertTo24System(startTime);
+        const endTime24 = convertTo24System(endTime);
+        combinedStartDate.setHours(startTime24.hours, startTime24.minutes);
+        combinedEndDate.setHours(endTime24.hours, endTime24.minutes);
         // Prepare the final form data
         const finalFormData = {
             ...formData,
             startDate: combinedStartDate.toISOString(),
             endDate: combinedEndDate.toISOString(),
-            pictures: uploadedFileUrls, // Ensure this is updated correctly
+            //pictures: uploadedFileUrls, // Ensure this is updated correctly
             tags: selectedTags,
+            latitude: pickupLocation.latitude,
+            longitude: pickupLocation.longitude,
+            location: pickupLocation.location,
         };
 
         try {
-            const response = await axiosInstance.put(
+            const response = await axiosInstance.patch(
                 `/activity/updateActivity/${id}`,
                 finalFormData,
                 {
@@ -402,7 +432,7 @@ const UpdateActivityPage = () => {
                                         <CalendarTodayIcon
                                             style={{
                                                 position: "absolute",
-                                                left: "15vw",
+                                                left: "18vw",
                                                 top: "50%",
                                                 transform: "translateY(-50%)",
                                                 cursor: "pointer",
@@ -412,35 +442,34 @@ const UpdateActivityPage = () => {
                                             onClick={() => setShowDateModal(true)}
                                         />
                                     </div>
-                                    <div style={{ position: "relative", width: "100%" }}>
-                                        <InputGroup>
-                                            <Label>Start Time</Label>
-                                            <TextField
-                                                name="startTime"
-                                                variant="outlined"
-                                                value={startTime} // Show the extracted start time
-                                                readOnly
-                                                style={inputStyles}
-                                                onClick={() => setShowTimeModal(true)} // For selecting new start time
-                                            />
-                                        </InputGroup>
-
-                                        <InputGroup>
-                                            <Label>End Time</Label>
-                                            <TextField
-                                                name="endTime"
-                                                variant="outlined"
-                                                value={endTime} // Show the extracted end time
-                                                readOnly
-                                                style={inputStyles}
-                                                onClick={() => setShowTimeModal(true)} // For selecting new end time
-                                            />
-                                        </InputGroup>
-
+                                    <div
+                                        style={{
+                                            position: "relative",
+                                            width: "100%",
+                                            marginBottom: "1rem",
+                                        }}
+                                    >
+                                        <input
+                                            type="text"
+                                            value={formattedTime}
+                                            readOnly
+                                            onClick={() => setShowTimeModal(true)}
+                                            //placeholder="Select Date"
+                                            style={{
+                                                fontSize: "1.125rem",
+                                                width: "100%",
+                                                height: "3rem",
+                                                paddingLeft: "1rem",
+                                                paddingRight: "2.5rem",
+                                                border: "1px solid #ddd",
+                                                borderRadius: "0.375rem",
+                                                cursor: "pointer",
+                                            }}
+                                        />
                                         <AccessTimeIcon
                                             style={{
                                                 position: "absolute",
-                                                left: "15vw",
+                                                left: "18vw",
                                                 top: "50%",
                                                 transform: "translateY(-50%)",
                                                 cursor: "pointer",

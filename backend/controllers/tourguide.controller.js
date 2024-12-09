@@ -135,8 +135,9 @@ export const deleteTourGuide = async (req, res) => {
     try {
         const upcomingItineraries = await Itinerary.find({
             tourguideID: tourguideId,
-            availableDatesAndTimes: { $gte: new Date() },
+            startTime: { $gte: new Date() },
         }).distinct("_id");
+        console.log(upcomingItineraries);
 
         const hasUpcoming = await Bookings.exists({
             bookingType: "Itinerary",

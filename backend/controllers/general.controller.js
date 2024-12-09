@@ -171,7 +171,8 @@ export const login = async (req, res) => {
             user._id.toString(),
             user.picture,
             user.currency,
-            user.email
+            user.email,
+            user?.wallet
         )
             .status(200)
             .json({ message: "Login successful", user });
@@ -187,7 +188,8 @@ export const assignCookies = (
     userId,
     profileImage,
     currency = "EGP",
-    email = ""
+    email = "",
+    wallet = 0
 ) => {
     const maxAge = 5 * 60 * 60 * 1000; // 5 hours
     const token = jwt.sign({ userId, userType }, secretKey, {
@@ -200,6 +202,7 @@ export const assignCookies = (
     if (userType === "Tourist") {
         res.cookie("currency", currency || "EGP", { maxAge });
         res.cookie("email", email, { maxAge });
+        res.cookie("balance", wallet, { maxAge });
     }
 
     return res;
@@ -243,6 +246,7 @@ export const notifyAdminsAboutComplaint = async (
 ) => {
     const admins = await mongoose.model("Admin").find();
     for (const admin of admins) {
+        if (!admin.email) continue;
         sendNotificationToEmailAndSystem(
             "New Complaint",
             isComment
