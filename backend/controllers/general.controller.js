@@ -243,6 +243,7 @@ export const notifyAdminsAboutComplaint = async (
 ) => {
     const admins = await mongoose.model("Admin").find();
     for (const admin of admins) {
+        if (!admin.email) continue;
         sendNotificationToEmailAndSystem(
             "New Complaint",
             isComment
