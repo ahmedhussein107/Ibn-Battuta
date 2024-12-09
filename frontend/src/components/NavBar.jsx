@@ -88,9 +88,10 @@ const NavBar = () => {
         if (userType !== "Guest") {
             console.log("WebSocket connection establishing");
             const socket = new WebSocket(
-                `${URI.replace("http://", "ws://")}notifications?token=${Cookies.get(
-                    "jwt"
-                )}`
+                `${URI.replace(
+                    "http://",
+                    "ws://"
+                )}notifications?token=${Cookies.get("jwt")}`
             );
 
             socket.onopen = () => {
@@ -153,7 +154,9 @@ const NavBar = () => {
         newNotifications[index].isRead = true;
         setNotifications(newNotifications);
         try {
-            axiosInstance.put(`/general/markNotificationAsRead/${notification._id}`);
+            axiosInstance.put(
+                `/general/markNotificationAsRead/${notification._id}`
+            );
         } catch (err) {
             console.log(err);
         }
@@ -180,7 +183,11 @@ const NavBar = () => {
                     {dropdown.map((subItem, subIndex) => {
                         const [subLabel, subLink] = Object.entries(subItem)[0];
                         return (
-                            <Link key={subIndex} to={subLink} className="dropdown-item">
+                            <Link
+                                key={subIndex}
+                                to={subLink}
+                                className="dropdown-item"
+                            >
                                 {subLabel}
                             </Link>
                         );
@@ -210,7 +217,7 @@ const NavBar = () => {
                     borderRadius: "20px",
                     height: "5.2vh",
                     objectFit: "contain",
-                    marginLeft: "-.8vw",
+                    marginLeft: ".8vw",
                 }}
                 src="/logo.png"
             />
@@ -260,7 +267,10 @@ const NavBar = () => {
                             )}
                         </div>
                         {isNotificationOpen && (
-                            <div ref={dropdownRef} className="notification-dropdown">
+                            <div
+                                ref={dropdownRef}
+                                className="notification-dropdown"
+                            >
                                 <h4>Notifications</h4>
                                 {notifications.length > 0 ? (
                                     notifications.map((notification, index) => (
@@ -306,18 +316,21 @@ const NavBar = () => {
                             />
                             <div className="dropdown-content">
                                 {userType === "Tourist" ? (
-                                    touristProfileDropdown.map((item, index) => {
-                                        const [label, link] = Object.entries(item)[0];
-                                        return (
-                                            <Link
-                                                key={index}
-                                                to={link}
-                                                className="dropdown-item"
-                                            >
-                                                {label}
-                                            </Link>
-                                        );
-                                    })
+                                    touristProfileDropdown.map(
+                                        (item, index) => {
+                                            const [label, link] =
+                                                Object.entries(item)[0];
+                                            return (
+                                                <Link
+                                                    key={index}
+                                                    to={link}
+                                                    className="dropdown-item"
+                                                >
+                                                    {label}
+                                                </Link>
+                                            );
+                                        }
+                                    )
                                 ) : userType === "Guest" ? null : (
                                     <Link
                                         to={`/${userType.toLowerCase()}/profile`}

@@ -30,6 +30,7 @@ import "../../styles/ItineraryDetails.css";
 import Button from "../../components/Button";
 import Alert from "@mui/material/Alert";
 import LanguageIcon from "@mui/icons-material/Language";
+import PlaceIcon from "@mui/icons-material/Place";
 const ItineraryDetails = () => {
     const navigate = useNavigate();
     const [userType, setUserType] = useState(null);
@@ -280,10 +281,19 @@ const ItineraryDetails = () => {
                 showBookmark={userType === "Tourist"}
             />
 
-            <div className="language-container">
-                <div className="language-header">
-                    <LanguageIcon fontSize="large" className="language-icon" />
-                    <span> Language: {itinerary.language}</span>
+            <div style={{ display: "flex", width: "100%", gap: "30%", marginLeft: "5%" }}>
+                {" "}
+                <div className="language-container">
+                    <div className="language-header">
+                        <PlaceIcon fontSize="large" className="language-icon" />
+                        <span> {itinerary.pickupLocation}</span>
+                    </div>
+                </div>
+                <div className="language-container">
+                    <div className="language-header">
+                        <LanguageIcon fontSize="large" className="language-icon" />
+                        <span> Language: {itinerary.language}</span>
+                    </div>
                 </div>
             </div>
 
@@ -315,9 +325,9 @@ const ItineraryDetails = () => {
             <div className="itinerary-info">
                 <div className="placeholder">
                     <ItineraryTimeline
-                        pickUpLocation={itinerary.pickup}
-                        pickUpTime={itinerary.pickupTime}
-                        dropOffLocation={itinerary.dropOff}
+                        pickUpLocation={itinerary.pickupLocation}
+                        pickUpTime={itinerary.startDate}
+                        dropOffLocation={itinerary.dropOffLocation}
                         activities={activities}
                     />
                     {/* pickyp location, pickup time, drop off location, and activity details array */}

@@ -110,7 +110,7 @@ const Itineraries = () => {
         const query = buildQuery();
         setCurrentPage(1);
         fetchItineraries(query);
-    }, [priceRange, location, tags, name, sortBy]);
+    }, [priceRange, location, selectedTags, name, sortBy]);
 
     useEffect(() => {
         const query = buildQuery();
