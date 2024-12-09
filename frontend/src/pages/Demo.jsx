@@ -2,10 +2,36 @@ import React, { useState } from "react";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 const steps = [
-    { image: "/room1.jpeg", description: "Step 1", title: "step 1" },
-    { image: "/room2.jpeg", description: "Step 2", title: "step 1" },
-    { image: "/room3.jpeg", description: "Step 1", title: "step 1" },
-    { image: "/room4.jpeg", description: "Step 2", title: "step 1" },
+    {
+        image: "/iti/1.png",
+        description: "Select Explore and then Itineraries",
+        title: "Open Home",
+    },
+    {
+        image: "/iti/2.png",
+        description: "Choose itinerary you want to book",
+        title: "Explore Itineraries",
+    },
+    {
+        image: "/iti/3.png",
+        description: "Explore images, availability, dates and included Activities",
+        title: "Explore itinerary details",
+    },
+    {
+        image: "/iti/4.png",
+        description: "Hear from the travelers about their experience",
+        title: "Ratings",
+    },
+    {
+        image: "/iti/5.png",
+        description: "Click Book, a Popup will appear",
+        title: "Booking",
+    },
+    {
+        image: "/iti/6.png",
+        description: "Fill the form and click Book",
+        title: "Complete Booking",
+    },
 ];
 const Demo = () => {
     const navigate = useNavigate();
