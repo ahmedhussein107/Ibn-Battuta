@@ -26,6 +26,7 @@ export const touristNavbarItems = [
         ],
     },
     { Shop: "/shop" },
+    { Guide: "/tourist/demo" },
 ];
 
 export const sellerNavbarItems = [
@@ -80,9 +81,6 @@ export const adminNavbarItems = [
         ],
     },
     {
-        Categorization: [
-            { Tags: "/admin/tags" },
-            { Category: "/admin/categories" },
-        ],
+        Categorization: [{ Tags: "/admin/tags" }, { Category: "/admin/categories" }],
     },
 ];
