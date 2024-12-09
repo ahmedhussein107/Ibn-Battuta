@@ -538,8 +538,6 @@ const Checkout = () => {
                                         {address.name}
                                     </option>
                                 ))}
-
-                                <option value="addNew">Add new Address</option>
                             </select>
 
                             {/* Popup component */}
