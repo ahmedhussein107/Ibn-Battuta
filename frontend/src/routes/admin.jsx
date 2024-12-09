@@ -13,6 +13,7 @@ import UpdateProductPage from "../pages/Product/UpdateProductPage";
 import Inventory from "../pages/Seller/Inventory";
 import AdminProfilePage from "../pages/Admin/AdminProfilePage";
 import Analytics from "../pages/Analytics/Analytics";
+import EditProductPage from "../pages/Product/EditProduct";
 const adminRoutes = [
     { path: "/admin", element: <AdminHome /> },
     {
@@ -31,6 +32,7 @@ const adminRoutes = [
     { path: "/admin/inventory", element: <Inventory /> },
     { path: "/admin/shop/update-product/:productId", element: <UpdateProductPage /> },
     { path: "/admin/create-product", element: <CreateProductPage /> },
+    { path:"/admin/edit-product/:productId", element:<EditProductPage /> },
     { path: "/admin/users", element: <UserManagement /> },
 
     {
