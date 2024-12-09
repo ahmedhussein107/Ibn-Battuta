@@ -30,6 +30,8 @@ import publicRoutes from "./routes/public.jsx";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./hooks/currencyHooks.js";
 
+import CheckoutPopup from "./components/CheckoutPopup.jsx";
+
 const returnUserRoutes = (routesList, userType) => {
     return (
         <>
@@ -76,6 +78,11 @@ function App() {
                                 <Route
                                     path="/landmark/landmark/"
                                     element={<LandmarkPage />}
+                                />
+
+                                <Route
+                                    path="/checkoutpopup"
+                                    element={<CheckoutPopup price={1000} />}
                                 />
 
                                 {/* Default route */}

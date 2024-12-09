@@ -5,6 +5,7 @@ import Tourist from "../models/tourist.model.js";
 import { getFreeSpotsHelper } from "./itinerary.controller.js";
 import { Query } from "mongoose";
 import path from "path";
+import sendEmail from "../utilities/emailUtils.js";
 export const getBookings = async (req, res) => {
     try {
         const bookings = await Booking.find();
@@ -126,6 +127,11 @@ export const completeBooking = async (req, res) => {
         }
         booking.isComplete = true;
         const tourist = await Tourist.findById(booking.touristID);
+        sendEmail(
+            tourist.email,
+            "Booking Completed",
+            `Your booking has been completed successfully\n You have paid ${booking.totalPrice} EGP`
+        );
         tourist.points += booking.pointsAdded;
         tourist.loyalityPoints += booking.pointsAdded;
         if (isWalletUsed)
