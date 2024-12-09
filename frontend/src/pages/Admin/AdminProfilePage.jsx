@@ -25,6 +25,8 @@ const AdminProfilePage = () => {
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const [formData, setFormData] = useState({ name: "", username: "", email: "" });
+    const [promoCode, setPromoCode] = useState(null);
+    const [isPromoCodeLoading, setIsPromoCodeLoading] = useState(false);
     const defaultImage =
         "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg";
     const [image, setImage] = useState(defaultImage);
@@ -64,6 +66,27 @@ const AdminProfilePage = () => {
         setIsEditing(true);
     };
 
+    const handleApplyPromoCode = async () => {
+        console.log("i am here at promocode");
+        if (!promoCode || promoCode.trim() === "") {
+            return;
+        }
+        setIsPromoCodeLoading(true);
+        try {
+            await axiosInstance.post(
+                "/promoCode/createPromoCode",
+                {
+                    code: promoCode,
+                },
+                { withCredentials: true }
+            );
+            console.log("Promo code applied successfully");
+            setPromoCode("");
+        } catch (err) {
+        } finally {
+            setIsPromoCodeLoading(false);
+        }
+    };
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -407,7 +430,41 @@ const AdminProfilePage = () => {
                     )}
                 </div>
             </div>
-
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginBottom: "20px",
+                }}
+            >
+                <input
+                    type="text"
+                    placeholder="add a promo code..."
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    style={{
+                        height: "4vh",
+                        border: "1px solid var(--accent-color)",
+                        borderRadius: "50px",
+                        padding: "5px",
+                        paddingLeft: "20px",
+                        marginRight: "10px",
+                    }}
+                />
+                <Button
+                    stylingMode="always-dark"
+                    text="Apply"
+                    width="10vw"
+                    isLoading={isPromoCodeLoading}
+                    customStyle={
+                        {
+                            //margin
+                        }
+                    }
+                    handleClick={handleApplyPromoCode}
+                />
+            </div>
             <hr
                 style={{
                     width: "90vw",

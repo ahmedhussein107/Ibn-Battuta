@@ -79,6 +79,7 @@ const styles = {
         backgroundColor: "#fff",
         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
         textAlign: "center",
+        maxHeight:"20vh"
     },
     availableSeats: {
         color: "green",
