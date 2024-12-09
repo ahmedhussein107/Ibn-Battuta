@@ -119,11 +119,7 @@ const groupDataByMonth = (data) => {
     console.log("grouped data", groupedData);
     return groupedData;
 };
-const Controls = ({
-    initialTableData,
-    currentTableData,
-    setCurrentTableData,
-}) => {
+const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) => {
     const [selectedMonth, setSelectedMonth] = useState(null);
     const [isAll, setIsAll] = useState(true);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -205,9 +201,7 @@ const Controls = ({
                     options={options}
                     value={
                         selectedMonth
-                            ? options.find(
-                                  (option) => option.value === selectedMonth
-                              )
+                            ? options.find((option) => option.value === selectedMonth)
                             : null
                     }
                     onChange={(selectedOption) => {
@@ -286,9 +280,7 @@ const DrawTable = ({ data }) => {
                                 <td style={tableRowStyle}>{item.date}</td>
                                 <td style={tableRowStyle}>{item.month}</td>
                                 <td style={tableRowStyle}>{item.revenue}</td>
-                                <td style={tableRowStyle}>
-                                    {item.numberOfTourists}
-                                </td>
+                                <td style={tableRowStyle}>{item.numberOfTourists}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -326,13 +318,7 @@ const DrawAreaChart = ({ data }) => {
                     <CartesianGrid strokeDasharray="none" stroke="none" />
 
                     <defs>
-                        <linearGradient
-                            id="colorGradient"
-                            x1="0"
-                            y1="0"
-                            x2="0"
-                            y2="1"
-                        >
+                        <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop
                                 offset="0%"
                                 stopColor="var(--accent-color)"
@@ -380,10 +366,7 @@ const DrawBarChart = ({ data, title }) => {
         >
             <h2 style={{ marginTop: "1vh", marginBottom: "1vh" }}>{title}</h2>
             <ResponsiveContainer width="100%" height={400}>
-                <BarChart
-                    data={data}
-                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                >
+                <BarChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                     <CartesianGrid
                         horizontal={true}
                         vertical={false}
@@ -396,11 +379,7 @@ const DrawBarChart = ({ data, title }) => {
                             backgroundColor: "transparent", // Make tooltip background transparent
                         }}
                     />{" "}
-                    <Bar
-                        dataKey="value"
-                        fill="var(--accent-color)"
-                        barSize={20}
-                    />
+                    <Bar dataKey="value" fill="var(--accent-color)" barSize={20} />
                 </BarChart>
             </ResponsiveContainer>
         </div>
@@ -488,17 +467,11 @@ const DrawRadialBarChart = ({ data }) => {
                     color: "var(--accent-color)",
                 }}
             >
-                <h2 style={{ fontSize: "1.25rem", fontWeight: 600 }}>
-                    Sales Per Month
-                </h2>
+                <h2 style={{ fontSize: "1.25rem", fontWeight: 600 }}>Sales Per Month</h2>
                 <Select
                     options={options}
-                    value={options.find(
-                        (option) => option.value === selectedMonth
-                    )}
-                    onChange={(selectedOption) =>
-                        setSelectedMonth(selectedOption.value)
-                    }
+                    value={options.find((option) => option.value === selectedMonth)}
+                    onChange={(selectedOption) => setSelectedMonth(selectedOption.value)}
                     styles={customStyles}
                     placeholder="Select a month"
                     isSearchable={false}
@@ -548,9 +521,7 @@ const DrawRadialBarChart = ({ data }) => {
                             }}
                         >
                             <ColorDot color={entry.color} />
-                            <span style={{ marginLeft: "8px" }}>
-                                {entry.name}
-                            </span>
+                            <span style={{ marginLeft: "8px" }}>{entry.name}</span>
                         </div>
                     ))}
                 </div>
@@ -565,6 +536,7 @@ const DrawTouristsPerMonth = ({ data }) => {
     }
 
     const maxTourists = Math.max(...data.map((item) => item.tourists));
+    const sumOfTourists = data.reduce((total, item) => total + item.tourists, 0);
 
     return (
         <div
@@ -576,6 +548,8 @@ const DrawTouristsPerMonth = ({ data }) => {
                 padding: "2vw",
             }}
         >
+            <h2>Total : {sumOfTourists} tourists</h2>
+
             <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>
                 Number of Tourists per Month
             </h2>
@@ -599,8 +573,7 @@ const DrawTouristsPerMonth = ({ data }) => {
                                     textAlign: "left",
                                     padding: "10px",
                                     fontSize: "1.1rem",
-                                    borderBottom:
-                                        "2px solid var(--accent-color)",
+                                    borderBottom: "2px solid var(--accent-color)",
                                 }}
                             >
                                 #
@@ -610,8 +583,7 @@ const DrawTouristsPerMonth = ({ data }) => {
                                     textAlign: "left",
                                     padding: "10px",
                                     fontSize: "1.1rem",
-                                    borderBottom:
-                                        "2px solid var(--accent-color)",
+                                    borderBottom: "2px solid var(--accent-color)",
                                 }}
                             >
                                 Month
@@ -621,8 +593,7 @@ const DrawTouristsPerMonth = ({ data }) => {
                                     textAlign: "left",
                                     padding: "10px",
                                     fontSize: "1.1rem",
-                                    borderBottom:
-                                        "2px solid var(--accent-color)",
+                                    borderBottom: "2px solid var(--accent-color)",
                                 }}
                             >
                                 Number of Tourists
@@ -662,8 +633,7 @@ const DrawTouristsPerMonth = ({ data }) => {
                                         className="bar"
                                         style={{
                                             width: `${
-                                                (item.tourists / maxTourists) *
-                                                100
+                                                (item.tourists / maxTourists) * 100
                                             }%`,
                                             backgroundColor:
                                                 index === 0
@@ -700,6 +670,8 @@ const Analytics = () => {
     const [monthData, setMonthData] = useState([]);
     const [revenuePerThing, setRevenuePerThing] = useState([]);
     const [touristPerThing, setTouristPerThing] = useState([]);
+    const [activityRevenue, setActivityRevenue] = useState(0);
+    const [itineraryRevenue, setItineraryRevenue] = useState(0);
     const [radial, setRadial] = useState({
         January: [
             { name: "number of tourists", value: 0, color: "brown" },
@@ -712,9 +684,7 @@ const Analytics = () => {
         axiosInstance
             .get("/analytics/getAnalytics", { withCredentials: true })
             .then((res) => {
-                setTouristData(
-                    res.data.touristData ? res.data.touristData : []
-                );
+                setTouristData(res.data.touristData ? res.data.touristData : []);
                 console.log("result is :", res);
                 const updatedData = res.data.data.map((item) => {
                     const month = new Date(item.date).getMonth();
@@ -723,6 +693,10 @@ const Analytics = () => {
                         month: _month[month],
                     };
                 });
+                if (res.data.itineraryRevenue)
+                    setItineraryRevenue(res.data.itineraryRevenue);
+                if (res.data.activityRevenue)
+                    setActivityRevenue(res.data.activityRevenue);
                 setData(updatedData);
                 // to get the total revenue per month
                 setMonthData(
@@ -816,10 +790,27 @@ const Analytics = () => {
                 {Cookies.get("userType") === "Admin" && (
                     <DrawTouristsPerMonth data={touristData} />
                 )}
-                <DrawRadialBarChart
-                    data={radial}
-                    title="Total Revenue Per Month"
-                />
+                {Cookies.get("userType") === "Admin" && (
+                    <div
+                        style={{
+                            border: "1px solid var(--accent-color)",
+                            padding: "10px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "auto",
+                            height: "50%",
+                            borderRadius: "10px",
+                            color: "fontVariant(--accent-color)",
+                            flexDirection: "column",
+                            gap: "20px",
+                        }}
+                    >
+                        <h3>TotalRevenun from Activities: {activityRevenue} EGP</h3>
+                        <h3>TotalRevenun from Activities: {itineraryRevenue} EGP</h3>
+                    </div>
+                )}
+                <DrawRadialBarChart data={radial} title="Total Revenue Per Month" />
             </div>
             <Footer />
         </div>
