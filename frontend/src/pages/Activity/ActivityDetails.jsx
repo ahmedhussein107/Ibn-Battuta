@@ -454,6 +454,7 @@ const BookingPayment = ({
 
 const ActivityDetails = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const [userType, setUserType] = useState(null);
 	const [activityData, setActivityData] = useState(null);
 	const { activityId } = useParams();
@@ -695,7 +696,7 @@ const ActivityDetails = () => {
 
 					{(!userType ||
 						userType == "Tourist" ||
-						userType == "Guest") && (
+						userType == "Guest") && !location.state?.id&& (
 						<DiscountCard
 							availableSeats={activityData.freeSpots}
 							price={activityData.price}
