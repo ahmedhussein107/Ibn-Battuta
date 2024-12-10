@@ -48,6 +48,8 @@ const Checkout = () => {
     });
     const location = useLocation();
 
+    const { price } = location.state;
+
     const navigate = useNavigate();
     const { setSuccess, setFailure } = useFunctionContext();
     const currency = Cookies.get("currency") || "EGP";
@@ -182,34 +184,6 @@ const Checkout = () => {
         setIsPopUpOpen(true);
     };
 
-    // const handleNext = async () => {
-    //     const response = await axiosInstance.post(
-    //         "/booking/createBooking",
-    //         { typeId: "672faf9887fad62d0420dbc4", bookingType: "Activity", count: 1 },
-    //         { withCredentials: true }
-    //     );
-    //     const bookingId = response.data._id;
-    //     const handleSuccess = async () => {
-    //         await axiosInstance.patch(`/booking/completeBooking/${bookingId}`, {
-    //             isWalletUsed: false,
-    //         });
-    //         navigate("/tourist/bookings", { state: { tab: "Activities" } });
-    //     };
-    //     const handleFailure = async () => {
-    //         await axiosInstance.delete(`booking/deleteBooking/${bookingId}`);
-    //     };
-    //     const amount = 1000;
-    //     setSuccess(handleSuccess);
-    //     setFailure(handleFailure);
-    //     navigate("/tourist/payment", {
-    //         state: {
-    //             amount,
-    //             currency,
-    //             headerImage: bookingsBackground,
-    //         },
-    //     });
-    // };
-
     const handleNext = async () => {
         if (!formData.mobile.trim()) {
             showAlert("error", "Please enter your mobile number before proceeding.");
@@ -239,21 +213,23 @@ const Checkout = () => {
                         "promocode/applyPromoCode",
                         {
                             promoCodeId: promoCode,
-                            totalAmount: location.state.price,
+                            totalAmount: price,
                         },
                         { withCredentials: true }
                     );
                 }
 
                 await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
-                    isWalletUsed: isWalletUsed,
-                    finalPrice: location.state.price - promoCodeDiscount,
+                    amountFromWallet: isWalletUsed
+                        ? Math.min(tourist.wallet, price - promoCodeDiscount)
+                        : 0,
                 });
+
                 if (
                     paymentMethod === "cash on delivery" ||
                     (paymentMethod === "card" &&
                         isWalletUsed === true &&
-                        tourist.wallet >= location.state.price)
+                        tourist.wallet >= price)
                 ) {
                     setIsCompletionPopUpOpen(true);
                 } else navigate("/tourist/orders");
@@ -377,9 +353,7 @@ const Checkout = () => {
 
             showAlert("success", response.data.message);
 
-            setPromoCodeDiscount(
-                location.state.price * (response.data.promoCodeDetails.discount / 100)
-            );
+            setPromoCodeDiscount(price * (response.data.promoCodeDetails.discount / 100));
         } catch (error) {
             setPromoCodeDiscount(0);
             const backendErrorMessage =
@@ -1041,7 +1015,7 @@ const Checkout = () => {
                                                         fontWeight: "bold",
                                                     }}
                                                 >
-                                                    {formatPrice(location.state.price)}
+                                                    {formatPrice(price)}
                                                 </span>
                                             </div>
                                             {/* Promocode Row */}
@@ -1078,8 +1052,7 @@ const Checkout = () => {
                                             >
                                                 {isWalletUsed &&
                                                     tourist.wallet >=
-                                                        location.state.price -
-                                                            promoCodeDiscount && (
+                                                        price - promoCodeDiscount && (
                                                         <div
                                                             style={{
                                                                 display: "flex",
@@ -1103,8 +1076,7 @@ const Checkout = () => {
                                                                 {formatPrice(
                                                                     Math.min(
                                                                         tourist.wallet,
-                                                                        location.state
-                                                                            .price -
+                                                                        price -
                                                                             promoCodeDiscount
                                                                     )
                                                                 )}
@@ -1143,15 +1115,14 @@ const Checkout = () => {
                                                     {isWalletUsed
                                                         ? formatPrice(
                                                               Math.max(
-                                                                  location.state.price -
+                                                                  price -
                                                                       tourist.wallet -
                                                                       promoCodeDiscount,
                                                                   0
                                                               )
                                                           )
                                                         : formatPrice(
-                                                              location.state.price -
-                                                                  promoCodeDiscount
+                                                              price - promoCodeDiscount
                                                           )}
                                                 </span>
                                             </div>
@@ -1180,7 +1151,7 @@ const Checkout = () => {
                                     (paymentMethod === "card" && !isWalletUsed) ||
                                     (paymentMethod === "card" &&
                                         isWalletUsed &&
-                                        tourist.wallet < location.state.price)
+                                        tourist.wallet < price)
                                         ? "Next"
                                         : "Place Order"
                                 }
