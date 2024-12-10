@@ -188,8 +188,7 @@ const SellerProfilePage = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isEditing1, setIsEditing1] = useState(false);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
-        useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         username: "",
@@ -272,10 +271,7 @@ const SellerProfilePage = () => {
                 })
                 .catch((error) => {
                     console.error("Error updating profile:", error);
-                    showAlert(
-                        "Error updating profile. Please try again.",
-                        "error"
-                    ); // Use showAlert here
+                    showAlert("Error updating profile. Please try again.", "error"); // Use showAlert here
                 });
         } else {
             // No changes made
@@ -298,10 +294,7 @@ const SellerProfilePage = () => {
                 })
                 .catch((error) => {
                     console.error("Error updating profile:", error);
-                    showAlert(
-                        "Error updating profile. Please try again.",
-                        "error"
-                    ); // Use showAlert here
+                    showAlert("Error updating profile. Please try again.", "error"); // Use showAlert here
                 });
         } else {
             // No changes made; log a message and update state
@@ -343,11 +336,9 @@ const SellerProfilePage = () => {
         setIsPopUpOpen(true);
     };
 
-    const handleCurrentPasswordChange = (e) =>
-        setCurrentPassword(e.target.value);
+    const handleCurrentPasswordChange = (e) => setCurrentPassword(e.target.value);
     const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
-    const handleConfirmNewPasswordChange = (e) =>
-        setConfirmNewPassword(e.target.value);
+    const handleConfirmNewPasswordChange = (e) => setConfirmNewPassword(e.target.value);
 
     const PopUpAction = () => {
         if (newPassword !== confirmNewPassword) {
@@ -370,9 +361,7 @@ const SellerProfilePage = () => {
             })
             .catch((error) => {
                 const errorMessage =
-                    error.response &&
-                    error.response.data &&
-                    error.response.data.message
+                    error.response && error.response.data && error.response.data.message
                         ? error.response.data.message
                         : "An error occurred. Please try again.";
                 console.error("Error changing password:", error);
@@ -396,35 +385,24 @@ const SellerProfilePage = () => {
                     withCredentials: true,
                 })
                 .then((response) => {
-                    showAlert(
-                        "Profile picture updated successfully!",
-                        "success"
-                    ); // Use showAlert here
-                    console.log(
-                        "Updated Seller Picture:",
-                        response.data.picture
-                    );
+                    showAlert("Profile picture updated successfully!", "success"); // Use showAlert here
+                    console.log("Updated Seller Picture:", response.data.picture);
 
                     // Ensure response.data contains the full URL of the picture
                     setResponse((prev) => ({
                         ...prev,
                         picture: response.data.picture, // This should be a string URL
                     }));
+                    Cookies.set("profileImage", image);
 
-                    console.log(
-                        "Updated SellerPicture:",
-                        response.data.picture
-                    );
+                    console.log("Updated SellerPicture:", response.data.picture);
                     setTimeout(() => {
                         window.location.reload();
                     }, 5000); // Reload after a delay if needed
                 })
                 .catch((error) => {
                     console.error("Error uploading picture:", error);
-                    showAlert(
-                        "An error occurred while uploading the picture.",
-                        "error"
-                    ); // Use showAlert here
+                    showAlert("An error occurred while uploading the picture.", "error"); // Use showAlert here
                 });
         }
     };
@@ -457,9 +435,7 @@ const SellerProfilePage = () => {
                         {/* Profile Image Section */}
                         <ProfileImageContainer>
                             <div
-                                onClick={
-                                    isEditing ? handleImageClick : undefined
-                                } // Clickable only when isEditing is true
+                                onClick={isEditing ? handleImageClick : undefined} // Clickable only when isEditing is true
                                 style={{
                                     width: "10vw",
                                     height: "10vw",
@@ -485,10 +461,7 @@ const SellerProfilePage = () => {
                             <strong>
                                 <p> {response?.name || "name not provided"}</p>
                             </strong>
-                            <p>
-                                {" "}
-                                @{response?.username || "username not provided"}
-                            </p>
+                            <p> @{response?.username || "username not provided"}</p>
                         </ProfileImageContainer>
 
                         {/* Profile Details Section */}
@@ -581,9 +554,7 @@ const SellerProfilePage = () => {
                         )}
                     </ProfileDetailsBox>
                     <ProfileDetailsBox>
-                        <ProfileDetailsContainer
-                            style={{ marginBottom: "100px" }}
-                        >
+                        <ProfileDetailsContainer style={{ marginBottom: "100px" }}>
                             <h2>About me</h2>
                             {isEditing1 ? (
                                 <div>
@@ -631,8 +602,7 @@ const SellerProfilePage = () => {
                                 </div>
                             ) : (
                                 <p>
-                                    {response?.description ||
-                                        "No description provided"}
+                                    {response?.description || "No description provided"}
                                 </p>
                             )}
                         </ProfileDetailsContainer>
@@ -666,9 +636,7 @@ const SellerProfilePage = () => {
                     <PopUp
                         isOpen={isDeleteConfirmationOpen}
                         setIsOpen={setIsDeleteConfirmationOpen}
-                        headerText={
-                            "Are you sure you want to delete your account?"
-                        }
+                        headerText={"Are you sure you want to delete your account?"}
                         actionText={"Confirm"}
                         handleSubmit={handleDeleteAccountConfirm}
                     ></PopUp>

@@ -208,6 +208,8 @@ const AdminProfilePage = () => {
                     }));
 
                     console.log("Updated Admin Picture:", response.data.picture);
+                    Cookies.set("profileImage", image);
+                    window.location.reload();
                     setTimeout(() => {
                         window.location.reload();
                     }, 5000); // Alert will close after 5 seconds
