@@ -137,7 +137,7 @@ const CheckoutPopup = ({
         // 1- wallet only
         // a) complete the payment
         // b) show success message
-        if (totalPrice === 0) {
+        if (totalPrice - amountFromWallet === 0) {
             try {
                 await handleSuccess();
             } catch (error) {
