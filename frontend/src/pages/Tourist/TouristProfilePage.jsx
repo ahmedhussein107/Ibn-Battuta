@@ -345,9 +345,7 @@ export default function TouristProfilePage() {
             tourist.preferences.map((tag, index) => (
                 <TagBubble key={index}>
                     {tag}
-                    <CloseButton onClick={() => handleTagRemove(tag)}>
-                        ×
-                    </CloseButton>
+                    <CloseButton onClick={() => handleTagRemove(tag)}>×</CloseButton>
                 </TagBubble>
             ))
         ) : (
@@ -371,10 +369,7 @@ export default function TouristProfilePage() {
                     withCredentials: true,
                 })
                 .then((response) => {
-                    showAlert(
-                        "Profile picture updated successfully!",
-                        "success"
-                    );
+                    showAlert("Profile picture updated successfully!", "success");
                     setTourist((prev) => ({
                         ...prev,
                         picture: response.data.picture,
@@ -382,10 +377,7 @@ export default function TouristProfilePage() {
                 })
                 .catch((error) => {
                     console.error("Error uploading picture:", error);
-                    showAlert(
-                        "An error occurred while uploading the picture.",
-                        "error"
-                    );
+                    showAlert("An error occurred while uploading the picture.", "error");
                 });
         }
     };
@@ -423,9 +415,7 @@ export default function TouristProfilePage() {
     };
 
     const handleTagRemove = (tagToRemove) => {
-        const updatedSelectedTags = selectedTags.filter(
-            (tag) => tag !== tagToRemove
-        );
+        const updatedSelectedTags = selectedTags.filter((tag) => tag !== tagToRemove);
         setSelectedTags(updatedSelectedTags);
 
         if (tourist?.preferences.includes(tagToRemove)) {
@@ -496,19 +486,13 @@ export default function TouristProfilePage() {
                     );
                 });
         } else if (pointsToRedeem === 0) {
-            showAlert(
-                "Please enter a valid amount of points to redeem.",
-                "warning"
-            ); // Use showAlert instead of alert
+            showAlert("Please enter a valid amount of points to redeem.", "warning"); // Use showAlert instead of alert
         } else if (tourist?.loyalityPoints < pointsToRedeem) {
             showAlert("Insufficient points for redemption.", "warning"); // Use showAlert instead of alert
         } else if (pointsToRedeem % 10000 !== 0) {
             showAlert("Please enter a multiple of 10000.", "warning"); // Use showAlert instead of alert
         } else {
-            showAlert(
-                "Insufficient points for redemption or invalid input",
-                "warning"
-            ); // Use showAlert instead of alert
+            showAlert("Insufficient points for redemption or invalid input", "warning"); // Use showAlert instead of alert
         }
     };
 
@@ -578,8 +562,7 @@ export default function TouristProfilePage() {
     const [newAddressName, setNewAddressName] = useState("");
     const [newAddressLocation, setNewAddressLocation] = useState("");
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
-        useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -634,9 +617,7 @@ export default function TouristProfilePage() {
             })
             .catch((error) => {
                 const errorMessage =
-                    error.response &&
-                    error.response.data &&
-                    error.response.data.message
+                    error.response && error.response.data && error.response.data.message
                         ? error.response.data.message
                         : "An error occurred while deleting the account. Please try again.";
 
@@ -649,13 +630,15 @@ export default function TouristProfilePage() {
         setIsPopUpOpen(true);
     };
 
-    const handleCurrentPasswordChange = (e) =>
-        setCurrentPassword(e.target.value);
+    const handleCurrentPasswordChange = (e) => setCurrentPassword(e.target.value);
     const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
-    const handleConfirmNewPasswordChange = (e) =>
-        setConfirmNewPassword(e.target.value);
+    const handleConfirmNewPasswordChange = (e) => setConfirmNewPassword(e.target.value);
 
     const PopUpAction = () => {
+        if (!currentPassword || !newPassword || !confirmNewPassword) {
+            showAlert("Please fill out all fields.", "error"); // Use showAlert instead of alert
+            return;
+        }
         if (newPassword !== confirmNewPassword) {
             showAlert("New passwords do not match!", "warning"); // Use showAlert instead of alert
             return;
@@ -676,10 +659,7 @@ export default function TouristProfilePage() {
             })
             .catch((error) => {
                 console.error("Error changing password:", error);
-                showAlert(
-                    "Old password is incorrect. Please try again.",
-                    "error"
-                ); // Use showAlert instead of alert
+                showAlert("Old password is incorrect. Please try again.", "error"); // Use showAlert instead of alert
             });
     };
 
@@ -715,9 +695,7 @@ export default function TouristProfilePage() {
                         {/* Profile Image Section */}
                         <ProfileImageContainer>
                             <div
-                                onClick={
-                                    isEditing ? handleImageClick : undefined
-                                } // Clickable only when isEditing is true
+                                onClick={isEditing ? handleImageClick : undefined} // Clickable only when isEditing is true
                                 style={{
                                     width: "10vw",
                                     height: "10vw",
@@ -820,56 +798,50 @@ export default function TouristProfilePage() {
                                     </p>
                                     <p style={{ marginBottom: "16px" }}>
                                         <strong>Addresses:</strong>
-                                        {formData.address.map(
-                                            (address, index) => (
-                                                <div
-                                                    key={index}
+                                        {formData.address.map((address, index) => (
+                                            <div
+                                                key={index}
+                                                style={{
+                                                    marginBottom: "8px",
+                                                }}
+                                            >
+                                                <TextField
+                                                    variant="outlined"
+                                                    size="small"
+                                                    fullWidth
+                                                    label="Address Name"
+                                                    value={address.name}
                                                     style={{
-                                                        marginBottom: "8px",
+                                                        marginBottom: "4px",
                                                     }}
+                                                    InputProps={{
+                                                        readOnly: true,
+                                                    }}
+                                                />
+                                                <button
+                                                    style={{
+                                                        marginTop: "4px",
+                                                        background: "red",
+                                                        color: "white",
+                                                        border: "none",
+                                                        padding: "6px 12px",
+                                                        borderRadius: "50%", // Make it round
+                                                        width: "30px", // Set width for the button
+                                                        height: "30px", // Set height for the button
+                                                        display: "flex", // Center the 'X'
+                                                        alignItems: "center", // Center vertically
+                                                        justifyContent: "center", // Center horizontally
+                                                        cursor: "pointer",
+                                                    }}
+                                                    onClick={() =>
+                                                        handleRemoveAddress(index)
+                                                    }
                                                 >
-                                                    <TextField
-                                                        variant="outlined"
-                                                        size="small"
-                                                        fullWidth
-                                                        label="Address Name"
-                                                        value={address.name}
-                                                        style={{
-                                                            marginBottom: "4px",
-                                                        }}
-                                                        InputProps={{
-                                                            readOnly: true,
-                                                        }}
-                                                    />
-                                                    <button
-                                                        style={{
-                                                            marginTop: "4px",
-                                                            background: "red",
-                                                            color: "white",
-                                                            border: "none",
-                                                            padding: "6px 12px",
-                                                            borderRadius: "50%", // Make it round
-                                                            width: "30px", // Set width for the button
-                                                            height: "30px", // Set height for the button
-                                                            display: "flex", // Center the 'X'
-                                                            alignItems:
-                                                                "center", // Center vertically
-                                                            justifyContent:
-                                                                "center", // Center horizontally
-                                                            cursor: "pointer",
-                                                        }}
-                                                        onClick={() =>
-                                                            handleRemoveAddress(
-                                                                index
-                                                            )
-                                                        }
-                                                    >
-                                                        &times;{" "}
-                                                        {/* HTML entity for multiplication sign (×) */}
-                                                    </button>
-                                                </div>
-                                            )
-                                        )}
+                                                    &times;{" "}
+                                                    {/* HTML entity for multiplication sign (×) */}
+                                                </button>
+                                            </div>
+                                        ))}
                                         <div>
                                             <TextField
                                                 variant="outlined"
@@ -877,9 +849,7 @@ export default function TouristProfilePage() {
                                                 label="New Address Name"
                                                 value={newAddressName}
                                                 onChange={(e) =>
-                                                    setNewAddressName(
-                                                        e.target.value
-                                                    )
+                                                    setNewAddressName(e.target.value)
                                                 }
                                                 style={{
                                                     marginBottom: "8px",
@@ -911,13 +881,10 @@ export default function TouristProfilePage() {
                                             onChange={handleChange}
                                             style={{ width: "30%" }} // Optional styling for the dropdown
                                         >
-                                            <option value="">
-                                                Select Currency
-                                            </option>
+                                            <option value="">Select Currency</option>
                                             {/* Default option */}
                                             <option value="AED">
-                                                AED - United Arab Emirates
-                                                Dirham
+                                                AED - United Arab Emirates Dirham
                                             </option>
                                             <option value="AUD">
                                                 AUD - Australian Dollar
@@ -925,9 +892,7 @@ export default function TouristProfilePage() {
                                             <option value="EGP">
                                                 EGP - Egyptian Pound
                                             </option>
-                                            <option value="EUR">
-                                                EUR - Euro
-                                            </option>
+                                            <option value="EUR">EUR - Euro</option>
                                             <option value="GBP">
                                                 GBP - British Pound
                                             </option>
@@ -943,9 +908,7 @@ export default function TouristProfilePage() {
                                             <option value="USD">
                                                 USD - United States Dollar
                                             </option>
-                                            <option value="WST">
-                                                WST - Samoan Tala
-                                            </option>
+                                            <option value="WST">WST - Samoan Tala</option>
                                             <option value="XAF">
                                                 XAF - Central African CFA Franc
                                             </option>
@@ -1011,20 +974,16 @@ export default function TouristProfilePage() {
                                     </p>
                                     <p>
                                         <strong>Addresses:</strong>{" "}
-                                        {tourist?.address &&
-                                        tourist.address.length > 0
-                                            ? tourist.address.map(
-                                                  (addr, index) => (
-                                                      <span key={index}>
-                                                          {addr.name}
+                                        {tourist?.address && tourist.address.length > 0
+                                            ? tourist.address.map((addr, index) => (
+                                                  <span key={index}>
+                                                      {addr.name}
 
-                                                          {index <
-                                                              tourist.address
-                                                                  .length -
-                                                                  1 && ", "}
-                                                      </span>
-                                                  )
-                                              )
+                                                      {index <
+                                                          tourist.address.length - 1 &&
+                                                          ", "}
+                                                  </span>
+                                              ))
                                             : "Not Provided"}
                                     </p>
                                     <p>
@@ -1069,9 +1028,7 @@ export default function TouristProfilePage() {
                             ].map((tag, index) => (
                                 <TagBubble key={index}>
                                     {tag}
-                                    <CloseButton
-                                        onClick={() => handleTagRemove(tag)}
-                                    >
+                                    <CloseButton onClick={() => handleTagRemove(tag)}>
                                         ×
                                     </CloseButton>
                                 </TagBubble>
@@ -1150,9 +1107,7 @@ export default function TouristProfilePage() {
                     <PopUp
                         isOpen={isDeleteConfirmationOpen}
                         setIsOpen={setIsDeleteConfirmationOpen}
-                        headerText={
-                            "Are you sure you want to delete your account?"
-                        }
+                        headerText={"Are you sure you want to delete your account?"}
                         actionText={"Confirm"}
                         handleSubmit={handleDeleteAccountConfirm}
                     ></PopUp>
@@ -1166,52 +1121,61 @@ export default function TouristProfilePage() {
                         actionText={"Confirm"}
                         handleSubmit={PopUpAction}
                     >
-                        <label>Current Password:</label>
-                        <input
-                            type="password"
-                            name="Current Password"
-                            placeholder="Current Password"
-                            onChange={handleCurrentPasswordChange}
-                            value={currentPassword}
+                        <div
                             style={{
-                                width: "80%", // Full width
-                                padding: "1vw", // Padding for better spacing
-                                marginBottom: "1vw", // Space between inputs
-                                border: "1px solid #ccc", // Border style
-                                borderRadius: "4px", // Rounded corners
-                                alignItems: "center", // Align text to center
+                                width: "30vw",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
                             }}
-                        />
-                        <label>New Password:</label>
-                        <input
-                            type="password"
-                            name="New Password"
-                            placeholder="Current Password"
-                            onChange={handleNewPasswordChange}
-                            value={newPassword}
-                            style={{
-                                width: "80%", // Full width
-                                padding: "1vw", // Padding for better spacing
-                                marginBottom: "1vw", // Space between inputs
-                                border: "1px solid #ccc", // Border style
-                                borderRadius: "4px", // Rounded corners
-                            }}
-                        />
-                        <label>Confirm New Password:</label>
-                        <input
-                            type="password"
-                            name="Confirm New Password"
-                            placeholder="Current Password"
-                            onChange={handleConfirmNewPasswordChange}
-                            value={confirmNewPassword}
-                            style={{
-                                width: "80%", // Full width
-                                padding: "1vw", // Padding for better spacing
-                                marginBottom: "1vw", // Space between inputs
-                                border: "1px solid #ccc", // Border style
-                                borderRadius: "4px", // Rounded corners
-                            }}
-                        />
+                        >
+                            <label>Current Password:</label>
+                            <input
+                                type="password"
+                                name="Current Password"
+                                placeholder="Current Password"
+                                onChange={handleCurrentPasswordChange}
+                                value={currentPassword}
+                                style={{
+                                    width: "60%", // Full width
+                                    padding: "1vw", // Padding for better spacing
+                                    marginBottom: "1vw", // Space between inputs
+                                    border: "1px solid #ccc", // Border style
+                                    borderRadius: "4px", // Rounded corners
+                                    alignItems: "center", // Align text to center
+                                }}
+                            />
+                            <label>New Password:</label>
+                            <input
+                                type="password"
+                                name="New Password"
+                                placeholder="New Password"
+                                onChange={handleNewPasswordChange}
+                                value={newPassword}
+                                style={{
+                                    width: "60%", // Full width
+                                    padding: "1vw", // Padding for better spacing
+                                    marginBottom: "1vw", // Space between inputs
+                                    border: "1px solid #ccc", // Border style
+                                    borderRadius: "4px", // Rounded corners
+                                }}
+                            />
+                            <label>Confirm New Password:</label>
+                            <input
+                                type="password"
+                                name="Confirm New Password"
+                                placeholder="Confirm New Password"
+                                onChange={handleConfirmNewPasswordChange}
+                                value={confirmNewPassword}
+                                style={{
+                                    width: "60%", // Full width
+                                    padding: "1vw", // Padding for better spacing
+                                    marginBottom: "1vw", // Space between inputs
+                                    border: "1px solid #ccc", // Border style
+                                    borderRadius: "4px", // Rounded corners
+                                }}
+                            />
+                        </div>
                     </PopUp>
                 </ButtonContainer>
             </MainContent>
