@@ -363,7 +363,6 @@ export default function TouristProfilePage() {
             const formData = new FormData();
             const image = await uploadFile(file, "tourist-profile-pictures");
             formData.append("picture", image);
-
             axiosInstance
                 .put("/tourist/updateTourist", formData, {
                     withCredentials: true,
@@ -374,6 +373,8 @@ export default function TouristProfilePage() {
                         ...prev,
                         picture: response.data.picture,
                     }));
+                    Cookies.set("profileImage", image);
+                    window.location.reload();
                 })
                 .catch((error) => {
                     console.error("Error uploading picture:", error);

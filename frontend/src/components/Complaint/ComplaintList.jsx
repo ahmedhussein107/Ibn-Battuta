@@ -10,6 +10,7 @@ import usePageHeader from "../Header/UseHeaderPage";
 
 const ComplaintList = () => {
     const [complaints, setComplaints] = useState([]);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedFilter, setSelectedFilter] = useState("all");
@@ -19,9 +20,17 @@ const ComplaintList = () => {
     usePageHeader("/complaints.png", "Complaints Page");
 
     useEffect(() => {
+        console.log(
+            "currentPage:",
+            currentPage,
+            "selectedFilter:",
+            selectedFilter,
+            "isSorted:",
+            isSorted
+        );
         fetchComplaints(currentPage);
         console.log("Here at useEffect:");
-    }, [currentPage, selectedFilter]);
+    }, [currentPage, selectedFilter, isSorted]);
 
     const handleSort = () => {
         setIsSorted(!isSorted);
@@ -47,9 +56,10 @@ const ComplaintList = () => {
                 `complaint/getSomeComplaints?page=${page}&limit=${itemsPerPage}&isSorted=${isSorted}&status=${selectedFilter}`,
                 { withCredentials: true }
             );
-            console.log("response", response.data);
+            console.log("response 1");
             setComplaints(response.data.complaints);
             setTotalPages(response.data.totalPages);
+            console.log("response 2");
         } catch (error) {
             console.error("Failed to fetch complaints:", error);
         }
