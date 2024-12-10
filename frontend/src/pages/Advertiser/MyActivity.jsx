@@ -238,7 +238,7 @@ const MyActivity = () => {
                                         onClick: () =>
                                             navigate(
                                                 `/advertiser/update-activity/${activity._id}`
-                                            ), // Pass the activity ID here
+                                            ),
                                         type: "always-dark",
                                         width: "50%",
                                         styles: {
