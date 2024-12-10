@@ -10,6 +10,7 @@ const GenericDropDown = ({
 }) => {
     const placeholder = `Select a ${label}`;
 
+    console.log(options);
     return (
         <Select
             value={selectedItem}

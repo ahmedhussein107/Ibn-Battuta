@@ -30,6 +30,7 @@ export const TimeModalContent = ({
 
     // Validation functions
     const validateHour = (value) => {
+        console.log(typeof value);
         const numericValue = value.replace(/[^0-9]/g, "");
         const hour = parseInt(numericValue);
         if (value === "") return "";
@@ -69,8 +70,8 @@ export const TimeModalContent = ({
 
     const handleTimeChange = () => {
 
-        const newStartTime = `${validateHour(startHour)}:${validateMinute(startMinute)} ${startPeriod}`;
-        const newEndTime = `${validateHour(endHour)}:${validateMinute(endMinute)} ${endPeriod}`;
+        const newStartTime = `${validateHour(startHour.toString())}:${validateMinute(startMinute.toString())} ${startPeriod}`;
+        const newEndTime = `${validateHour(endHour.toString())}:${validateMinute(endMinute.toString())} ${endPeriod}`;
         onTimesChange(newStartTime, newEndTime);
     };
 
