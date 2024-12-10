@@ -33,12 +33,32 @@ export const TimeModalContent = ({
         const numericValue = value.replace(/[^0-9]/g, "");
         const hour = parseInt(numericValue);
         if (value === "") return "";
-        if (hour < 1) return "1";
+        if (hour < 1) return "01";
+        if (hour < 10) return "0".concat(hour);
         if (hour > 12) return "12";
         return numericValue;
     };
 
     const validateMinute = (value) => {
+        const numericValue = value.replace(/[^0-9]/g, "");
+        const minute = parseInt(numericValue);
+        if (value === "") return "";
+        if (minute < 0) return "00";
+        if (minute < 10) return "0".concat(minute);
+        if (minute > 59) return "59";
+        return numericValue;
+    };
+
+    const validateHourPopUp = (value) => {
+        const numericValue = value.replace(/[^0-9]/g, "");
+        const hour = parseInt(numericValue);
+        if (value === "") return "";
+        if (hour < 1) return "1";
+        if (hour > 12) return "12";
+        return numericValue;
+    };
+
+    const validateMinutePopUp = (value) => {
         const numericValue = value.replace(/[^0-9]/g, "");
         const minute = parseInt(numericValue);
         if (value === "") return "";
@@ -48,8 +68,9 @@ export const TimeModalContent = ({
     };
 
     const handleTimeChange = () => {
-        const newStartTime = `${startHour}:${startMinute} ${startPeriod}`;
-        const newEndTime = `${endHour}:${endMinute} ${endPeriod}`;
+
+        const newStartTime = `${validateHour(startHour)}:${validateMinute(startMinute)} ${startPeriod}`;
+        const newEndTime = `${validateHour(endHour)}:${validateMinute(endMinute)} ${endPeriod}`;
         onTimesChange(newStartTime, newEndTime);
     };
 
@@ -84,7 +105,7 @@ export const TimeModalContent = ({
                         <input
                             type="text"
                             value={startHour}
-                            onChange={(e) => setStartHour(validateHour(e.target.value))}
+                            onChange={(e) => setStartHour(validateHourPopUp(e.target.value))}
                             maxLength={2}
                             style={{
                                 width: "3rem",
@@ -101,7 +122,7 @@ export const TimeModalContent = ({
                             type="text"
                             value={startMinute}
                             onChange={(e) =>
-                                setStartMinute(validateMinute(e.target.value))
+                                setStartMinute(validateMinutePopUp(e.target.value))
                             }
                             maxLength={2}
                             style={{
@@ -183,7 +204,7 @@ export const TimeModalContent = ({
                             <input
                                 type="text"
                                 value={endHour}
-                                onChange={(e) => setEndHour(validateHour(e.target.value))}
+                                onChange={(e) => setEndHour(validateHourPopUp(e.target.value))}
                                 maxLength={2}
                                 style={{
                                     width: "3rem",
@@ -200,7 +221,7 @@ export const TimeModalContent = ({
                                 type="text"
                                 value={endMinute}
                                 onChange={(e) =>
-                                    setEndMinute(validateMinute(e.target.value))
+                                    setEndMinute(validateMinutePopUp(e.target.value))
                                 }
                                 maxLength={2}
                                 style={{

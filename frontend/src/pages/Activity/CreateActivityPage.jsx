@@ -100,7 +100,7 @@ const CreateActivityPage = () => {
         setEndDate(end);
         const startString = start ? start.toLocaleDateString() : "";
         const endString = end ? end.toLocaleDateString() : "";
-        setFormattedDate(`${startString} to ${endString}`);
+        setFormattedDate(`${startString}`);
     };
 
     useEffect(() => {
@@ -195,7 +195,7 @@ const CreateActivityPage = () => {
             };
 
             const combinedStartDate = new Date(startDate);
-            const combinedEndDate = new Date(endDate);
+            const combinedEndDate = new Date(startDate);
             const startTime24 = convertTo24System(startTime);
             const endTime24 = convertTo24System(endTime);
             combinedStartDate.setHours(startTime24.hours, startTime24.minutes);
@@ -413,7 +413,6 @@ const CreateActivityPage = () => {
                                 isOpen={showDateModal}
                                 onClose={() => setShowDateModal(false)}
                                 startDate={startDate}
-                                endDate={endDate}
                                 onDatesChange={handleDatesChange}
                             />
                             <TimeModal
