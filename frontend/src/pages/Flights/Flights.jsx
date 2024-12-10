@@ -293,25 +293,22 @@ const Flights = () => {
                                     localStorage.getItem("flightOffer")
                                 ),
                                 airlines: JSON.parse(localStorage.getItem("airlines")),
+                                amountFromWallet,
                             },
                             { withCredentials: true }
                         );
-                        try {
-                            const response = await axiosInstance.get(
-                                "/booking/checkPossiblePackageFlight/",
-                                {
-                                    withCredentials: true,
-                                }
-                            );
-                            localStorage.removeItem("flightOffer");
-                            localStorage.removeItem("airlines");
-                            localStorage.setItem(
-                                "hotel",
-                                JSON.stringify(response?.data?.hotel || null)
-                            );
-                        } catch (error) {
-                            console.log(error);
-                        }
+                        const response = await axiosInstance.get(
+                            "/booking/checkPossiblePackageFlight/",
+                            {
+                                withCredentials: true,
+                            }
+                        );
+                        localStorage.removeItem("flightOffer");
+                        localStorage.removeItem("airlines");
+                        localStorage.setItem(
+                            "hotel",
+                            JSON.stringify(response?.data?.hotel || null)
+                        );
                     }}
                     handleOnFailure={() => {}}
                 />

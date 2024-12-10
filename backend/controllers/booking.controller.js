@@ -138,7 +138,9 @@ export const completeBooking = async (req, res) => {
         tourist.wallet = Math.max(0, tourist.wallet - amountFromWallet);
         await tourist.save();
         await booking.save();
-        res.status(200).json({ message: "Booking completed successfully" });
+        res.cookie("balance", tourist.wallet)
+            .status(200)
+            .json({ message: "Booking completed successfully" });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -431,6 +433,7 @@ export const checkPossiblePackageFlight = async (req, res) => {
         const hotels = tourist.hotelBookings.sort(
             (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
         );
+        console.log("hotels", hotels);
         for (const hotel of hotels) {
             const result =
                 new Date(hotel.checkInDate).getTime() -
