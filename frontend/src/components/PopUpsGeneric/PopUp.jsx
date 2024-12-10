@@ -50,7 +50,7 @@ const PopUp = ({
     return (
         <div className="popup-overlay" style={{ ...stylesOfOverlay, zIndex }}>
             <div className="popup" ref={popupRef}>
-                <PopUpHeader headerText={headerText} setIsOpen={setIsOpen} />
+                <PopUpHeader headerText={headerText} handleOnClose={handleOnClose} />
 
                 {children}
                 {containsFooter && (
