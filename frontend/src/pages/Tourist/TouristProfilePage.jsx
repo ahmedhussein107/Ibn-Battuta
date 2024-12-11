@@ -20,6 +20,10 @@ import Button from "../../components/Button";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
+import CurrencyDropdown from "../../components/CurrencyDropdownList";
+import LocationAdder from "../../components/LocationAdder";
+import MapPopUp from "../../components/MapPopUp";
+
 const PageWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -129,8 +133,9 @@ const InfoBoxesContainer = styled.div`
 `;
 
 const WalletIcon = styled.img`
-    width: 100%;
-    height: 100%;
+    width: 85%;
+    height: 85%;
+    margin-left: 5%;
 `;
 const LevelContainer = styled.div`
     font-size: 16px;
@@ -138,6 +143,7 @@ const LevelContainer = styled.div`
     flex-direction: column; /* Stack level text and progress bar vertically */
     margin-right: 5%;
 `;
+
 const levelImages = {
     1: "/level1.png", // Replace with actual path for Level 1
     2: "/level2.png", // Replace with actual path for Level 2
@@ -237,7 +243,7 @@ const CustomAlert = ({ message, severity, open, onClose }) => {
                         position: "fixed", // Fixed position to keep it in view
                         bottom: "5vh", // Distance from the bottom of the page
                         right: "10vh", // Distance from the right of the page
-                        zIndex: 1000, // Ensure it is on top of other elements
+                        zIndex: 2000, // Ensure it is on top of other elements
                     }}
                 >
                     <Collapse in={open}>
@@ -274,7 +280,10 @@ const CustomAlert = ({ message, severity, open, onClose }) => {
 export default function TouristProfilePage() {
     const [tourist, setTourist] = useState(null);
     const [userType, setUserType] = useState("Tourist");
-    const [tag, setTags] = useState([]);
+    const [tags, setTags] = useState([]);
+    const defaultImage =
+        "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg";
+    const [image, setImage] = useState(defaultImage);
     const [selectedTags, setSelectedTags] = useState([]);
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
     const [redeemValue, setRedeemValue] = useState(0);
@@ -285,6 +294,21 @@ export default function TouristProfilePage() {
     const [alertSeverity, setAlertSeverity] = useState("info");
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
+
+    const [location, setLocation] = useState({
+        longitude: 0,
+        latitude: 0,
+        location: "",
+    });
+
+    const [mapFunction, setMapFunction] = useState(null);
+    const [isMapOpen, setIsMapOpen] = useState(false);
+
+    useEffect(() => {
+        if (mapFunction) {
+            setIsMapOpen(true);
+        }
+    }, [mapFunction]);
 
     const showAlert = (message, severity = "info") => {
         setAlertMessage(message);
@@ -329,6 +353,7 @@ export default function TouristProfilePage() {
                     address: response.data.address || [],
                     currency: response.data.currency || "",
                 });
+                setImage(response.data.picture || defaultImage);
             })
             .catch((error) => {
                 console.error("Error fetching tourist:", error);
@@ -345,9 +370,7 @@ export default function TouristProfilePage() {
             tourist.preferences.map((tag, index) => (
                 <TagBubble key={index}>
                     {tag}
-                    <CloseButton onClick={() => handleTagRemove(tag)}>
-                        ×
-                    </CloseButton>
+                    <CloseButton onClick={() => handleTagRemove(tag)}>×</CloseButton>
                 </TagBubble>
             ))
         ) : (
@@ -365,27 +388,30 @@ export default function TouristProfilePage() {
             const formData = new FormData();
             const image = await uploadFile(file, "tourist-profile-pictures");
             formData.append("picture", image);
-
             axiosInstance
                 .put("/tourist/updateTourist", formData, {
                     withCredentials: true,
                 })
                 .then((response) => {
-                    showAlert(
-                        "Profile picture updated successfully!",
-                        "success"
-                    );
+                    showAlert("Profile picture updated successfully!", "success");
                     setTourist((prev) => ({
                         ...prev,
                         picture: response.data.picture,
                     }));
+
+                    setImage(response.data.picture);
+                    console.log(
+                        "Updated Tourist Profile Picture:",
+                        response.data.picture
+                    );
+                    Cookies.set("profileImage", response.data.picture);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 5000); // Alert will close after 5 seconds
                 })
                 .catch((error) => {
                     console.error("Error uploading picture:", error);
-                    showAlert(
-                        "An error occurred while uploading the picture.",
-                        "error"
-                    );
+                    showAlert("An error occurred while uploading the picture.", "error");
                 });
         }
     };
@@ -423,9 +449,7 @@ export default function TouristProfilePage() {
     };
 
     const handleTagRemove = (tagToRemove) => {
-        const updatedSelectedTags = selectedTags.filter(
-            (tag) => tag !== tagToRemove
-        );
+        const updatedSelectedTags = selectedTags.filter((tag) => tag !== tagToRemove);
         setSelectedTags(updatedSelectedTags);
 
         if (tourist?.preferences.includes(tagToRemove)) {
@@ -496,19 +520,13 @@ export default function TouristProfilePage() {
                     );
                 });
         } else if (pointsToRedeem === 0) {
-            showAlert(
-                "Please enter a valid amount of points to redeem.",
-                "warning"
-            ); // Use showAlert instead of alert
+            showAlert("Please enter a valid amount of points to redeem.", "warning"); // Use showAlert instead of alert
         } else if (tourist?.loyalityPoints < pointsToRedeem) {
             showAlert("Insufficient points for redemption.", "warning"); // Use showAlert instead of alert
         } else if (pointsToRedeem % 10000 !== 0) {
             showAlert("Please enter a multiple of 10000.", "warning"); // Use showAlert instead of alert
         } else {
-            showAlert(
-                "Insufficient points for redemption or invalid input",
-                "warning"
-            ); // Use showAlert instead of alert
+            showAlert("Insufficient points for redemption or invalid input", "warning"); // Use showAlert instead of alert
         }
     };
 
@@ -531,7 +549,9 @@ export default function TouristProfilePage() {
         }
     };
 
-    const handleSaveChanges = () => {
+    const [saveChangesLoading, setSaveChangesLoading] = useState(false);
+
+    const handleSaveChanges = async () => {
         if (!formData.name || !formData.email) {
             showAlert("Please fill out all fields.", "warning");
             return;
@@ -548,38 +568,39 @@ export default function TouristProfilePage() {
         }
 
         // If no fields have changed, show an alert and return
-
-        axiosInstance
-            .put("/tourist/updateTourist", editedFields, {
-                withCredentials: true,
-            })
-            .then(() => {
-                axiosInstance
-                    .get("/tourist/tourist", { withCredentials: true })
-                    .then((response) => {
-                        setTourist(response.data);
-                        showAlert("Profile updated successfully", "success");
-                        setIsEditing(false); // Exit editing mode
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching updated tourist:", error);
-                    });
-            })
-            .catch((error) => {
-                console.error("Error updating profile:", error);
-                showAlert(
-                    error.response?.data?.e ||
-                        "An error occurred while updating profile.",
-                    "error"
-                );
-            });
+        try {
+            setSaveChangesLoading(true);
+            const response = await axiosInstance.put(
+                "/tourist/updateTourist",
+                editedFields,
+                {
+                    withCredentials: true,
+                }
+            );
+            try {
+                const response = await axiosInstance.get("/tourist/tourist", {
+                    withCredentials: true,
+                });
+                setTourist(response.data);
+                showAlert("Profile updated successfully", "success");
+                setIsEditing(false); // Exit editing mode
+            } catch (error) {
+                console.error("Error fetching updated tourist:", error);
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            showAlert(
+                error.response?.data?.e || "An error occurred while updating profile.",
+                "error"
+            );
+        } finally {
+            setSaveChangesLoading(false);
+        }
     };
 
     const [newAddressName, setNewAddressName] = useState("");
-    const [newAddressLocation, setNewAddressLocation] = useState("");
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
-        useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -590,11 +611,20 @@ export default function TouristProfilePage() {
                 ...prev,
                 address: [
                     ...prev.address,
-                    { name: newAddressName, location: newAddressLocation },
+                    {
+                        name: newAddressName,
+                        address: location.location,
+                        Latitude: location.latitude,
+                        Longitude: location.longitude,
+                    },
                 ],
             }));
             setNewAddressName(""); // Clear name field
-            setNewAddressLocation(""); // Clear location field
+            setLocation({
+                longitude: 0,
+                latitude: 0,
+                location: "",
+            });
         } else {
             showAlert(
                 "Please fill out both name and location for the address.",
@@ -634,9 +664,7 @@ export default function TouristProfilePage() {
             })
             .catch((error) => {
                 const errorMessage =
-                    error.response &&
-                    error.response.data &&
-                    error.response.data.message
+                    error.response && error.response.data && error.response.data.message
                         ? error.response.data.message
                         : "An error occurred while deleting the account. Please try again.";
 
@@ -649,13 +677,18 @@ export default function TouristProfilePage() {
         setIsPopUpOpen(true);
     };
 
-    const handleCurrentPasswordChange = (e) =>
-        setCurrentPassword(e.target.value);
+    const handleCurrentPasswordChange = (e) => setCurrentPassword(e.target.value);
     const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
-    const handleConfirmNewPasswordChange = (e) =>
-        setConfirmNewPassword(e.target.value);
+    const handleConfirmNewPasswordChange = (e) => setConfirmNewPassword(e.target.value);
+    const handleUpdateCurrency = (newCurrency) => {
+        setFormData((prev) => ({ ...prev, currency: newCurrency }));
+    };
 
     const PopUpAction = () => {
+        if (!currentPassword || !newPassword || !confirmNewPassword) {
+            showAlert("Please fill out all fields.", "error"); // Use showAlert instead of alert
+            return;
+        }
         if (newPassword !== confirmNewPassword) {
             showAlert("New passwords do not match!", "warning"); // Use showAlert instead of alert
             return;
@@ -676,10 +709,7 @@ export default function TouristProfilePage() {
             })
             .catch((error) => {
                 console.error("Error changing password:", error);
-                showAlert(
-                    "Old password is incorrect. Please try again.",
-                    "error"
-                ); // Use showAlert instead of alert
+                showAlert("Old password is incorrect. Please try again.", "error"); // Use showAlert instead of alert
             });
     };
 
@@ -688,535 +718,476 @@ export default function TouristProfilePage() {
     }
 
     return (
-        <PageWrapper>
-            <div
-                style={{
-                    bottom: "20px",
-                    width: "100vw",
-                    height: "40vh",
-                    backgroundImage: `url(${bg})`,
-                    backgroundSize: "100% 100%",
-                    backgroundRepeat: "no-repeat",
-                    top: "20vh", // Correcting to lowercase 'top' from 'Top'
-                    marginBottom: "20px", // Add the desired margin bottom here
-                }}
-            ></div>
+        <>
+            {isMapOpen && (
+                <MapPopUp
+                    popUpOpen={isMapOpen}
+                    setPopUpOpen={setIsMapOpen}
+                    mapFunction={mapFunction}
+                />
+            )}
+            <PageWrapper>
+                <div
+                    style={{
+                        bottom: "20px",
+                        width: "100vw",
+                        height: "40vh",
+                        backgroundImage: `url(${bg})`,
+                        backgroundSize: "100% 100%",
+                        backgroundRepeat: "no-repeat",
+                        top: "20vh", // Correcting to lowercase 'top' from 'Top'
+                        marginBottom: "20px", // Add the desired margin bottom here
+                    }}
+                ></div>
 
-            <Navbar />
-            <CustomAlert
-                message={alertMessage}
-                severity={alertSeverity}
-                open={alertOpen}
-                onClose={handleCloseAlert}
-            />
-            <MainContent>
-                <InfoBoxesContainer>
-                    <ProfileDetailsBox>
-                        {/* Profile Image Section */}
-                        <ProfileImageContainer>
-                            <div
-                                onClick={
-                                    isEditing ? handleImageClick : undefined
-                                } // Clickable only when isEditing is true
-                                style={{
-                                    width: "10vw",
-                                    height: "10vw",
-                                    borderRadius: "50%",
-                                    overflow: "hidden",
-                                    border: "4px solid white",
-                                    backgroundImage: `url(${
-                                        tourist?.picture
-                                            ? tourist.picture
-                                            : "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
-                                    })`,
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center",
-                                    cursor: isEditing ? "pointer" : "default", // Pointer cursor only when isEditing is true
-                                }}
-                            ></div>
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                style={{ display: "none" }}
-                                accept="image/*"
-                                onChange={handleFileChange}
-                            />
-                            <strong>
-                                <p>{tourist?.name}</p>
-                            </strong>
-                            <p>@{tourist?.username}</p>
-                        </ProfileImageContainer>
+                <Navbar />
+                <CustomAlert
+                    message={alertMessage}
+                    severity={alertSeverity}
+                    open={alertOpen}
+                    onClose={handleCloseAlert}
+                />
+                <MainContent>
+                    <InfoBoxesContainer>
+                        <ProfileDetailsBox>
+                            {/* Profile Image Section */}
+                            <ProfileImageContainer>
+                                <div
+                                    onClick={isEditing ? handleImageClick : undefined} // Clickable only when isEditing is true
+                                    style={{
+                                        width: "10vw",
+                                        height: "10vw",
+                                        borderRadius: "50%",
+                                        overflow: "hidden",
+                                        border: "4px solid white",
+                                        backgroundImage: `url(${image})`,
+                                        backgroundSize: "cover",
+                                        backgroundPosition: "center",
+                                        cursor: isEditing ? "pointer" : "default", // Pointer cursor only when isEditing is true
+                                    }}
+                                ></div>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    style={{ display: "none" }}
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                />
+                                <strong>
+                                    <p>{tourist?.name}</p>
+                                </strong>
+                                <p>@{tourist?.username}</p>
+                            </ProfileImageContainer>
 
-                        {/* Profile Details Section */}
-                        <ProfileDetailsContainer>
-                            <h2>Profile Details</h2>
-                            {isEditing ? (
-                                <div>
-                                    <p style={{ marginBottom: "16px" }}>
-                                        <strong>Name:</strong>
-                                        <TextField
-                                            variant="outlined"
-                                            size="small"
-                                            fullWidth
-                                            name="name"
-                                            label="Name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            style={{ marginTop: "8px" }}
-                                        />
-                                    </p>
-                                    <p style={{ marginBottom: "16px" }}>
-                                        <strong>Email:</strong>
-                                        <TextField
-                                            variant="outlined"
-                                            size="small"
-                                            fullWidth
-                                            name="email"
-                                            label="Email"
-                                            type="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            style={{ marginTop: "8px" }}
-                                        />
-                                    </p>
-                                    <p style={{ marginBottom: "16px" }}>
-                                        <strong>Mobile Number:</strong>
-                                        <TextField
-                                            variant="outlined"
-                                            size="small"
-                                            fullWidth
-                                            name="mobile"
-                                            label="Mobile Number"
-                                            value={formData.mobile}
-                                            onChange={handleChange}
-                                            style={{ marginTop: "8px" }}
-                                        />
-                                    </p>
-                                    <p style={{ marginBottom: "16px" }}>
-                                        <strong>Nationality:</strong>
-                                        <TextField
-                                            variant="outlined"
-                                            size="small"
-                                            fullWidth
-                                            name="nationality"
-                                            label="Nationality"
-                                            value={formData.nationality}
-                                            onChange={handleChange}
-                                            style={{ marginTop: "8px" }}
-                                        />
-                                    </p>
-                                    <p style={{ marginBottom: "16px" }}>
-                                        <strong>Job:</strong>
-                                        <TextField
-                                            variant="outlined"
-                                            size="small"
-                                            fullWidth
-                                            name="job"
-                                            label="Job"
-                                            value={formData.job}
-                                            onChange={handleChange}
-                                            style={{ marginTop: "8px" }}
-                                        />
-                                    </p>
-                                    <p style={{ marginBottom: "16px" }}>
-                                        <strong>Addresses:</strong>
-                                        {formData.address.map(
-                                            (address, index) => (
+                            {/* Profile Details Section */}
+                            <ProfileDetailsContainer>
+                                <h2>Profile Details</h2>
+                                {isEditing ? (
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            gap: "1rem", // Add consistent spacing between elements
+                                            width: "90%",
+                                        }}
+                                    >
+                                        {[
+                                            { label: "Name", name: "name", type: "text" },
+                                            {
+                                                label: "Email",
+                                                name: "email",
+                                                type: "email",
+                                            },
+                                            {
+                                                label: "Mobile Number",
+                                                name: "mobile",
+                                                type: "text",
+                                            },
+                                            {
+                                                label: "Nationality",
+                                                name: "nationality",
+                                                type: "text",
+                                            },
+                                            { label: "Job", name: "job", type: "text" },
+                                        ].map(({ label, name, type }) => (
+                                            <div
+                                                key={name}
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    gap: "1rem",
+                                                }}
+                                            >
+                                                <strong>{label}:</strong>
+                                                <TextField
+                                                    variant="outlined"
+                                                    size="small"
+                                                    fullWidth
+                                                    name={name}
+                                                    label={label}
+                                                    type={type}
+                                                    value={formData[name]}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                        ))}
+
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                gap: "1rem",
+                                            }}
+                                        >
+                                            <strong>Addresses:</strong>
+                                            {formData.address.map((address, index) => (
                                                 <div
                                                     key={index}
                                                     style={{
-                                                        marginBottom: "8px",
+                                                        display: "flex",
+                                                        justifyContent: "space-between",
+                                                        alignItems: "center",
+                                                        width: "100%",
                                                     }}
                                                 >
-                                                    <TextField
-                                                        variant="outlined"
-                                                        size="small"
-                                                        fullWidth
-                                                        label="Address Name"
-                                                        value={address.name}
-                                                        style={{
-                                                            marginBottom: "4px",
-                                                        }}
-                                                        InputProps={{
-                                                            readOnly: true,
+                                                    <p style={{ width: "25%" }}>
+                                                        {address.name}:{" "}
+                                                    </p>
+                                                    <p>
+                                                        {address.address ||
+                                                            "unknown address"}
+                                                    </p>
+                                                    <Button
+                                                        stylingMode="always-light"
+                                                        text="Remove"
+                                                        handleClick={() =>
+                                                            handleRemoveAddress(index)
+                                                        }
+                                                        customStyle={{
+                                                            fontSize: "0.8rem",
+                                                            padding: "0.8rem",
                                                         }}
                                                     />
-                                                    <button
-                                                        style={{
-                                                            marginTop: "4px",
-                                                            background: "red",
-                                                            color: "white",
-                                                            border: "none",
-                                                            padding: "6px 12px",
-                                                            borderRadius: "50%", // Make it round
-                                                            width: "30px", // Set width for the button
-                                                            height: "30px", // Set height for the button
-                                                            display: "flex", // Center the 'X'
-                                                            alignItems:
-                                                                "center", // Center vertically
-                                                            justifyContent:
-                                                                "center", // Center horizontally
-                                                            cursor: "pointer",
-                                                        }}
-                                                        onClick={() =>
-                                                            handleRemoveAddress(
-                                                                index
-                                                            )
-                                                        }
-                                                    >
-                                                        &times;{" "}
-                                                        {/* HTML entity for multiplication sign (×) */}
-                                                    </button>
                                                 </div>
-                                            )
-                                        )}
-                                        <div>
-                                            <TextField
-                                                variant="outlined"
-                                                size="small"
-                                                label="New Address Name"
-                                                value={newAddressName}
-                                                onChange={(e) =>
-                                                    setNewAddressName(
-                                                        e.target.value
-                                                    )
-                                                }
+                                            ))}
+                                            <div
                                                 style={{
-                                                    marginBottom: "8px",
-                                                    width: "48%",
-                                                    marginRight: "4%",
+                                                    display: "flex",
+                                                    gap: "1rem",
+                                                    alignItems: "center",
+                                                    flexDirection: "column",
+                                                    width: "100%",
                                                 }}
-                                            />
-                                            <button
-                                                style={{
-                                                    padding: "10px 20px",
-                                                    backgroundColor: "#9c4f21",
-                                                    color: "white",
-                                                    border: "none",
-                                                    borderRadius: "20px",
-                                                    cursor: "pointer",
-                                                    marginTop: "10px",
-                                                }}
-                                                onClick={handleAddAddress}
                                             >
-                                                Add Address
-                                            </button>
+                                                <TextField
+                                                    variant="outlined"
+                                                    size="small"
+                                                    label="New Address Name"
+                                                    sx={{ width: "100%" }}
+                                                    value={newAddressName}
+                                                    onChange={(e) =>
+                                                        setNewAddressName(e.target.value)
+                                                    }
+                                                    style={{ flex: 1 }}
+                                                />
+                                                <LocationAdder
+                                                    title={"pin on map"}
+                                                    location={location}
+                                                    styles={{ width: "100%" }}
+                                                    setLocation={setLocation}
+                                                    setMapFunction={setMapFunction}
+                                                    fontWeight="500"
+                                                    fontSize="1rem"
+                                                />
+                                                <Button
+                                                    stylingMode="always-dark"
+                                                    text="Add Address"
+                                                    handleClick={handleAddAddress}
+                                                    customStyle={{
+                                                        width: "40%",
+                                                        alignSelf: "center",
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
-                                    </p>
-                                    <p style={{ marginBottom: "16px" }}>
-                                        <strong>Preferred Currency:</strong>{" "}
-                                        <select
-                                            name="currency"
-                                            value={formData.currency}
-                                            onChange={handleChange}
-                                            style={{ width: "30%" }} // Optional styling for the dropdown
-                                        >
-                                            <option value="">
-                                                Select Currency
-                                            </option>
-                                            {/* Default option */}
-                                            <option value="AED">
-                                                AED - United Arab Emirates
-                                                Dirham
-                                            </option>
-                                            <option value="AUD">
-                                                AUD - Australian Dollar
-                                            </option>
-                                            <option value="EGP">
-                                                EGP - Egyptian Pound
-                                            </option>
-                                            <option value="EUR">
-                                                EUR - Euro
-                                            </option>
-                                            <option value="GBP">
-                                                GBP - British Pound
-                                            </option>
-                                            <option value="GTQ">
-                                                GTQ - Guatemalan Quetzal
-                                            </option>
-                                            <option value="IDR">
-                                                IDR - Indonesian Rupiah
-                                            </option>
-                                            <option value="KWD">
-                                                KWD - Kuwaiti Dinar
-                                            </option>
-                                            <option value="USD">
-                                                USD - United States Dollar
-                                            </option>
-                                            <option value="WST">
-                                                WST - Samoan Tala
-                                            </option>
-                                            <option value="XAF">
-                                                XAF - Central African CFA Franc
-                                            </option>
-                                            <option value="ZWL">
-                                                ZWL - Zimbabwean Dollar
-                                            </option>
-                                        </select>
-                                    </p>
-                                    <p style={{ marginBottom: "16px" }}>
-                                        <button
+
+                                        <div
                                             style={{
-                                                width: "45%",
-                                                height: "5vh",
-                                                background: "white",
-                                                borderRadius: "20vh",
-                                                border: "0.1vh solid #9c4f21",
-                                                color: "#9c4f21",
-                                                marginRight: "10px",
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                gap: "1rem",
                                             }}
-                                            onClick={() => setIsEditing(false)} // Function to handle cancel action
                                         >
-                                            Cancel
-                                        </button>
-                                        <button
+                                            <strong>Preferred Currency:</strong>
+                                            <CurrencyDropdown
+                                                selectedCurrency={formData.currency}
+                                                setSelectedCurrency={handleUpdateCurrency}
+                                            />
+                                        </div>
+
+                                        <div
                                             style={{
-                                                padding: "10px 20px",
-                                                backgroundColor: "#9c4f21",
-                                                color: "white",
-                                                border: "none",
-                                                borderRadius: "20px",
-                                                width: "45%",
-                                                height: "5vh",
-                                                cursor: "pointer",
-                                                marginTop: "10px",
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                width: "100%",
+                                                alignItems: "center",
+                                                marginTop: "1.5rem",
                                             }}
-                                            onClick={handleSaveChanges}
                                         >
-                                            Save Changes
-                                        </button>
-                                    </p>
-                                </div>
-                            ) : (
-                                <>
-                                    <p>
-                                        <strong>Name:</strong>{" "}
-                                        {tourist?.name || "Not Provided"}
-                                    </p>
-                                    <p>
-                                        <strong>Email:</strong>{" "}
-                                        {tourist?.email || "Not Provided"}
-                                    </p>
-                                    <p>
-                                        <strong>Mobile:</strong>{" "}
-                                        {tourist?.mobile || "Not Provided"}
-                                    </p>
-                                    <p>
-                                        <strong>Nationality:</strong>{" "}
-                                        {tourist?.nationality || "Not Provided"}
-                                    </p>
-                                    <p>
-                                        <strong>Job:</strong>{" "}
-                                        {tourist?.job || "Not Provided"}
-                                    </p>
-                                    <p>
-                                        <strong>Addresses:</strong>{" "}
-                                        {tourist?.address &&
-                                        tourist.address.length > 0
-                                            ? tourist.address.map(
-                                                  (addr, index) => (
+                                            <Button
+                                                stylingMode="dark-when-hovered"
+                                                text={"Cancel"}
+                                                customStyle={{
+                                                    width: "80%",
+                                                }}
+                                                handleClick={() => setIsEditing(false)}
+                                            />
+
+                                            <Button
+                                                stylingMode="always-dark"
+                                                text={"Save Changes"}
+                                                handleClick={handleSaveChanges}
+                                                customStyle={{
+                                                    width: "80%",
+                                                }}
+                                                isLoading={saveChangesLoading}
+                                            />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <p>
+                                            <strong>Name:</strong>{" "}
+                                            {tourist?.name || "Not Provided"}
+                                        </p>
+                                        <p>
+                                            <strong>Email:</strong>{" "}
+                                            {tourist?.email || "Not Provided"}
+                                        </p>
+                                        <p>
+                                            <strong>Mobile:</strong>{" "}
+                                            {tourist?.mobile || "Not Provided"}
+                                        </p>
+                                        <p>
+                                            <strong>Nationality:</strong>{" "}
+                                            {tourist?.nationality || "Not Provided"}
+                                        </p>
+                                        <p>
+                                            <strong>Job:</strong>{" "}
+                                            {tourist?.job || "Not Provided"}
+                                        </p>
+                                        <p>
+                                            <strong>Addresses:</strong>{" "}
+                                            {tourist?.address &&
+                                            tourist.address.length > 0
+                                                ? tourist.address.map((addr, index) => (
                                                       <span key={index}>
                                                           {addr.name}
 
                                                           {index <
-                                                              tourist.address
-                                                                  .length -
+                                                              tourist.address.length -
                                                                   1 && ", "}
                                                       </span>
-                                                  )
-                                              )
-                                            : "Not Provided"}
-                                    </p>
-                                    <p>
-                                        <strong>Preferred Currency:</strong>{" "}
-                                        {tourist?.currency || "Not Provided"}
-                                    </p>
-                                </>
+                                                  ))
+                                                : "Not Provided"}
+                                        </p>
+                                        <p>
+                                            <strong>Preferred Currency:</strong>{" "}
+                                            {tourist?.currency || "Not Provided"}
+                                        </p>
+                                    </>
+                                )}
+                            </ProfileDetailsContainer>
+                            {!isEditing && ( // Render EditIcon only when not in editing mode
+                                <EditIcon
+                                    onClick={handleEditProfileSubmit} // Add the click functionality
+                                    style={{
+                                        cursor: "pointer", // Make it look clickable
+                                        fontSize: "24px", // Adjust the size as needed
+                                        color: "#000", // Optional: Customize the color
+                                        margin: "10px", // Optional: Add spacing
+                                    }}
+                                    titleAccess="Edit Profile" // Optional: Add tooltip for accessibility
+                                />
                             )}
-                        </ProfileDetailsContainer>
-                        {!isEditing && ( // Render EditIcon only when not in editing mode
-                            <EditIcon
-                                onClick={handleEditProfileSubmit} // Add the click functionality
-                                style={{
-                                    cursor: "pointer", // Make it look clickable
-                                    fontSize: "24px", // Adjust the size as needed
-                                    color: "#000", // Optional: Customize the color
-                                    margin: "10px", // Optional: Add spacing
-                                }}
-                                titleAccess="Edit Profile" // Optional: Add tooltip for accessibility
-                            />
-                        )}
-                    </ProfileDetailsBox>
-                    <PreferenceTagsBox>
-                        <h3>Preference Tags</h3>
-                        <Dropdown onChange={handleTagSelect} value="">
-                            <option value="">Add Tags</option>
-                            {Object.keys(tag).length > 0 ? (
-                                Object.keys(tag).map((key) => (
-                                    <option key={key} value={tag[key]}>
-                                        {tag[key]}
-                                    </option>
-                                ))
-                            ) : (
-                                <option>No tags available</option>
-                            )}
-                        </Dropdown>
-                        <div style={{ marginTop: "10px" }}>
-                            {/* Combine tourist.preferences, selectedTags, and render them without duplicates */}
-                            {[
-                                ...(tourist?.preferences || []), // Existing preferences
-                                ...selectedTags, // Selected tags
-                            ].map((tag, index) => (
-                                <TagBubble key={index}>
-                                    {tag}
-                                    <CloseButton
-                                        onClick={() => handleTagRemove(tag)}
-                                    >
-                                        ×
-                                    </CloseButton>
-                                </TagBubble>
-                            ))}
-                        </div>
-                    </PreferenceTagsBox>
-                </InfoBoxesContainer>
-                <hr
-                    style={{
-                        width: "90%",
-                        borderTop: "2px solid #ccc",
-                        marginTop: "3vh",
-                        marginBottom: "3vh",
-                    }}
-                />
-                <InfoBoxesContainer>
-                    <RedeemBox>
-                        <LevelContainer>
-                            <WalletIcon src="/image 55.png" alt="Wallet Icon" />
-                        </LevelContainer>
+                        </ProfileDetailsBox>
+                        <PreferenceTagsBox>
+                            <h3>Preference Tags</h3>
+                            <Dropdown onChange={handleTagSelect} value="">
+                                <option value="">Add Tags</option>
+                                {Object.keys(tags).length > 0 ? (
+                                    Object.keys(tags).map((key) => (
+                                        <option key={key} value={tags[key]}>
+                                            {tags[key]}
+                                        </option>
+                                    ))
+                                ) : (
+                                    <option>No tags available</option>
+                                )}
+                            </Dropdown>
 
-                        <PointsSection>
-                            <h3>Wallet Details</h3>
-                            <p>Balance: {formatPrice(tourist?.wallet || 0)}</p>
-                            <h3>My Points</h3>
-                            <p>Points: {tourist?.loyalityPoints || 0}</p>
-                            Level: {currentLevel}
-                        </PointsSection>
-                    </RedeemBox>
-                    <RedeemBox>
-                        <LevelContainer>
-                            <WalletIcon
-                                src={levelImages[currentLevel]}
-                                alt={`Level ${currentLevel} Icon`}
-                            />
-                        </LevelContainer>
-                        <LevelContainer>
-                            <h3>Redeem Points</h3>
-                            <h4>10K points → 100 EGP</h4>
-                            <InputBox
-                                type="number"
-                                placeholder="Points"
-                                value={pointsToRedeem}
-                                onChange={handleRedeemPointsChange}
-                            />
-                            <Arrow>→</Arrow>
-                            <InputBox
-                                type="text"
-                                placeholder="Value"
-                                value={redeemValue.toFixed(2)}
-                                readOnly
-                            />
+                            <div style={{ marginTop: "10px" }}>
+                                {/* Combine tourist.preferences, selectedTags, and render them without duplicates */}
+                                {[
+                                    ...(tourist?.preferences || []), // Existing preferences
+                                    ...selectedTags, // Selected tags
+                                ].map((tag, index) => (
+                                    <TagBubble key={index}>
+                                        {tag}
+                                        <CloseButton onClick={() => handleTagRemove(tag)}>
+                                            ×
+                                        </CloseButton>
+                                    </TagBubble>
+                                ))}
+                            </div>
+                        </PreferenceTagsBox>
+                    </InfoBoxesContainer>
+                    <hr
+                        style={{
+                            width: "90%",
+                            borderTop: "2px solid #ccc",
+                            marginTop: "3vh",
+                            marginBottom: "3vh",
+                        }}
+                    />
+                    <InfoBoxesContainer>
+                        <RedeemBox>
                             <LevelContainer>
-                                {" "}
-                                <Button
-                                    stylingMode="always-dark"
-                                    text="Redeem"
-                                    handleClick={handleRedeemPoints}
-                                ></Button>
+                                <WalletIcon src="/wallet.png" alt="Wallet Icon" />
                             </LevelContainer>
-                        </LevelContainer>
-                    </RedeemBox>
-                </InfoBoxesContainer>
-                <hr
-                    style={{
-                        width: "90%",
-                        borderTop: "2px solid #ccc",
-                        marginTop: "3vh",
-                        marginBottom: "3vh",
-                    }}
-                />
-                <ButtonContainer>
-                    <DeleteAccount onClick={handleDeleteAccount}>
-                        Delete Account
-                    </DeleteAccount>
-                    <PopUp
-                        isOpen={isDeleteConfirmationOpen}
-                        setIsOpen={setIsDeleteConfirmationOpen}
-                        headerText={
-                            "Are you sure you want to delete your account?"
-                        }
-                        actionText={"Confirm"}
-                        handleSubmit={handleDeleteAccountConfirm}
-                    ></PopUp>
-                    <ChangePassword onClick={handleChangePassword}>
-                        Change Password
-                    </ChangePassword>
-                    <PopUp
-                        isOpen={isPopUpOpen}
-                        setIsOpen={setIsPopUpOpen}
-                        headerText={"Change Password"}
-                        actionText={"Confirm"}
-                        handleSubmit={PopUpAction}
-                    >
-                        <label>Current Password:</label>
-                        <input
-                            type="password"
-                            name="Current Password"
-                            placeholder="Current Password"
-                            onChange={handleCurrentPasswordChange}
-                            value={currentPassword}
-                            style={{
-                                width: "80%", // Full width
-                                padding: "1vw", // Padding for better spacing
-                                marginBottom: "1vw", // Space between inputs
-                                border: "1px solid #ccc", // Border style
-                                borderRadius: "4px", // Rounded corners
-                                alignItems: "center", // Align text to center
-                            }}
-                        />
-                        <label>New Password:</label>
-                        <input
-                            type="password"
-                            name="New Password"
-                            placeholder="Current Password"
-                            onChange={handleNewPasswordChange}
-                            value={newPassword}
-                            style={{
-                                width: "80%", // Full width
-                                padding: "1vw", // Padding for better spacing
-                                marginBottom: "1vw", // Space between inputs
-                                border: "1px solid #ccc", // Border style
-                                borderRadius: "4px", // Rounded corners
-                            }}
-                        />
-                        <label>Confirm New Password:</label>
-                        <input
-                            type="password"
-                            name="Confirm New Password"
-                            placeholder="Current Password"
-                            onChange={handleConfirmNewPasswordChange}
-                            value={confirmNewPassword}
-                            style={{
-                                width: "80%", // Full width
-                                padding: "1vw", // Padding for better spacing
-                                marginBottom: "1vw", // Space between inputs
-                                border: "1px solid #ccc", // Border style
-                                borderRadius: "4px", // Rounded corners
-                            }}
-                        />
-                    </PopUp>
-                </ButtonContainer>
-            </MainContent>
 
-            <Footer />
-        </PageWrapper>
+                            <PointsSection>
+                                <h3>Wallet Details</h3>
+                                <p>Balance: {formatPrice(tourist?.wallet || 0)}</p>
+                                <h3>My Points</h3>
+                                <p>Points: {tourist?.loyalityPoints || 0}</p>
+                                Level: {currentLevel}
+                            </PointsSection>
+                        </RedeemBox>
+                        <RedeemBox>
+                            <LevelContainer>
+                                <WalletIcon
+                                    src={levelImages[currentLevel]}
+                                    alt={`Level ${currentLevel} Icon`}
+                                />
+                            </LevelContainer>
+                            <LevelContainer>
+                                <h3>Redeem Points</h3>
+                                <h4>10K points → 100 EGP</h4>
+                                <InputBox
+                                    type="number"
+                                    placeholder="Points"
+                                    value={pointsToRedeem}
+                                    onChange={handleRedeemPointsChange}
+                                />
+                                <Arrow>→</Arrow>
+                                <InputBox
+                                    type="text"
+                                    placeholder="Value"
+                                    value={redeemValue.toFixed(2)}
+                                    readOnly
+                                />
+                                <LevelContainer>
+                                    {" "}
+                                    <Button
+                                        stylingMode="always-dark"
+                                        text="Redeem"
+                                        handleClick={handleRedeemPoints}
+                                    ></Button>
+                                </LevelContainer>
+                            </LevelContainer>
+                        </RedeemBox>
+                    </InfoBoxesContainer>
+                    <hr
+                        style={{
+                            width: "90%",
+                            borderTop: "2px solid #ccc",
+                            marginTop: "3vh",
+                            marginBottom: "3vh",
+                        }}
+                    />
+                    <ButtonContainer>
+                        <DeleteAccount onClick={handleDeleteAccount}>
+                            Delete Account
+                        </DeleteAccount>
+                        <PopUp
+                            isOpen={isDeleteConfirmationOpen}
+                            setIsOpen={setIsDeleteConfirmationOpen}
+                            headerText={"Are you sure you want to delete your account?"}
+                            actionText={"Confirm"}
+                            handleSubmit={handleDeleteAccountConfirm}
+                        ></PopUp>
+                        <ChangePassword onClick={handleChangePassword}>
+                            Change Password
+                        </ChangePassword>
+                        <PopUp
+                            isOpen={isPopUpOpen}
+                            setIsOpen={setIsPopUpOpen}
+                            headerText={"Change Password"}
+                            actionText={"Confirm"}
+                            handleSubmit={PopUpAction}
+                        >
+                            <div
+                                style={{
+                                    width: "30vw",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <label>Current Password:</label>
+                                <input
+                                    type="password"
+                                    name="Current Password"
+                                    placeholder="Current Password"
+                                    onChange={handleCurrentPasswordChange}
+                                    value={currentPassword}
+                                    style={{
+                                        width: "60%", // Full width
+                                        padding: "1vw", // Padding for better spacing
+                                        marginBottom: "1vw", // Space between inputs
+                                        border: "1px solid #ccc", // Border style
+                                        borderRadius: "4px", // Rounded corners
+                                        alignItems: "center", // Align text to center
+                                    }}
+                                />
+                                <label>New Password:</label>
+                                <input
+                                    type="password"
+                                    name="New Password"
+                                    placeholder="New Password"
+                                    onChange={handleNewPasswordChange}
+                                    value={newPassword}
+                                    style={{
+                                        width: "60%", // Full width
+                                        padding: "1vw", // Padding for better spacing
+                                        marginBottom: "1vw", // Space between inputs
+                                        border: "1px solid #ccc", // Border style
+                                        borderRadius: "4px", // Rounded corners
+                                    }}
+                                />
+                                <label>Confirm New Password:</label>
+                                <input
+                                    type="password"
+                                    name="Confirm New Password"
+                                    placeholder="Confirm New Password"
+                                    onChange={handleConfirmNewPasswordChange}
+                                    value={confirmNewPassword}
+                                    style={{
+                                        width: "60%", // Full width
+                                        padding: "1vw", // Padding for better spacing
+                                        marginBottom: "1vw", // Space between inputs
+                                        border: "1px solid #ccc", // Border style
+                                        borderRadius: "4px", // Rounded corners
+                                    }}
+                                />
+                            </div>
+                        </PopUp>
+                    </ButtonContainer>
+                </MainContent>
+
+                <Footer />
+            </PageWrapper>
+        </>
     );
 }

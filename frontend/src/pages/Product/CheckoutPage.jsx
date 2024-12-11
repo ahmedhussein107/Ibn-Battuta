@@ -19,6 +19,7 @@ import Cookies from "js-cookie";
 import { useFunctionContext } from "../../contexts/FunctionContext";
 import { useLocation } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
+import GenericDropDown from "../../components/GenericDropDown";
 
 const Checkout = () => {
     const [tourist, setTourist] = useState(null);
@@ -30,6 +31,7 @@ const Checkout = () => {
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [isCompletionPopUpOpen, setIsCompletionPopUpOpen] = useState(false);
     const [isAdressPopUpOpen, setIsAdressPopUpOpen] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
     const [alert, setAlert] = useState({
         open: false,
         severity: "info",
@@ -48,6 +50,8 @@ const Checkout = () => {
     });
     const location = useLocation();
 
+    const { price } = location.state;
+
     const navigate = useNavigate();
     const { setSuccess, setFailure } = useFunctionContext();
     const currency = Cookies.get("currency") || "EGP";
@@ -64,7 +68,7 @@ const Checkout = () => {
                     address: response.data.address || [],
                     selectedAddress:
                         response.data.address.length > 0
-                            ? response.data.address[0].name
+                            ? response.data.address[0].address
                             : "No Saved Address",
                 });
             })
@@ -103,10 +107,13 @@ const Checkout = () => {
         }, 8000); // Alert will close after 5 seconds
     };
 
-    const handleSelectAddress = (event) => {
+    const handleSelectAddress = (selectedAddress) => {
+        const address = formData.address.find(
+            (address) => address.name === selectedAddress
+        );
         setFormData((prevData) => ({
             ...prevData,
-            selectedAddress: event.target.value,
+            selectedAddress: address?.address || "unknown address",
         }));
     };
 
@@ -182,34 +189,6 @@ const Checkout = () => {
         setIsPopUpOpen(true);
     };
 
-    // const handleNext = async () => {
-    //     const response = await axiosInstance.post(
-    //         "/booking/createBooking",
-    //         { typeId: "672faf9887fad62d0420dbc4", bookingType: "Activity", count: 1 },
-    //         { withCredentials: true }
-    //     );
-    //     const bookingId = response.data._id;
-    //     const handleSuccess = async () => {
-    //         await axiosInstance.patch(`/booking/completeBooking/${bookingId}`, {
-    //             isWalletUsed: false,
-    //         });
-    //         navigate("/tourist/bookings", { state: { tab: "Activities" } });
-    //     };
-    //     const handleFailure = async () => {
-    //         await axiosInstance.delete(`booking/deleteBooking/${bookingId}`);
-    //     };
-    //     const amount = 1000;
-    //     setSuccess(handleSuccess);
-    //     setFailure(handleFailure);
-    //     navigate("/tourist/payment", {
-    //         state: {
-    //             amount,
-    //             currency,
-    //             headerImage: bookingsBackground,
-    //         },
-    //     });
-    // };
-
     const handleNext = async () => {
         if (!formData.mobile.trim()) {
             showAlert("error", "Please enter your mobile number before proceeding.");
@@ -220,6 +199,8 @@ const Checkout = () => {
             return; // Exit the function to prevent further execution
         }
         try {
+            setIsProcessing(true);
+
             const response = await axiosInstance.post(
                 "/order/createOrder",
                 { method: paymentMethod, address: formData.selectedAddress },
@@ -239,21 +220,23 @@ const Checkout = () => {
                         "promocode/applyPromoCode",
                         {
                             promoCodeId: promoCode,
-                            totalAmount: location.state.price,
+                            totalAmount: price,
                         },
                         { withCredentials: true }
                     );
                 }
 
                 await axiosInstance.patch(`/order/completeOrder/${order._id}`, {
-                    isWalletUsed: isWalletUsed,
-                    finalPrice: location.state.price - promoCodeDiscount,
+                    amountFromWallet: isWalletUsed
+                        ? Math.min(tourist.wallet, price - promoCodeDiscount)
+                        : 0,
                 });
+
                 if (
                     paymentMethod === "cash on delivery" ||
                     (paymentMethod === "card" &&
                         isWalletUsed === true &&
-                        tourist.wallet >= location.state.price)
+                        tourist.wallet >= price)
                 ) {
                     setIsCompletionPopUpOpen(true);
                 } else navigate("/tourist/orders");
@@ -276,6 +259,8 @@ const Checkout = () => {
         } catch (error) {
             showAlert("error", error.response.data.message);
             console.log(error);
+        } finally {
+            setIsProcessing(false);
         }
     };
 
@@ -377,9 +362,7 @@ const Checkout = () => {
 
             showAlert("success", response.data.message);
 
-            setPromoCodeDiscount(
-                location.state.price * (response.data.promoCodeDetails.discount / 100)
-            );
+            setPromoCodeDiscount(price * (response.data.promoCodeDetails.discount / 100));
         } catch (error) {
             setPromoCodeDiscount(0);
             const backendErrorMessage =
@@ -420,7 +403,7 @@ const Checkout = () => {
                             color: "#9c4f21",
                             marginLeft: "2vw",
                             marginTop: "1vh",
-                            fontSize: "40px",
+                            fontSize: "2rem",
                         }}
                     >
                         Delivery and Payment
@@ -453,7 +436,7 @@ const Checkout = () => {
                                 marginLeft: "3vw",
                                 marginBottom: "1vh",
                                 color: "#9c4f21",
-                                fontSize: "35px",
+                                fontSize: "1.8rem",
                             }}
                         >
                             Contact Details:
@@ -463,7 +446,10 @@ const Checkout = () => {
                                 marginLeft: "4vw",
                             }}
                         >
-                            <p style={{ fontSize: "25px" }}> Contact Mobile Number:</p>
+                            <p style={{ fontSize: "1.3rem", marginBottom: "0.5rem" }}>
+                                {" "}
+                                Contact Mobile Number:
+                            </p>
                             <Box
                                 component="form"
                                 sx={{
@@ -482,7 +468,7 @@ const Checkout = () => {
                                     onBlur={handleSubmit}
                                     onChange={handleChange}
                                     style={{
-                                        width: "25vw",
+                                        width: "90%",
                                         height: "4vh",
                                         marginTop: "1vh",
                                         marginLeft: "1vw",
@@ -493,8 +479,8 @@ const Checkout = () => {
                         <div
                             style={{
                                 marginLeft: "4vw",
-                                marginTop: "2vh",
-                                fontSize: "25px",
+                                marginTop: "5%",
+                                fontSize: "1.3rem",
                             }}
                         >
                             <div
@@ -506,39 +492,23 @@ const Checkout = () => {
                                     direction: "row",
                                 }}
                             >
-                                <p> Delivery Address:</p>
+                                <p style={{ fontSize: "1.3rem", marginBottom: "0.5rem" }}>
+                                    {" "}
+                                    Delivery Address:
+                                </p>
                             </div>
-                            <select
-                                name="address"
-                                value={formData.selectedAddress || "addNew"} // Default to "addNew" if no address is selected
-                                onClick={(e) => {
-                                    console.log("Selected value:", e.target.value);
-                                    if (e.target.value === "addNew") {
-                                        console.log("Opening popup...");
-                                        setIsAdressPopUpOpen(true);
-                                    }
-                                }}
-                                onChange={(e) => {
-                                    handleSelectAddress(e); // Existing address selection
-                                }}
-                                style={{
-                                    width: "25vw",
-                                    height: "6vh",
-                                    marginTop: "1vh",
-                                    padding: "10px",
-                                    border: "1px solid #ccc",
-                                    borderRadius: "4px",
-                                    boxSizing: "border-box",
-                                    display: "block",
-                                    marginLeft: "1vw",
-                                }}
-                            >
-                                {formData.address.map((address, index) => (
-                                    <option key={index} value={address.name}>
-                                        {address.name}
-                                    </option>
-                                ))}
-                            </select>
+                            <div style={{ marginLeft: "1vw" }}>
+                                <GenericDropDown
+                                    options={formData.address.map((address) => {
+                                        return {
+                                            _id: address.name,
+                                        };
+                                    })}
+                                    selectedItem={formData.selectedAddress}
+                                    setSelectedItem={handleSelectAddress}
+                                    label="address"
+                                />
+                            </div>
 
                             {/* Popup component */}
                             {isAdressPopUpOpen && (
@@ -575,7 +545,7 @@ const Checkout = () => {
                                     marginLeft: "1vw",
                                     marginBottom: "1.5vh",
                                     color: "#9c4f21",
-                                    fontSize: "35px",
+                                    fontSize: "1.8rem",
                                 }}
                             >
                                 Payment:
@@ -605,7 +575,9 @@ const Checkout = () => {
                                         style={{
                                             display: "flex",
                                             alignItems: "center",
-                                            fontSize: "25px",
+                                            justifyContent: "space-between",
+                                            width: "50%",
+                                            fontSize: "1.3rem",
                                         }}
                                     >
                                         <span
@@ -651,7 +623,9 @@ const Checkout = () => {
                                         style={{
                                             display: "flex",
                                             alignItems: "center",
-                                            fontSize: "25px",
+                                            justifyContent: "space-between",
+                                            width: "50%",
+                                            fontSize: "1.3rem",
                                         }}
                                     >
                                         <span
@@ -689,7 +663,7 @@ const Checkout = () => {
                                 display: "flex",
                                 flexDirection: "column",
                                 marginTop: "1vh",
-                                marginLeft: "5vw",
+                                marginLeft: "4vw",
                             }}
                         >
                             <div
@@ -697,8 +671,7 @@ const Checkout = () => {
                                     display: "flex",
                                     alignItems: "center",
                                     flexDirection: "row",
-                                    fontWeight: "bold",
-                                    fontSize: "25px",
+                                    fontSize: "1.3rem",
                                 }}
                             >
                                 Use Wallet Balance
@@ -719,18 +692,19 @@ const Checkout = () => {
                             >
                                 <p
                                     style={{
-                                        marginLeft: "0.5vw",
                                         marginTop: "-1vh",
-                                        fontSize: "25px",
+                                        fontSize: "1.3rem",
                                     }}
                                 >
-                                    Balance:{formatPrice(tourist?.wallet || 0)}
+                                    Balance: {formatPrice(tourist?.wallet || 0)}
                                 </p>
 
                                 {tourist?.loyalityPoints > 0 && (
                                     <Box
-                                        sx={{ "& > :not(style)": { m: 1 } }}
-                                        style={{ marginTop: "-2vh" }}
+                                        sx={{
+                                            "& > :not(style)": { m: 1 },
+                                            zIndex: 1,
+                                        }}
                                     >
                                         <Fab
                                             size="small"
@@ -925,7 +899,7 @@ const Checkout = () => {
                                 <p
                                     style={{
                                         color: "#9c4f21",
-                                        fontSize: "35px",
+                                        fontSize: "1.8rem",
                                     }}
                                 >
                                     {" "}
@@ -936,7 +910,6 @@ const Checkout = () => {
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        gap: "2vw",
                                     }}
                                 >
                                     <Box
@@ -981,11 +954,8 @@ const Checkout = () => {
                                         stylingMode={"always-dark"}
                                         text="Apply"
                                         customStyle={{
-                                            fontSize: "25px",
+                                            marginTop: "3%",
                                             textAlign: "center",
-                                            position: "center",
-                                            alignItems: "center",
-                                            lineHeight: "1vh",
                                         }}
                                         handleClick={handlePromoCode}
                                         width="8vw"
@@ -1010,9 +980,8 @@ const Checkout = () => {
                                             style={{
                                                 backgroundColor: "#A0522D", // Brown color
                                                 color: "#fff",
-                                                height: "3vh",
                                                 padding: "0.5vw",
-                                                fontSize: "28px",
+                                                fontSize: "1.6rem",
                                                 fontWeight: "bold",
                                                 textAlign: "center",
                                             }}
@@ -1024,25 +993,23 @@ const Checkout = () => {
                                             style={{
                                                 padding: "1vh",
                                                 color: "#4F4F4F",
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                alignItems: "center",
                                             }}
                                         >
                                             {/* Items Price Row */}
                                             <div
                                                 style={{
                                                     display: "flex",
+                                                    width: "90%",
                                                     justifyContent: "space-between",
                                                     margin: "0.5vh 0",
-                                                    fontSize: "20px",
+                                                    fontSize: "1.3rem",
                                                 }}
                                             >
                                                 <span>Items price</span>
-                                                <span
-                                                    style={{
-                                                        fontWeight: "bold",
-                                                    }}
-                                                >
-                                                    {formatPrice(location.state.price)}
-                                                </span>
+                                                <span>{formatPrice(price)}</span>
                                             </div>
                                             {/* Promocode Row */}
                                             {promoCodeDiscount > 0 && (
@@ -1071,6 +1038,7 @@ const Checkout = () => {
                                             <div
                                                 style={{
                                                     display: "flex",
+                                                    width: "90%",
                                                     justifyContent: "space-between",
                                                     margin: "0.5vh 0",
                                                     fontSize: "20px",
@@ -1078,8 +1046,7 @@ const Checkout = () => {
                                             >
                                                 {isWalletUsed &&
                                                     tourist.wallet >=
-                                                        location.state.price -
-                                                            promoCodeDiscount && (
+                                                        price - promoCodeDiscount && (
                                                         <div
                                                             style={{
                                                                 display: "flex",
@@ -1103,8 +1070,7 @@ const Checkout = () => {
                                                                 {formatPrice(
                                                                     Math.min(
                                                                         tourist.wallet,
-                                                                        location.state
-                                                                            .price -
+                                                                        price -
                                                                             promoCodeDiscount
                                                                     )
                                                                 )}
@@ -1116,8 +1082,8 @@ const Checkout = () => {
                                             {/* Divider */}
                                             <hr
                                                 style={{
-                                                    border: "none",
-                                                    borderTop: "1px solid #ddd",
+                                                    width: "95%",
+                                                    border: "1px solid #ddd",
                                                     margin: "2vh 0",
                                                 }}
                                             />
@@ -1126,32 +1092,27 @@ const Checkout = () => {
                                             <div
                                                 style={{
                                                     display: "flex",
+                                                    width: "90%",
                                                     justifyContent: "space-between",
-                                                    fontSize: "20px",
+                                                    fontSize: "1.4rem",
                                                     fontWeight: "bold",
                                                     marginTop: "1vh",
                                                     padding: "2vh ",
                                                 }}
                                             >
                                                 <span>Total</span>
-                                                <span
-                                                    style={{
-                                                        fontSize: "18px",
-                                                        color: "#000",
-                                                    }}
-                                                >
+                                                <span>
                                                     {isWalletUsed
                                                         ? formatPrice(
                                                               Math.max(
-                                                                  location.state.price -
+                                                                  price -
                                                                       tourist.wallet -
                                                                       promoCodeDiscount,
                                                                   0
                                                               )
                                                           )
                                                         : formatPrice(
-                                                              location.state.price -
-                                                                  promoCodeDiscount
+                                                              price - promoCodeDiscount
                                                           )}
                                                 </span>
                                             </div>
@@ -1180,10 +1141,11 @@ const Checkout = () => {
                                     (paymentMethod === "card" && !isWalletUsed) ||
                                     (paymentMethod === "card" &&
                                         isWalletUsed &&
-                                        tourist.wallet < location.state.price)
+                                        tourist.wallet < price)
                                         ? "Next"
                                         : "Place Order"
                                 }
+                                isLoading={isProcessing}
                                 handleClick={handleNext}
                                 width="10vw"
                                 height="5vh"

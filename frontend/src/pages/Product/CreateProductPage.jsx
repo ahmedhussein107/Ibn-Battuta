@@ -7,6 +7,7 @@ import Button from "../../components/Button.jsx";
 import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { CircularProgress } from "@mui/material";
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
         <PopupContent>
@@ -31,6 +32,9 @@ const CreateProductPage = () => {
     const [popupMessage, setPopupMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [isErrorPopup, setIsErrorPopup] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+
     const navigate = useNavigate();
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -56,6 +60,8 @@ const CreateProductPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null);
+        setIsLoading(true);
         if (!formData.name || !formData.description || imagePreviews.length === 0) {
             showPopupMessage("Please fill out all details.", true);
             return;
@@ -273,6 +279,7 @@ const CreateProductPage = () => {
                         handleClick={() => {
                             setFormData(defaultData);
                             setImagePreviews([]);
+                            navigate("/seller/home");
                         }}
                         width="auto"
                     />
@@ -280,6 +287,8 @@ const CreateProductPage = () => {
                         stylingMode="always-dark"
                         text="Create Product"
                         handleClick={handleSubmit}
+                        disabled={isLoading}
+                        isLoading={isLoading}
                         width="auto"
                     />
                 </ButtonGroup>

@@ -1,6 +1,7 @@
 .popup-body {
     display: flex;
     flex-direction: column;
+    width: 25vw;
     gap: 10px;
 }
 

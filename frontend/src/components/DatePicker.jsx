@@ -4,7 +4,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker as MUIDatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const DatePicker = ({ label, setValue }) => {
+const DatePicker = ({ label, setValue, isRemove = false }) => {
     const handleChange = (newValue) => {
         try {
             console.log("date selected is: ", newValue.toISOString());
@@ -14,6 +14,11 @@ const DatePicker = ({ label, setValue }) => {
             setValue("");
         }
     };
+    React.useEffect(() => {
+        if (isRemove) {
+            setValue("");
+        }
+    }, [isRemove]);
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -27,9 +32,22 @@ const DatePicker = ({ label, setValue }) => {
                     label={label}
                     onChange={handleChange}
                     sx={{
-                        border: "2px solid var(--accent-color)",
-                        borderColor: "var(--accent-color)",
-                        borderRadius: "10px",
+                        "& .MuiInputLabel-root": {
+                            "&.Mui-focused": {
+                                color: "var(--accent-color)",
+                            },
+                        },
+                        "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                                borderColor: "var(--accent-color)",
+                            },
+                            "&:hover fieldset": {
+                                borderColor: "var(--accent-color)",
+                            },
+                            "&.Mui-focused fieldset": {
+                                borderColor: "var(--accent-color)",
+                            },
+                        },
                     }}
                 />
             </DemoContainer>

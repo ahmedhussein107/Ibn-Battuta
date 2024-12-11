@@ -6,6 +6,7 @@ import HotelsControls from "./HotelsControls";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
+import Footer from "../Footer";
 const room = {
     name: "Grand City Hotel",
     address: "123 Main Street, New York, USA",
@@ -61,7 +62,14 @@ const HotelList = () => {
                 hotel.chosenCity = chosenCity;
             });
             console.log("Fetched data:", response);
-            setRooms(response.data.hotels || []);
+            setRooms(
+                response.data.hotels.map((hotel) => {
+                    return {
+                        ...hotel,
+                        totalPrice: hotel.totalPrice / 100,
+                    };
+                }) || []
+            );
         } catch (err) {
             console.error("Error fetching rooms:", err);
             setRooms([]);
@@ -101,28 +109,31 @@ const HotelList = () => {
     }, [searchParams]);
 
     return (
-        <div className="hotel-list-with-controls">
-            <HotelsControls
-                startDate={start}
-                setStartDate={setStart}
-                endDate={end}
-                setEndDate={setEnd}
-                guests={guests}
-                setGuests={setGuests}
-                onSearch={handleSearchButton}
-                chosenCity={chosenCity}
-                setChosenCity={setChosenCity}
-            />
+        <>
+            <div className="hotel-list-with-controls">
+                <HotelsControls
+                    startDate={start}
+                    setStartDate={setStart}
+                    endDate={end}
+                    setEndDate={setEnd}
+                    guests={guests}
+                    setGuests={setGuests}
+                    onSearch={handleSearchButton}
+                    chosenCity={chosenCity}
+                    setChosenCity={setChosenCity}
+                />
 
-            <div className="hotel-list-container">
-                <div className="hotel-grid">
-                    {/* change later for rooms.map(offer=(item)) */}
-                    {rooms?.map((item, index) => (
-                        <HotelCard key={index} offer={item} isAllOffers={true} />
-                    ))}
+                <div className="hotel-list-container">
+                    <div className="hotel-grid">
+                        {/* change later for rooms.map(offer=(item)) */}
+                        {rooms?.map((item, index) => (
+                            <HotelCard key={index} offer={item} isAllOffers={true} />
+                        ))}
+                    </div>
                 </div>
             </div>
-        </div>
+            <Footer />
+        </>
     );
 };
 

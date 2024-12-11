@@ -170,6 +170,7 @@ const OrderDetails = () => {
 								<OrderEntry
 									orderID={id}
 									product={element.product}
+									price={element.price}
 									count={element.count}
 									formatPrice={formatPrice}
 									ratingID={element.ratingID}

@@ -12,18 +12,26 @@ import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const landmarkRouter = express.Router();
 
-landmarkRouter.post("/createLandmark", createLandmark);
+landmarkRouter.post("/createLandmark", isAuthenticated, createLandmark);
 
 landmarkRouter.get("/allLandmarks", getAllLandmarks);
 
-landmarkRouter.get("/landmark/:id", getLandmarkById);
+landmarkRouter.get("/landmark/:id", isAuthenticated, getLandmarkById);
 
-landmarkRouter.get("/ticketPricesFromLandmark/:id", getTicketPricesFromLandmark);
+landmarkRouter.get(
+    "/ticketPricesFromLandmark",
+    isAuthenticated,
+    getTicketPricesFromLandmark
+);
 
-landmarkRouter.patch("/updateLandmark/:id", updateLandmark);
+landmarkRouter.patch("/updateLandmark/:id", isAuthenticated, updateLandmark);
 
-landmarkRouter.delete("/deleteLandmark/:id", deleteLandmark);
+landmarkRouter.delete("/deleteLandmark/:id", isAuthenticated, deleteLandmark);
 
-landmarkRouter.get("/getGovernorLandmarks", isAuthenticated, getGovernorLandmarks);
+landmarkRouter.get(
+    "/getGovernorLandmarks",
+    isAuthenticated,
+    getGovernorLandmarks
+);
 
 export default landmarkRouter;

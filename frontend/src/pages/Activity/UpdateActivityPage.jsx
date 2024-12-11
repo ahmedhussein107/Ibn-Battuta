@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import styled, { keyframes } from "styled-components";
 import axiosInstance from "../../api/axiosInstance";
 import { uploadFiles } from "../../api/firebase";
@@ -7,18 +7,17 @@ import DateModal from "../../components/DateModal.jsx";
 import TimeModal from "../../components/TimeModal.jsx";
 import Button from "../../components/Button.jsx";
 import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
-import NavBar from "../../components/NavBar.jsx";
-import Map from "../map";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import LocationAdder from "../../components/LocationAdder.jsx";
 import MapPopUp from "../../components/MapPopUp.jsx";
 import CurrencyDropdown from "../../components/CurrencyDropdownList.jsx";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 import Cookies from "js-cookie";
-import { useParams } from "react-router-dom";
+import GenericDropDown from "../../components/GenericDropDown.jsx";
+import {CircularProgress} from "@mui/material";
 
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
@@ -60,12 +59,13 @@ const UpdateActivityPage = () => {
     const [endTime, setEndTime] = useState(null);
     const [formattedTime, setFormattedTime] = useState("");
     const [selectedCurrency, setSelectedCurrency] = useState("EGP");
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const currency = Cookies.get("currency") || "EGP";
+    const [isPageLoading, setIsPageLoading] = useState(true);
+    const [updateProcessing, setUpdateProcessing] = useState(false);
     const { isLoading, formatPrice, convertPrice } = useCurrencyConverter(currency);
-    const [isEditing, setisEditing] = useState(false);
-    const [activity, setActivity] = useState("");
 
-    const { id } = useParams();
+    const activityId = useParams();
 
     const [pickupLocation, setPickupLocation] = useState({
         latitude: 0,
@@ -105,10 +105,18 @@ const UpdateActivityPage = () => {
     const handleDatesChange = (start, end) => {
         setStartDate(start);
         setEndDate(end);
-        const startString = start ? start.toLocaleDateString() : "";
-        const endString = end ? end.toLocaleDateString() : "";
-        setFormattedDate(`${startString} to ${endString}`);
     };
+
+    useEffect( () => {
+        const startString = startDate ? startDate.toLocaleDateString() : "";
+        setFormattedDate(`${startString}`);
+    }, [startDate]);
+
+    useEffect( () => {
+        setFormattedTime(`${startTime} to ${endTime}`);
+    }, [startTime, endTime]);
+
+
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -129,98 +137,71 @@ const UpdateActivityPage = () => {
             }
         };
 
-        fetchCategories();
-        fetchTags();
-    }, []);
+        const transformISODate = (isoDateString) => {
+            const date = new Date(isoDateString);
+            const startDate = date;
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const period = hours >= 12 ? 'PM' : 'AM';
+            let formattedHours = hours % 12;
+            formattedHours = formattedHours === 0 ? 12 : formattedHours;
+            const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 
-    useEffect(() => {
-        const fetchActivityData = async () => {
-            if (id) {
-                try {
-                    const response = await axiosInstance.get(
-                        `/activity/getActivity/${id}`
-                    );
-                    console.log("Activity Data:", response.data);
+            const startTime = `${formattedHours}:${formattedMinutes} ${period}`;
+            return {
+                date: startDate,
+                time: startTime
+            };
+        };
 
-                    setActivity(response.data);
-                    setFormData({
-                        ...defaultData,
-                        name: response.data.name,
-                        description: response.data.description,
-                        startDate: new Date(response.data.startDate),
-                        endDate: new Date(response.data.endDate),
-                        category: response.data.category,
-                        freeSpots: response.data.freeSpots,
-                        specialDiscount: response.data.specialDiscount,
-                        price: response.data.price,
-                        isOpenForBooking: response.data.isOpenForBooking,
-                    });
+        const fetchActivity = async () => {
+            try {
+                const response = await axiosInstance.get(`activity/getActivity/${activityId.id}`);
+                setFormData(response.data);
+                setSelectedTags(response.data.tags);
+                setSelectedCategory(response.data.category);
 
-                    const fetchedStartDate = new Date(response.data.startDate); // this includes time
-                    const fetchedEndDate = new Date(response.data.endDate); // this includes time
+                console.log(response.data.price);
 
-                    // Set start date and end date for display
-                    setStartDate(fetchedStartDate);
-                    setEndDate(fetchedEndDate);
-                    setFormattedDate(
-                        `${fetchedStartDate.toLocaleDateString()} to ${fetchedEndDate.toLocaleDateString()}`
-                    );
+                const databaseImagePreviews = response.data.pictures.map((pictureUrl, index) => ({
+                    id: `db-${Date.now()}-${index}`,
+                    url: pictureUrl,
+                    file: null,
+                    isFromDatabase: true
+                }));
 
-                    // Extract and format the time from the fetched dates
-                    const startHours = fetchedStartDate.getHours();
-                    const startMinutes = fetchedStartDate.getMinutes();
-                    const endHours = fetchedEndDate.getHours();
-                    const endMinutes = fetchedEndDate.getMinutes();
+                setImagePreviews(databaseImagePreviews);
 
-                    const startTimeString = `${startHours
-                        .toString()
-                        .padStart(2, "0")}:${startMinutes.toString().padStart(2, "0")}`;
-
-                    convertPrice;
-
-                    const endTimeString = `${endHours
-                        .toString()
-                        .padStart(2, "0")}:${endMinutes.toString().padStart(2, "0")}`;
-
-                    // Format and set times as "HH:MM" string
-                    setStartTime(startTimeString);
-                    setEndTime(endTimeString);
-
-                    // Set formatted time string
-                    setFormattedTime(`${startTimeString} to ${endTimeString}`);
-
-                    setSelectedCurrency(response.data.currency); // Set the selected currency
-
-                    setImagePreviews(
-                        response.data.pictures.map((url) => ({ id: url, file: null }))
-                    );
-                    console.log("Image Previews:", imagePreviews);
-                    console.log(
-                        response.data.pictures.map((url) => ({ id: url, file: null }))
-                    );
-                    setSelectedTags(response.data.tags);
-                    setPickupLocation({
-                        latitude: response.data.latitude,
-                        longitude: response.data.longitude,
-                        location: response.data.location,
-                    });
-                } catch (error) {
-                    console.error("Error fetching activity data:", error);
-                    showPopupMessage(
-                        "Error fetching activity data. Please try again.",
-                        true
-                    );
+                const curPickupLocation = {
+                    location: response.data.location,
+                    latitude: response.data.Latitude,
+                    longitude: response.data.Longitude
                 }
+                setPickupLocation(curPickupLocation);
+
+                const { date: newStartDate, time: newStartTime } = transformISODate(response.data.startDate);
+                const { date: newEndDate, time: newEndTime} = transformISODate(response.data.endDate);
+
+                setStartDate(newStartDate);
+                setStartTime(newStartTime);
+                setEndDate(newEndDate);
+                setEndTime(newEndTime);
+
+
+            } catch(error) {
+                console.error("Error fetching activity:", error);
             }
         };
 
-        fetchActivityData();
-    }, [id]);
+        fetchActivity();
+        fetchCategories();
+        fetchTags();
+        setIsPageLoading(false);
+    }, []);
+
 
     const handleInputChange = (e) => {
         let { name, value, type, checked } = e.target;
-        console.log(name, value);
-        console.log(formData);
         if (type === "number" && isNaN(value)) return;
         if (type == "number") value = Math.max(value, 0);
         if (name == "specialDiscount") value = Math.min(value, 100);
@@ -255,70 +236,119 @@ const UpdateActivityPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        formData.category = selectedCategory;
+        console.log(formData);
+
+
 
         if (
-            !formData.name ||
+            (!formData.name ||
             !formData.description ||
             !startDate ||
             !endDate ||
             !formData.price ||
             !formData.category ||
-            !formData.freeSpots ||
-            imagePreviews.length === 0
+            imagePreviews.length === 0,
+                !formData.freeSpots)
         ) {
             showPopupMessage("Please fill out all required details.", true);
             return;
         }
-        const newImages = imagePreviews.filter((preview) => preview.file !== null);
-        const oldImages = imagePreviews.filter((preview) => preview.file === null);
-        const oldImageUrls = oldImages.map((preview) => preview.id);
-        const files = newImages.map((preview) => preview.file);
-        const uploadedFileUrls = await uploadFiles(files, "activities");
 
-        const urls = [...oldImageUrls, ...uploadedFileUrls];
+        if (tags.length === 0 || selectedTags.length === 0) {
+            showPopupMessage("Please select at least one tag.", true);
+            return;
+        }
 
-        const convertTo24System = (timeObj) => {
-            const [time, period] = timeObj.split(" ");
-            let [hours, minutes] = time.split(":").map(Number);
-            if (period == "PM" && hours < 12) hours += 12;
-            if (period == "AM" && hours === 12) hours = 0;
-            return { hours, minutes };
-        };
-
-        const combinedStartDate = new Date(startDate);
-        const combinedEndDate = new Date(endDate);
-        const startTime24 = convertTo24System(startTime);
-        const endTime24 = convertTo24System(endTime);
-        combinedStartDate.setHours(startTime24.hours, startTime24.minutes);
-        combinedEndDate.setHours(endTime24.hours, endTime24.minutes);
-        // Prepare the final form data
-        const finalFormData = {
-            ...formData,
-            startDate: combinedStartDate.toISOString(),
-            endDate: combinedEndDate.toISOString(),
-            //pictures: uploadedFileUrls, // Ensure this is updated correctly
-            tags: selectedTags,
-            latitude: pickupLocation.latitude,
-            longitude: pickupLocation.longitude,
-            location: pickupLocation.location,
-        };
+        function destructureDate(date) {
+            if (!(date instanceof Date)) {
+                date = new Date(date);
+            }
+            let hours = date.getHours();
+            const minutes = date.getMinutes();
+            const ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+            return {hours, minutes, ampm};
+        }
 
         try {
+            const convertTo24System = (timeObj) => {
+                const [time, period] = timeObj.split(" ");
+                let [hours, minutes] = time.split(":").map(Number);
+                if (period == "PM" && hours < 12) hours += 12;
+                if (period == "AM" && hours === 12) hours = 0;
+                return { hours, minutes };
+            };
+
+            const combinedStartDate = new Date(startDate);
+            const combinedEndDate = new Date(startDate);
+            const startTime24 = convertTo24System(startTime);
+            const endTime24 = convertTo24System(endTime);
+            combinedStartDate.setHours(startTime24.hours, startTime24.minutes);
+            combinedEndDate.setHours(endTime24.hours, endTime24.minutes);
+
+            const newFiles = imagePreviews
+                .filter(preview => preview.file !== null)
+                .map(preview => preview.file);
+
+            const uploadedFileUrls = newFiles.length > 0
+                ? await uploadFiles(newFiles, "activities")
+                : [];
+
+            const finalPictures = [
+                ...imagePreviews
+                    .filter(preview => preview.isFromDatabase)
+                    .map(preview => preview.url),
+                ...uploadedFileUrls
+            ];
+
+            const finalFormData = {
+                ...formData,
+                startDate: combinedStartDate.toISOString(),
+                endDate: combinedEndDate.toISOString(),
+                pictures: finalPictures,
+                tags: selectedTags,
+                initialFreeSpots: parseInt(formData.freeSpots) || 0,
+                specialDiscount: parseFloat(formData.specialDiscount) || 0,
+                price:
+                    parseFloat(convertPrice(formData.price, selectedCurrency, "EGP")) ||
+                    0,
+                Latitude: pickupLocation.latitude
+                    ? parseFloat(pickupLocation.latitude)
+                    : undefined,
+                Longitude: pickupLocation.longitude
+                    ? parseFloat(pickupLocation.longitude)
+                    : undefined,
+                location: pickupLocation.location,
+            };
+
+
+            Object.keys(finalFormData).forEach(
+                (key) => finalFormData[key] === undefined && delete finalFormData[key]
+            );
+
+            setUpdateProcessing(true);
             const response = await axiosInstance.patch(
-                `/activity/updateActivity/${id}`,
+                `/activity/updateActivity/${activityId.id}`,
                 finalFormData,
                 {
                     withCredentials: true,
                 }
             );
-            console.log("Activity successfully updated:", response.data);
+            console.log("Activity updated:", response.data);
+
+            setUpdateProcessing(false);
             showPopupMessage("Activity updated successfully!", false);
+
             setTimeout(() => navigate("/advertiser/assigned"), 1000);
         } catch (error) {
             console.error("Error updating activity:", error);
+            setUpdateProcessing(false);
             showPopupMessage(
                 error.response?.data?.message ||
-                    "Error updating activity. Please try again.",
+                "Error updating activity. Please try again.",
                 true
             );
         }
@@ -342,6 +372,10 @@ const UpdateActivityPage = () => {
         "Update Activity"
     );
 
+    if (isPageLoading) {
+        return <CircularProgress/>;
+    }
+
     return (
         <PageContainer>
             {showPopup && (
@@ -357,6 +391,11 @@ const UpdateActivityPage = () => {
                 onSubmit={(e) => {
                     e.preventDefault();
                 }}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                    }
+                }}
             >
                 <FormContainer>
                     <div>
@@ -366,7 +405,6 @@ const UpdateActivityPage = () => {
                                 <TextField
                                     name="name"
                                     id="outlined-basic"
-                                    // label="Insert title here..."
                                     variant="outlined"
                                     value={formData.name}
                                     onChange={handleInputChange}
@@ -380,7 +418,6 @@ const UpdateActivityPage = () => {
                                 <TextField
                                     name="description"
                                     id="outlined-basic"
-                                    // label="Insert description here...."
                                     variant="outlined"
                                     value={formData.description}
                                     onChange={handleInputChange}
@@ -417,7 +454,7 @@ const UpdateActivityPage = () => {
                                             value={formattedDate}
                                             readOnly
                                             onClick={() => setShowDateModal(true)}
-                                            //placeholder="Select Date"
+                                            placeholder="Select Date"
                                             style={{
                                                 fontSize: "1.125rem",
                                                 width: "100%",
@@ -432,7 +469,7 @@ const UpdateActivityPage = () => {
                                         <CalendarTodayIcon
                                             style={{
                                                 position: "absolute",
-                                                left: "18vw",
+                                                left: "15vw",
                                                 top: "50%",
                                                 transform: "translateY(-50%)",
                                                 cursor: "pointer",
@@ -442,19 +479,13 @@ const UpdateActivityPage = () => {
                                             onClick={() => setShowDateModal(true)}
                                         />
                                     </div>
-                                    <div
-                                        style={{
-                                            position: "relative",
-                                            width: "100%",
-                                            marginBottom: "1rem",
-                                        }}
-                                    >
+                                    <div style={{ position: "relative", width: "100%" }}>
                                         <input
                                             type="text"
                                             value={formattedTime}
                                             readOnly
                                             onClick={() => setShowTimeModal(true)}
-                                            //placeholder="Select Date"
+                                            placeholder="Select Time"
                                             style={{
                                                 fontSize: "1.125rem",
                                                 width: "100%",
@@ -469,7 +500,7 @@ const UpdateActivityPage = () => {
                                         <AccessTimeIcon
                                             style={{
                                                 position: "absolute",
-                                                left: "18vw",
+                                                left: "15vw",
                                                 top: "50%",
                                                 transform: "translateY(-50%)",
                                                 cursor: "pointer",
@@ -486,7 +517,6 @@ const UpdateActivityPage = () => {
                                 isOpen={showDateModal}
                                 onClose={() => setShowDateModal(false)}
                                 startDate={startDate}
-                                endDate={endDate}
                                 onDatesChange={handleDatesChange}
                             />
                             <TimeModal
@@ -518,19 +548,14 @@ const UpdateActivityPage = () => {
 
                             <FlexGroup>
                                 <Label>Category</Label>
-                                <Select
-                                    name="category"
-                                    value={formData.category}
-                                    onChange={handleInputChange}
-                                    style={{ minWidth: "27vw" }}
-                                >
-                                    <option value="">Select a category</option>
-                                    {categories.map((category) => (
-                                        <option key={category._id} value={category._id}>
-                                            {category._id}
-                                        </option>
-                                    ))}
-                                </Select>
+                                <div style={{width:'60%'}}>
+                                    <GenericDropDown
+                                        options={categories}
+                                        selectedItem={selectedCategory}
+                                        setSelectedItem={setSelectedCategory}
+                                        label={"category"}
+                                    />
+                                </div>
                             </FlexGroup>
 
                             <FlexGroup
@@ -550,26 +575,12 @@ const UpdateActivityPage = () => {
                                 </Label>
                                 <div style={{ flex: 1 }}>
                                     <div style={{ display: "flex", gap: "1vh" }}>
-                                        <Select
-                                            value={selectedTag}
-                                            onChange={(e) =>
-                                                setSelectedTag(e.target.value)
-                                            }
-                                            style={{
-                                                minWidth: "27vw",
-                                                marginLeft: "0vw",
-                                                padding: "1vh 1.5vh",
-                                                borderRadius: "0.5vh",
-                                                border: "0.1vh solid #ccc",
-                                            }}
-                                        >
-                                            <option value="">Select tag</option>
-                                            {tags.map((tag) => (
-                                                <option key={tag._id} value={tag._id}>
-                                                    {tag._id}
-                                                </option>
-                                            ))}
-                                        </Select>
+                                        <GenericDropDown
+                                            options={tags}
+                                            selectedItem={selectedTag}
+                                            setSelectedItem={setSelectedTag}
+                                            label={"tag"}
+                                        />
                                         <button
                                             type="button"
                                             onClick={addTag}
@@ -762,7 +773,6 @@ const UpdateActivityPage = () => {
                                         <TextField
                                             name="price"
                                             id="outlined-basic"
-                                            //  label="Insert Price here..."
                                             variant="outlined"
                                             type="number"
                                             value={formData.price}
@@ -792,7 +802,6 @@ const UpdateActivityPage = () => {
                                     <TextField
                                         name="specialDiscount"
                                         id="outlined-basic"
-                                        //  label="Insert discount here..."
                                         variant="outlined"
                                         type="number"
                                         value={formData.specialDiscount}
@@ -826,8 +835,9 @@ const UpdateActivityPage = () => {
                         />
                         <Button
                             stylingMode="always-dark"
-                            text="Submit"
+                            text="Update Activity"
                             handleClick={handleSubmit}
+                            isLoading={updateProcessing}
                             width="auto"
                         />
                     </ButtonGroup>
@@ -838,14 +848,14 @@ const UpdateActivityPage = () => {
 };
 
 const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 `;
 
 const PopupContainer = styled.div`
@@ -854,7 +864,7 @@ const PopupContainer = styled.div`
     right: 1em;
     z-index: 1000;
     animation: ${fadeIn} 0.3s ease;
-    background-color: ${({ isError }) => (isError ? "#f8d7da" : "#d4edda")};
+    background-color: ${({ isError }) => (isError ? "#f8d7da" : "#d1edda")};
 `;
 
 const PopupContent = styled.div`

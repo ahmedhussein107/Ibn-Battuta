@@ -16,6 +16,7 @@ import MapPopUp from "../../components/MapPopUp.jsx";
 import CurrencyDropdown from "../../components/CurrencyDropdownList.jsx";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 import Cookies from "js-cookie";
+import GenericDropDown from "../../components/GenericDropDown.jsx";
 
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
@@ -57,6 +58,7 @@ const CreateActivityPage = () => {
     const [endTime, setEndTime] = useState(null);
     const [formattedTime, setFormattedTime] = useState("");
     const [selectedCurrency, setSelectedCurrency] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice, convertPrice } = useCurrencyConverter(currency);
 
@@ -100,7 +102,8 @@ const CreateActivityPage = () => {
         setEndDate(end);
         const startString = start ? start.toLocaleDateString() : "";
         const endString = end ? end.toLocaleDateString() : "";
-        setFormattedDate(`${startString} to ${endString}`);
+        console.log("handle date change", startString);
+        setFormattedDate(`${startString}`);
     };
 
     useEffect(() => {
@@ -128,8 +131,6 @@ const CreateActivityPage = () => {
 
     const handleInputChange = (e) => {
         let { name, value, type, checked } = e.target;
-        console.log(name, value);
-        console.log(formData);
         if (type === "number" && isNaN(value)) return;
         if (type == "number") value = Math.max(value, 0);
         if (name == "specialDiscount") value = Math.min(value, 100);
@@ -164,7 +165,9 @@ const CreateActivityPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        formData.category = selectedCategory;
         console.log(formData);
+
 
         if (
             (!formData.name ||
@@ -185,6 +188,8 @@ const CreateActivityPage = () => {
             return;
         }
 
+
+
         try {
             const convertTo24System = (timeObj) => {
                 const [time, period] = timeObj.split(" ");
@@ -195,7 +200,7 @@ const CreateActivityPage = () => {
             };
 
             const combinedStartDate = new Date(startDate);
-            const combinedEndDate = new Date(endDate);
+            const combinedEndDate = new Date(startDate);
             const startTime24 = convertTo24System(startTime);
             const endTime24 = convertTo24System(endTime);
             combinedStartDate.setHours(startTime24.hours, startTime24.minutes);
@@ -254,6 +259,7 @@ const CreateActivityPage = () => {
 
     const handleImageAdd = (newImages) => {
         setImagePreviews((prev) => [...prev, ...newImages]);
+        console.log(imagePreviews);
     };
 
     const handleImageRemove = (idToRemove) => {
@@ -413,7 +419,6 @@ const CreateActivityPage = () => {
                                 isOpen={showDateModal}
                                 onClose={() => setShowDateModal(false)}
                                 startDate={startDate}
-                                endDate={endDate}
                                 onDatesChange={handleDatesChange}
                             />
                             <TimeModal
@@ -445,19 +450,14 @@ const CreateActivityPage = () => {
 
                             <FlexGroup>
                                 <Label>Category</Label>
-                                <Select
-                                    name="category"
-                                    value={formData.category}
-                                    onChange={handleInputChange}
-                                    style={{ minWidth: "27vw" }}
-                                >
-                                    <option value="">Select a category</option>
-                                    {categories.map((category) => (
-                                        <option key={category._id} value={category._id}>
-                                            {category._id}
-                                        </option>
-                                    ))}
-                                </Select>
+                                <div style={{width:'60%'}}>
+                                    <GenericDropDown
+                                        options={categories}
+                                        selectedItem={selectedCategory}
+                                        setSelectedItem={setSelectedCategory}
+                                        label={"category"}
+                                    />
+                                </div>
                             </FlexGroup>
 
                             <FlexGroup
@@ -477,26 +477,12 @@ const CreateActivityPage = () => {
                                 </Label>
                                 <div style={{ flex: 1 }}>
                                     <div style={{ display: "flex", gap: "1vh" }}>
-                                        <Select
-                                            value={selectedTag}
-                                            onChange={(e) =>
-                                                setSelectedTag(e.target.value)
-                                            }
-                                            style={{
-                                                minWidth: "27vw",
-                                                marginLeft: "0vw",
-                                                padding: "1vh 1.5vh",
-                                                borderRadius: "0.5vh",
-                                                border: "0.1vh solid #ccc",
-                                            }}
-                                        >
-                                            <option value="">Select tag</option>
-                                            {tags.map((tag) => (
-                                                <option key={tag._id} value={tag._id}>
-                                                    {tag._id}
-                                                </option>
-                                            ))}
-                                        </Select>
+                                        <GenericDropDown
+                                            options={tags}
+                                            selectedItem={selectedTag}
+                                            setSelectedItem={setSelectedTag}
+                                            label={"tag"}
+                                        />
                                         <button
                                             type="button"
                                             onClick={addTag}

@@ -124,6 +124,7 @@ const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) =
     const [isAll, setIsAll] = useState(true);
     const [selectedDate, setSelectedDate] = useState(null);
     const [searchText, setSearchText] = useState(null);
+    const [isRemove, setIsRemove] = useState(false);
 
     const options = _month.map((month, index) => ({
         value: month,
@@ -192,6 +193,7 @@ const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) =
                     handleClick={() => {
                         setIsAll(true);
                         setSelectedMonth("");
+                        setIsRemove(!isRemove);
                     }}
                 />
             </div>
@@ -213,7 +215,11 @@ const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) =
                     isSearchable={false}
                 />
             </div>
-            <DatePicker label="Select a date" setValue={setSelectedDate} />
+            <DatePicker
+                label="Select a date"
+                setValue={setSelectedDate}
+                isRemove={isRemove}
+            />
             <div style={{ width: "30%" }}>
                 <SearchField
                     placeholder={"search by name"}
@@ -225,7 +231,20 @@ const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) =
     );
 };
 const DrawTable = ({ data }) => {
-    const [currentData, setCurrentData] = useState(data);
+    const [currentData, setCurrentData] = useState([]);
+    useEffect(() => {
+        setCurrentData(data);
+    }, [data]);
+    console.log("current data", currentData);
+    console.log("given data", data);
+
+    const API =
+        Cookies.get("userType") === "Advertiser"
+            ? "Activity"
+            : Cookies.get("userType") === "TourGuide"
+            ? "Itinerary"
+            : "Product";
+
     return (
         <div
             style={{
@@ -259,7 +278,7 @@ const DrawTable = ({ data }) => {
                 >
                     <thead>
                         <tr>
-                            <th style={tableHeadStyle}>API</th>
+                            <th style={tableHeadStyle}>{API}</th>
                             <th style={tableHeadStyle}>Date</th>
                             <th style={tableHeadStyle}>Month</th>
                             <th style={tableHeadStyle}>Total Revenue</th>
@@ -548,11 +567,11 @@ const DrawTouristsPerMonth = ({ data }) => {
                 padding: "2vw",
             }}
         >
-            <h2>Total : {sumOfTourists} tourists</h2>
-
+            <h2>Registered Tourists : {sumOfTourists} </h2>
             <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>
                 Number of Tourists per Month
             </h2>
+
             <div
                 style={{
                     maxHeight: data.length > 5 ? "300px" : "none",
@@ -790,28 +809,62 @@ const Analytics = () => {
                 {Cookies.get("userType") === "Admin" && (
                     <DrawTouristsPerMonth data={touristData} />
                 )}
-                {Cookies.get("userType") === "Admin" && (
-                    <div
-                        style={{
-                            border: "1px solid var(--accent-color)",
-                            padding: "10px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "auto",
-                            height: "50%",
-                            borderRadius: "10px",
-                            color: "fontVariant(--accent-color)",
-                            flexDirection: "column",
-                            gap: "20px",
-                        }}
-                    >
-                        <h3>TotalRevenun from Activities: {activityRevenue} EGP</h3>
-                        <h3>TotalRevenun from Activities: {itineraryRevenue} EGP</h3>
-                    </div>
-                )}
+
                 <DrawRadialBarChart data={radial} title="Total Revenue Per Month" />
             </div>
+            {Cookies.get("userType") === "Admin" && (
+                <div
+                    style={{
+                        border: "1px solid var(--accent-color)",
+                        display: "flex",
+                        justifyContent: "space-around",
+                        alignItems: "center",
+                        width: "80%",
+                        borderRadius: "10px",
+                        color: "fontVariant(--accent-color)",
+                        textAlign: "center",
+                        margin: "2vmin",
+                        height: "10vh",
+                        flexDirection: "row",
+                    }}
+                >
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            color: "var(--accent-color)",
+                        }}
+                    >
+                        <h3>Total Revenue from Activities: </h3>
+                        <h3 style={{ marginLeft: "1vw" }}>{activityRevenue} EGP</h3>
+                    </div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            color: "var(--accent-color)",
+                        }}
+                    >
+                        <h3 style={{ marginLeft: "1vw" }}>
+                            Total Revenue from Itineraries:
+                        </h3>
+                        <h3 style={{ marginLeft: "1vw" }}> {itineraryRevenue} EGP</h3>
+                    </div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            color: "var(--accent-color)",
+                        }}
+                    >
+                        <h3 style={{ marginLeft: "1vw" }}>Total Revenue from Both:</h3>
+                        <h3 style={{ marginLeft: "1vw" }}>
+                            {" "}
+                            {itineraryRevenue + activityRevenue} EGP
+                        </h3>
+                    </div>
+                </div>
+            )}
             <Footer />
         </div>
     );

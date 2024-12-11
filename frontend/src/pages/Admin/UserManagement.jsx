@@ -15,6 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";
+import FilePresentIcon from "@mui/icons-material/FilePresent";
 import { styled } from "@mui/system";
 import axiosInstance from "../../api/axiosInstance";
 import ConfirmationDialog from "../../components/ConfirmationDialog"; // Import the ConfirmationDialog component
@@ -22,9 +23,14 @@ import "./UserManagement.css";
 import ActionButtonsForUsers from "./ActionButtonsForUsers";
 import PaginationComponent from "../../components/Pagination";
 import CreateUserPopUp from "./CreateUserPopUp";
+import usePageHeader from "../../components/Header/UseHeaderPage";
+import { use } from "react";
+import PopUp from "../../components/PopUpsGeneric/PopUp";
+import { Alert } from "@mui/material";
+import Footer from "../../components/Footer";
 const UserManagement = ({ isAll = true }) => {
+    usePageHeader("/users.png", isAll ? "Users List" : "Pending Users");
     const [users, setUsers] = useState([]);
-    const [message, setMessage] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false); // Track dialog state
     const [selectedUser, setSelectedUser] = useState(null); // Track selected user ID
     const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +40,12 @@ const UserManagement = ({ isAll = true }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [toBeCreatedUserType, setToBeCreatedUserType] = useState("");
     const maxUserPerPage = 10;
+    const [popupAlert, setPopupAlert] = useState({
+        open: false,
+        severity: "info",
+        message: "",
+    });
+
     const models = {
         advertiser: "Advertiser",
         seller: "Seller",
@@ -67,7 +79,7 @@ const UserManagement = ({ isAll = true }) => {
             setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error("Error fetching users:", error);
-            setMessage("Error fetching users. Please try again.");
+            showPopUpAlert("error", "Error fetching users. Please try again.");
         }
     };
 
@@ -80,13 +92,11 @@ const UserManagement = ({ isAll = true }) => {
             }?userId=${selectedUser._id}`;
             console.log(uri);
             await axiosInstance.delete(uri, { withCredentials: true });
-            console.log("3");
-            setMessage("User deleted successfully!");
+            showPopUpAlert("success", "User deleted successfully!");
             fetchUsers();
         } catch (error) {
             console.error("Error deleting user:", error);
-            setMessage("Error deleting user. Please try again.");
-            alert(error.response.data.message);
+            showPopUpAlert("error", error.response.data.message + "!");
         } finally {
             setSelectedUser(null);
             setIsDialogOpen(false);
@@ -102,10 +112,10 @@ const UserManagement = ({ isAll = true }) => {
                 },
                 { withCredentials: true, params: { userId: touristID } }
             );
-            setMessage("Points added successfully!");
+            showPopUpAlert("success", "Points added successfully!");
         } catch (error) {
             console.error("Error adding point  user:", touristID, error);
-            setMessage("Error adding points. Please try again.");
+            showPopUpAlert("error", "Error adding points. Please try again.");
         } finally {
             setIsDialogOpen(false);
         }
@@ -115,6 +125,15 @@ const UserManagement = ({ isAll = true }) => {
     const openConfirmationDialog = (user) => {
         setSelectedUser(user);
         setIsDialogOpen(true);
+    };
+
+    const showPopUpAlert = (severity, message) => {
+        setPopupAlert({ open: true, severity, message });
+
+        setTimeout(() => {
+            setPopupAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+            // setIsOpen(false);
+        }, 4000); // Alert will close after 5 seconds
     };
 
     const closeConfirmationDialog = () => {
@@ -129,8 +148,8 @@ const UserManagement = ({ isAll = true }) => {
     const RoleBadge = styled("span")(({ theme, role }) => ({
         padding: "4px 8px",
         borderRadius: "8px",
-        color: "#FFFFFF",
-        fontSize: "0.8rem",
+        color: "black",
+        fontSize: "1rem",
         backgroundColor:
             {
                 admin: "#D1C4E9",
@@ -150,44 +169,64 @@ const UserManagement = ({ isAll = true }) => {
             }`;
             console.log(uri);
             await axiosInstance.put(uri, { isAccepted: true }, { withCredentials: true });
-            setMessage("User Accepted successfully!");
+            showPopUpAlert("success", "User accepted successfully");
             fetchUsers();
         } catch (error) {
             console.error("Error Accepting user:", error);
-            setMessage("Error Accepting user. Please try again.");
+            showPopUpAlert("error", "Error Accepting user. Please try again.");
         } finally {
             setSelectedUser(null);
             setIsDialogOpen(false);
         }
     };
-    const CustomTable = (handleDelete) => {
+    const CustomTable = () => {
         return (
-            <Box sx={{ padding: 3, backgroundColor: "#F5F5F5" }}>
+            <Box
+                sx={{
+                    padding: 3,
+                    backgroundColor: "#FFFFFF",
+                    borderRadius: 4,
+                    overflow: "hidden",
+                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                    width: "90%",
+                    margin: "auto",
+                }}
+            >
                 <TableContainer
                     component={Paper}
-                    sx={{ borderRadius: 4, overflow: "hidden" }}
+                    sx={{
+                        borderRadius: 4,
+                        overflow: "hidden",
+                        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                        width: "100%",
+                        margin: "auto",
+                        justifyContent: "center",
+                    }}
                 >
                     <Table>
                         <TableHead>
-                            <TableRow sx={{ backgroundColor: "#EDEDED" }}>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Role</TableCell>
-                                <TableCell>Email</TableCell>
-                                <TableCell>Date</TableCell>
-
+                            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+                                <TableCell sx={{ fontSize: "1.3rem" }}>Name</TableCell>
+                                <TableCell sx={{ fontSize: "1.3rem" }}>Role</TableCell>
+                                <TableCell sx={{ fontSize: "1.3rem" }}>Email</TableCell>
+                                <TableCell sx={{ fontSize: "1.3rem" }}>Date</TableCell>
                                 {!isAll && (
                                     <>
-                                        <TableCell>ID </TableCell>
-                                        <TableCell>Documents</TableCell>
+                                        <TableCell sx={{ fontSize: "1.3rem" }}>
+                                            ID
+                                        </TableCell>
+                                        <TableCell sx={{ fontSize: "1.3rem" }}>
+                                            Documents
+                                        </TableCell>
                                     </>
                                 )}
-                                <TableCell></TableCell>
+                                <TableCell sx={{ fontSize: "1.3rem" }}></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {users.map((user) => (
                                 <TableRow key={user.id}>
-                                    <TableCell>
+                                    <TableCell sx={{ fontSize: "1.2rem" }}>
                                         <Box
                                             sx={{
                                                 display: "flex",
@@ -195,45 +234,64 @@ const UserManagement = ({ isAll = true }) => {
                                                 gap: 2,
                                             }}
                                         >
-                                            <Avatar src={user.avatar} alt={user.name} />
+                                            <Avatar src={user.picture} alt={user.name} />
                                             {user.name}
                                         </Box>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{ fontSize: "1.2rem" }}>
                                         <RoleBadge role={user.role}>
                                             {user.role}
                                         </RoleBadge>
                                     </TableCell>
-                                    <TableCell>{user.email}</TableCell>
-                                    <TableCell>{user.createdAt}</TableCell>
+                                    <TableCell sx={{ fontSize: "1.2rem" }}>
+                                        {user.email}
+                                    </TableCell>
+                                    <TableCell sx={{ fontSize: "1.2rem" }}>
+                                        {
+                                            new Date(user.createdAt)
+                                                .toLocaleString("en-GB")
+                                                .split(",")[0]
+                                        }{" "}
+                                    </TableCell>
                                     {!isAll && (
                                         <>
-                                            <TableCell>
+                                            <TableCell sx={{ fontSize: "1.2rem" }}>
+                                                <FilePresentIcon
+                                                    sx={{
+                                                        marginRight: "0.5rem",
+                                                        fontSize: "1.2em",
+                                                        verticalAlign: "middle",
+                                                    }}
+                                                />
                                                 <a
                                                     href={user.documents?.[0]}
                                                     target={user.documents?.[0]}
-                                                    // rel="noopener noreferrer"
                                                 >
                                                     id
                                                 </a>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell sx={{ fontSize: "1.2rem" }}>
                                                 {user.documents
                                                     .slice(1)
                                                     .map((doc, index) => (
-                                                        <a
-                                                            href={doc}
-                                                            target={doc}
-                                                            // rel="noopener noreferrer"
-                                                        >
-                                                            doc{index + 1}
-                                                        </a>
+                                                        <>
+                                                            <FilePresentIcon
+                                                                sx={{
+                                                                    marginRight: "0.5rem",
+                                                                    fontSize: "1.2em",
+                                                                    verticalAlign:
+                                                                        "middle",
+                                                                }}
+                                                            />
+                                                            <a href={doc} target={doc}>
+                                                                doc{index + 1}
+                                                            </a>
+                                                        </>
                                                     ))}
                                             </TableCell>
                                         </>
                                     )}
-
-                                    <TableCell align="center">
+                                    <TableCell align="center" sx={{ fontSize: "1.2rem" }}>
                                         {isAll ? (
                                             <div>
                                                 {user.role.toLowerCase() ===
@@ -250,10 +308,9 @@ const UserManagement = ({ isAll = true }) => {
                                                         }}
                                                     >
                                                         <AddIcon />
-                                                        1000,000 EGP
+                                                        1,000,000 EGP
                                                     </IconButton>
                                                 )}
-
                                                 <IconButton
                                                     color="error"
                                                     onClick={() => {
@@ -261,7 +318,9 @@ const UserManagement = ({ isAll = true }) => {
                                                         console.log(user._id);
                                                     }}
                                                 >
-                                                    <DeleteIcon />
+                                                    <DeleteIcon
+                                                        sx={{ fontSize: "1.8rem" }}
+                                                    />
                                                 </IconButton>
                                             </div>
                                         ) : (
@@ -273,13 +332,19 @@ const UserManagement = ({ isAll = true }) => {
                                                         console.log(user._id);
                                                     }}
                                                 >
-                                                    <ClearIcon />
+                                                    <ClearIcon
+                                                        sx={{ fontSize: "1.8rem" }}
+                                                    />
                                                 </IconButton>
                                                 <IconButton
                                                     color="success"
-                                                    onClick={() => handleAcceptUser(user)}
+                                                    onClick={() => {
+                                                        handleAcceptUser(user);
+                                                    }}
                                                 >
-                                                    <CheckIcon />
+                                                    <CheckIcon
+                                                        sx={{ fontSize: "1.8rem" }}
+                                                    />
                                                 </IconButton>
                                             </div>
                                         )}
@@ -295,6 +360,27 @@ const UserManagement = ({ isAll = true }) => {
 
     return (
         <div className="user-management-container">
+            {popupAlert.open && (
+                <Alert
+                    severity={popupAlert.severity}
+                    onClose={() =>
+                        setPopupAlert({
+                            ...popupAlert,
+                            open: false,
+                        })
+                    }
+                    style={{
+                        position: "fixed",
+                        right: "1%",
+                        bottom: "2%",
+                        width: "25%",
+                        justifyContent: "center",
+                        zIndex: 1000,
+                    }}
+                >
+                    {popupAlert.message}
+                </Alert>
+            )}
             <CreateUserPopUp
                 userType={toBeCreatedUserType}
                 isOpen={isOpen}
@@ -307,20 +393,25 @@ const UserManagement = ({ isAll = true }) => {
                 setIsOpen={setIsOpen}
                 setUserType={setToBeCreatedUserType}
             />
-            {message && <p>{message}</p>}
+            <div style={{ width: "10vw" }}>
+                <PopUp
+                    isOpen={isDialogOpen}
+                    setIsOpen={setIsDialogOpen}
+                    headerText={"Are you sure you want to delete this user?"}
+                    cancelText="Cancel"
+                    actionText="Delete"
+                    handleSubmit={handleDelete}
+                ></PopUp>
+            </div>
 
-            <ConfirmationDialog
-                message="Are you sure you want to delete this user?"
-                onConfirm={handleDelete}
-                onCancel={closeConfirmationDialog}
-                isOpen={isDialogOpen}
-            />
+            <hr style={{ width: "90%", margin: "1% auto" }} />
             <CustomTable />
             <PaginationComponent
                 totalPages={totalPages}
                 currentPage={currentPage}
                 onChange={handlePageChange}
             />
+            <Footer />
         </div>
     );
 };

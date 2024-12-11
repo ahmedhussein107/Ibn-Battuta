@@ -8,7 +8,7 @@
     background-position: top center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    /* Optional: for parallax scrolling effect */
+    user-select: none;
 }
 
 /* Text overlay positioned in the center */
@@ -25,6 +25,7 @@
     padding: 0 20px; /* Add some padding to avoid text touching the edges */
     width: 100%; /* Ensure the text container spans the full width */
     box-sizing: border-box; /* Ensure padding is included in width */
+    user-select: none;
 }
 
 .header-search-bar {
@@ -32,6 +33,7 @@
     top: 80%;
     left: 50%;
     transform: translate(-50%, -50%);
+    user-select: none;
 }
 
 .header-profile-picture {
@@ -39,4 +41,5 @@
     top: 100%;
     left: 50%;
     transform: translate(-50%, -50%);
+    user-select: none;
 }

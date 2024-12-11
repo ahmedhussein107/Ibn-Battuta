@@ -34,18 +34,18 @@ export const deleteItineraries = async (req, res) => {
 };
 
 export const getItineraryById = async (req, res) => {
-    try {
-        const itinerary = await Itinerary.findById(req.params.id)
-            .populate("tourguideID")
-            .populate("activities.activity");
-        if (itinerary) {
-            res.status(200).json(itinerary);
-        } else {
-            res.status(404).json({ message: "Itinerary not found" });
-        }
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+	try {
+		const itinerary = await Itinerary.findById(req.params.id)
+			.populate("tourguideID")
+			.populate("activities.activity");
+		if (itinerary) {
+			res.status(200).json(itinerary);
+		} else {
+			res.status(404).json({ message: "Itinerary not found" });
+		}
+	} catch (error) {
+		res.status(400).json({ message: error.message });
+	}
 };
 
 /** I want to make a function that returns the minimum no of free spot for an Itinrary
@@ -120,6 +120,17 @@ export const updateItinerary = async (req, res) => {
 
 export const deleteItinerary = async (req, res) => {
 	try {
+		const existingBookings = await Booking.countDocuments({
+			typeId: req.params.id,
+			bookingType: "Itinerary",
+		});
+
+		if (existingBookings > 0) {
+			return res.status(400).json({
+				message: `Cannot delete itinerary. There are ${existingBookings} active bookings for this itinerary.`,
+			});
+		}
+
 		const itinerary = await Itinerary.findByIdAndDelete(req.params.id);
 		if (itinerary) {
 			res.status(200).json({ message: "Itinerary deleted successfully" });
@@ -132,51 +143,51 @@ export const deleteItinerary = async (req, res) => {
 };
 
 export const getUpcomingItineraries = async (req, res) => {
-    const { sortBy, page, limit, ...rest } = req.query;
-    console.log("rest", rest);
-    const _page = Math.max(1, parseInt(req.query.page) || 1);
-    const _limit = Math.max(1, parseInt(req.query.limit) || 10);
-    const toSkip = (_page - 1) * _limit;
-    const query = buildFilter(rest);
-    try {
-        // Query the database with the constructed query object
-        console.log(query);
-        let itineraries = await Itinerary.find({
-            isActivated: true, // itineraries that are deactivated do not appear to the user according to requirement (25)
-            isFlagged: false, // itineraries that are flagged do not appear to the user according to requirement (33)
-            startDate: { $gt: Date.now() },
-            ...query,
-        })
-            .populate("tourguideID")
-            .populate("activities.activity")
-            .populate("ratings");
+	const { sortBy, page, limit, ...rest } = req.query;
+	console.log("rest", rest);
+	const _page = Math.max(1, parseInt(req.query.page) || 1);
+	const _limit = Math.max(1, parseInt(req.query.limit) || 10);
+	const toSkip = (_page - 1) * _limit;
+	const query = buildFilter(rest);
+	try {
+		// Query the database with the constructed query object
+		console.log(query);
+		let itineraries = await Itinerary.find({
+			isActivated: true, // itineraries that are deactivated do not appear to the user according to requirement (25)
+			isFlagged: false, // itineraries that are flagged do not appear to the user according to requirement (33)
+			startDate: { $gt: Date.now() },
+			...query,
+		})
+			.populate("tourguideID")
+			.populate("activities.activity")
+			.populate("ratings");
 
-        if (sortBy) {
-            if (sortBy === "priceAsc") {
-                itineraries.sort((a, b) => a.price - b.price);
-            } else if (sortBy === "priceDesc") {
-                itineraries.sort((a, b) => b.price - a.price);
-            } else if (sortBy === "ratingAsc") {
-                itineraries.sort((a, b) => a.rating - b.rating);
-            } else if (sortBy === "ratingDesc") {
-                itineraries.sort((a, b) => b.rating - a.rating);
-            }
-        }
-        const count = itineraries.length;
-        itineraries = itineraries.slice(toSkip, Math.min(toSkip + _limit, count));
-        return res.status(200).json({
-            result: itineraries,
-            totalPages: count > 0 ? Math.ceil(count / _limit) : 1,
-        });
-    } catch (err) {
-        // Log error details
-        console.error("Error fetching itineraries:", err);
-        // Return error response
-        res.status(500).json({
-            error: "An error occurred while fetching itineraries.",
-            details: err.message,
-        });
-    }
+		if (sortBy) {
+			if (sortBy === "priceAsc") {
+				itineraries.sort((a, b) => a.price - b.price);
+			} else if (sortBy === "priceDesc") {
+				itineraries.sort((a, b) => b.price - a.price);
+			} else if (sortBy === "ratingAsc") {
+				itineraries.sort((a, b) => a.rating - b.rating);
+			} else if (sortBy === "ratingDesc") {
+				itineraries.sort((a, b) => b.rating - a.rating);
+			}
+		}
+		const count = itineraries.length;
+		itineraries = itineraries.slice(toSkip, Math.min(toSkip + _limit, count));
+		return res.status(200).json({
+			result: itineraries,
+			totalPages: count > 0 ? Math.ceil(count / _limit) : 1,
+		});
+	} catch (err) {
+		// Log error details
+		console.error("Error fetching itineraries:", err);
+		// Return error response
+		res.status(500).json({
+			error: "An error occurred while fetching itineraries.",
+			details: err.message,
+		});
+	}
 };
 
 export const getTourGuideItinerary = async (req, res) => {
@@ -207,18 +218,22 @@ export const toggleFlaggedItineraries = async (req, res) => {
 			return res.status(404).json({ message: "Itinerary not found" });
 		}
 		itinerary.isFlagged = !itinerary.isFlagged;
+		console.log(itinerary);
 		await itinerary.save();
+		console.log("here after");
+
 		await sendNotificationToEmailAndSystem(
 			"Itinerary Flagged",
 			`Your Itinerary ${itinerary.name} has been flagged as ${
 				itinerary.isFlagged ? "not " : ""
 			}appropriate`,
-			itinerary.advertiserID,
-			"Advertiser",
+			itinerary.tourguideID,
+			"TourGuide",
 			itinerary._id,
-			"Activity",
+			"Itinerary",
 			itinerary.isFlagged ? "warning" : "info"
 		);
+
 		res.status(200).json({
 			message: "Itinerary flagged status changed successfully",
 			itinerary,

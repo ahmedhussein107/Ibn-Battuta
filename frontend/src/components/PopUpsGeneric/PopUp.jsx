@@ -26,7 +26,9 @@ const PopUp = ({
     cancelText = "Cancel",
     actionText = "Submit",
     handleSubmit = () => {},
-    handleOnClose = () => {},
+    handleOnClose = () => {
+        setIsOpen(false);
+    },
     children = null,
     zIndex = "1000",
 }) => {
@@ -50,7 +52,7 @@ const PopUp = ({
     return (
         <div className="popup-overlay" style={{ ...stylesOfOverlay, zIndex }}>
             <div className="popup" ref={popupRef}>
-                <PopUpHeader headerText={headerText} setIsOpen={setIsOpen} />
+                <PopUpHeader headerText={headerText} handleOnClose={handleOnClose} />
 
                 {children}
                 {containsFooter && (

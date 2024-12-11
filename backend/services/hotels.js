@@ -119,6 +119,7 @@ amadeusHotelsRouter.get("/search/hotel-offers", async (req, res) => {
 
 amadeusHotelsRouter.post("/book-hotel", isAuthenticated, async (req, res) => {
     const offer = req.body.offer;
+    const amountFromWallet = req.body.amountFromWallet;
     console.log("offer is of hotel booking", offer);
     const touristId = req.user.userId;
     try {
@@ -128,11 +129,11 @@ amadeusHotelsRouter.post("/book-hotel", isAuthenticated, async (req, res) => {
         }
         const randomId = Math.floor(Math.random() * 10000000000000);
         offer.bookingId = randomId;
-        tourist.wallet -= offer.totalPrice;
+        tourist.wallet -= amountFromWallet;
         offer.createdAt = new Date();
         tourist.hotelBookings.push(offer);
         await tourist.save();
-        res.status(200).send({ bookingId: randomId });
+        res.cookie("balance", tourist.wallet).status(200).send({ bookingId: randomId });
     } catch (error) {
         res.status(400).send({ error: error.message });
     }

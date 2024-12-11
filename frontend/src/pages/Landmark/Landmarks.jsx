@@ -72,7 +72,7 @@ const Landmarks = () => {
         let query = {};
 
         if (searchedTag) {
-            query.tags = searchedTag;
+            query.tags = "~" + searchedTag;
         } else {
             if (selectedTags && selectedTags.length > 0) {
                 query.tags = selectedTags.join("|");

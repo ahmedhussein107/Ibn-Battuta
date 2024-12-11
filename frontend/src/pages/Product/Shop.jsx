@@ -7,7 +7,7 @@ import Sorter from "../../components/Sorter.jsx";
 import PriceRange from "../../components/PriceRange.jsx";
 import RatingRange from "../../components/RatingRange.jsx";
 import Footer from "../../components/Footer.jsx";
-import { useNavigate } from "react-router-dom"; //REMOVE
+import { useNavigate, useLocation } from "react-router-dom"; //REMOVE
 import shopBackground from "../../assets/backgrounds/shopBackground.png";
 import ShareAndMark from "../../components/ShareAndMark.jsx";
 import CardProduct from "../../components/CardProduct.jsx";
@@ -22,7 +22,7 @@ import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-
+import { Alert } from "@mui/material";
 const Shop = () => {
     const currency = Cookies.get("currency") || "EGP";
     const userType = Cookies.get("userType") || "Guest";
@@ -47,12 +47,19 @@ const Shop = () => {
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     const navigate = useNavigate(); //REMOVE
 
-    const [selectedPage, setSelectedPage] = useState("Shop");
+    const location = useLocation();
+
+    const [selectedPage, setSelectedPage] = useState(
+        location.state?.selectedPage || "Shop"
+    );
     const [wishlistStatus, setWishlistStatus] = useState({});
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 10;
+    const [alertMessage, setAlertMessage] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [SeverError, setServerError] = useState("");
 
     const fetchWishlistStatus = async (query) => {
         if (userType !== "Tourist") return;
@@ -136,6 +143,13 @@ const Shop = () => {
                 { withCredentials: true }
             );
             setBuyingPopUpOpen(false);
+            setAlertMessage("Product Added to cart successfully");
+            setServerError("success");
+            setShowAlert(true);
+
+            setTimeout(() => {
+                setShowAlert(false);
+            }, 5000);
         } catch (error) {
             console.error("Error adding to cart:", error);
             alert("Error adding to cart. Please try again.");
@@ -241,17 +255,49 @@ const Shop = () => {
                 overflowX: "hidden",
             }}
         >
+            {showAlert && (
+                <Alert
+                    severity={SeverError}
+                    onClose={() => setShowAlert(false)}
+                    style={{
+                        position: "fixed",
+                        right: "1%",
+                        bottom: "1%",
+                        width: "25%",
+                        justifyContent: "center",
+                        zIndex: 1000,
+                    }}
+                >
+                    {alertMessage}
+                </Alert>
+            )}
             <div
                 style={{
                     width: "100vw",
                     height: "30vh",
-                    backgroundImage: `url(${shopBackground})`,
-                    backgroundSize: "100% 100%",
+                    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${shopBackground})`,
+                    backgroundSize: "100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
                     backgroundColor: "white",
+                    shadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                 }}
-            ></div>
+            >
+                <p
+                    style={{
+                        position: "relative",
+                        fontSize: "2rem",
+                        fontWeight: "bold",
+                        marginTop: "5%",
+                        color: "White",
+                    }}
+                >
+                    Shop
+                </p>
+            </div>
             {(userType === "Tourist" || userType === "Guest") && (
                 <div
                     style={{
@@ -287,8 +333,8 @@ const Shop = () => {
                         <button
                             style={
                                 selectedPage === "wishlist"
-                                    ? selectedButtonStyle
-                                    : buttonStyle
+                                    ? { ...selectedButtonStyle, marginLeft: "1rem" }
+                                    : { ...buttonStyle, marginLeft: "1rem" }
                             }
                             onClick={() => setSelectedPage("wishlist")}
                         >
@@ -405,27 +451,62 @@ const Shop = () => {
                                 width={"32vw"}
                                 height={"25vh"}
                                 fontSize="1.2rem"
+                                line2={
+                                    <>
+                                        <div
+                                            style={{
+                                                fontSize: "1em",
+                                                color: "#666",
+                                                fontStyle: "italic",
+                                            }}
+                                        >
+                                            Seller: {product.ownerID?.name}
+                                        </div>
+                                    </>
+                                }
                                 firstLineButtons={[
-                                    <ShareAndMark
-                                        width="1.2rem"
-                                        height="1.2rem"
-                                        styles={{ padding: "0.5vh" }}
-                                        isBookmarked={wishlistStatus[product.id]}
-                                        showBookmark={userType === "Tourist"}
-                                        onSecondIconClick={() =>
-                                            handleAddToWishlist(product.id)
-                                        }
-                                        icon={"loveIcon"}
-                                        scale={1.3}
-                                    />,
+                                    userType === "Tourist" && (
+                                        <ShareAndMark
+                                            width="1.2rem"
+                                            height="1.2rem"
+                                            styles={{ padding: "0.5vh" }}
+                                            isBookmarked={wishlistStatus[product.id]}
+                                            showBookmark={userType === "Tourist"}
+                                            onSecondIconClick={() =>
+                                                handleAddToWishlist(product.id)
+                                            }
+                                            icon={"loveIcon"}
+                                            scale={1.3}
+                                            isShop={true}
+                                        />
+                                    ),
                                 ]}
                                 controlButtons={[
                                     userType === "Tourist" && (
-                                        <div style={{ fontSize: "0.8rem" }}>
+                                        <div
+                                            style={{
+                                                fontSize: "0.8rem",
+                                                width: "9vw",
+                                                marginTop: "5vh",
+                                            }}
+                                        >
                                             <CustomButton
                                                 text="Add to cart"
                                                 stylingMode="always-dark"
                                                 handleClick={() => {
+                                                    if (product.quantity === 0) {
+                                                        setAlertMessage(
+                                                            "Product is out of stock"
+                                                        );
+                                                        setServerError("error");
+                                                        setShowAlert(true);
+
+                                                        setTimeout(() => {
+                                                            setShowAlert(false);
+                                                        }, 5000);
+                                                        return;
+                                                    }
+
                                                     setSelectedProduct(product);
                                                     setSelectedQuantity(1);
                                                     setBuyingPopUpOpen(true);

@@ -6,6 +6,11 @@ import "../styles/NavBar.css";
 import { useState, useEffect, useRef } from "react";
 import Button from "./Button";
 import axiosInstance from "../api/axiosInstance";
+import TourIcon from "@mui/icons-material/Tour";
+import ChatIcon from "@mui/icons-material/Chat";
+import RowingIcon from "@mui/icons-material/Rowing";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
+import DiscountIcon from "@mui/icons-material/Discount";
 
 import {
     guestNavbarItems,
@@ -88,10 +93,9 @@ const NavBar = () => {
         if (userType !== "Guest") {
             console.log("WebSocket connection establishing");
             const socket = new WebSocket(
-                `${URI.replace(
-                    "http://",
-                    "ws://"
-                )}notifications?token=${Cookies.get("jwt")}`
+                `${URI.replace("http://", "ws://")}notifications?token=${Cookies.get(
+                    "jwt"
+                )}`
             );
 
             socket.onopen = () => {
@@ -105,13 +109,18 @@ const NavBar = () => {
                 if (data.type === "initialNotifications") {
                     console.log("notifications are", data.notifications);
                     setUnreadNotificationCount(data.count);
-                    setNotifications(data.notifications);
+                    setNotifications(
+                        data.notifications.sort(
+                            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                        )
+                    );
                 } else if (data.type === "onlineNotification") {
                     setUnreadNotificationCount((prevCount) => prevCount + 1);
-                    setNotifications((prevNotifications) => [
-                        ...prevNotifications,
-                        data.notification,
-                    ]);
+                    setNotifications((prevNotifications) =>
+                        [...prevNotifications, data.notification].sort(
+                            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                        )
+                    );
                 }
             };
 
@@ -136,33 +145,43 @@ const NavBar = () => {
         console.log("Notification clicked");
     };
     const handleNotificationClick = (notification, index) => {
-        // TODO: navigate to the appropriate page;
-        let prefix = notification.relatedType.toLowerCase();
-        if (prefix.endsWith("s")) {
-            prefix = prefix.slice(0, -1);
+        // ["Complaint", "Activity", "Itinerary", "Product", "PromoCode"],
+
+        let url = null;
+
+        switch (notification.relatedType) {
+            case "Complaint":
+                url = `/${userType.toLowerCase()}/complaint/${notification.relatedId}`;
+                break;
+            case "Activity":
+                url = `/activity-details/${notification.relatedId}`;
+                break;
+            case "Itinerary":
+                url = `/itinerary/itinerary-details/${notification.relatedId}`;
+                break;
+            case "Product":
+                url = `/shop`;
+                break;
         }
-        const link = `/${Cookies.get("userType").toLowerCase()}/${prefix}/${
-            notification.relatedId
-        }`;
-        if (notification.isRead) {
-            navigate(link);
+        console.log("the url is:", url);
+
+        if (url && notification.isRead) {
+            navigate(url);
             return;
         }
+
         let newNotifications = notifications;
         setUnreadNotificationCount(unreadNotificationCount - 1);
-        console.log("notification is ", notification);
         newNotifications[index].isRead = true;
         setNotifications(newNotifications);
         try {
-            axiosInstance.put(
-                `/general/markNotificationAsRead/${notification._id}`
-            );
+            axiosInstance.put(`/general/markNotificationAsRead/${notification._id}`);
         } catch (err) {
             console.log(err);
         }
 
         setIsNotificationOpen(false);
-        navigate(link);
+        navigate(url);
     };
     const handleLogout = () => {
         // TODO: log out logic is not implemented
@@ -171,8 +190,8 @@ const NavBar = () => {
         Cookies.remove("profileImage");
         Cookies.set("currency", "EGP");
         setUserType("Guest");
-
         navigate("/");
+        window.location.reload();
     };
 
     const renderDropdownItem = (label, index, dropdown) => {
@@ -183,11 +202,7 @@ const NavBar = () => {
                     {dropdown.map((subItem, subIndex) => {
                         const [subLabel, subLink] = Object.entries(subItem)[0];
                         return (
-                            <Link
-                                key={subIndex}
-                                to={subLink}
-                                className="dropdown-item"
-                            >
+                            <Link key={subIndex} to={subLink} className="dropdown-item">
                                 {subLabel}
                             </Link>
                         );
@@ -213,16 +228,13 @@ const NavBar = () => {
         <nav className="navbar">
             <img
                 style={{
-                    padding: "0px",
-                    borderRadius: "20px",
-                    height: "5.2vh",
-                    objectFit: "contain",
-                    marginLeft: ".8vw",
+                    borderRadius: "25px",
+                    height: "6.2vh",
+                    marginLeft: "-1%",
                 }}
                 src="/logo.png"
             />
 
-            {/* Center: Navbar items */}
             <div className="navbar-links">
                 {navbarItems.map((item, index) => renderItem(item, index))}
             </div>
@@ -267,10 +279,7 @@ const NavBar = () => {
                             )}
                         </div>
                         {isNotificationOpen && (
-                            <div
-                                ref={dropdownRef}
-                                className="notification-dropdown"
-                            >
+                            <div ref={dropdownRef} className="notification-dropdown">
                                 <h4>Notifications</h4>
                                 {notifications.length > 0 ? (
                                     notifications.map((notification, index) => (
@@ -288,14 +297,47 @@ const NavBar = () => {
                                                 )
                                             }
                                         >
-                                            <p className="notification-message">
-                                                {notification.message}
-                                            </p>
-                                            <span className="notification-date">
-                                                {new Date(
-                                                    notification.createdAt
-                                                ).toLocaleString()}
-                                            </span>
+                                            <div className="notifications-icon">
+                                                {(() => {
+                                                    switch (notification.relatedType) {
+                                                        case "Itinerary":
+                                                            return (
+                                                                <TourIcon className="notification-type-icon" />
+                                                            );
+                                                        case "PromoCode":
+                                                            return (
+                                                                <DiscountIcon className="notification-type-icon" />
+                                                            );
+                                                        case "Complaint":
+                                                            return (
+                                                                <ChatIcon className="notification-type-icon" />
+                                                            );
+                                                        case "Activity":
+                                                            return (
+                                                                <RowingIcon className="notification-type-icon" />
+                                                            );
+                                                        case "Product":
+                                                            return (
+                                                                <ProductionQuantityLimitsIcon className="notification-type-icon" />
+                                                            );
+                                                        default:
+                                                            return (
+                                                                <ChatIcon className="notification-type-icon" />
+                                                            ); // Default icon
+                                                    }
+                                                })()}
+                                            </div>
+                                            <div className="notification-content">
+                                                <p className="notification-message">
+                                                    {notification.message}
+                                                </p>
+                                                <span className="notification-date">
+                                                    <i className="fas fa-calendar-alt"></i>
+                                                    {new Date(
+                                                        notification.createdAt
+                                                    ).toLocaleString()}
+                                                </span>
+                                            </div>
                                         </div>
                                     ))
                                 ) : (
@@ -316,21 +358,18 @@ const NavBar = () => {
                             />
                             <div className="dropdown-content">
                                 {userType === "Tourist" ? (
-                                    touristProfileDropdown.map(
-                                        (item, index) => {
-                                            const [label, link] =
-                                                Object.entries(item)[0];
-                                            return (
-                                                <Link
-                                                    key={index}
-                                                    to={link}
-                                                    className="dropdown-item"
-                                                >
-                                                    {label}
-                                                </Link>
-                                            );
-                                        }
-                                    )
+                                    touristProfileDropdown.map((item, index) => {
+                                        const [label, link] = Object.entries(item)[0];
+                                        return (
+                                            <Link
+                                                key={index}
+                                                to={link}
+                                                className="dropdown-item"
+                                            >
+                                                {label}
+                                            </Link>
+                                        );
+                                    })
                                 ) : userType === "Guest" ? null : (
                                     <Link
                                         to={`/${userType.toLowerCase()}/profile`}
