@@ -104,10 +104,19 @@ export const updateTourGuide = async (req, res) => {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
         if (req.body.email) {
-            await Email.findByIdAndDelete(tourGuide.email);
-            await Email.create({
-                _id: req.body.email,
-            });
+            try {
+                await Email.findByIdAndDelete(tourGuide.email);
+                await Email.create({
+                    _id: req.body.email,
+                });
+            } catch (e) {
+                await Email.create({
+                    _id: tourGuide.email,
+                });
+                return res
+                    .status(400)
+                    .json({ message: "Error updating email", error: e.message });
+            }
         }
 
         // Update tourGuide details

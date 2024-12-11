@@ -109,10 +109,19 @@ export const updateGovernor = async (req, res) => {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
         if (req.body.email) {
-            await Email.findByIdAndDelete(governor.email);
-            await Email.create({
-                _id: req.body.email,
-            });
+            try {
+                await Email.findByIdAndDelete(governor.email);
+                await Email.create({
+                    _id: req.body.email,
+                });
+            } catch (e) {
+                await Email.create({
+                    _id: governor.email,
+                });
+                return res
+                    .status(400)
+                    .json({ message: "Error updating email", error: e.message });
+            }
         }
 
         // Update governor details
