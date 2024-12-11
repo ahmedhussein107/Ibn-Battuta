@@ -110,9 +110,6 @@ const HotelCard = ({ offer, isAllOffers = true }) => {
                         <strong>Cancellation:</strong> {offer.cancellationPolicy}
                     </p>
                     <p>
-                        <strong>Payment:</strong> {offer.paymentMethod}
-                    </p>
-                    <p>
                         <strong>Total Price:</strong> {formatPrice(offer.totalPrice)}
                     </p>
                 </div>

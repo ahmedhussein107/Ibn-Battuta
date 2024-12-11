@@ -722,6 +722,7 @@ const ActivityDetails = () => {
                                         lat: activityData?.Latitude,
                                         lng: activityData?.Longitude,
                                     }}
+                                    customStyles={{ height: "100%", width: "100%" }}
                                 />
                             </MapWrapper>
                         </div>
