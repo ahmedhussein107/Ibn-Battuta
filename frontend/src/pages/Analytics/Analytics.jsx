@@ -225,7 +225,12 @@ const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) =
     );
 };
 const DrawTable = ({ data }) => {
-    const [currentData, setCurrentData] = useState(data);
+    const [currentData, setCurrentData] = useState([]);
+    useEffect(() => {
+        setCurrentData(data);
+    }, [data]);
+    console.log("current data", currentData);
+    console.log("given data", data);
 
     const API =
         Cookies.get("userType") === "Advertiser"

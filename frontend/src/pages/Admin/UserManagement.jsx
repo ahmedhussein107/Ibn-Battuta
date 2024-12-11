@@ -25,10 +25,11 @@ import PaginationComponent from "../../components/Pagination";
 import CreateUserPopUp from "./CreateUserPopUp";
 import usePageHeader from "../../components/Header/UseHeaderPage";
 import { use } from "react";
+import PopUp from "../../components/PopUpsGeneric/PopUp";
+import { Alert } from "@mui/material";
 const UserManagement = ({ isAll = true }) => {
 	usePageHeader("/users.png", "User Management");
 	const [users, setUsers] = useState([]);
-	const [message, setMessage] = useState("");
 	const [isDialogOpen, setIsDialogOpen] = useState(false); // Track dialog state
 	const [selectedUser, setSelectedUser] = useState(null); // Track selected user ID
 	const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +39,12 @@ const UserManagement = ({ isAll = true }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [toBeCreatedUserType, setToBeCreatedUserType] = useState("");
 	const maxUserPerPage = 10;
+	const [popupAlert, setPopupAlert] = useState({
+		open: false,
+		severity: "info",
+		message: "",
+	});
+
 	const models = {
 		advertiser: "Advertiser",
 		seller: "Seller",
@@ -71,7 +78,7 @@ const UserManagement = ({ isAll = true }) => {
 			setTotalPages(response.data.totalPages);
 		} catch (error) {
 			console.error("Error fetching users:", error);
-			setMessage("Error fetching users. Please try again.");
+			showPopUpAlert("error", "Error fetching users. Please try again.");
 		}
 	};
 
@@ -84,13 +91,11 @@ const UserManagement = ({ isAll = true }) => {
 			}?userId=${selectedUser._id}`;
 			console.log(uri);
 			await axiosInstance.delete(uri, { withCredentials: true });
-			console.log("3");
-			setMessage("User deleted successfully!");
+			showPopUpAlert("success", "User deleted successfully!");
 			fetchUsers();
 		} catch (error) {
 			console.error("Error deleting user:", error);
-			setMessage("Error deleting user. Please try again.");
-			alert(error.response.data.message);
+			showPopUpAlert("error", error.response.data.message + "!");
 		} finally {
 			setSelectedUser(null);
 			setIsDialogOpen(false);
@@ -106,10 +111,10 @@ const UserManagement = ({ isAll = true }) => {
 				},
 				{ withCredentials: true, params: { userId: touristID } }
 			);
-			setMessage("Points added successfully!");
+			showPopUpAlert("success", "Points added successfully!");
 		} catch (error) {
 			console.error("Error adding point  user:", touristID, error);
-			setMessage("Error adding points. Please try again.");
+			showPopUpAlert("error", "Error adding points. Please try again.");
 		} finally {
 			setIsDialogOpen(false);
 		}
@@ -119,6 +124,15 @@ const UserManagement = ({ isAll = true }) => {
 	const openConfirmationDialog = (user) => {
 		setSelectedUser(user);
 		setIsDialogOpen(true);
+	};
+
+	const showPopUpAlert = (severity, message) => {
+		setPopupAlert({ open: true, severity, message });
+
+		setTimeout(() => {
+			setPopupAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+			// setIsOpen(false);
+		}, 4000); // Alert will close after 5 seconds
 	};
 
 	const closeConfirmationDialog = () => {
@@ -152,11 +166,11 @@ const UserManagement = ({ isAll = true }) => {
 			const uri = `${user.role.toLowerCase()}/update${models[user.role]}?userId=${user._id}`;
 			console.log(uri);
 			await axiosInstance.put(uri, { isAccepted: true }, { withCredentials: true });
-			setMessage("User Accepted successfully!");
+			showPopUpAlert("success", "User accepted successfully");
 			fetchUsers();
 		} catch (error) {
 			console.error("Error Accepting user:", error);
-			setMessage("Error Accepting user. Please try again.");
+			showPopUpAlert("error", "Error Accepting user. Please try again.");
 		} finally {
 			setSelectedUser(null);
 			setIsDialogOpen(false);
@@ -307,7 +321,9 @@ const UserManagement = ({ isAll = true }) => {
 												</IconButton>
 												<IconButton
 													color="success"
-													onClick={() => handleAcceptUser(user)}
+													onClick={() => {
+														handleAcceptUser(user);
+													}}
 												>
 													<CheckIcon />
 												</IconButton>
@@ -325,6 +341,27 @@ const UserManagement = ({ isAll = true }) => {
 
 	return (
 		<div className="user-management-container">
+			{popupAlert.open && (
+				<Alert
+					severity={popupAlert.severity}
+					onClose={() =>
+						setPopupAlert({
+							...popupAlert,
+							open: false,
+						})
+					}
+					style={{
+						position: "fixed",
+						right: "1%",
+						bottom: "2%",
+						width: "25%",
+						justifyContent: "center",
+						zIndex: 1000,
+					}}
+				>
+					{popupAlert.message}
+				</Alert>
+			)}
 			<CreateUserPopUp userType={toBeCreatedUserType} isOpen={isOpen} setIsOpen={setIsOpen} />
 			<ActionButtonsForUsers
 				searchText={searchText}
@@ -333,14 +370,14 @@ const UserManagement = ({ isAll = true }) => {
 				setIsOpen={setIsOpen}
 				setUserType={setToBeCreatedUserType}
 			/>
-			{message && <p>{message}</p>}
-
-			<ConfirmationDialog
-				message="Are you sure you want to delete this user?"
-				onConfirm={handleDelete}
-				onCancel={closeConfirmationDialog}
+			<PopUp
 				isOpen={isDialogOpen}
-			/>
+				setIsOpen={setIsDialogOpen}
+				headerText={"Are you sure you want to delete this user?"}
+				cancelText="Cancel"
+				actionText="Delete"
+				handleSubmit={handleDelete}
+			></PopUp>
 			<hr style={{ width: "90%", margin: "1% auto" }} />
 			<CustomTable />
 			<PaginationComponent
