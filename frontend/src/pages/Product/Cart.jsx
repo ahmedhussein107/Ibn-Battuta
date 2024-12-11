@@ -20,8 +20,6 @@ const Cart = () => {
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
-    usePageHeader(background, "Cart");
-
     useEffect(() => {
         const fetchCart = async () => {
             const response = await axiosInstance.get("/cart/getCart", {
@@ -92,9 +90,35 @@ const Cart = () => {
                 alignItems: "center",
                 gap: "3vh",
                 width: "100%",
-                marginTop: "20%",
             }}
         >
+            <div
+                style={{
+                    width: "100vw",
+                    height: "30vh",
+                    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${background})`,
+                    backgroundSize: "100%",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundColor: "white",
+                    shadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <p
+                    style={{
+                        position: "relative",
+                        fontSize: "2rem",
+                        fontWeight: "bold",
+                        marginTop: "5%",
+                        color: "White",
+                    }}
+                >
+                    Cart
+                </p>
+            </div>
             <div
                 style={{
                     display: "flex",
@@ -122,7 +146,12 @@ const Cart = () => {
                             Shop
                         </span>
                     </button>
-                    <button style={buttonStyle} onClick={() => navigate("/shop")}>
+                    <button
+                        style={{ ...buttonStyle, marginLeft: "1rem" }}
+                        onClick={() =>
+                            navigate("/shop", { state: { selectedPage: "wishlist" } })
+                        }
+                    >
                         <FavoriteBorderIcon
                             style={{
                                 width: "1rem",
@@ -263,10 +292,12 @@ const Cart = () => {
             )}
 
             {!isLoading && !cartIsLoading && cart.length == 0 && (
-                <p>
-                    Your cart is empty! Go to the <Link to="/shop">shop</Link> page to add
-                    some products
-                </p>
+                <div style={{ minHeight: "45vh" }}>
+                    <p>
+                        Your cart is empty! Go to the <Link to="/shop">shop</Link> page to
+                        add some products
+                    </p>
+                </div>
             )}
 
             <Footer />
