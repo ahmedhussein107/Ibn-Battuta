@@ -83,10 +83,19 @@ export const updateSeller = async (req, res) => {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
         if (req.body.email) {
-            await Email.findByIdAndDelete(seller.email);
-            await Email.create({
-                _id: req.body.email,
-            });
+            try {
+                await Email.findByIdAndDelete(seller.email);
+                await Email.create({
+                    _id: req.body.email,
+                });
+            } catch (e) {
+                await Email.create({
+                    _id: seller.email,
+                });
+                return res
+                    .status(400)
+                    .json({ message: "Error updating email", error: e.message });
+            }
         }
 
         // Update seller details
