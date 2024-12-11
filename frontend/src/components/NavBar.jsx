@@ -104,13 +104,18 @@ const NavBar = () => {
                 if (data.type === "initialNotifications") {
                     console.log("notifications are", data.notifications);
                     setUnreadNotificationCount(data.count);
-                    setNotifications(data.notifications);
+                    setNotifications(
+                        data.notifications.sort(
+                            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                        )
+                    );
                 } else if (data.type === "onlineNotification") {
                     setUnreadNotificationCount((prevCount) => prevCount + 1);
-                    setNotifications((prevNotifications) => [
-                        ...prevNotifications,
-                        data.notification,
-                    ]);
+                    setNotifications((prevNotifications) =>
+                        [...prevNotifications, data.notification].sort(
+                            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                        )
+                    );
                 }
             };
 

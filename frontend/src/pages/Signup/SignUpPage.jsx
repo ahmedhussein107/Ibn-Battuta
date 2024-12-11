@@ -77,12 +77,10 @@ const SignUpPage = () => {
     const handleNextStep = () => {
         const form = document.querySelector("#form");
 
-        // // Check if the form is valid
-        // if (form && !form.checkValidity()) {
-        // 	// Trigger the browser's built-in validation feedback
-        // 	form.reportValidity();
-        // 	return; // Prevent navigation to the next step if invalid
-        // }
+        if (!userData.email || !userData.password || !userData.username) {
+            alert("Please fill in all required fields. ");
+            return;
+        }
 
         setSetp(step + 1);
     };
