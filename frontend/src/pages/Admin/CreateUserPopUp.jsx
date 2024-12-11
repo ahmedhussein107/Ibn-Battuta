@@ -1,5 +1,7 @@
 import React from "react";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 import axiosInstance from "../../api/axiosInstance";
 import { useState } from "react";
 import "./UserManagement.css";
@@ -29,7 +31,7 @@ const CreateUserPopUp = ({ userType, isOpen, setIsOpen }) => {
             actionText="Create"
             handleSubmit={handleSubmit}
         >
-            <div class="create-user-input-container">
+            <div className="create-user-input-container">
                 <input
                     type="text"
                     placeholder="Enter the username"
