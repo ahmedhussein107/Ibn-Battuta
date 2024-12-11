@@ -8,6 +8,16 @@ import { uploadFile } from "../../api/firebase";
 import Footer from "../../components/Footer";
 import landmarkbackground from "../../assets/backgrounds/landmarksBackground.png";
 import { useNavigate } from "react-router-dom";
+import PhotosUpload from "../../components/PhotosUpload.jsx";
+import CurrencyDropdown from "../../components/CurrencyDropdownList.jsx";
+import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
+import Cookies from "js-cookie";
+import Alert from "@mui/material/Alert";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton"; // Ensure this is imported for the close button
+import CloseIcon from "@mui/icons-material/Close";
+import GenericDropDown from "../../components/GenericDropDown.jsx";
+
 const FormWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -21,50 +31,20 @@ const FormWrapper = styled.div`
     left: 0;
 `;
 
-const FormTitle = styled.h2`
-    text-align: center;
-    color: var(--accent-color);
-`;
-const ImageList = styled.ul`
-    margin-top: 10px;
-    list-style: none;
-    padding: 0;
-    max-height: 150px;
-    overflow-y: auto;
-`;
-
-const ImageItem = styled.li`
-    background: #e8f5e9;
-    padding: 8px;
-    border: 1px solid #4caf50;
-    border-radius: 4px;
-    margin-bottom: 5px;
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-`;
-
-const RemoveButton = styled.button`
-    background: transparent;
-    border: none;
-    color: #d32f2f;
-    cursor: pointer;
-    font-size: 12px;
-
-    &:hover {
-        text-decoration: underline;
-    }
-`;
 const InfoBoxesContainer = styled.div`
-    margintop: 20px;
+    margin-top: 2px;
+    flex: 1;
     display: flex;
-    gap: 20px;
+    gap: 10px; /* Increase the gap for more spacing */
     flex-direction: row;
-    align-items: stretch; // Ensures all child elements have the same height
-    align-content: stretch; // Ensures all child elements have the same height
-    width: 100%; // Set the desired width here
+    align-items: stretch; /* Ensure all child elements stretch to fill height */
+    justify-content: center; /* Ensure alignment */
+    padding: 20px; /* Add padding around the container */
+    width: 95%;
+    max-width: 95%; /* Set a max width for better layout control */
+    height: 100%; /* Fill the parent's height */
 `;
+
 const FormGroup = styled.div`
     display: flex; // Flex layout for horizontal arrangement
     flex-direction: column;
@@ -73,13 +53,19 @@ const FormGroup = styled.div`
     box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
     border-radius: 20px;
     padding: 20px;
-    display: flex;
+    width: 100%;
+    min-height: 100; // Set a minimum height to ensure visibility and equalization
 `;
+
 const ColumnContainter = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
+    align-items: stretch; // Ensure child elements stretch to fill the width
+    width: 40%; /* Set the desired width here */
+    height: 100%; /* Set height to 100% to fill the parent container */
 `;
+
 const Label = styled.label`
     display: block;
     margin-bottom: 8px;
@@ -133,24 +119,6 @@ const Button1 = styled.button`
     }
 `;
 
-const ImageDropzone = styled.div`
-    border: 2px dashed #4caf50;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    color: #4caf50;
-    background: #e8f5e9;
-    border-radius: 8px;
-    position: relative;
-`;
-
-const FileInput = styled.input`
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-`;
-
 const TicketRow = styled.div`
     justify-content: space-between;
 `;
@@ -162,11 +130,80 @@ const DayRow = styled(Row)`
     justify-content: flex-start;
     display: flex;
     flex-direction: flex-end;
+    flex: 1; /* Takes up remaining space */
+    font-weight: bold;
+    font-size: 1rem;
+    margin-right: 10px; /* Space between label and time selects */
 `;
 
 const TimeSelect = styled(TimePicker)`
     width: 150px;
+    padding: 5px 10px;
+    margin-right: 10px; /* Space between time selects */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 120px; /* Fixed width for time selects */
 `;
+const OpeningHoursSection = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin: 1px; /* Add some space around the section */
+`;
+
+const CustomAlert = ({ message, severity, open, onClose }) => {
+    // Automatically close the alert after a specified duration (e.g., 3000ms)
+    useEffect(() => {
+        if (open) {
+            const timer = setTimeout(() => {
+                onClose(); // Close the alert after the duration
+            }, 3000); // Duration in milliseconds
+
+            return () => clearTimeout(timer); // Cleanup the timer when unmounting or when `open` changes
+        }
+    }, [open, onClose]);
+
+    return (
+        <>
+            {open && ( // Render the alert only if it is open
+                <div
+                    style={{
+                        position: "fixed", // Fixed position to keep it in view
+                        bottom: "5vh", // Distance from the bottom of the page
+                        right: "10vh", // Distance from the right of the page
+                        zIndex: 2000, // Ensure it is on top of other elements
+                    }}
+                >
+                    <Collapse in={open}>
+                        <Alert
+                            severity={severity || "info"}
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={onClose}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{
+                                mb: 2,
+                                minHeight: "5vh", // Minimum height for better visibility
+                                height: "auto", // Allow height to expand
+                                width: "60vh", // Fixed width to prevent excessive stretching
+                                fontSize: "1rem", // Adjust text size as needed
+                                padding: "10px 15px", // Padding for content space
+                            }}
+                        >
+                            {message}
+                        </Alert>
+                    </Collapse>
+                </div>
+            )}
+        </>
+    );
+};
 
 export default function LandmarkForm() {
     const navigate = useNavigate();
@@ -196,6 +233,21 @@ export default function LandmarkForm() {
     const [tags, setTags] = useState([]);
     const [selectedTag, setSelectedTag] = useState("");
     const [predefinedTags, setPredefinedTags] = useState([]);
+    const [selectedCurrency, setSelectedCurrency] = useState("");
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice, convertPrice } =
+        useCurrencyConverter(currency);
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [alertSeverity, setAlertSeverity] = useState("info");
+    const showAlert = (message, severity = "info") => {
+        setAlertMessage(message);
+        setAlertSeverity(severity);
+        setAlertOpen(true);
+    };
+    const handleCloseAlert = () => {
+        setAlertOpen(false);
+    };
 
     useEffect(() => {
         const fetchPredefinedTags = async () => {
@@ -235,32 +287,19 @@ export default function LandmarkForm() {
             ticketPrices: { ...landmark.ticketPrices, [type]: value },
         });
     };
-
-    const handleTimeChange = (day, type, time) => {
-        setLandmark({
-            ...landmark,
-            openingHours: {
-                ...landmark.openingHours,
-                [day]: { ...landmark.openingHours[day], [type]: time },
-            },
-        });
+    const handleImageAdd = (newImages) => {
+        setLandmark((prev) => ({
+            ...prev,
+            pictures: [...prev.pictures, ...newImages],
+        }));
+        console.log(landmark.pictures); // Log the current pictures state
     };
 
-    const handleImageDrop = (e) => {
-        e.preventDefault();
-        const files = Array.from(e.dataTransfer.files);
-        setLandmark({
-            ...landmark,
-            pictures: [...landmark.pictures, ...files],
-        });
-    };
-
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
-        setLandmark({
-            ...landmark,
-            pictures: [...landmark.pictures, ...files],
-        });
+    const handleImageRemove = (idToRemove) => {
+        setLandmark((prev) => ({
+            ...prev,
+            pictures: prev.pictures.filter((image) => image.id !== idToRemove),
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -274,25 +313,77 @@ export default function LandmarkForm() {
                 uploadedPictures.push(uploadedPath);
             }
             _landmark = { ..._landmark, pictures: uploadedPictures };
-            axiosInstance.post("/landmark/createLandmark", _landmark, {
+
+            await axiosInstance.post("/landmark/createLandmark", _landmark, {
                 withCredentials: true,
             });
+
+            // Show success alert before navigating
+            showAlert("Landmark created successfully", "success");
+
             navigate("/governor/landmarks");
-        } catch (err) {}
+        } catch (err) {
+            showAlert("Error submitting landmark. Please try again.", "error");
+        }
     };
 
     const addTag = () => {
         if (selectedTag && !tags.includes(selectedTag)) {
             setTags([...tags, selectedTag]);
             setSelectedTag("");
+            console.log("Selected Tags after adding:", [...tags, selectedTag]); // Log the updated tags
         }
     };
+
     const removeTag = (tagToRemove) => {
-        setTags(tags.filter((tag) => tag !== tagToRemove));
+        setTags((prevTags) => {
+            const updatedTags = prevTags.filter((tag) => tag !== tagToRemove);
+
+            // Clear selectedTag if the removed tag is the current selectedTag
+            if (selectedTag === tagToRemove) {
+                setSelectedTag("");
+            }
+
+            console.log("Selected Tags after removing:", updatedTags); // Log the updated tags
+            return updatedTags; // Return the updated tags array
+        });
+    };
+    const handleTimeChange = (day, type, time) => {
+        const openTime =
+            type === "open" ? time : landmark.openingHours[day].open;
+        const closeTime =
+            type === "close" ? time : landmark.openingHours[day].close;
+
+        // Check if the selected open time is after close time
+        if (type === "open" && closeTime && time && time.isAfter(closeTime)) {
+            showAlert("Open time cannot be after close time.", "error");
+            return; // Exit the function if validation fails
+        }
+
+        // Check if the selected close time is before open time
+        if (type === "close" && openTime && time && time.isBefore(openTime)) {
+            showAlert("Close time cannot be before open time.", "error");
+            return; // Exit the function if validation fails
+        }
+
+        // Update state if validation passes
+        setLandmark({
+            ...landmark,
+            openingHours: {
+                ...landmark.openingHours,
+                [day]: { ...landmark.openingHours[day], [type]: time },
+            },
+        });
     };
 
     return (
         <FormWrapper>
+            <CustomAlert
+                message={alertMessage}
+                severity={alertSeverity}
+                open={alertOpen}
+                onClose={handleCloseAlert}
+            />
             <div
                 style={{
                     width: "100vw",
@@ -327,60 +418,126 @@ export default function LandmarkForm() {
             <form
                 onSubmit={handleSubmit}
                 style={{
-                    width: "80%",
-                    margin: "0 auto",
-                    marginTop: "5%",
-                    flexDirection: "row",
+                    width: "100%", // Set to 90% to leave 5% margin on both sides
+                    maxWidth: "100%", // Optional maximum width
+                    marginTop: "1%", // Auto margin for centering with 5% margin on top and bottom
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                 }}
             >
-                <InfoBoxesContainer>
-                    <FormGroup>
-                        <Label>Landmark Name</Label>
-                        <Input
-                            type="text"
-                            name="name"
-                            value={landmark.name}
-                            onChange={handleInputChange}
-                            required
-                            style={{ width: "70%" }} // Adjust width here
-                        />
-                        <Label>Description</Label>
-                        <Input
-                            type="text"
-                            name="description"
-                            value={landmark.description}
-                            onChange={handleInputChange}
-                            style={{ width: "70%" }} // Adjust width here
-                        />
-
-                        {Object.keys(landmark.openingHours).map((day) => (
-                            <DayRow key={day}>
-                                <Label>{day}</Label>
-                                <TimeSelect
-                                    value={landmark.openingHours[day].open}
-                                    onChange={(time) =>
-                                        handleTimeChange(day, "open", time)
-                                    }
-                                    placeholder="Open"
-                                    format="HH:mm"
-                                />
-                                <TimeSelect
-                                    value={landmark.openingHours[day].close}
-                                    onChange={(time) =>
-                                        handleTimeChange(day, "close", time)
-                                    }
-                                    placeholder="Close"
-                                    format="HH:mm"
-                                />
-                            </DayRow>
-                        ))}
+                <InfoBoxesContainer
+                    style={{
+                        width: "100%", // Full width for the info boxes
+                        display: "flex",
+                        flexWrap: "wrap",
+                        justifyContent: "center",
+                    }}
+                >
+                    <FormGroup
+                        style={{
+                            flex: 1, // Allow to grow
+                            maxWidth: "600px", // Maximum width for FormGroup
+                            margin: "10px", // Margin for spacing
+                        }}
+                    >
+                        <Row
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                width: "100%",
+                            }}
+                        >
+                            <Label>Landmark Name</Label>
+                            <Input
+                                type="text"
+                                name="name"
+                                value={landmark.name}
+                                onChange={handleInputChange}
+                                required
+                                style={{ width: "93%", minWidth: "200px" }} // Full width
+                            />
+                        </Row>
+                        <Row
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                width: "93%",
+                            }}
+                        >
+                            <Label>Description</Label>
+                            <Input
+                                type="text"
+                                name="description"
+                                value={landmark.description}
+                                onChange={handleInputChange}
+                                style={{ width: "100%", minWidth: "200px" }} // Full width
+                            />
+                        </Row>
+                        <OpeningHoursSection>
+                            {Object.keys(landmark.openingHours).map((day) => (
+                                <DayRow
+                                    key={day}
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "flex-start",
+                                        marginBottom: "5px", // Spacing between day rows
+                                    }}
+                                >
+                                    <Label style={{ marginBottom: "0px" }}>
+                                        {day}
+                                    </Label>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            gap: "1px",
+                                            marginTop: "0px",
+                                            width: "100%", // Ensure the container takes full width
+                                        }}
+                                    >
+                                        <TimeSelect
+                                            value={
+                                                landmark.openingHours[day].open
+                                            }
+                                            onChange={(time) =>
+                                                handleTimeChange(
+                                                    day,
+                                                    "open",
+                                                    time
+                                                )
+                                            }
+                                            placeholder="Open"
+                                            format="HH:mm"
+                                            style={{ flex: 1 }} // Allow TimeSelect components to grow
+                                        />
+                                        <TimeSelect
+                                            value={
+                                                landmark.openingHours[day].close
+                                            }
+                                            onChange={(time) =>
+                                                handleTimeChange(
+                                                    day,
+                                                    "close",
+                                                    time
+                                                )
+                                            }
+                                            placeholder="Close"
+                                            format="HH:mm"
+                                            style={{ flex: 1 }} // Allow TimeSelect components to grow
+                                        />
+                                    </div>
+                                </DayRow>
+                            ))}
+                        </OpeningHoursSection>
                         <div
+                            onClick={(e) => e.preventDefault()}
                             style={{
                                 display: "flex",
                                 justifyContent: "space-between",
+                                marginTop: "15px",
                             }}
                         >
-                            {/* add map adder here */}
                             {isMapOpen && (
                                 <MapPopUp
                                     popUpOpen={isMapOpen}
@@ -390,14 +547,14 @@ export default function LandmarkForm() {
                             )}
                             <div
                                 style={{
-                                    width: "30%",
+                                    flex: 1, // Allow the LocationAdder to grow
                                     marginTop: "30px",
-                                    marginRight: "10%",
+                                    marginRight: "10px",
                                 }}
                             >
                                 <LocationAdder
-                                    title="Pickup Location"
-                                    styles={{ width: "100%" }}
+                                    title="Location"
+                                    styles={{ width: "100%" }} // Full width
                                     location={pickupLocation}
                                     setLocation={setPickupLocation}
                                     setMapFunction={setMapFunction}
@@ -406,7 +563,7 @@ export default function LandmarkForm() {
                         </div>
                         <div style={{ flex: "1" }}>
                             <Label>Tags</Label>
-                            <div style={{ display: "flex", width: "35%" }}>
+                            <div style={{ display: "flex", width: "100%" }}>
                                 <select
                                     value={selectedTag}
                                     onChange={(e) =>
@@ -416,14 +573,14 @@ export default function LandmarkForm() {
                                         flex: 1,
                                         padding: "1vh",
                                         marginLeft: "1vh",
-                                        backgroundColor: "white", // White background
-                                        border: "1px solid lightgray", // Light gray border
-                                        borderRadius: "01px", // Rounded rectangle shape
-                                        color: "black", // Text color
-                                        fontSize: "1rem", // Adjust font size for readability
-                                        outline: "none", // Remove focus outline
+                                        backgroundColor: "white",
+                                        border: "1px solid lightgray",
+                                        borderRadius: "4px",
+                                        color: "black",
+                                        fontSize: "1rem",
+                                        outline: "none",
                                         boxShadow:
-                                            "0 1px 3px rgba(0, 0, 0, 0.1)", // Subtle shadow
+                                            "0 1px 3px rgba(0, 0, 0, 0.1)",
                                     }}
                                 >
                                     <option value="">Select tag</option>
@@ -439,7 +596,7 @@ export default function LandmarkForm() {
                                     style={{
                                         marginLeft: "1vh",
                                         padding: "1vh",
-                                        backgroundColor: "#f4e1c1", // Matching color as the Add Tag button
+                                        backgroundColor: "#f4e1c1",
                                         border: "2px solid black",
                                         borderRadius: "40px",
                                     }}
@@ -461,7 +618,7 @@ export default function LandmarkForm() {
                                         key={index}
                                         style={{
                                             padding: "0.5vh 1vh",
-                                            backgroundColor: "#f4e1c1", // Same color as Add Tag button
+                                            backgroundColor: "#f4e1c1",
                                             borderRadius: "8px",
                                             display: "flex",
                                             alignItems: "center",
@@ -485,47 +642,24 @@ export default function LandmarkForm() {
                             </div>
                         </div>
                     </FormGroup>
+
                     <ColumnContainter>
                         <FormGroup>
                             <Label>Pictures</Label>
-                            <ImageDropzone
-                                onDrop={handleImageDrop}
-                                onDragOver={(e) => e.preventDefault()}
-                            >
-                                Drag & Drop Images Here or Click to Select
-                                <FileInput
-                                    type="file"
-                                    multiple
-                                    onChange={handleImageChange}
-                                />
-                            </ImageDropzone>
-                            <ImageList>
-                                {landmark.pictures.map((file, index) => (
-                                    <ImageItem key={index}>
-                                        {file.name || file}{" "}
-                                        {/* Use file name if available */}
-                                        <RemoveButton
-                                            onClick={() => {
-                                                const updatedPictures = [
-                                                    ...landmark.pictures,
-                                                ];
-                                                updatedPictures.splice(
-                                                    index,
-                                                    1
-                                                );
-                                                setLandmark({
-                                                    ...landmark,
-                                                    pictures: updatedPictures,
-                                                });
-                                            }}
-                                        >
-                                            Remove
-                                        </RemoveButton>
-                                    </ImageItem>
-                                ))}
-                            </ImageList>
+                            <PhotosUpload
+                                label="Activity Photos"
+                                imagePreviews={landmark.pictures}
+                                onImageAdd={handleImageAdd}
+                                onImageRemove={handleImageRemove}
+                            />
                         </FormGroup>
+
                         <FormGroup>
+                            <Label>Ticket Prices</Label>
+                            <CurrencyDropdown
+                                selectedCurrency={selectedCurrency}
+                                setSelectedCurrency={setSelectedCurrency}
+                            />
                             <TicketRow>
                                 {["foreigner", "native", "student"].map(
                                     (type) => (
@@ -550,7 +684,7 @@ export default function LandmarkForm() {
                                                     width: "80%",
                                                     height: "5%",
                                                     marginBottom: "10px",
-                                                }} // Adjust width and height as needed
+                                                }}
                                             />
                                         </div>
                                     )
@@ -559,13 +693,20 @@ export default function LandmarkForm() {
                         </FormGroup>
                     </ColumnContainter>
                 </InfoBoxesContainer>
-                <div style={{ display: "flex", justifyContent: "center" }}>
+
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "100%",
+                    }}
+                >
                     <Button
                         stylingMode="always-light"
                         text="Cancel"
                         onClick={() => navigate("/governor/landmarks")}
                         width="auto"
-                        style={{ marginRight: "75%" }} // Add right margin to the first button
+                        style={{ marginRight: "75%" }}
                     >
                         Cancel
                     </Button>
