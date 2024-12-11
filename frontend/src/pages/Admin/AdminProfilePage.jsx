@@ -30,7 +30,6 @@ const AdminProfilePage = () => {
     const defaultImage =
         "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg";
     const [image, setImage] = useState(defaultImage);
-    const [imageFile, setImageFile] = useState(null);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -65,6 +64,7 @@ const AdminProfilePage = () => {
     const handleEditProfileSubmit = () => {
         setIsEditing(true);
     };
+
 
     const handleApplyPromoCode = async () => {
         console.log("i am here at promocode");
@@ -190,8 +190,8 @@ const AdminProfilePage = () => {
         const file = event.target.files[0];
         if (file) {
             const formData = new FormData();
-            const image = await uploadFile(file, "admin-profile-pictures");
-            formData.append("picture", image);
+            const curImage = await uploadFile(file, "admin-profile-pictures");
+            formData.append("picture", curImage);
 
             axiosInstance
                 .put("/admin/updateAdmin", formData, {
@@ -207,8 +207,9 @@ const AdminProfilePage = () => {
                         picture: response.data.picture, // This should be a string URL
                     }));
 
+                    setImage(response.data.picture);
                     console.log("Updated Admin Picture:", response.data.picture);
-                    Cookies.set("profileImage", image);
+                    Cookies.set("profileImage", response.data.picture);
                     window.location.reload();
                     setTimeout(() => {
                         window.location.reload();
