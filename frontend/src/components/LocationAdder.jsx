@@ -30,6 +30,7 @@ const LocationAdder = ({
     setLocation,
     setMapFunction,
     fontWeight = "bold",
+    fontSize = "1.2rem",
 }) => {
     const handleAddLocation = () => {
         const mapFunction = (location) => setLocation(location);
@@ -53,7 +54,7 @@ const LocationAdder = ({
                     alignItems: "center",
                 }}
             >
-                <Typography variant="h6" sx={{ fontWeight }}>
+                <Typography variant="h6" sx={{ fontWeight, fontSize }}>
                     {title}
                 </Typography>
                 {/* Add Location Button */}
