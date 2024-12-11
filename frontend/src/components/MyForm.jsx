@@ -546,7 +546,7 @@ const MyForm = ({
                     />
                     <Button
                         stylingMode="always-dark"
-                        text="Create Activity"
+                        text="Create Itinerary"
                         handleClick={handleCreate}
                         width="auto"
                     />
