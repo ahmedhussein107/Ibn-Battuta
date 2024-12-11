@@ -308,7 +308,7 @@ const TourguideProfilePage = () => {
                             style={{
                                 display: "flex",
                                 justifyContent: "flex-start", // Align items to the left
-                                height: "65vh",
+                                height: "80vh",
                                 flexDirection: "column",
                                 width: "45vw",
                                 backgroundColor: "#FFFFFF",
@@ -608,7 +608,7 @@ const TourguideProfilePage = () => {
                         >
                             <ReviewsSection
                                 ratingIds={ratings}
-                                height={"68vh"}
+                                height={"100%"}
                                 width={"100%"}
                                 fontSize={"12px"}
                                 reviewsPerPage={2}

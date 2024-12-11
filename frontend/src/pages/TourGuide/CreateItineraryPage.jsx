@@ -36,10 +36,14 @@ const CreateItineraryPage = ({ isEdit = false }) => {
     const [accessibility, setAccessibility] = useState([]);
     const [language, setLanguage] = useState("");
 
+    const [currency, setCurrency] = useState("EGP");
+
+    const [formattedDate, setFormattedDate] = useState("");
+    const [formattedTime, setFormattedTime] = useState("");
+
     const { convertPrice } = useCurrencyConverter();
 
     useEffect(() => {
-        const currency = "EGP";
         let totalPrice = convertPrice(price, "EGP", currency);
         let picture = "https://cdn-icons-png.flaticon.com/512/7603/7603006.png";
         timelineActivities.forEach((activity) => {
@@ -250,6 +254,12 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                     language={language}
                     setLanguage={setLanguage}
                     handleSubmit={handleSubmit}
+                    currency={currency}
+                    setCurrency={setCurrency}
+                    formattedDate={formattedDate}
+                    setFormattedDate={setFormattedDate}
+                    formattedTime={formattedTime}
+                    setFormattedTime={setFormattedTime}
                 />
             )}
             {step === 2 && (

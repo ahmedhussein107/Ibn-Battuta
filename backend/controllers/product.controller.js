@@ -1,6 +1,8 @@
 import Product from "../models/product.model.js";
 import { buildFilter } from "../utilities/searchUtils.js";
 import Order from "../models/order.model.js";
+import Seller from "../models/seller.model.js";
+import Admin from "../models/admin.model.js";
 export const createProduct = async (req, res) => {
     try {
         const productData = req.body;
@@ -55,6 +57,15 @@ export const getProduct = async (req, res) => {
         res.status(400).json({ e: e.message });
     }
 };
+export const getProductOwnerName = async (ownerID, ownerType) => {
+    console.log("ownerID: ", ownerID);
+    if (ownerType === "Seller") {
+        return (await Seller.findById(ownerID))?.name;
+    } else {
+        return (await Admin.findById(ownerID))?.name;
+    }
+};
+
 export const getProductsById = async (req, res) => {
     const query = buildFilter(req.query);
     const _id = req.user.userId;
@@ -72,13 +83,16 @@ export const deleteProduct = async (req, res) => {
             "purchases.product": id,
             status: "pending",
         });
+        console.log(1);
+        // console.log(ordered._id);
         if (ordered) {
+            console.log(2);
             return res
                 .status(400)
                 .json({ message: "Cannot delete a product that is ordered" });
         }
-        const product = await Product.findById(id);
         await Product.findByIdAndDelete(id);
+        console.log(3);
         res.json({ message: "deleted successfully" });
     } catch (e) {
         res.status(400).json({ e: e.message });
@@ -104,7 +118,7 @@ export const searchProducts = async (req, res) => {
         let products = await Product.find({
             ...query,
             isArchived: false,
-        });
+        }).populate("ownerID ratings");
         if (rating) {
             const bounds = rating.split("-");
             const minRating = bounds[0] ? parseInt(bounds[0]) : -1;
