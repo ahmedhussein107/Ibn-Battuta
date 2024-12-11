@@ -12,7 +12,7 @@ import { isAuthenticated } from "../routers.middleware/authentication.js";
 
 const landmarkRouter = express.Router();
 
-landmarkRouter.post("/createLandmark", createLandmark);
+landmarkRouter.post("/createLandmark", isAuthenticated, createLandmark);
 
 landmarkRouter.get("/allLandmarks", getAllLandmarks);
 

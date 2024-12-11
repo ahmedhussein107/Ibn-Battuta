@@ -228,6 +228,7 @@ const TourguideProfilePage = () => {
                     }));
 
                     console.log("Updated Touguide Picture:", response.data.picture);
+                    Cookies.set("profileImage", image);
                     setTimeout(() => {
                         window.location.reload();
                     }, 5000); // Alert will close after 5 seconds

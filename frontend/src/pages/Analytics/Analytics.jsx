@@ -226,6 +226,10 @@ const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) =
 };
 const DrawTable = ({ data }) => {
     const [currentData, setCurrentData] = useState(data);
+
+    const API = Cookies.get("userType") === "Advertiser" ? "Activity"
+        : Cookies.get("userType") === "TourGuide" ? "Itinerary" : "Product";
+
     return (
         <div
             style={{
@@ -259,7 +263,8 @@ const DrawTable = ({ data }) => {
                 >
                     <thead>
                         <tr>
-                            <th style={tableHeadStyle}>API</th>
+
+                            <th style={tableHeadStyle}>{API}</th>
                             <th style={tableHeadStyle}>Date</th>
                             <th style={tableHeadStyle}>Month</th>
                             <th style={tableHeadStyle}>Total Revenue</th>

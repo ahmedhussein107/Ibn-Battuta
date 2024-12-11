@@ -457,6 +457,8 @@ const ActivityDetails = () => {
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
+    const location = useLocation();
+
     //To retrieve user type from browser
     useEffect(() => {
         // Retrieve the userType from cookies when the component mounts
@@ -737,13 +739,17 @@ const ActivityDetails = () => {
                             discountPercentage={activityData.specialDiscount}
                             width="65%"
                             height="25%"
+                            showButton={
+                                !location?.state?.bookingId &&
+                                activityData.isOpenForBooking &&
+                                activityData.freeSpots > 0
+                            }
                             onClick={() => {
                                 // Open pop up with booking details
                                 if (userType == "Guest" || !userType) {
                                     navigate("/signin");
                                     return;
                                 }
-
                                 // setBookPopUp(true);
                                 setIsCheckoutPopupOpen(true);
                             }}

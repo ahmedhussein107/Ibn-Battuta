@@ -291,6 +291,8 @@ const AdvertiserProfilePage = () => {
                     setIsEditing(false);
                     showAlert("Profile updated successfully", "success"); // Use showAlert instead of alert
                     setImage(response.data.picture || defaultImage); // Update image state if there's a new image
+                    Cookies.set("profileImage", image);
+                    window.location.reload();
                 })
                 .catch((error) => {
                     console.error("Error updating profile:", error);

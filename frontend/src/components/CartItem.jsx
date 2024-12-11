@@ -129,7 +129,7 @@ const CartItem = ({
                     </div>
                 </div>
             </div>
-            <div
+            {/* <div
                 style={{
                     height: "2%",
                     width: "98%",
@@ -137,7 +137,15 @@ const CartItem = ({
                     margin: "20px 0",
                     borderRadius: "1px",
                 }}
-            ></div>
+            ></div> */}
+            <hr
+                style={{
+                    width: "90%",
+                    border: "1px solid #D1D5DB",
+                    marginTop: "2vh",
+                    marginBottom: "2vh",
+                }}
+            />
         </div>
     );
 };

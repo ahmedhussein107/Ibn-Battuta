@@ -1,6 +1,5 @@
 import React from "react";
-import { Select, MenuItem, CircularProgress } from "@mui/material";
-import { useCurrencyConverter } from "../hooks/currencyHooks";
+import { Select, MenuItem } from "@mui/material";
 
 const GenericDropDown = ({
     options,
@@ -10,6 +9,7 @@ const GenericDropDown = ({
 }) => {
     const placeholder = `Select a ${label}`;
 
+    console.log(options);
     return (
         <Select
             value={selectedItem}
