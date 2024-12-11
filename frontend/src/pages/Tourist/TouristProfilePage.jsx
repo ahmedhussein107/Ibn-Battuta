@@ -20,6 +20,8 @@ import Button from "../../components/Button";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
+import CurrencyDropdown from "../../components/CurrencyDropdownList";
+
 const PageWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -138,6 +140,7 @@ const LevelContainer = styled.div`
     flex-direction: column; /* Stack level text and progress bar vertically */
     margin-right: 5%;
 `;
+
 const levelImages = {
     1: "/level1.png", // Replace with actual path for Level 1
     2: "/level2.png", // Replace with actual path for Level 2
@@ -237,7 +240,7 @@ const CustomAlert = ({ message, severity, open, onClose }) => {
                         position: "fixed", // Fixed position to keep it in view
                         bottom: "5vh", // Distance from the bottom of the page
                         right: "10vh", // Distance from the right of the page
-                        zIndex: 1000, // Ensure it is on top of other elements
+                        zIndex: 2000, // Ensure it is on top of other elements
                     }}
                 >
                     <Collapse in={open}>
@@ -274,7 +277,7 @@ const CustomAlert = ({ message, severity, open, onClose }) => {
 export default function TouristProfilePage() {
     const [tourist, setTourist] = useState(null);
     const [userType, setUserType] = useState("Tourist");
-    const [tag, setTags] = useState([]);
+    const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
     const [redeemValue, setRedeemValue] = useState(0);
@@ -634,6 +637,9 @@ export default function TouristProfilePage() {
     const handleCurrentPasswordChange = (e) => setCurrentPassword(e.target.value);
     const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
     const handleConfirmNewPasswordChange = (e) => setConfirmNewPassword(e.target.value);
+    const handleUpdateCurrency = (newCurrency) => {
+        setFormData((prev) => ({ ...prev, currency: newCurrency }));
+    };
 
     const PopUpAction = () => {
         if (!currentPassword || !newPassword || !confirmNewPassword) {
@@ -876,47 +882,10 @@ export default function TouristProfilePage() {
                                     </p>
                                     <p style={{ marginBottom: "16px" }}>
                                         <strong>Preferred Currency:</strong>{" "}
-                                        <select
-                                            name="currency"
-                                            value={formData.currency}
-                                            onChange={handleChange}
-                                            style={{ width: "30%" }} // Optional styling for the dropdown
-                                        >
-                                            <option value="">Select Currency</option>
-                                            {/* Default option */}
-                                            <option value="AED">
-                                                AED - United Arab Emirates Dirham
-                                            </option>
-                                            <option value="AUD">
-                                                AUD - Australian Dollar
-                                            </option>
-                                            <option value="EGP">
-                                                EGP - Egyptian Pound
-                                            </option>
-                                            <option value="EUR">EUR - Euro</option>
-                                            <option value="GBP">
-                                                GBP - British Pound
-                                            </option>
-                                            <option value="GTQ">
-                                                GTQ - Guatemalan Quetzal
-                                            </option>
-                                            <option value="IDR">
-                                                IDR - Indonesian Rupiah
-                                            </option>
-                                            <option value="KWD">
-                                                KWD - Kuwaiti Dinar
-                                            </option>
-                                            <option value="USD">
-                                                USD - United States Dollar
-                                            </option>
-                                            <option value="WST">WST - Samoan Tala</option>
-                                            <option value="XAF">
-                                                XAF - Central African CFA Franc
-                                            </option>
-                                            <option value="ZWL">
-                                                ZWL - Zimbabwean Dollar
-                                            </option>
-                                        </select>
+                                        <CurrencyDropdown
+                                            selectedCurrency={formData.currency}
+                                            setSelectedCurrency={handleUpdateCurrency}
+                                        />
                                     </p>
                                     <p style={{ marginBottom: "16px" }}>
                                         <button
@@ -1011,16 +980,17 @@ export default function TouristProfilePage() {
                         <h3>Preference Tags</h3>
                         <Dropdown onChange={handleTagSelect} value="">
                             <option value="">Add Tags</option>
-                            {Object.keys(tag).length > 0 ? (
-                                Object.keys(tag).map((key) => (
-                                    <option key={key} value={tag[key]}>
-                                        {tag[key]}
+                            {Object.keys(tags).length > 0 ? (
+                                Object.keys(tags).map((key) => (
+                                    <option key={key} value={tags[key]}>
+                                        {tags[key]}
                                     </option>
                                 ))
                             ) : (
                                 <option>No tags available</option>
                             )}
                         </Dropdown>
+
                         <div style={{ marginTop: "10px" }}>
                             {/* Combine tourist.preferences, selectedTags, and render them without duplicates */}
                             {[
