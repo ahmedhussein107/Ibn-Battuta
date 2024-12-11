@@ -2,7 +2,7 @@
     color: var(--text-color);
     margin: 0;
     width: 100vw; /* Full viewport width */
-    height: auto; /* Full viewport height */
+    height: 100vh; /* Full viewport height */
     background-image: url("/auth.png"); /* Replace with the path to your image */
     background-size: cover;
     background-repeat: no-repeat;
@@ -29,7 +29,7 @@
     width: 30%; /* Width relative to the parent div */
     display: flex;
     flex-direction: column; /* Stack children vertically */
-    margin-top: 5%;
+    margin-top: 10%;
     margin-bottom: 10%;
 }
 
