@@ -11,9 +11,7 @@ const LandmarkPage = () => {
     useEffect(() => {
         const fetchLandmark = async () => {
             try {
-                const response = await axiosInstance.get(
-                    `/landmark/landmark/${landmarkId}`
-                );
+                const response = await axiosInstance.get(`/allLandmarks`);
                 setLandmark(response.data);
             } catch (error) {
                 console.error("Error fetching landmark:", error);
