@@ -4,6 +4,8 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 // External libraries or API instance
 import axiosInstance from "../../api/axiosInstance";
 
+import { MapWrapper } from "../../components/MapWrapper.jsx";
+import MapComponent from "../../components/MapComponent.jsx";
 // Top-level components
 import NavBar from "../../components/NavBar.jsx";
 import ItineraryAndActivityHeader from "../../components/ItineraryAndActivityHeader.jsx";
@@ -457,6 +459,8 @@ const ActivityDetails = () => {
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
+    const location = useLocation();
+
     //To retrieve user type from browser
     useEffect(() => {
         // Retrieve the userType from cookies when the component mounts
@@ -476,6 +480,7 @@ const ActivityDetails = () => {
                 );
                 // setAdvertiserName(activityResponse.data.advertiser);
                 setActivityData(activityResponse.data);
+                console.log("activity data", activityResponse.data);
                 setAdvertiserName(activityResponse.data.advertiserID.name);
             } catch (error) {
                 console.error("Error fetching activity data:", error);
@@ -686,7 +691,10 @@ const ActivityDetails = () => {
                     <ProfileAndDescription
                         mode="Activity"
                         name={advertiserName}
-                        picture={activityData.advertiserID.picture}
+                        picture={
+                            activityData.advertiserID.picture ||
+                            "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
+                        }
                         description={activityData.description}
                         width={"80%"}
                         fontSize={"1.2em"}
@@ -703,18 +711,16 @@ const ActivityDetails = () => {
                             />
                             <span>Activity Location</span>
                         </div>
-                        <Map
-                            setMarkerPosition={(position) => {}}
-                            defaultPosition={
-                                activityData.Latitude
-                                    ? {
-                                          lat: activityData.Latitude,
-                                          lng: activityData.Longitude,
-                                      }
-                                    : null
-                            }
-                            customStyles={{ height: "70vh", width: "50vw" }}
-                        />
+                        <div style={{ height: "70vh", width: "50vw" }}>
+                            <MapWrapper>
+                                <MapComponent
+                                    markerPosition={{
+                                        lat: activityData?.Latitude,
+                                        lng: activityData?.Longitude,
+                                    }}
+                                />
+                            </MapWrapper>
+                        </div>
                     </div>
                 </div>
                 <div className="activity-info-right">
@@ -737,13 +743,17 @@ const ActivityDetails = () => {
                             discountPercentage={activityData.specialDiscount}
                             width="65%"
                             height="25%"
+                            showButton={
+                                !location?.state?.id &&
+                                activityData.isOpenForBooking &&
+                                activityData.freeSpots > 0
+                            }
                             onClick={() => {
                                 // Open pop up with booking details
                                 if (userType == "Guest" || !userType) {
                                     navigate("/signin");
                                     return;
                                 }
-
                                 // setBookPopUp(true);
                                 setIsCheckoutPopupOpen(true);
                             }}

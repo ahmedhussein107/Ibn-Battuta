@@ -59,13 +59,25 @@ const Demo = () => {
                 width: "50%",
                 height: "100%",
                 margin: "auto",
+
+                marginTop: "15vh",
+                marginBottom: "5vh",
+
                 padding: "20px",
                 border: "1px solid #ccc",
                 borderRadius: "10px",
                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
             }}
         >
-            <h2 style={{ marginBottom: "20px" }}>{steps[currentStep].title}</h2>
+            <iframe
+                src="https://scribehow.com/embed/Booking_a_Sunrise_Adventure_Getaway_Online__1tFBATtTTNmVyXQ0Tv7-CA"
+                width="100%"
+                height="640"
+                allowfullscreen
+                frameborder="0"
+            ></iframe>
+
+            {/* <h2 style={{ marginBottom: "20px" }}>{steps[currentStep].title}</h2>
             <img
                 src={steps[currentStep].image}
                 alt={`Step ${currentStep + 1}`}
@@ -116,7 +128,7 @@ const Demo = () => {
                             : nextStep
                     }
                 />
-            </div>
+            </div> */}
         </div>
     );
 };

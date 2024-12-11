@@ -102,6 +102,7 @@ const CreateActivityPage = () => {
         setEndDate(end);
         const startString = start ? start.toLocaleDateString() : "";
         const endString = end ? end.toLocaleDateString() : "";
+        console.log("handle date change", startString);
         setFormattedDate(`${startString}`);
     };
 
@@ -258,6 +259,7 @@ const CreateActivityPage = () => {
 
     const handleImageAdd = (newImages) => {
         setImagePreviews((prev) => [...prev, ...newImages]);
+        console.log(imagePreviews);
     };
 
     const handleImageRemove = (idToRemove) => {

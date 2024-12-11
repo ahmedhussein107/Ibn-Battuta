@@ -102,18 +102,22 @@ export const getSomeComplaints = async (req, res) => {
             query = { ...query, status };
         }
         const totalComplaints = await Complaint.countDocuments(query);
+        console.log("totalComplaints:", totalComplaints);
         let complaints = await Complaint.find(query)
+            .sort(isSorted === "true" ? { createdAt: -1 } : {})
             .skip(skip)
             .limit(limit)
             .populate("touristID", "name picture");
-        if (isSorted === "true") {
-            complaints = complaints.sort({ createdAt: -1 }); // Sort by createdAt descending
+        if (complaints.length === 0) {
+            return res.status(404).json({ message: "No complaints found" });
         }
+
         res.status(200).json({
             complaints,
             totalPages: Math.ceil(totalComplaints / limit),
         });
     } catch (error) {
+        console.error("Error fetching complaints:", error);
         res.status(500).json({ message: "Server Error" });
     }
 };

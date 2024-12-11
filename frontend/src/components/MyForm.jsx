@@ -57,6 +57,12 @@ const MyForm = ({
     language,
     setLanguage,
     handleSubmit,
+    currency,
+    setCurrency,
+    formattedDate,
+    setFormattedDate,
+    formattedTime,
+    setFormattedTime,
 }) => {
     const [popupMessage, setPopupMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
@@ -65,14 +71,12 @@ const MyForm = ({
     const [showTimeModal, setShowTimeModal] = useState(false);
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
-    const [formattedTime, setFormattedTime] = useState("");
-    const [formattedDate, setFormattedDate] = useState("");
-    const [selectedCurrency, setSelectedCurrency] = useState("");
     const [allTags, setAllTags] = useState([]);
     const [selectedTag, setSelectedTag] = useState("");
 
-    const currency = Cookies.get("currency") || "EGP";
-    const { isLoading, formatPrice, convertPrice } = useCurrencyConverter(currency);
+    const currentCurrency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice, convertPrice } =
+        useCurrencyConverter(currentCurrency);
 
     const [isMapOpen, setIsMapOpen] = useState(false);
     const [mapFunction, setMapFunction] = useState(null);
@@ -503,8 +507,8 @@ const MyForm = ({
                                         }}
                                     >
                                         <CurrencyDropdown
-                                            selectedCurrency={selectedCurrency}
-                                            setSelectedCurrency={setSelectedCurrency}
+                                            selectedCurrency={currency}
+                                            setSelectedCurrency={setCurrency}
                                         />
 
                                         <TextField
@@ -536,7 +540,7 @@ const MyForm = ({
                         stylingMode="dark-when-hovered"
                         text="Cancel"
                         handleClick={() => {
-                            setStep(1);
+                            navigate(-1);
                         }}
                         width="auto"
                     />

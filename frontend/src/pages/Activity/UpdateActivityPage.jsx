@@ -58,10 +58,11 @@ const UpdateActivityPage = () => {
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [formattedTime, setFormattedTime] = useState("");
-    const [selectedCurrency, setSelectedCurrency] = useState("");
+    const [selectedCurrency, setSelectedCurrency] = useState("EGP");
     const [selectedCategory, setSelectedCategory] = useState(null);
     const currency = Cookies.get("currency") || "EGP";
     const [isPageLoading, setIsPageLoading] = useState(true);
+    const [updateProcessing, setUpdateProcessing] = useState(false);
     const { isLoading, formatPrice, convertPrice } = useCurrencyConverter(currency);
 
     const activityId = useParams();
@@ -104,11 +105,18 @@ const UpdateActivityPage = () => {
     const handleDatesChange = (start, end) => {
         setStartDate(start);
         setEndDate(end);
-        console.log(startDate);
-        const startString = start ? start.toLocaleDateString() : "";
-        const endString = end ? end.toLocaleDateString() : "";
-        setFormattedDate(`${startString}`);
     };
+
+    useEffect( () => {
+        const startString = startDate ? startDate.toLocaleDateString() : "";
+        setFormattedDate(`${startString}`);
+    }, [startDate]);
+
+    useEffect( () => {
+        setFormattedTime(`${startTime} to ${endTime}`);
+    }, [startTime, endTime]);
+
+
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -129,21 +137,56 @@ const UpdateActivityPage = () => {
             }
         };
 
+        const transformISODate = (isoDateString) => {
+            const date = new Date(isoDateString);
+            const startDate = date;
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const period = hours >= 12 ? 'PM' : 'AM';
+            let formattedHours = hours % 12;
+            formattedHours = formattedHours === 0 ? 12 : formattedHours;
+            const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+            const startTime = `${formattedHours}:${formattedMinutes} ${period}`;
+            return {
+                date: startDate,
+                time: startTime
+            };
+        };
+
         const fetchActivity = async () => {
             try {
                 const response = await axiosInstance.get(`activity/getActivity/${activityId.id}`);
                 setFormData(response.data);
                 setSelectedTags(response.data.tags);
                 setSelectedCategory(response.data.category);
-                setImagePreviews(response.data.pictures);
+
+                console.log(response.data.price);
+
+                const databaseImagePreviews = response.data.pictures.map((pictureUrl, index) => ({
+                    id: `db-${Date.now()}-${index}`,
+                    url: pictureUrl,
+                    file: null,
+                    isFromDatabase: true
+                }));
+
+                setImagePreviews(databaseImagePreviews);
+
                 const curPickupLocation = {
                     location: response.data.location,
                     latitude: response.data.Latitude,
                     longitude: response.data.Longitude
                 }
                 setPickupLocation(curPickupLocation);
-                console.log("databse: ", response.data.startDate.toLocaleString());
-                setStartDate(response.data.startDate);
+
+                const { date: newStartDate, time: newStartTime } = transformISODate(response.data.startDate);
+                const { date: newEndDate, time: newEndTime} = transformISODate(response.data.endDate);
+
+                setStartDate(newStartDate);
+                setStartTime(newStartTime);
+                setEndDate(newEndDate);
+                setEndTime(newEndTime);
+
 
             } catch(error) {
                 console.error("Error fetching activity:", error);
@@ -196,6 +239,8 @@ const UpdateActivityPage = () => {
         formData.category = selectedCategory;
         console.log(formData);
 
+
+
         if (
             (!formData.name ||
             !formData.description ||
@@ -244,14 +289,26 @@ const UpdateActivityPage = () => {
             combinedStartDate.setHours(startTime24.hours, startTime24.minutes);
             combinedEndDate.setHours(endTime24.hours, endTime24.minutes);
 
-            const files = imagePreviews.map((preview) => preview.file);
-            const uploadedFileUrls = await uploadFiles(files, "activities");
+            const newFiles = imagePreviews
+                .filter(preview => preview.file !== null)
+                .map(preview => preview.file);
+
+            const uploadedFileUrls = newFiles.length > 0
+                ? await uploadFiles(newFiles, "activities")
+                : [];
+
+            const finalPictures = [
+                ...imagePreviews
+                    .filter(preview => preview.isFromDatabase)
+                    .map(preview => preview.url),
+                ...uploadedFileUrls
+            ];
 
             const finalFormData = {
                 ...formData,
                 startDate: combinedStartDate.toISOString(),
                 endDate: combinedEndDate.toISOString(),
-                pictures: uploadedFileUrls,
+                pictures: finalPictures,
                 tags: selectedTags,
                 initialFreeSpots: parseInt(formData.freeSpots) || 0,
                 specialDiscount: parseFloat(formData.specialDiscount) || 0,
@@ -267,14 +324,14 @@ const UpdateActivityPage = () => {
                 location: pickupLocation.location,
             };
 
-            console.log(pickupLocation);
 
             Object.keys(finalFormData).forEach(
                 (key) => finalFormData[key] === undefined && delete finalFormData[key]
             );
 
-            const response = await axiosInstance.post(
-                "/activity/updateActivity",
+            setUpdateProcessing(true);
+            const response = await axiosInstance.patch(
+                `/activity/updateActivity/${activityId.id}`,
                 finalFormData,
                 {
                     withCredentials: true,
@@ -282,11 +339,13 @@ const UpdateActivityPage = () => {
             );
             console.log("Activity updated:", response.data);
 
+            setUpdateProcessing(false);
             showPopupMessage("Activity updated successfully!", false);
 
             setTimeout(() => navigate("/advertiser/assigned"), 1000);
         } catch (error) {
             console.error("Error updating activity:", error);
+            setUpdateProcessing(false);
             showPopupMessage(
                 error.response?.data?.message ||
                 "Error updating activity. Please try again.",
@@ -776,8 +835,9 @@ const UpdateActivityPage = () => {
                         />
                         <Button
                             stylingMode="always-dark"
-                            text="Create Activity"
+                            text="Update Activity"
                             handleClick={handleSubmit}
+                            isLoading={updateProcessing}
                             width="auto"
                         />
                     </ButtonGroup>
@@ -804,7 +864,7 @@ const PopupContainer = styled.div`
     right: 1em;
     z-index: 1000;
     animation: ${fadeIn} 0.3s ease;
-    background-color: ${({ isError }) => (isError ? "#f8d7da" : "#d4edda")};
+    background-color: ${({ isError }) => (isError ? "#f8d7da" : "#d1edda")};
 `;
 
 const PopupContent = styled.div`

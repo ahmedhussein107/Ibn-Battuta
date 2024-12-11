@@ -17,13 +17,16 @@ import CardProduct from "../../components/CardProduct";
 import DeleteButton from "../../components/DeleteButton";
 import usePageHeader from "../../components/Header/UseHeaderPage";
 import Cookies from "js-cookie";
+import Alert from "@mui/material/Alert";
 const Inventory = () => {
     const navigate = useNavigate();
     usePageHeader(null, null);
     const [products, setProducts] = useState([]);
     const [searchedTerm, setSearchedTerm] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
-    // I want to change every thing to products
+    const [alertMessage, setAlertMessage] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [SeverError, setServerError] = useState("");
     const sortProducts = (products) => {
         console.log("Sort By", sortBy);
         let sortedProducts = [...products]; // Create a shallow copy
@@ -49,17 +52,41 @@ const Inventory = () => {
             console.error("Error fetching data:", error);
         }
     };
+    const fetchData = async (query) => {
+        try {
+            const response = await axiosInstance.get(`/product/getProductsById`, {
+                params: query,
+                withCredentials: true,
+            });
+            const data = response.data;
+            sortProducts(data);
+            console.log("response gata is", data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
     const buildQuery = () => {
         const query = {};
+        const buildQuery = () => {
+            const query = {};
 
-        if (searchedTerm) {
-            query.name = "~" + searchedTerm;
-        }
+            if (searchedTerm) {
+                query.name = "~" + searchedTerm;
+            }
+            if (searchedTerm) {
+                query.name = "~" + searchedTerm;
+            }
 
+            return query;
+        };
         return query;
     };
 
+    useEffect(() => {
+        const query = buildQuery();
+        fetchData(query);
+    }, [searchedTerm]);
     useEffect(() => {
         const query = buildQuery();
         fetchData(query);
@@ -68,18 +95,47 @@ const Inventory = () => {
     useEffect(() => {
         sortProducts(products);
     }, [sortBy]);
+    useEffect(() => {
+        sortProducts(products);
+    }, [sortBy]);
 
     const deleteProductHandler = async (productID) => {
-        const response = await axiosInstance.delete(
-            `/product/deleteProduct/${productID}`
-        );
+        console.log(1);
+        console.log(productID);
+
+        let response;
+        try {
+            response = await axiosInstance.delete(`/product/deleteProduct/${productID}`);
+        } catch (error) {
+            setAlertMessage("Cannot delete a product that is ordered");
+            setServerError("error");
+            setShowAlert(true);
+
+            setTimeout(() => {
+                setShowAlert(false);
+            }, 5000);
+        }
         if (response.status === 200) {
             setProducts(products.filter((product) => product._id !== productID));
+            setAlertMessage("Product deleted successfully");
+            setShowAlert(true);
+            setServerError("success");
+            setTimeout(() => {
+                setShowAlert(false);
+            }, 5000);
         } else {
-            alert("Error deleting itinerary");
+            console.log(3);
+            alert("Error deleting Product");
         }
     };
 
+    const archiveProductHandler = async (product) => {
+        try {
+            await axiosInstance.patch(`/product/archiveProduct/${product._id}`);
+        } catch (error) {
+            console.error("Error archiving product", error);
+        }
+    };
     const archiveProductHandler = async (product) => {
         try {
             await axiosInstance.patch(`/product/archiveProduct/${product._id}`);
@@ -96,9 +152,32 @@ const Inventory = () => {
             console.error("Error unarchiving product", error);
         }
     };
+    const unarchiveProductHandler = async (product) => {
+        try {
+            await axiosInstance.patch(`/product/unarchiveProduct/${product._id}`);
+            product.isArchived = false;
+        } catch (error) {
+            console.error("Error unarchiving product", error);
+        }
+    };
 
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>
+            {showAlert && (
+                <Alert
+                    severity={SeverError}
+                    onClose={() => setShowAlert(false)}
+                    style={{
+                        position: "fixed",
+                        left: "50%",
+                        bottom: "12vh",
+                        transform: "translateX(-50%)",
+                        zIndex: 1000,
+                    }}
+                >
+                    {alertMessage}
+                </Alert>
+            )}
             <div>
                 <div style={{ position: "relative" }}>
                     <img
@@ -124,6 +203,19 @@ const Inventory = () => {
                     />
                 </div>
 
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "18vh",
+                        left: "46.5vw",
+                        fontSize: "3.2vh",
+                        fontWeight: "bold",
+                        color: "White",
+                        pointerEvents: "none",
+                    }}
+                >
+                    Inventory
+                </div>
                 <div
                     style={{
                         position: "absolute",
@@ -167,7 +259,7 @@ const Inventory = () => {
                             sx={{
                                 position: "absolute",
                                 width: "2.7vw",
-                                height: "4.8vh",
+                                height: "4.6vh",
                                 marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
                                 bgcolor: orange[700],
@@ -300,7 +392,7 @@ const Inventory = () => {
                                         controlButtons={
                                             <>
                                                 <CustomButton
-                                                    stylingMode="always-light"
+                                                    stylingMode="always-dark"
                                                     text="Edit"
                                                     width="70%"
                                                     height="30%"
@@ -320,7 +412,7 @@ const Inventory = () => {
                                                     }}
                                                 />
                                                 <CustomButton
-                                                    stylingMode="always-light"
+                                                    stylingMode="dark-when-hovered"
                                                     text={
                                                         product.isArchived
                                                             ? "Unarchive"

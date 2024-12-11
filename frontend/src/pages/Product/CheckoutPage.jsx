@@ -68,7 +68,7 @@ const Checkout = () => {
                     address: response.data.address || [],
                     selectedAddress:
                         response.data.address.length > 0
-                            ? response.data.address[0].name
+                            ? response.data.address[0].address
                             : "No Saved Address",
                 });
             })
@@ -108,9 +108,12 @@ const Checkout = () => {
     };
 
     const handleSelectAddress = (selectedAddress) => {
+        const address = formData.address.find(
+            (address) => address.name === selectedAddress
+        );
         setFormData((prevData) => ({
             ...prevData,
-            selectedAddress,
+            selectedAddress: address?.address || "unknown address",
         }));
     };
 
@@ -443,7 +446,10 @@ const Checkout = () => {
                                 marginLeft: "4vw",
                             }}
                         >
-                            <p style={{ fontSize: "1.3rem" }}> Contact Mobile Number:</p>
+                            <p style={{ fontSize: "1.3rem", marginBottom: "0.5rem" }}>
+                                {" "}
+                                Contact Mobile Number:
+                            </p>
                             <Box
                                 component="form"
                                 sx={{
@@ -473,7 +479,7 @@ const Checkout = () => {
                         <div
                             style={{
                                 marginLeft: "4vw",
-                                marginTop: "2vh",
+                                marginTop: "5%",
                                 fontSize: "1.3rem",
                             }}
                         >
@@ -486,7 +492,10 @@ const Checkout = () => {
                                     direction: "row",
                                 }}
                             >
-                                <p> Delivery Address:</p>
+                                <p style={{ fontSize: "1.3rem", marginBottom: "0.5rem" }}>
+                                    {" "}
+                                    Delivery Address:
+                                </p>
                             </div>
                             <div style={{ marginLeft: "1vw" }}>
                                 <GenericDropDown
@@ -662,7 +671,7 @@ const Checkout = () => {
                                     display: "flex",
                                     alignItems: "center",
                                     flexDirection: "row",
-                                    fontSize: "1.6rem",
+                                    fontSize: "1.3rem",
                                 }}
                             >
                                 Use Wallet Balance

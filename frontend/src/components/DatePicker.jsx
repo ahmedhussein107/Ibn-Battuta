@@ -27,9 +27,22 @@ const DatePicker = ({ label, setValue }) => {
                     label={label}
                     onChange={handleChange}
                     sx={{
-                        border: "2px solid var(--accent-color)",
-                        borderColor: "var(--accent-color)",
-                        borderRadius: "10px",
+                        '& .MuiInputLabel-root': {
+                            '&.Mui-focused': {
+                                color: 'var(--accent-color)',
+                            }
+                        },
+                        '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                borderColor: "var(--accent-color)",
+                            },
+                            '&:hover fieldset': {
+                                borderColor: "var(--accent-color)",
+                            },
+                            '&.Mui-focused fieldset': {
+                                borderColor: "var(--accent-color)",
+                            }
+                        }
                     }}
                 />
             </DemoContainer>

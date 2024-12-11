@@ -64,9 +64,9 @@ export const createAdmin = async (req, res) => {
     console.log("email", email);
     if (username) {
         console.log("duplicate username");
-        return res
-            .status(400)
-            .json({ error: "Username already exists. Please choose another one!." });
+        return res.status(400).json({
+            message: "Username already exists.Choose another one!",
+        });
     }
 
     if (email) {

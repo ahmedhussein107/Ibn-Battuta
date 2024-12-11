@@ -37,7 +37,9 @@ const CreateProductPage = () => {
     const [isErrorPopup, setIsErrorPopup] = useState(false);
     const [selectedCurrency, setSelectedCurrency] = useState("");
     const currency = Cookies.get("currency") || "EGP";
-    const { isLoading, formatPrice, convertPrice } = useCurrencyConverter(currency);
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const navigate = useNavigate();
     const handleInputChange = (e) => {
@@ -64,6 +66,8 @@ const CreateProductPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null);
+        setIsLoading(true);
         if (!formData.name || !formData.description || imagePreviews.length === 0) {
             showPopupMessage("Please fill out all details.", true);
             return;
@@ -333,6 +337,8 @@ const CreateProductPage = () => {
                         stylingMode="always-dark"
                         text="Create Product"
                         handleClick={handleSubmit}
+                        disabled={isLoading}
+                        isLoading={isLoading}
                         width="auto"
                     />
                 </ButtonGroup>
