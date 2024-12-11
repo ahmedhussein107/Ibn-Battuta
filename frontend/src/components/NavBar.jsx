@@ -6,6 +6,11 @@ import "../styles/NavBar.css";
 import { useState, useEffect, useRef } from "react";
 import Button from "./Button";
 import axiosInstance from "../api/axiosInstance";
+import TourIcon from "@mui/icons-material/Tour";
+import ChatIcon from "@mui/icons-material/Chat";
+import RowingIcon from "@mui/icons-material/Rowing";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
+import DiscountIcon from "@mui/icons-material/Discount";
 
 import {
     guestNavbarItems,
@@ -292,14 +297,47 @@ const NavBar = () => {
                                                 )
                                             }
                                         >
-                                            <p className="notification-message">
-                                                {notification.message}
-                                            </p>
-                                            <span className="notification-date">
-                                                {new Date(
-                                                    notification.createdAt
-                                                ).toLocaleString()}
-                                            </span>
+                                            <div className="notifications-icon">
+                                                {(() => {
+                                                    switch (notification.relatedType) {
+                                                        case "Itinerary":
+                                                            return (
+                                                                <TourIcon className="notification-type-icon" />
+                                                            );
+                                                        case "PromoCode":
+                                                            return (
+                                                                <DiscountIcon className="notification-type-icon" />
+                                                            );
+                                                        case "Complaint":
+                                                            return (
+                                                                <ChatIcon className="notification-type-icon" />
+                                                            );
+                                                        case "Activity":
+                                                            return (
+                                                                <RowingIcon className="notification-type-icon" />
+                                                            );
+                                                        case "Product":
+                                                            return (
+                                                                <ProductionQuantityLimitsIcon className="notification-type-icon" />
+                                                            );
+                                                        default:
+                                                            return (
+                                                                <ChatIcon className="notification-type-icon" />
+                                                            ); // Default icon
+                                                    }
+                                                })()}
+                                            </div>
+                                            <div className="notification-content">
+                                                <p className="notification-message">
+                                                    {notification.message}
+                                                </p>
+                                                <span className="notification-date">
+                                                    <i className="fas fa-calendar-alt"></i>
+                                                    {new Date(
+                                                        notification.createdAt
+                                                    ).toLocaleString()}
+                                                </span>
+                                            </div>
                                         </div>
                                     ))
                                 ) : (
