@@ -207,7 +207,10 @@ export const toggleFlaggedItineraries = async (req, res) => {
             return res.status(404).json({ message: "Itinerary not found" });
         }
         itinerary.isFlagged = !itinerary.isFlagged;
+        console.log(itinerary);
         await itinerary.save();
+        console.log("here after");
+
         await sendNotificationToEmailAndSystem(
             "Itinerary Flagged",
             `Your Itinerary ${itinerary.name} has been flagged as ${
@@ -216,9 +219,10 @@ export const toggleFlaggedItineraries = async (req, res) => {
             itinerary.tourguideID,
             "TourGuide",
             itinerary._id,
-            "Activity",
+            "Itinerary",
             itinerary.isFlagged ? "warning" : "info"
         );
+
         res.status(200).json({
             message: "Itinerary flagged status changed successfully",
             itinerary,

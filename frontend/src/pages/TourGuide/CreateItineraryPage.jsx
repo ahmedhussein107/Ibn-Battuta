@@ -152,8 +152,8 @@ const CreateItineraryPage = ({ isEdit = false }) => {
         timelineActivities.forEach((activity) => {
             if (activity.activityType === "Activity") {
                 totalPrice += Number(activity.activity.price);
-                if (activity.activity.picture) {
-                    picture = activity.activity.picture;
+                if (activity.activity.pictures && activity.activity.pictures.length > 0) {
+                    picture = activity.activity.pictures[0];
                 }
             }
         });
