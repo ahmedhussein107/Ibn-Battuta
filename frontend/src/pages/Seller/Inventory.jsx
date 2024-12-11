@@ -159,7 +159,6 @@ const Inventory = () => {
                         }}
                     />
                 </div>
-
                 <div
                     style={{
                         position: "absolute",
@@ -173,7 +172,6 @@ const Inventory = () => {
                 >
                     Inventory
                 </div>
-
                 <div
                     style={{
                         position: "absolute",
@@ -253,6 +251,7 @@ const Inventory = () => {
                     <AddIcon sx={{ fontSize: "3vh" }} />
                     <p style={{ marginLeft: ".3vw" }}>Create Product</p>
                 </Button>
+                <hr style={{ width: "94%", margin: "5px auto", marginTop: "15px" }} />
                 <div
                     style={{
                         display: "flex",
