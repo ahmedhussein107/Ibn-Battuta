@@ -250,7 +250,7 @@ const SignUpPage = () => {
 
                     <div className="button-group">
                         <Button
-                            stylingMode="dark-when-hovered"
+                            stylingMode="always-light"
                             text={"Previous"}
                             handleClick={handlepreviousStep}
                             disabled={step == 1}
