@@ -27,6 +27,7 @@ const TourguideProfilePage = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isPrevEditing, setIsPrevEditing] = useState(false);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const defaultImage =
         "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg";
@@ -209,7 +210,9 @@ const TourguideProfilePage = () => {
         const file = event.target.files[0];
         if (file) {
             const formData = new FormData();
+            setIsLoading(true);
             const image = await uploadFile(file, "tourguide-profile-pictures");
+            setIsLoading(false);
             formData.append("picture", image);
 
             axiosInstance
@@ -585,6 +588,7 @@ const TourguideProfilePage = () => {
                                             }
                                         }
                                         handleClick={handleSaveChanges}
+                                        isLoading={isLoading}
                                     />
                                 )}
                             </div>
