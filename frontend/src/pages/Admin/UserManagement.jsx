@@ -15,6 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";
+import FilePresentIcon from "@mui/icons-material/FilePresent";
 import { styled } from "@mui/system";
 import axiosInstance from "../../api/axiosInstance";
 import ConfirmationDialog from "../../components/ConfirmationDialog"; // Import the ConfirmationDialog component
@@ -22,7 +23,10 @@ import "./UserManagement.css";
 import ActionButtonsForUsers from "./ActionButtonsForUsers";
 import PaginationComponent from "../../components/Pagination";
 import CreateUserPopUp from "./CreateUserPopUp";
+import usePageHeader from "../../components/Header/UseHeaderPage";
+import { use } from "react";
 const UserManagement = ({ isAll = true }) => {
+    usePageHeader("/users.png", "User Management");
     const [users, setUsers] = useState([]);
     const [message, setMessage] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false); // Track dialog state
@@ -129,7 +133,7 @@ const UserManagement = ({ isAll = true }) => {
     const RoleBadge = styled("span")(({ theme, role }) => ({
         padding: "4px 8px",
         borderRadius: "8px",
-        color: "#FFFFFF",
+        color: "black",
         fontSize: "0.8rem",
         backgroundColor:
             {
@@ -205,10 +209,23 @@ const UserManagement = ({ isAll = true }) => {
                                         </RoleBadge>
                                     </TableCell>
                                     <TableCell>{user.email}</TableCell>
-                                    <TableCell>{user.createdAt}</TableCell>
+                                    <TableCell>
+                                        {
+                                            new Date(user.createdAt)
+                                                .toLocaleString("en-GB")
+                                                .split(",")[0]
+                                        }{" "}
+                                    </TableCell>
                                     {!isAll && (
                                         <>
                                             <TableCell>
+                                                <FilePresentIcon
+                                                    sx={{
+                                                        marginRight: "0.5rem",
+                                                        fontSize: "1.2em",
+                                                        verticalAlign: "middle",
+                                                    }}
+                                                />
                                                 <a
                                                     href={user.documents?.[0]}
                                                     target={user.documents?.[0]}
@@ -221,13 +238,23 @@ const UserManagement = ({ isAll = true }) => {
                                                 {user.documents
                                                     .slice(1)
                                                     .map((doc, index) => (
-                                                        <a
-                                                            href={doc}
-                                                            target={doc}
-                                                            // rel="noopener noreferrer"
-                                                        >
-                                                            doc{index + 1}
-                                                        </a>
+                                                        <>
+                                                            <FilePresentIcon
+                                                                sx={{
+                                                                    marginRight: "0.5rem",
+                                                                    fontSize: "1.2em",
+                                                                    verticalAlign:
+                                                                        "middle",
+                                                                }}
+                                                            />
+                                                            <a
+                                                                href={doc}
+                                                                target={doc}
+                                                                // rel="noopener noreferrer"
+                                                            >
+                                                                doc{index + 1}
+                                                            </a>
+                                                        </>
                                                     ))}
                                             </TableCell>
                                         </>
