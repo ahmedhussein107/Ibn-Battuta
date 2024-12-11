@@ -377,6 +377,14 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
 
         const handleSubmit = async () => {
             try {
+                if(name ===""){
+                    alert("Please enter activty name");
+                    return;
+                }
+                if(description ===""){
+                    alert("Please enter activty description");
+                    return;
+                }
                 const data = {
                     name,
                     description,
