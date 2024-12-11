@@ -185,11 +185,8 @@ const UserManagement = ({ isAll = true }) => {
                 sx={{
                     padding: 3,
                     backgroundColor: "#FFFFFF",
+                    boxShadow: 5,
                     borderRadius: 4,
-                    overflow: "hidden",
-                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                    width: "90%",
-                    margin: "auto",
                 }}
             >
                 <TableContainer
@@ -205,11 +202,12 @@ const UserManagement = ({ isAll = true }) => {
                 >
                     <Table>
                         <TableHead>
-                            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                                <TableCell sx={{ fontSize: "1.3rem" }}>Name</TableCell>
-                                <TableCell sx={{ fontSize: "1.3rem" }}>Role</TableCell>
-                                <TableCell sx={{ fontSize: "1.3rem" }}>Email</TableCell>
-                                <TableCell sx={{ fontSize: "1.3rem" }}>Date</TableCell>
+                            <TableRow sx={{ backgroundColor: "#FCF3E2" }}>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Role</TableCell>
+                                <TableCell>Email</TableCell>
+                                <TableCell>Date</TableCell>
+
                                 {!isAll && (
                                     <>
                                         <TableCell sx={{ fontSize: "1.3rem" }}>

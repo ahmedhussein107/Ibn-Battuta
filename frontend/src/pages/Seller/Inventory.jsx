@@ -52,14 +52,34 @@ const Inventory = () => {
             console.error("Error fetching data:", error);
         }
     };
+    const fetchData = async (query) => {
+        try {
+            const response = await axiosInstance.get(`/product/getProductsById`, {
+                params: query,
+                withCredentials: true,
+            });
+            const data = response.data;
+            sortProducts(data);
+            console.log("response gata is", data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
     const buildQuery = () => {
         const query = {};
+        const buildQuery = () => {
+            const query = {};
 
-        if (searchedTerm) {
-            query.name = "~" + searchedTerm;
-        }
+            if (searchedTerm) {
+                query.name = "~" + searchedTerm;
+            }
+            if (searchedTerm) {
+                query.name = "~" + searchedTerm;
+            }
 
+            return query;
+        };
         return query;
     };
 
@@ -67,7 +87,14 @@ const Inventory = () => {
         const query = buildQuery();
         fetchData(query);
     }, [searchedTerm]);
+    useEffect(() => {
+        const query = buildQuery();
+        fetchData(query);
+    }, [searchedTerm]);
 
+    useEffect(() => {
+        sortProducts(products);
+    }, [sortBy]);
     useEffect(() => {
         sortProducts(products);
     }, [sortBy]);
@@ -109,7 +136,22 @@ const Inventory = () => {
             console.error("Error archiving product", error);
         }
     };
+    const archiveProductHandler = async (product) => {
+        try {
+            await axiosInstance.patch(`/product/archiveProduct/${product._id}`);
+        } catch (error) {
+            console.error("Error archiving product", error);
+        }
+    };
 
+    const unarchiveProductHandler = async (product) => {
+        try {
+            await axiosInstance.patch(`/product/unarchiveProduct/${product._id}`);
+            product.isArchived = false;
+        } catch (error) {
+            console.error("Error unarchiving product", error);
+        }
+    };
     const unarchiveProductHandler = async (product) => {
         try {
             await axiosInstance.patch(`/product/unarchiveProduct/${product._id}`);
@@ -158,6 +200,20 @@ const Inventory = () => {
                             zIndex: 0, // This will place the second image on top of the first
                         }}
                     />
+                </div>
+
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "18vh",
+                        left: "46.5vw",
+                        fontSize: "3.2vh",
+                        fontWeight: "bold",
+                        color: "White",
+                        pointerEvents: "none",
+                    }}
+                >
+                    Inventory
                 </div>
                 <div
                     style={{
