@@ -285,6 +285,8 @@ const Inventory = () => {
                                         product={product}
                                         width={"45vw"}
                                         height={"32vh"}
+                                        lowerHeight={"65%"}
+                                        upperHeight={"35%"}
                                         line2={
                                             <div
                                                 style={{
@@ -356,7 +358,7 @@ const Inventory = () => {
                                                     }}
                                                 />
                                                 <CustomButton
-                                                    stylingMode="dark-when-hovered"
+                                                    stylingMode="always-light"
                                                     text={
                                                         product.isArchived
                                                             ? "Unarchive"
