@@ -13,6 +13,7 @@ export default function ShareAndMark({
     mode = "card",
     isBookmarked = false,
     showBookmark = false,
+    isShop = false,
     icon = "markIcon",
     scale = 1,
 }) {
@@ -80,28 +81,30 @@ export default function ShareAndMark({
                     />
                 </div>
             )}
+            {!isShop && (
+                <div className="icon">
+                    <img
+                        src="/shareIcon.png"
+                        alt="Dropdown Icon"
+                        style={mode === "card" ? { width: width, height: height } : {}}
+                    />
 
-            {/* Share with Dropdown */}
-            <div className="icon">
-                <img
-                    src="/shareIcon.png"
-                    alt="Dropdown Icon"
-                    style={mode === "card" ? { width: width, height: height } : {}}
-                />
-
-                <div className="dropdownlist">
-                    <div className="dropdownlist-option" onClick={copyToClipboard}>
-                        Copy
-                        {/* "Copied to clipboard" message */}
-                        {showCopiedMessage && (
-                            <span className="copied-message">Copied to clipboard</span>
-                        )}
-                    </div>
-                    <div className="dropdownlist-option" onClick={emailFriend}>
-                        Email a Friend
+                    <div className="dropdownlist">
+                        <div className="dropdownlist-option" onClick={copyToClipboard}>
+                            Copy
+                            {/* "Copied to clipboard" message */}
+                            {showCopiedMessage && (
+                                <span className="copied-message">
+                                    Copied to clipboard
+                                </span>
+                            )}
+                        </div>
+                        <div className="dropdownlist-option" onClick={emailFriend}>
+                            Email a Friend
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }
