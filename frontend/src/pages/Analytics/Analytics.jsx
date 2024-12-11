@@ -548,11 +548,11 @@ const DrawTouristsPerMonth = ({ data }) => {
                 padding: "2vw",
             }}
         >
-            <h2>Total : {sumOfTourists} tourists</h2>
-
+            <h2>Registered Tourists : {sumOfTourists} </h2>
             <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>
                 Number of Tourists per Month
             </h2>
+
             <div
                 style={{
                     maxHeight: data.length > 5 ? "300px" : "none",
