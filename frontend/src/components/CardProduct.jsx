@@ -21,18 +21,8 @@ const CardProduct = ({
 }) => {
     const image = product.pictures[0];
     const line1 = (
-        <div style={{ fontSize: fontSize }}>
+        <div style={{ fontSize: fontSize, marginTop: "2%" }}>
             <TitleAndButtons title={product.name} buttons={firstLineButtons} />
-            <div
-                style={{
-                    fontSize: "0.9em",
-                    color: "#666",
-                    marginTop: "4px",
-                    fontStyle: "italic",
-                }}
-            >
-                Seller: {product.ownerID?.name}
-            </div>
         </div>
     );
     const currency = Cookies.get("currency") || "EGP";
