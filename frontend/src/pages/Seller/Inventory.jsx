@@ -17,13 +17,16 @@ import CardProduct from "../../components/CardProduct";
 import DeleteButton from "../../components/DeleteButton";
 import usePageHeader from "../../components/Header/UseHeaderPage";
 import Cookies from "js-cookie";
+import Alert from "@mui/material/Alert";
 const Inventory = () => {
     const navigate = useNavigate();
     usePageHeader(null, null);
     const [products, setProducts] = useState([]);
     const [searchedTerm, setSearchedTerm] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
-    // I want to change every thing to products
+    const [alertMessage, setAlertMessage] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [SeverError, setServerError] = useState("");
     const sortProducts = (products) => {
         console.log("Sort By", sortBy);
         let sortedProducts = [...products]; // Create a shallow copy
@@ -70,12 +73,31 @@ const Inventory = () => {
     }, [sortBy]);
 
     const deleteProductHandler = async (productID) => {
-        const response = await axiosInstance.delete(
-            `/product/deleteProduct/${productID}`
-        );
+        console.log(1);
+        console.log(productID);
+
+        let response;
+        try {
+            response = await axiosInstance.delete(`/product/deleteProduct/${productID}`);
+        } catch (error) {
+            setAlertMessage("Cannot delete a product that is ordered");
+            setServerError("error");
+            setShowAlert(true);
+
+            setTimeout(() => {
+                setShowAlert(false);
+            }, 5000);
+        }
         if (response.status === 200) {
             setProducts(products.filter((product) => product._id !== productID));
+            setAlertMessage("Product deleted successfully");
+            setShowAlert(true);
+            setServerError("success");
+            setTimeout(() => {
+                setShowAlert(false);
+            }, 5000);
         } else {
+            console.log(3);
             alert("Error deleting Product");
         }
     };
@@ -99,6 +121,21 @@ const Inventory = () => {
 
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>
+            {showAlert && (
+                <Alert
+                    severity={SeverError}
+                    onClose={() => setShowAlert(false)}
+                    style={{
+                        position: "fixed",
+                        left: "50%",
+                        bottom: "12vh",
+                        transform: "translateX(-50%)",
+                        zIndex: 1000,
+                    }}
+                >
+                    {alertMessage}
+                </Alert>
+            )}
             <div>
                 <div style={{ position: "relative" }}>
                     <img
@@ -167,7 +204,7 @@ const Inventory = () => {
                             sx={{
                                 position: "absolute",
                                 width: "2.7vw",
-                                height: "4.8vh",
+                                height: "4.6vh",
                                 marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
                                 bgcolor: orange[700],
