@@ -2,9 +2,16 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axiosInstance from "../../api/axiosInstance";
 
-const ReviewsSection = ({ ratingIds, width, height, fontSize, reviewsPerPage = 3 }) => {
+const ReviewsSection = ({
+    ratingIds,
+    width,
+    height,
+    fontSize,
+    reviewsPerPage = 3,
+    isOpen = true,
+}) => {
     const [reviews, setReviews] = useState([]);
-    const [showReviews, setShowReviews] = useState(true);
+    const [showReviews, setShowReviews] = useState(isOpen);
     const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
