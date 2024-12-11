@@ -70,6 +70,7 @@ const MyForm = ({
     const [selectedCurrency, setSelectedCurrency] = useState("");
     const [allTags, setAllTags] = useState([]);
     const [selectedTag, setSelectedTag] = useState("");
+    const [Loading, setLoading] = useState(false);
 
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice, convertPrice } = useCurrencyConverter(currency);
@@ -158,13 +159,13 @@ const MyForm = ({
         }
 
         try {
+            setLoading(true);
             await handleSubmit();
 
             showPopupMessage("Activity created successfully!", false);
 
-            setTimeout(() => navigate("/advertiser/assigned"), 1000);
         } catch (error) {
-            console.error("Error creating activity:", error);
+            console.error("Error creating Itinerary:", error);
             showPopupMessage(
                 error.response?.data?.message ||
                     "Error creating activity. Please try again.",
@@ -542,9 +543,10 @@ const MyForm = ({
                     />
                     <Button
                         stylingMode="always-dark"
-                        text="Create Activity"
+                        text="Create Itinerary"
                         handleClick={handleCreate}
                         width="auto"
+                        isLoading={Loading}
                     />
                 </ButtonGroup>
             </form>
