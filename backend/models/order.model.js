@@ -33,6 +33,7 @@ const orderSchema = new mongoose.Schema(
             default: "pending",
         },
         isComplete: { type: Boolean, default: false },
+        amountFromWallet: { type: Number, default: 0 },
     },
     { timestamps: true }
 );

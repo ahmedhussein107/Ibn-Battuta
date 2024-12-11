@@ -40,7 +40,7 @@ export const createGovernor = async (req, res) => {
         console.log("duplicate username");
         return res
             .status(400)
-            .json({ error: "Username already exists. Please choose another one!." });
+            .json({ message: "Username already exists. Choose another one!" });
     }
 
     if (email) {
@@ -109,10 +109,19 @@ export const updateGovernor = async (req, res) => {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
         if (req.body.email) {
-            await Email.findByIdAndDelete(governor.email);
-            await Email.create({
-                _id: req.body.email,
-            });
+            try {
+                await Email.findByIdAndDelete(governor.email);
+                await Email.create({
+                    _id: req.body.email,
+                });
+            } catch (e) {
+                await Email.create({
+                    _id: governor.email,
+                });
+                return res
+                    .status(400)
+                    .json({ message: "Error updating email", error: e.message });
+            }
         }
 
         // Update governor details

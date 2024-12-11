@@ -29,7 +29,7 @@ const touristSchema = new mongoose.Schema(
         hotelBookings: [{ type: Object, default: [] }],
         flightBookings: [{ type: Object, default: [] }],
         preferences: [{ type: String, ref: "Tag" }],
-        address: [{ name: String, Latitude: Number, Longitude: Number }],
+        address: [{ name: String, Latitude: Number, Longitude: Number, address: String }],
         currency: { type: String, default: "EGP" },
     },
     { timestamps: true }

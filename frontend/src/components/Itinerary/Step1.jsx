@@ -25,6 +25,12 @@ const Step1 = ({
     language,
     setLanguage,
     handleSubmit,
+    currency,
+    setCurrency,
+    formattedDate,
+    setFormattedDate,
+    formattedTime,
+    setFormattedTime,
 }) => {
     const [showMorePopupOpen, setShowMorePopupOpen] = useState(false);
     const [showMoreCustomActivty, setShowMoreCustomActivty] = useState(null);
@@ -101,6 +107,16 @@ const Step1 = ({
                         language={language}
                         setLanguage={setLanguage}
                         handleSubmit={handleSubmit}
+                        currency={currency}
+                        setCurrency={setCurrency}
+                        formattedDate={formattedDate}
+                        setFormattedDate={(value) => {
+                            setFormattedDate(value);
+                        }}
+                        formattedTime={formattedTime}
+                        setFormattedTime={(value) => {
+                            setFormattedTime(value);
+                        }}
                     />
                 </div>
                 <div style={{ width: "30%" }}>
@@ -110,7 +126,7 @@ const Step1 = ({
                         setTimelineActivities={setTimelineActivities}
                         pickupLocation={pickupLocation.location}
                         pickupTime={startDate}
-                        dropOffLocation="drop off location"
+                        dropOffLocation={dropoffLocation.location}
                         setShowMorePopupOpen={setShowMorePopupOpen}
                         setShowMoreCustomActivity={setShowMoreCustomActivty}
                     />

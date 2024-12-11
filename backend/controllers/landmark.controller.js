@@ -4,6 +4,8 @@ import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 
 export const createLandmark = async (req, res) => {
     try {
+        const governorID = req.user.userId;
+        req.body.governorID = governorID;
         const landmark = await Landmark.create(req.body);
         res.status(201).json(landmark);
     } catch (e) {

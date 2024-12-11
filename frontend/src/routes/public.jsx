@@ -7,6 +7,7 @@ import Activities from "../pages/Activity/Activities";
 import ActivityDetails from "../pages/Activity/ActivityDetails";
 import Itineraries from "../pages/Itinerary/Itineraries";
 import ItineraryDetails from "../pages/Itinerary/ItineraryDetails";
+import Demo from "../pages/Demo.jsx";
 
 const publicRoutes = [
     { path: "/", element: <HomePage /> },
@@ -18,5 +19,6 @@ const publicRoutes = [
     { path: "/activity-details/:activityId", element: <ActivityDetails /> },
     { path: "/itineraries", element: <Itineraries /> },
     { path: "/itinerary-details/:itineraryId", element: <ItineraryDetails /> },
+    { path: "/demo", element: <Demo /> },
 ];
 export default publicRoutes;

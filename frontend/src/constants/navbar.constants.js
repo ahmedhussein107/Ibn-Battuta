@@ -4,10 +4,11 @@ export const guestNavbarItems = [
         Explore: [
             { Activities: "/activities" },
             { Itineraries: "/itineraries" },
-            { Landmark: "/landmarks" },
+            { Landmarks: "/landmarks" },
         ],
     },
     { Shop: "/shop" },
+    { Guide: "/demo" },
 ];
 
 export const touristNavbarItems = [
@@ -16,24 +17,24 @@ export const touristNavbarItems = [
         Explore: [
             { Activities: "/activities" },
             { Itineraries: "/itineraries" },
-            { Landmark: "/landmarks" },
+            { Landmarks: "/landmarks" },
         ],
     },
     {
         Travel: [
-            { Flights: "tourist/flight/offers" },
-            { Hotels: "tourist/hotel/offers" },
+            { Flights: "/tourist/flight/offers" },
+            { Hotels: "/tourist/hotel/offers" },
         ],
     },
     { Shop: "/shop" },
-    { Guide: "/tourist/demo" },
+    { Guide: "/demo" },
 ];
 
 export const sellerNavbarItems = [
     { Home: "/seller" },
     { Browse: "/shop" },
-    { Inventory: "seller/inventory" },
-    { Analytics: "seller/analytics" },
+    { Inventory: "/seller/inventory" },
+    { Analytics: "/seller/analytics" },
 ];
 
 export const tourGuideNavbarItems = [

@@ -88,10 +88,9 @@ const NavBar = () => {
         if (userType !== "Guest") {
             console.log("WebSocket connection establishing");
             const socket = new WebSocket(
-                `${URI.replace(
-                    "http://",
-                    "ws://"
-                )}notifications?token=${Cookies.get("jwt")}`
+                `${URI.replace("http://", "ws://")}notifications?token=${Cookies.get(
+                    "jwt"
+                )}`
             );
 
             socket.onopen = () => {
@@ -136,33 +135,43 @@ const NavBar = () => {
         console.log("Notification clicked");
     };
     const handleNotificationClick = (notification, index) => {
-        // TODO: navigate to the appropriate page;
-        let prefix = notification.relatedType.toLowerCase();
-        if (prefix.endsWith("s")) {
-            prefix = prefix.slice(0, -1);
+        // ["Complaint", "Activity", "Itinerary", "Product", "PromoCode"],
+
+        let url = null;
+
+        switch (notification.relatedType) {
+            case "Complaint":
+                url = `/${userType.toLowerCase()}/complaint/${notification.relatedId}`;
+                break;
+            case "Activity":
+                url = `/activity-details/${notification.relatedId}`;
+                break;
+            case "Itinerary":
+                url = `/itinerary/itinerary-details/${notification.relatedId}`;
+                break;
+            case "Product":
+                url = `/shop`;
+                break;
         }
-        const link = `/${Cookies.get("userType").toLowerCase()}/${prefix}/${
-            notification.relatedId
-        }`;
-        if (notification.isRead) {
-            navigate(link);
+        console.log("the url is:", url);
+
+        if (url && notification.isRead) {
+            navigate(url);
             return;
         }
+
         let newNotifications = notifications;
         setUnreadNotificationCount(unreadNotificationCount - 1);
-        console.log("notification is ", notification);
         newNotifications[index].isRead = true;
         setNotifications(newNotifications);
         try {
-            axiosInstance.put(
-                `/general/markNotificationAsRead/${notification._id}`
-            );
+            axiosInstance.put(`/general/markNotificationAsRead/${notification._id}`);
         } catch (err) {
             console.log(err);
         }
 
         setIsNotificationOpen(false);
-        navigate(link);
+        navigate(url);
     };
     const handleLogout = () => {
         // TODO: log out logic is not implemented
@@ -171,8 +180,8 @@ const NavBar = () => {
         Cookies.remove("profileImage");
         Cookies.set("currency", "EGP");
         setUserType("Guest");
-
         navigate("/");
+        window.location.reload();
     };
 
     const renderDropdownItem = (label, index, dropdown) => {
@@ -183,11 +192,7 @@ const NavBar = () => {
                     {dropdown.map((subItem, subIndex) => {
                         const [subLabel, subLink] = Object.entries(subItem)[0];
                         return (
-                            <Link
-                                key={subIndex}
-                                to={subLink}
-                                className="dropdown-item"
-                            >
+                            <Link key={subIndex} to={subLink} className="dropdown-item">
                                 {subLabel}
                             </Link>
                         );
@@ -267,10 +272,7 @@ const NavBar = () => {
                             )}
                         </div>
                         {isNotificationOpen && (
-                            <div
-                                ref={dropdownRef}
-                                className="notification-dropdown"
-                            >
+                            <div ref={dropdownRef} className="notification-dropdown">
                                 <h4>Notifications</h4>
                                 {notifications.length > 0 ? (
                                     notifications.map((notification, index) => (
@@ -316,21 +318,18 @@ const NavBar = () => {
                             />
                             <div className="dropdown-content">
                                 {userType === "Tourist" ? (
-                                    touristProfileDropdown.map(
-                                        (item, index) => {
-                                            const [label, link] =
-                                                Object.entries(item)[0];
-                                            return (
-                                                <Link
-                                                    key={index}
-                                                    to={link}
-                                                    className="dropdown-item"
-                                                >
-                                                    {label}
-                                                </Link>
-                                            );
-                                        }
-                                    )
+                                    touristProfileDropdown.map((item, index) => {
+                                        const [label, link] = Object.entries(item)[0];
+                                        return (
+                                            <Link
+                                                key={index}
+                                                to={link}
+                                                className="dropdown-item"
+                                            >
+                                                {label}
+                                            </Link>
+                                        );
+                                    })
                                 ) : userType === "Guest" ? null : (
                                     <Link
                                         to={`/${userType.toLowerCase()}/profile`}

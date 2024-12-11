@@ -30,7 +30,7 @@ const HeaderControls = ({ onFilterChange, selectedFilter, onSort, isSorted }) =>
                         <Button
                             handleClick={onSort}
                             text="Sort by Date"
-                            stylingMode="always-light"
+                            stylingMode={isSorted ? "always-dark" : "always-light"}
                             height="4vh"
                             icon={
                                 <SortIcon

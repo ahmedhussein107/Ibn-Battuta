@@ -49,10 +49,14 @@ const Welcome = ({ title }) => {
 
 const styles = {
     content: {
+        position: "relative",
         marginLeft: "10%",
         marginTop: "17%",
+
         fontFamily: "Inika",
         color: "#fbf9f8",
+        padding: "1.5rem",
+        borderRadius: "8px",
     },
     title: {
         fontSize: "5vw",

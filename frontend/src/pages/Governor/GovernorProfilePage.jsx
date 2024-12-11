@@ -184,6 +184,7 @@ const GovernorProfilePage = () => {
                     }));
 
                     console.log("Updated Governor Picture:", response.data.picture);
+                    Cookies.set("profileImage", image);
                     setTimeout(() => {
                         window.location.reload();
                     }, 5000); // Alert will close after 5 seconds

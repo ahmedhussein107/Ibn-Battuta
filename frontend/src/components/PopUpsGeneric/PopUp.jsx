@@ -26,7 +26,9 @@ const PopUp = ({
     cancelText = "Cancel",
     actionText = "Submit",
     handleSubmit = () => {},
-    handleOnClose = () => {},
+    handleOnClose = () => {
+        setIsOpen(false);
+    },
     children = null,
     zIndex = "1000",
 }) => {

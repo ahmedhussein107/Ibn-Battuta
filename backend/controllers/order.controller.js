@@ -59,12 +59,11 @@ export const completeOrder = async (req, res) => {
     try {
         console.log("gowa completee order");
         const order = await Order.findById(req.params.id).populate("purchases.product");
-        const { isWalletUsed, finalPrice } = req.body;
+        const { amountFromWallet } = req.body;
         const tourist = await Tourist.findById(order.buyer);
-        if (isWalletUsed) {
-            tourist.wallet = Math.max(0, tourist.wallet - finalPrice);
-            await tourist.save();
-        }
+        tourist.wallet -= amountFromWallet;
+        await tourist.save();
+        order.amountFromWallet = amountFromWallet;
         order.isComplete = true;
         await order.save();
 
@@ -99,13 +98,13 @@ export const getOrders = async (req, res) => {
 
 export const deleteOrder = async (req, res) => {
     try {
-        console.log("betro7 failure lehhhhhh");
         const order = await Order.findById(req.params.id).populate("purchases.product");
         const tourist = await Tourist.findById(order.buyer);
 
         if (order.isComplete && order.status === "delivered") {
             return res.json({ message: "Can't delete a delivered order" });
         }
+
         for (let purchase of order.purchases) {
             const product = purchase.product;
             product.quantity += purchase.count;
@@ -115,7 +114,11 @@ export const deleteOrder = async (req, res) => {
 
         if (order.isComplete) {
             // I want also to add amount to the wallet of the tourist
-            tourist.wallet += order.totalPrice;
+            if (order.method === "cash on delivery") {
+                tourist.wallet += order.amountFromWallet;
+            } else {
+                tourist.wallet += order.totalPrice;
+            }
             await tourist.save();
             order.status = "canceled";
             await order.save();

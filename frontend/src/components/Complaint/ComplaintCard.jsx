@@ -9,12 +9,8 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 const ComplaintCard = ({ complaint, isExpanded, ...props }) => {
-    console.log("complaint in the first thing of the card", complaint);
     const navigate = useNavigate();
-    console.log("1");
-    console.log("complaint", complaint);
     const { title, createdAt, body, status, touristID, ...more } = complaint;
-    console.log("complaint", complaint);
     const userType = Cookies.get("userType") || "Tourist";
     const formatDate = (date) => {
         const d = new Date(date);
