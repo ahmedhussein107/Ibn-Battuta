@@ -297,7 +297,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem", setError }) 
                     <CustomButton
                         stylingMode="always-dark"
                         width="40%"
-                        text="view"
+                        text="View"
                         customStyle={{}}
                         handleClick={() => {
                             const type = booking.bookingType;
