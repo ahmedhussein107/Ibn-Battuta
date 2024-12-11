@@ -233,15 +233,18 @@ const OrderEntry = ({ orderID, product, count, ratingID, formatPrice, orderStatu
                         </div>
                     </div>
                 </div>
-                <div
+                {/* <div
                     style={{
                         height: "2%",
                         width: "98%",
-                        backgroundColor: "#D1D5DB", // colo
+                        backgroundColor: "#D1D5DB", // color
                         margin: "20px 0",
                         borderRadius: "1px",
                     }}
-                ></div>
+                ></div> */}
+                <hr
+                    style={{ width: "98%", margin: "2vh", border: "1px solid #D1D5DB" }}
+                />
             </div>
         </>
     );

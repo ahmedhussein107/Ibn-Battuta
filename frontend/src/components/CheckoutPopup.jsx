@@ -21,27 +21,10 @@ const CheckoutPopup = ({
     state,
     headerImage,
 }) => {
-    useEffect(() => {
-        const onMount = async () => {
-            console.log("in onMount");
-            await handleOnMount();
-            console.log("after handleOnMount");
-        };
-
-        if (!isOpen) return;
-
-        try {
-            onMount();
-        } catch (error) {
-            console.log(error);
-            setErr(error.message);
-        }
-    }, [isOpen]);
-
     const [isWalletUsed, setIsWalletUsed] = useState(false);
     const [promoCode, setPromoCode] = useState("");
     const [promoCodes, setPromoCodes] = useState([]);
-    const [buttonText, setButtonText] = useState("pay with card");
+    const [buttonText, setButtonText] = useState("Pay with Card");
     const [discounts, setDiscounts] = useState([]); // {title, discount}
     const [err, setErr] = useState(null);
 
@@ -54,38 +37,45 @@ const CheckoutPopup = ({
     const originalPrice = items.reduce((acc, item) => acc + item.price, 0);
     const [totalPrice, setTotalPrice] = useState(originalPrice);
 
+    const [amountFromWallet, setAmountFromWallet] = useState(0);
+
     useEffect(() => {
-        if (isWalletUsed) {
-            let newDiscounts = [...discounts];
-            newDiscounts.push({
-                title: "wallet",
-                discount: Math.min(Cookies.get("balance"), totalPrice),
-            });
-            setDiscounts(newDiscounts);
-            const newTotalPrice =
-                items.reduce((acc, item) => acc + item.price, 0) -
-                newDiscounts.reduce((acc, item) => acc + item.discount, 0);
-            setTotalPrice(newTotalPrice);
-            if (newTotalPrice === 0) {
-                setButtonText("pay with wallet");
-            } else {
-                setButtonText("pay with card");
-            }
-        } else {
-            let newDiscounts = discounts.filter(
-                (discount) => discount.title !== "wallet"
-            );
-            setDiscounts(newDiscounts);
-            const newTotalPrice =
-                items.reduce((acc, item) => acc + item.price, 0) -
-                newDiscounts.reduce((acc, item) => acc + item.discount, 0);
-            setTotalPrice(newTotalPrice);
-            if (newTotalPrice === 0) {
-                setButtonText("pay with wallet");
-            } else {
-                setButtonText("pay with card");
-            }
+        const onMount = async () => {
+            console.log("in onMount");
+            await handleOnMount();
+            console.log("after handleOnMount");
+        };
+
+        if (!isOpen) {
+            setErr(null);
+            setButtonText("Pay with Card");
+            setIsWalletUsed(false);
+            setPromoCode("");
+            setPromoCodes([]);
+            setDiscounts([]);
+            setTotalPrice(originalPrice);
+            setAmountFromWallet(0);
+            return;
         }
+
+        try {
+            onMount();
+        } catch (error) {
+            console.log(error);
+            setErr(error.message);
+        }
+    }, [isOpen]);
+
+    useEffect(() => {
+        let newTotalPrice = totalPrice;
+        if (isWalletUsed) {
+            const wallet = Math.min(totalPrice, Number(Cookies.get("balance")));
+            setAmountFromWallet(wallet);
+            newTotalPrice = totalPrice - wallet;
+        } else {
+            setAmountFromWallet(0);
+        }
+        setButtonText(newTotalPrice !== 0 ? "Pay with Card" : "Pay with Wallet");
     }, [isWalletUsed]);
 
     const applyPromoCode = async () => {
@@ -110,7 +100,13 @@ const CheckoutPopup = ({
                     discount: (totalPrice * promoCodeDetails.discount) / 100,
                 },
             ]);
-            setTotalPrice((prev) => prev - prev * (promoCodeDetails.discount / 100));
+            const newTotalPrice =
+                totalPrice - (totalPrice * promoCodeDetails.discount) / 100;
+            if (isWalletUsed)
+                setAmountFromWallet(
+                    Math.min(newTotalPrice, Number(Cookies.get("balance")))
+                );
+            setTotalPrice(newTotalPrice);
             setPromoCodes((prev) => [...prev, promoCode]);
         } catch (error) {
             setErr(error.response.data.message);
@@ -120,8 +116,6 @@ const CheckoutPopup = ({
     const handleSubmit = async () => {
         setErr(null);
         const handleSuccess = async () => {
-            const amountFromWallet =
-                discounts.find((discount) => discount.title === "wallet")?.discount || 0;
             await handleOnSuccess(amountFromWallet);
             const promoCodesPromises = promoCodes.map(async (promoCode) => {
                 await axiosInstance.post(
@@ -143,7 +137,7 @@ const CheckoutPopup = ({
         // 1- wallet only
         // a) complete the payment
         // b) show success message
-        if (totalPrice === 0) {
+        if (totalPrice - amountFromWallet === 0) {
             try {
                 await handleSuccess();
             } catch (error) {
@@ -198,7 +192,7 @@ const CheckoutPopup = ({
                         setValue={setIsWalletUsed}
                     />
                     <p>Balance: {formatPrice(Cookies.get("balance"))}</p>
-                    <label>promo code: </label>
+                    <label>Promo Code: </label>
                     <div style={{ display: "flex", width: "100%", gap: "1rem" }}>
                         <TextField
                             id="outlined-basic"
@@ -209,7 +203,7 @@ const CheckoutPopup = ({
                         />
                         <Button
                             stylingMode="always-dark"
-                            text={"apply"}
+                            text={"Apply"}
                             handleClick={applyPromoCode}
                             width="30%"
                             customStyle={{
@@ -238,47 +232,73 @@ const CheckoutPopup = ({
                                     padding: "10px",
                                 }}
                             >
-                                price details
+                                Price Details
                             </p>
                         </div>
                         <div style={{ width: "100%", backgroundColor: "white" }}>
-                            {items.map((item, index) => (
+                            <div
+                                style={{
+                                    width: "100%",
+                                    margin: "auto",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                }}
+                            >
+                                {items.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        style={{
+                                            width: "90%",
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                        }}
+                                    >
+                                        <p>{item.title}</p>
+                                        <p>{formatPrice(item.price)}</p>
+                                    </div>
+                                ))}
+                                {discounts.map((discount, index) => (
+                                    <div
+                                        key={index}
+                                        style={{
+                                            width: "90%",
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            color: "red",
+                                        }}
+                                    >
+                                        <p>{discount.title}</p>
+                                        <p> - {formatPrice(discount.discount)}</p>
+                                    </div>
+                                ))}
+                                {amountFromWallet > 0 && (
+                                    <div
+                                        key={"wallet"}
+                                        style={{
+                                            width: "90%",
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            color: "red",
+                                        }}
+                                    >
+                                        <p>Wallet</p>
+                                        <p> - {formatPrice(amountFromWallet)}</p>
+                                    </div>
+                                )}
+                                <hr style={{ width: "100%" }} />
                                 <div
-                                    key={index}
                                     style={{
+                                        width: "90%",
+                                        backgroundColor: "white",
                                         display: "flex",
-                                        justifyContent: "space-around",
+                                        justifyContent: "space-between",
                                     }}
                                 >
-                                    <p>{item.title}</p>
-                                    <p>{formatPrice(item.price)}</p>
+                                    <p style={{ fontWeight: "bold" }}>Total:</p>
+                                    <p>{formatPrice(totalPrice - amountFromWallet)}</p>
                                 </div>
-                            ))}
-                            {discounts.map((discount, index) => (
-                                <div
-                                    key={index}
-                                    style={{
-                                        display: "flex",
-                                        justifyContent: "space-around",
-                                        color: "red",
-                                    }}
-                                >
-                                    <p>{discount.title}</p>
-                                    <p> - {formatPrice(discount.discount)}</p>
-                                </div>
-                            ))}
-                        </div>
-                        <hr style={{ width: "100%" }} />
-                        <div
-                            style={{
-                                width: "100%",
-                                backgroundColor: "white",
-                                display: "flex",
-                                justifyContent: "space-around",
-                            }}
-                        >
-                            <p style={{ fontWeight: "bold" }}>total:</p>
-                            <p>{formatPrice(totalPrice)}</p>
+                            </div>
                         </div>
                     </div>
                     {err && <Alert severity="error">{err}</Alert>}

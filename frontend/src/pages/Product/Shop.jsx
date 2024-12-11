@@ -7,7 +7,7 @@ import Sorter from "../../components/Sorter.jsx";
 import PriceRange from "../../components/PriceRange.jsx";
 import RatingRange from "../../components/RatingRange.jsx";
 import Footer from "../../components/Footer.jsx";
-import { useNavigate } from "react-router-dom"; //REMOVE
+import { useNavigate, useLocation } from "react-router-dom"; //REMOVE
 import shopBackground from "../../assets/backgrounds/shopBackground.png";
 import ShareAndMark from "../../components/ShareAndMark.jsx";
 import CardProduct from "../../components/CardProduct.jsx";
@@ -47,7 +47,11 @@ const Shop = () => {
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     const navigate = useNavigate(); //REMOVE
 
-    const [selectedPage, setSelectedPage] = useState("Shop");
+    const location = useLocation();
+
+    const [selectedPage, setSelectedPage] = useState(
+        location.state?.selectedPage || "Shop"
+    );
     const [wishlistStatus, setWishlistStatus] = useState({});
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -245,13 +249,29 @@ const Shop = () => {
                 style={{
                     width: "100vw",
                     height: "30vh",
-                    backgroundImage: `url(${shopBackground})`,
-                    backgroundSize: "100% 100%",
+                    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${shopBackground})`,
+                    backgroundSize: "100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
                     backgroundColor: "white",
+                    shadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                 }}
-            ></div>
+            >
+                <p
+                    style={{
+                        position: "relative",
+                        fontSize: "2rem",
+                        fontWeight: "bold",
+                        marginTop: "5%",
+                        color: "White",
+                    }}
+                >
+                    Shop
+                </p>
+            </div>
             {(userType === "Tourist" || userType === "Guest") && (
                 <div
                     style={{
@@ -287,8 +307,8 @@ const Shop = () => {
                         <button
                             style={
                                 selectedPage === "wishlist"
-                                    ? selectedButtonStyle
-                                    : buttonStyle
+                                    ? { ...selectedButtonStyle, marginLeft: "1rem" }
+                                    : { ...buttonStyle, marginLeft: "1rem" }
                             }
                             onClick={() => setSelectedPage("wishlist")}
                         >

@@ -4,10 +4,11 @@ export const guestNavbarItems = [
         Explore: [
             { Activities: "/activities" },
             { Itineraries: "/itineraries" },
-            { Landmark: "/landmarks" },
+            { Landmarks: "/landmarks" },
         ],
     },
     { Shop: "/shop" },
+    { Guide: "/demo" },
 ];
 
 export const touristNavbarItems = [
@@ -16,7 +17,7 @@ export const touristNavbarItems = [
         Explore: [
             { Activities: "/activities" },
             { Itineraries: "/itineraries" },
-            { Landmark: "/landmarks" },
+            { Landmarks: "/landmarks" },
         ],
     },
     {
@@ -26,7 +27,7 @@ export const touristNavbarItems = [
         ],
     },
     { Shop: "/shop" },
-    { Guide: "/tourist/demo" },
+    { Guide: "/demo" },
 ];
 
 export const sellerNavbarItems = [
