@@ -119,7 +119,11 @@ export const updateTourGuide = async (req, res) => {
             }
         );
 
-        res.status(200).json(updatedtourGuide);
+        res.cookie("profileImage", updateTourGuide.picture, {
+            maxAge: 5 * 60 * 60 * 1000,
+        })
+            .status(200)
+            .json(updatedtourGuide);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
