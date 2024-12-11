@@ -270,9 +270,9 @@ const AllItineraries = () => {
                                     {
                                         text: "View Details",
                                         onClick: () =>
-                                            navigate(`/itinerary-details`, {
-                                                state: { itinerary },
-                                            }),
+                                            navigate(
+                                                `/itinerary-details/${itinerary.id}`
+                                            ),
                                         type: "always-dark",
                                         width: "70%",
                                         styles: {
