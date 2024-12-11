@@ -50,8 +50,10 @@ export const createBooking = async (req, res) => {
         console.log("req.body", req.body);
         const touristID = req.user.userId;
         const tourist = await Tourist.findById(touristID);
+        let date = new Date();
         if (bookingType === "Itinerary") {
             const itinerary = await Itinary.findById(typeId);
+            date = itinerary.startDate;
             if (itinerary.isActivated === false) {
                 return res
                     .status(400)
@@ -76,6 +78,7 @@ export const createBooking = async (req, res) => {
                         totalPrice: itinerary.price * count,
                         pointsAdded: 0,
                         isInItinerary: true,
+                        eventStartDate: object.startDate,
                     });
                 } else if (object.activityType === "CustomActivity") {
                     // Handle CustomActivity if needed
@@ -83,6 +86,7 @@ export const createBooking = async (req, res) => {
             }
         } else {
             const activity = await Activity.findById(typeId);
+            date = activity.startDate;
             if (activity.isOpenForBooking === false) {
                 return res
                     .status(400)
@@ -108,6 +112,7 @@ export const createBooking = async (req, res) => {
             ...req.body,
             totalPrice: totprice,
             pointsAdded,
+            eventStartDate: date,
         });
         res.status(201).json(booking);
     } catch (error) {
