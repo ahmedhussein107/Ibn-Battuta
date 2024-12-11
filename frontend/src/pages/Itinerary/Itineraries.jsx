@@ -292,7 +292,11 @@ const Itineraries = () => {
                                 ]}
                                 bottomButtons={[
                                     {
-                                        text: "Book Now",
+                                        text:
+                                            userType !== "Tourist" &&
+                                            userType !== "Guest"
+                                                ? "View Details"
+                                                : "Book Now",
                                         onClick: () =>
                                             navigate(
                                                 `/itinerary-details/${itinerary.id}`

@@ -744,7 +744,7 @@ const ActivityDetails = () => {
                             width="65%"
                             height="25%"
                             showButton={
-                                !location?.state?.bookingId &&
+                                !location?.state?.id &&
                                 activityData.isOpenForBooking &&
                                 activityData.freeSpots > 0
                             }

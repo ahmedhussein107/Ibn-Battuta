@@ -230,9 +230,9 @@ const AllActivities = () => {
                                     {
                                         text: "View Details",
                                         onClick: () =>
-                                            navigate(`/activity-details`, {
-                                                state: activity,
-                                            }),
+                                            navigate(
+                                                `/activity-details/${activity.id}`
+                                            ),
                                         type: "always-dark",
                                         width: "70%",
                                         styles: {
