@@ -11,11 +11,11 @@ export const getAnalytics = async (req, res) => {
 
     let result = { message: "Success" };
 
-    if (req.user.userType === "Tourguide" || req.user.userType === "Advertiser") {
+    if (req.user.userType === "TourGuide" || req.user.userType === "Advertiser") {
         const data = await getEventsData(
             userId,
             userType,
-            userType === "Tourguide" ? "Itinerary" : "Activity"
+            userType === "TourGuide" ? "Itinerary" : "Activity"
         );
         result = { ...result, data };
     } else {
@@ -216,6 +216,7 @@ const getEventsData = async (userId, userType, eventType = "Itinerary") => {
         const events = await mongoose
             .model(eventType)
             .find({ [`${userType.toLowerCase()}ID`]: userId });
+        console.log("events length", events.length, events);
 
         const revenueData = await Booking.aggregate([
             {

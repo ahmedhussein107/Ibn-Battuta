@@ -308,7 +308,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem", setError }) 
                                     }`,
                                     {
                                         state: {
-                                            bookingId: booking.typeId._id,
+                                            id: booking.typeId._id,
                                         },
                                     }
                                 );
