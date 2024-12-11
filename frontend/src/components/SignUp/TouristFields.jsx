@@ -7,10 +7,13 @@ import PhoneInput from "react-phone-number-input";
 import { ChevronDown } from "lucide-react";
 
 import { countries } from "../../constants/phoneNumber.constants";
+import { Alert } from "@mui/material";
 const PhoneNumberInput = ({ onChange, userData }) => {
     const [selectedCountry, setSelectedCountry] = useState(countries[0]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+    const [alertMessage, setAlertMessage] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [SeverError, setServerError] = useState("");
     const handleCountrySelect = (country) => {
         setSelectedCountry(country);
         setIsDropdownOpen(false);
@@ -74,6 +77,20 @@ const PhoneNumberInput = ({ onChange, userData }) => {
 
     return (
         <div style={styles.container}>
+            {showAlert && (
+                <Alert
+                    severity={SeverError}
+                    onClose={() => setShowAlert(false)}
+                    style={{
+                        position: "fixed",
+                        right: "1%",
+                        bottom: "1vh",
+                        zIndex: 1000,
+                    }}
+                >
+                    {alertMessage}
+                </Alert>
+            )}
             <div
                 style={styles.countrySelector}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -174,12 +191,22 @@ const MyDatePicker = ({ onChange, userData }) => {
             const minValidDate = new Date(today.getFullYear() - 120, 0, 1);
 
             if (selectedDate > today) {
-                alert("Date cannot be in the future");
+                setAlertMessage("Date cannot be in the future");
+                setShowAlert(true);
+                setServerError("error");
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 5000);
                 return;
             }
 
             if (selectedDate < minValidDate) {
-                alert("Please enter a valid birth date");
+                setAlertMessage("Please enter a valid birth date");
+                setShowAlert(true);
+                setServerError("error");
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 5000);
                 return;
             }
         }
