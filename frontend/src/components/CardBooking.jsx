@@ -285,7 +285,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem", setError }) 
                         <CustomButton
                             stylingMode="dark-when-hovered"
                             width="40%"
-                            text="cancel"
+                            text="Cancel"
                             customStyle={{}}
                             handleClick={() => {
                                 setCancelPopup(true);
