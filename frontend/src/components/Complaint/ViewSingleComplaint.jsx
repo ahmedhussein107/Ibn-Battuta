@@ -9,6 +9,7 @@ import Comment from "./Comment";
 import usePageHeader from "../Header/UseHeaderPage";
 import { useNavigate } from "react-router-dom";
 import Button from "../Button";
+import Footer from "../Footer";
 const ViewSingleComplaint = () => {
     usePageHeader("/complaints.png", "Complaint Page");
     const navigate = useNavigate();
@@ -94,6 +95,7 @@ const ViewSingleComplaint = () => {
                 height="20px"
                 customStyle={{ marginTop: "20px", marginBottom: "20px" }}
             ></Button>
+            <Footer />
         </>
     );
 };

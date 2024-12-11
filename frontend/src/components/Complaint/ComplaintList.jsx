@@ -7,7 +7,7 @@ import PaginationComponent from "../Pagination";
 import Button from "../Button";
 import Cookies from "js-cookie";
 import usePageHeader from "../Header/UseHeaderPage";
-
+import Footer from "../Footer";
 const ComplaintList = () => {
     const [complaints, setComplaints] = useState([]);
 
@@ -93,6 +93,7 @@ const ComplaintList = () => {
                 currentPage={currentPage}
                 onChange={handlePageChange}
             />
+            <Footer />
         </div>
     );
 };

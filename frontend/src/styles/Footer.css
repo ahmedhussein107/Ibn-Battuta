@@ -7,6 +7,7 @@ footer {
     background-color: black;
     min-height: 8vh;
     width: 100vw;
+    margin-top: 5vh;
 }
 
 .footer-item {
