@@ -162,14 +162,21 @@ const UserManagement = ({ isAll = true }) => {
     };
     const CustomTable = (handleDelete) => {
         return (
-            <Box sx={{ padding: 3, backgroundColor: "#F5F5F5" }}>
+            <Box
+                sx={{
+                    padding: 3,
+                    backgroundColor: "#FFFFFF",
+                    boxShadow: 5,
+                    borderRadius: 4,
+                }}
+            >
                 <TableContainer
                     component={Paper}
                     sx={{ borderRadius: 4, overflow: "hidden" }}
                 >
                     <Table>
                         <TableHead>
-                            <TableRow sx={{ backgroundColor: "#EDEDED" }}>
+                            <TableRow sx={{ backgroundColor: "#FCF3E2" }}>
                                 <TableCell>Name</TableCell>
                                 <TableCell>Role</TableCell>
                                 <TableCell>Email</TableCell>

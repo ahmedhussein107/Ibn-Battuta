@@ -83,4 +83,5 @@ export const adminNavbarItems = [
     {
         Categorization: [{ Tags: "/admin/tags" }, { Category: "/admin/categories" }],
     },
+    { PromoCode: "/admin/promocode" },
 ];

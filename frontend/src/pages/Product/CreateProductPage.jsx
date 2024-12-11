@@ -7,6 +7,10 @@ import Button from "../../components/Button.jsx";
 import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import TextField from "@mui/material/TextField";
+import CurrencyDropdown from "../../components/CurrencyDropdownList.jsx";
+import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
+
 const Popup = ({ message, onClose, isError }) => (
     <PopupContainer isError={isError}>
         <PopupContent>
@@ -31,6 +35,10 @@ const CreateProductPage = () => {
     const [popupMessage, setPopupMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [isErrorPopup, setIsErrorPopup] = useState(false);
+    const [selectedCurrency, setSelectedCurrency] = useState("");
+    const currency = Cookies.get("currency") || "EGP";
+    const { isLoading, formatPrice, convertPrice } = useCurrencyConverter(currency);
+
     const navigate = useNavigate();
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -68,6 +76,9 @@ const CreateProductPage = () => {
             const finalFormData = {
                 ...formData,
                 pictures: uploadedFileUrls,
+                price:
+                    parseFloat(convertPrice(formData.price, selectedCurrency, "EGP")) ||
+                    0,
             };
 
             const response = await axiosInstance.post(
@@ -98,6 +109,11 @@ const CreateProductPage = () => {
         setImagePreviews((prev) => prev.filter((image) => image.id !== idToRemove));
     };
 
+    const inputStyles = {
+        width: "100%", // Or a specific value like "20rem"
+        height: "3rem",
+    };
+
     usePageHeader(
         "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzB8fHNvdXZlbmlyJTIwc2hvcHxlbnwwfHwwfHx8MA%3D%3D",
         "Create a New Product"
@@ -119,36 +135,73 @@ const CreateProductPage = () => {
                         <FormSection>
                             <InputGroup>
                                 <Label>Product Name</Label>
-                                <Input
-                                    type="text"
+                                <TextField
                                     name="name"
-                                    placeholder="Insert name here..."
+                                    id="outlined-basic"
+                                    label="Insert title here..."
+                                    variant="outlined"
                                     value={formData.name}
                                     onChange={handleInputChange}
+                                    style={inputStyles}
                                 />
                             </InputGroup>
 
                             <InputGroup>
                                 <Label>Description</Label>
-                                <TextArea
+                                <TextField
                                     name="description"
-                                    placeholder="Insert description here...."
+                                    id="outlined-basic"
+                                    label="Insert description here...."
+                                    variant="outlined"
                                     value={formData.description}
                                     onChange={handleInputChange}
+                                    style={inputStyles}
                                 />
                             </InputGroup>
-                        </FormSection>
-
-                        <FormSection>
                             <FlexGroup>
-                                <Label>Price</Label>
-                                <Input
-                                    type="number"
-                                    name="price"
-                                    placeholder="Insert price here..."
-                                    value={formData.price}
-                                    onChange={handleInputChange}
-                                />
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column", // Stacks children vertically
+                                        width: "100%", // Ensures the text field takes up the full width
+                                        gap: "1rem", // Adds spacing between elements
+                                    }}
+                                >
+                                    <Label>Price</Label>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column", // Stacks children vertically
+                                            width: "100%", // Ensures the text field takes up the full width
+                                            gap: "1rem", // Adds spacing between elements
+                                        }}
+                                    >
+                                        <CurrencyDropdown
+                                            selectedCurrency={selectedCurrency}
+                                            setSelectedCurrency={setSelectedCurrency}
+                                            style={{
+                                                width: "100%", // Ensures the text field takes up the full width
+                                            }}
+                                        />
+
+                                        <TextField
+                                            name="price"
+                                            id="outlined-basic"
+                                            label="Insert Price here..."
+                                            variant="outlined"
+                                            type="number"
+                                            value={formData.price}
+                                            onChange={handleInputChange}
+                                            style={{
+                                                width: "100%", // Ensures the text field takes up the full width
+                                            }}
+                                            inputProps={{
+                                                step: "0.01", // Allows decimal values if needed
+                                                min: "0", // Enforces a minimum value of 0
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                             </FlexGroup>
 
                             <FlexGroup>
@@ -344,10 +397,10 @@ const FormContainer = styled.div`
 `;
 
 const FormSection = styled.div`
-    background: #faf4f4;
+    background: #ffffff;
     padding: clamp(1em, 3vw, 2em);
     border-radius: 1em;
-    box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.3);
     margin-bottom: 2em;
 `;
 
@@ -408,7 +461,7 @@ const StockControl = styled.div`
 `;
 
 const StockButton = styled.button`
-    background-color: #f28b82;
+    background-color: #9c4f21;
     color: #fff;
     padding: 0.5rem;
     font-size: 1.2rem;
@@ -418,7 +471,8 @@ const StockButton = styled.button`
     cursor: pointer;
 
     &:hover {
-        background-color: #d77d7d;
+        color: black;
+        background-color: #d9a56c;
     }
 `;
 
