@@ -5,6 +5,7 @@ import XIcon from "@mui/icons-material/X";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Link } from "@mui/material";
+import { FaBorderAll } from "react-icons/fa";
 
 const icons = [
     {
@@ -53,6 +54,7 @@ const styles = {
         marginTop: "17%",
         fontFamily: "Inika",
         color: "#fbf9f8",
+        textShadow: "-4px -4px 0 black",
     },
     title: {
         fontSize: "5vw",
@@ -70,6 +72,8 @@ const styles = {
         fontSize: "2.3vw",
         color: "#fbf9f8",
         cursor: "pointer",
+        strokeWidth: ".4",
+        stroke: "black",
     },
 };
 
