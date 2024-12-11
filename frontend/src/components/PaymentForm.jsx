@@ -308,7 +308,7 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
                     }}
                 >
                     <Typography variant="subtitle1" gutterBottom>
-                        Important information about your booking:
+                        Important information about your payment:
                     </Typography>
                 </div>
                 <div style={{ marginLeft: "2vw" }}>

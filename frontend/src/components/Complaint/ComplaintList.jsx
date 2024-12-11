@@ -32,6 +32,10 @@ const ComplaintList = () => {
         console.log("Here at useEffect:");
     }, [currentPage, selectedFilter, isSorted]);
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [selectedFilter]);
+
     const handleSort = () => {
         setIsSorted(!isSorted);
 

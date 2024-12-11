@@ -6,13 +6,15 @@ import Button from "../../components/Button";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import Cookies from "js-cookie";
-
+import Alert from "@mui/material/Alert";
 const SigninComponent = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [response, setResponse] = useState("");
     const [responseColor, setResponseColor] = useState("#000");
-
+    const [alertMessage, setAlertMessage] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [SeverError, setServerError] = useState("");
     const navigate = useNavigate();
 
     const hanldeClick = async (e) => {
@@ -36,22 +38,18 @@ const SigninComponent = () => {
                 { withCredentials: true }
             );
             console.log(response.data);
-            setResponseColor("#3CB371");
-            setResponse("Login Successful! you will be redircted in a few seconds");
+            setAlertMessage("Login Successful! you will be redircted in a few seconds");
+            setShowAlert(true);
+            setServerError("success");
             setTimeout(() => {
                 const userType = Cookies.get("userType");
                 window.location.reload();
-
-                // if (userType === "Tourist") {
-                // 	navigate("/");
-                // 	return;
-                // }
                 console.log("userType", userType.toLowerCase());
-                // navigate(`/${userType.toLowerCase()}`);
             }, 1000);
         } catch (err) {
-            console.log(err);
-            setResponse(err.response.data.message);
+            setAlertMessage("Username or password is incorrect");
+            setShowAlert(true);
+            setServerError("error");
         }
     };
 
@@ -66,6 +64,20 @@ const SigninComponent = () => {
                 marginTop: "20%",
             }}
         >
+            {showAlert && (
+                <Alert
+                    severity={SeverError}
+                    onClose={() => setShowAlert(false)}
+                    style={{
+                        position: "fixed",
+                        right: "1%",
+                        bottom: "1vh",
+                        zIndex: 1000,
+                    }}
+                >
+                    {alertMessage}
+                </Alert>
+            )}
             <h1
                 style={{
                     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
@@ -204,6 +216,8 @@ const Signin = () => {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    backgroundBlendMode: "overlay",
+                    backgroundColor: "rgba(0, 0, 0, 0.4)",
                 }}
             >
                 <Welcome title={"Welcome Back"} />;

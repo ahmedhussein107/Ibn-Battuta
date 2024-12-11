@@ -11,7 +11,7 @@
     z-index: 0;
     display: flex;
     justify-content: space-evenly;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 .admin-create-buttons {
     display: flex;

@@ -38,9 +38,13 @@ export const getAllLandmarks = async (req, res) => {
 export const updateLandmark = async (req, res) => {
     try {
         console.log(req.body);
-        const landmark = await Landmark.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        });
+        const landmark = await Landmark.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+            }
+        );
 
         // console.log(landmark);
 
@@ -92,12 +96,20 @@ export const deleteLandmark = async (req, res) => {
 };
 
 export const getGovernorLandmarks = async (req, res) => {
-    const governorId = req.user.userId;
     try {
+        const governorId = req.user?.userId;
+        if (!governorId) {
+            return res
+                .status(400)
+                .json({ message: "Governor ID not found in request" });
+        }
+
+        console.log("Fetching landmarks for Governor ID:", governorId);
+
         const landmarks = await Landmark.find({ governorID: governorId });
         res.status(200).json(landmarks);
     } catch (error) {
-        console.error("Error fetching landmarks:", error);
+        console.error("Error fetching governor landmarks:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };

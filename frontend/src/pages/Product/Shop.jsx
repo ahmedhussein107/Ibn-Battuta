@@ -451,6 +451,19 @@ const Shop = () => {
                                 width={"32vw"}
                                 height={"25vh"}
                                 fontSize="1.2rem"
+                                line2={
+                                    <>
+                                        <div
+                                            style={{
+                                                fontSize: "1em",
+                                                color: "#666",
+                                                fontStyle: "italic",
+                                            }}
+                                        >
+                                            Seller: {product.ownerID?.name}
+                                        </div>
+                                    </>
+                                }
                                 firstLineButtons={[
                                     userType === "Tourist" && (
                                         <ShareAndMark

@@ -113,7 +113,7 @@ const SelectYourRoleComponent = ({ navigate }) => {
                         }}
                     >
                         <Button
-                            stylingMode="dark-when-hovered"
+                            stylingMode="always-light"
                             text="Cancel"
                             width={"10vw"}
                             handleClick={() => {
@@ -191,6 +191,8 @@ const SelectYourRole = () => {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    backgroundBlendMode: "overlay",
+                    backgroundColor: "rgba(0, 0, 0, 0.4)",
                 }}
             >
                 <Welcome title={"Welcome"} />;

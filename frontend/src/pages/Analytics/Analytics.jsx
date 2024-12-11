@@ -806,19 +806,52 @@ const Analytics = () => {
                     style={{
                         border: "1px solid var(--accent-color)",
                         display: "flex",
-                        justifyContent: "center",
+                        justifyContent: "space-around",
                         alignItems: "center",
                         width: "80%",
                         borderRadius: "10px",
                         color: "fontVariant(--accent-color)",
                         textAlign: "center",
                         margin: "2vmin",
+                        height: "10vh",
+                        flexDirection: "row",
                     }}
                 >
-                    <h3>
-                        TotalRevenun from Activities: {activityRevenue} EGP,{"  "}{" "}
-                    </h3>
-                    <h3>TotalRevenun from Itineryary: {itineraryRevenue} EGP</h3>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            color: "var(--accent-color)",
+                        }}
+                    >
+                        <h3>Total Revenue from Activities: </h3>
+                        <h3 style={{ marginLeft: "1vw" }}>{activityRevenue} EGP</h3>
+                    </div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            color: "var(--accent-color)",
+                        }}
+                    >
+                        <h3 style={{ marginLeft: "1vw" }}>
+                            Total Revenue from Itineraries:
+                        </h3>
+                        <h3 style={{ marginLeft: "1vw" }}> {itineraryRevenue} EGP</h3>
+                    </div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            color: "var(--accent-color)",
+                        }}
+                    >
+                        <h3 style={{ marginLeft: "1vw" }}>Total Revenue from Both:</h3>
+                        <h3 style={{ marginLeft: "1vw" }}>
+                            {" "}
+                            {itineraryRevenue + activityRevenue} EGP
+                        </h3>
+                    </div>
                 </div>
             )}
             <Footer />

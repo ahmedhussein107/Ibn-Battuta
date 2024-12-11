@@ -32,6 +32,7 @@ import { CircularProgress } from "@mui/material";
 // Styles
 import "../../styles/ActivityDetails.css";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
+import CyclicPhotoDisplay from "../Itinerary/CyclicPhotoDisplay.jsx";
 
 const ImageSlideshow = ({
     images,
@@ -515,6 +516,8 @@ const ActivityDetails = () => {
     }, [activityData]);
 
     useEffect(() => {
+        if (userType !== "Tourist") return;
+
         axiosInstance
             .get("/tourist/tourist", { withCredentials: true })
             .then((response) => {
@@ -595,9 +598,10 @@ const ActivityDetails = () => {
 
     return (
         <div className="activity-details-container">
-            <ImageSlideshow
-                images={activityData.pictures}
-                defaultImage={activityDefaultBackground}
+            <CyclicPhotoDisplay
+                photos={activityData.pictures}
+                width="95%"
+                height="70vh"
             />
             <NavBar />
 
@@ -718,6 +722,7 @@ const ActivityDetails = () => {
                                         lat: activityData?.Latitude,
                                         lng: activityData?.Longitude,
                                     }}
+                                    customStyles={{ height: "100%", width: "100%" }}
                                 />
                             </MapWrapper>
                         </div>
