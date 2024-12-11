@@ -55,11 +55,18 @@ const Inventory = () => {
 
     const buildQuery = () => {
         const query = {};
+        const buildQuery = () => {
+            const query = {};
 
-        if (searchedTerm) {
-            query.name = "~" + searchedTerm;
-        }
+            if (searchedTerm) {
+                query.name = "~" + searchedTerm;
+            }
+            if (searchedTerm) {
+                query.name = "~" + searchedTerm;
+            }
 
+            return query;
+        };
         return query;
     };
 
@@ -67,7 +74,14 @@ const Inventory = () => {
         const query = buildQuery();
         fetchData(query);
     }, [searchedTerm]);
+    useEffect(() => {
+        const query = buildQuery();
+        fetchData(query);
+    }, [searchedTerm]);
 
+    useEffect(() => {
+        sortProducts(products);
+    }, [sortBy]);
     useEffect(() => {
         sortProducts(products);
     }, [sortBy]);
@@ -158,6 +172,20 @@ const Inventory = () => {
                             zIndex: 0, // This will place the second image on top of the first
                         }}
                     />
+                </div>
+
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "18vh",
+                        left: "46.5vw",
+                        fontSize: "3.2vh",
+                        fontWeight: "bold",
+                        color: "White",
+                        pointerEvents: "none",
+                    }}
+                >
+                    Inventory
                 </div>
                 <div
                     style={{

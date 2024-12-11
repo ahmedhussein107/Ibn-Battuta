@@ -14,11 +14,17 @@ import Inventory from "../pages/Seller/Inventory";
 import AdminProfilePage from "../pages/Admin/AdminProfilePage";
 import Analytics from "../pages/Analytics/Analytics";
 import EditProductPage from "../pages/Product/EditProduct";
+import AdminPromoCode from "../pages/Admin/AdminPromoCode";
+
 const adminRoutes = [
-    { path: "/admin", element: <AdminHome /> },
+    { path: "/admin", element: <Analytics /> },
     {
         path: "/admin/profile",
         element: <AdminProfilePage />,
+    },
+    {
+        path: "/admin/promocode",
+        element: <AdminPromoCode />,
     },
     { path: "/admin/tags", element: <ViewTags /> },
     { path: "/admin/categories", element: <ViewCategories /> },
@@ -32,7 +38,7 @@ const adminRoutes = [
     { path: "/admin/inventory", element: <Inventory /> },
     { path: "/admin/shop/update-product/:productId", element: <UpdateProductPage /> },
     { path: "/admin/create-product", element: <CreateProductPage /> },
-    { path:"/admin/edit-product/:productId", element:<EditProductPage /> },
+    { path: "/admin/edit-product/:productId", element: <EditProductPage /> },
     { path: "/admin/users", element: <UserManagement /> },
 
     {
