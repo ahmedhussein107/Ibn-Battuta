@@ -27,9 +27,8 @@
 
 .custom-icon-label {
     max-width: 10vw;
-    max-height: 10vh;
+    max-height: 13vh;
     border-radius: 50%;
-    margin-bottom: 6vh;
 }
 .custom-icon-label:hover {
     cursor: pointer;
