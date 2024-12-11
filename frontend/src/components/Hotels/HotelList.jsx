@@ -62,7 +62,14 @@ const HotelList = () => {
                 hotel.chosenCity = chosenCity;
             });
             console.log("Fetched data:", response);
-            setRooms(response.data.hotels || []);
+            setRooms(
+                response.data.hotels.map((hotel) => {
+                    return {
+                        ...hotel,
+                        totalPrice: hotel.totalPrice / 100,
+                    };
+                }) || []
+            );
         } catch (err) {
             console.error("Error fetching rooms:", err);
             setRooms([]);
