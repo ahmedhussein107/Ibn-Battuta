@@ -1,6 +1,6 @@
 import Product from "../models/product.model.js";
 import { buildFilter } from "../utilities/searchUtils.js";
-
+import Order from "../models/order.model.js";
 export const createProduct = async (req, res) => {
     try {
         const productData = req.body;
@@ -68,6 +68,16 @@ export const getProductsById = async (req, res) => {
 export const deleteProduct = async (req, res) => {
     const { id } = req.params;
     try {
+        const ordered = await Order.findOne({
+            "purchases.product": id,
+            status: "pending",
+        });
+        if (ordered) {
+            return res
+                .status(400)
+                .json({ message: "Cannot delete a product that is ordered" });
+        }
+        const product = await Product.findById(id);
         await Product.findByIdAndDelete(id);
         res.json({ message: "deleted successfully" });
     } catch (e) {
