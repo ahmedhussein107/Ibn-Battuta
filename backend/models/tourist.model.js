@@ -24,7 +24,6 @@ const touristSchema = new mongoose.Schema(
         wallet: { type: Number, default: 0 },
         points: { type: Number, default: 0 },
         loyalityPoints: { type: Number, default: 0 },
-        cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
         notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notification" }],
         hotelBookings: [{ type: Object, default: [] }],
         flightBookings: [{ type: Object, default: [] }],
