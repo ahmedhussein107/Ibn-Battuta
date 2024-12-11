@@ -22,13 +22,16 @@ const governorLandmark = () => {
 
     const fetchLandmarks = async () => {
         try {
-            const response = await axiosInstance.get(`/landmark/getGovernorLandmarks/`, {
-                params: {
-                    page: currentPage,
-                    limit: itemsPerPage,
-                },
-                withCredentials: true,
-            });
+            const response = await axiosInstance.get(
+                `/landmark/getGovernorLandmarks`,
+                {
+                    params: {
+                        page: currentPage,
+                        limit: itemsPerPage,
+                    },
+                    withCredentials: true,
+                }
+            );
             console.log("response", response.data);
             setLandmarks(response.data);
         } catch (error) {
@@ -41,7 +44,14 @@ const governorLandmark = () => {
     }, [currentPage]);
 
     return (
-        <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+        <div
+            style={{
+                width: "100vw",
+                position: "absolute",
+                top: "0",
+                left: "0",
+            }}
+        >
             <div
                 style={{
                     width: "100vw",

@@ -235,7 +235,7 @@
     background-color: rgb(246, 202, 202);
 }
 .notification-item.read {
-    background-color: azure;
+    background-color: #ecf3f3;
 }
 
 .notification-item p {
