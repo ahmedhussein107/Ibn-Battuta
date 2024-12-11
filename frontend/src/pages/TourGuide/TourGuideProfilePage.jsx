@@ -227,8 +227,9 @@ const TourguideProfilePage = () => {
                         picture: response.data.picture, // This should be a string URL
                     }));
 
+                    setImage(response.data.picture);
                     console.log("Updated Touguide Picture:", response.data.picture);
-                    Cookies.set("profileImage", image);
+                    Cookies.set("profileImage", response.data.picture);
                     setTimeout(() => {
                         window.location.reload();
                     }, 5000); // Alert will close after 5 seconds
