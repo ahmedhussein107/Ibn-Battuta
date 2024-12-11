@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import Cookies from "js-cookie";
 import Alert from "@mui/material/Alert";
+import { set } from "mongoose";
 const SigninComponent = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -21,11 +22,23 @@ const SigninComponent = () => {
         e.preventDefault();
         setResponseColor("#DC143C");
         if (!username) {
-            setResponse("Please enter your username");
+            //setResponse("Please enter your username");
+            setAlertMessage("Please enter your username");
+            setShowAlert(true);
+            setServerError("info");
+            setTimeout(() => {
+                // setShowAlert(false);
+            }, 8000);
             return;
         }
         if (!password) {
-            setResponse("Please enter your password");
+            //setResponse("Please enter your password");
+            setAlertMessage("Please enter your password");
+            setShowAlert(true);
+            setServerError("info");
+            setTimeout(() => {
+                // setShowAlert(false);
+            }, 8000);
             return;
         }
         try {
@@ -47,7 +60,8 @@ const SigninComponent = () => {
                 console.log("userType", userType.toLowerCase());
             }, 1000);
         } catch (err) {
-            setAlertMessage("Username or password is incorrect");
+            //setAlertMessage("Username or password is incorrect");
+            setAlertMessage(err.response.data.message);
             setShowAlert(true);
             setServerError("error");
             setTimeout(() => {
@@ -67,20 +81,6 @@ const SigninComponent = () => {
                 marginTop: "20%",
             }}
         >
-            {showAlert && (
-                <Alert
-                    severity={SeverError}
-                    onClose={() => setShowAlert(false)}
-                    style={{
-                        position: "fixed",
-                        right: "1%",
-                        bottom: "1vh",
-                        zIndex: 1000,
-                    }}
-                >
-                    {alertMessage}
-                </Alert>
-            )}
             <h1
                 style={{
                     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
@@ -160,6 +160,7 @@ const SigninComponent = () => {
                     {response}
                 </p>
             </div>
+
             <p
                 style={{
                     display: "flex",
@@ -185,6 +186,21 @@ const SigninComponent = () => {
                     </Link>
                 }
             </p>
+            {showAlert && (
+                <Alert
+                    severity={SeverError}
+                    onClose={() => setShowAlert(false)}
+                    style={{
+                        position: "fixed",
+                        right: "1%",
+                        bottom: "25vh",
+                        width: "25vw",
+                        zIndex: 1000,
+                    }}
+                >
+                    {alertMessage}
+                </Alert>
+            )}
         </div>
     );
 };

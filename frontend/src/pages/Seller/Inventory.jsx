@@ -52,19 +52,6 @@ const Inventory = () => {
             console.error("Error fetching data:", error);
         }
     };
-    const fetchData = async (query) => {
-        try {
-            const response = await axiosInstance.get(`/product/getProductsById`, {
-                params: query,
-                withCredentials: true,
-            });
-            const data = response.data;
-            sortProducts(data);
-            console.log("response gata is", data);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
 
     const buildQuery = () => {
         const query = {};
@@ -136,22 +123,7 @@ const Inventory = () => {
             console.error("Error archiving product", error);
         }
     };
-    const archiveProductHandler = async (product) => {
-        try {
-            await axiosInstance.patch(`/product/archiveProduct/${product._id}`);
-        } catch (error) {
-            console.error("Error archiving product", error);
-        }
-    };
 
-    const unarchiveProductHandler = async (product) => {
-        try {
-            await axiosInstance.patch(`/product/unarchiveProduct/${product._id}`);
-            product.isArchived = false;
-        } catch (error) {
-            console.error("Error unarchiving product", error);
-        }
-    };
     const unarchiveProductHandler = async (product) => {
         try {
             await axiosInstance.patch(`/product/unarchiveProduct/${product._id}`);
