@@ -406,18 +406,21 @@ const Shop = () => {
                                 height={"25vh"}
                                 fontSize="1.2rem"
                                 firstLineButtons={[
-                                    <ShareAndMark
-                                        width="1.2rem"
-                                        height="1.2rem"
-                                        styles={{ padding: "0.5vh" }}
-                                        isBookmarked={wishlistStatus[product.id]}
-                                        showBookmark={userType === "Tourist"}
-                                        onSecondIconClick={() =>
-                                            handleAddToWishlist(product.id)
-                                        }
-                                        icon={"loveIcon"}
-                                        scale={1.3}
-                                    />,
+                                    userType === "Tourist" && (
+                                        <ShareAndMark
+                                            width="1.2rem"
+                                            height="1.2rem"
+                                            styles={{ padding: "0.5vh" }}
+                                            isBookmarked={wishlistStatus[product.id]}
+                                            showBookmark={userType === "Tourist"}
+                                            onSecondIconClick={() =>
+                                                handleAddToWishlist(product.id)
+                                            }
+                                            icon={"loveIcon"}
+                                            scale={1.3}
+                                            isShop={true}
+                                        />
+                                    ),
                                 ]}
                                 controlButtons={[
                                     userType === "Tourist" && (
