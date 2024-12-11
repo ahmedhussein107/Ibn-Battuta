@@ -127,9 +127,8 @@ const Inventory = () => {
                     onClose={() => setShowAlert(false)}
                     style={{
                         position: "fixed",
-                        left: "50%",
-                        bottom: "12vh",
-                        transform: "translateX(-50%)",
+                        right: "1%",
+                        bottom: "1vh",
                         zIndex: 1000,
                     }}
                 >
