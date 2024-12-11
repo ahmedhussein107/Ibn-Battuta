@@ -7,8 +7,12 @@ import bcrypt from "bcrypt";
 import { assignCookies } from "./general.controller.js";
 import Admin from "../models/admin.model.js";
 import Complaint from "../models/complaint.model.js";
+import Comment from "../models/comment.model.js";
 import Booking from "../models/booking.model.js";
 import TouristBookmark from "../models/touristBookmark.model.js";
+import TouristWishlist from "../models/touristWishlist.model.js";
+import TouristCart from "../models/touristCart.model.js";
+import Order from "../models/order.model.js";
 
 export const getTourists = async (req, res) => {
     try {
@@ -168,11 +172,24 @@ export const deleteTourist = async (req, res) => {
             const hasBookings =
                 (await Booking.find({
                     touristID: touristID,
+                    eventStartDate: { $gt: new Date() },
                 }).countDocuments()) > 0;
             if (hasBookings) {
-                return res
-                    .status(400)
-                    .json({ message: "Cannot delete tourist with bookings" });
+                return res.status(400).json({
+                    message: "Cannot delete a tourist account with upcoming bookings",
+                });
+            }
+
+            const hasOrders =
+                (await Order.find({
+                    buyer: touristID,
+                    status: "pending",
+                }).countDocuments()) > 0;
+
+            if (hasOrders) {
+                return res.status(400).json({
+                    message: "Cannot delete a tourist account with pending orders",
+                });
             }
         }
 
@@ -194,13 +211,28 @@ export const deleteTourist = async (req, res) => {
             }
 
             // Delete complaints
-            if (tourist.complaints && tourist.complaints.length > 0) {
-                await Promise.all(
-                    tourist.complaints.map((complaintId) =>
-                        Complaint.findByIdAndDelete(complaintId)
-                    )
-                );
+            const complaints = await Complaint.find({
+                touristID: tourist._id,
+            });
+
+            for (let complaint of complaints) {
+                for (let comment of complaint.replies) {
+                    await deleteComplaintComments(comment);
+                }
+                await Complaint.findByIdAndDelete(complaint._id);
             }
+
+            await TouristWishlist.deleteMany({
+                touristID: tourist._id,
+            });
+
+            await TouristBookmark.deleteMany({
+                touristID: tourist._id,
+            });
+
+            await TouristCart.deleteMany({
+                touristID: tourist._id,
+            });
 
             // Delete related tourist activity notifications
             await TouristActivityNotification.deleteMany({
@@ -216,6 +248,14 @@ export const deleteTourist = async (req, res) => {
     } catch (e) {
         res.status(500).json({ error: e.message }); // Use 500 for internal server errors
     }
+};
+
+const deleteComplaintComments = async (commentId) => {
+    const comment = await Comment.findById(commentId);
+    for (let reply of comment.replies) {
+        deleteComplaintComments(reply);
+    }
+    await Comment.findByIdAndDelete(commentId);
 };
 
 export const redeemPoints = async (req, res) => {
@@ -290,9 +330,7 @@ export const addToWishlist = async (req, res) => {
             return res.status(400).json({ e: "Item is required" });
         }
         if (tourist.wishlist.includes(item)) {
-            return res
-                .status(400)
-                .json({ e: "Item already exists in wishlist" });
+            return res.status(400).json({ e: "Item already exists in wishlist" });
         }
         tourist.wishlist.push(item);
         await tourist.save();
@@ -312,9 +350,7 @@ export const removeFromWishlist = async (req, res) => {
         const { item } = req.body;
         const index = tourist.wishlist.indexOf(item);
         if (index === -1) {
-            return res
-                .status(400)
-                .json({ e: "Item does not exist in wishlist" });
+            return res.status(400).json({ e: "Item does not exist in wishlist" });
         }
         tourist.wishlist.splice(index, 1);
         await tourist.save();
@@ -352,9 +388,7 @@ export const changeTouristPassword = async (req, res) => {
     try {
         // Validate the input fields
         if (!oldPassword || !newPassword) {
-            return res
-                .status(400)
-                .json("Both old and new passwords are required");
+            return res.status(400).json("Both old and new passwords are required");
         }
 
         // Find the tourist by ID
@@ -377,8 +411,6 @@ export const changeTouristPassword = async (req, res) => {
         return res.status(200).json("Password changed successfully!");
     } catch (err) {
         console.error("Error changing password:", err);
-        return res
-            .status(500)
-            .json("An error occurred while changing the password");
+        return res.status(500).json("An error occurred while changing the password");
     }
 };

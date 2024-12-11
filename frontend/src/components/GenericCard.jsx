@@ -39,7 +39,7 @@ const GenericCard = ({
             <div
                 style={{
                     width: "70%",
-                    backgroundColor: "#f0f0f0",
+                    backgroundColor: "#fffafa",
                     borderRadius: "0 2vh 2vh 0",
                 }}
             >

@@ -33,7 +33,6 @@ const sendEmail = async (toEmail, subject, body, type = "text") => {
         await transporter.sendMail(mailOptions);
     } catch (err) {
         console.log("error sending email", err);
-        throw new Error("The email associated with your account is incorrect");
     }
 };
 export default sendEmail;

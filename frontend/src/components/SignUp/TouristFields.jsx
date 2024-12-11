@@ -7,10 +7,13 @@ import PhoneInput from "react-phone-number-input";
 import { ChevronDown } from "lucide-react";
 
 import { countries } from "../../constants/phoneNumber.constants";
+import { Alert } from "@mui/material";
 const PhoneNumberInput = ({ onChange, userData }) => {
     const [selectedCountry, setSelectedCountry] = useState(countries[0]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+    const [alertMessage, setAlertMessage] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [SeverError, setServerError] = useState("");
     const handleCountrySelect = (country) => {
         setSelectedCountry(country);
         setIsDropdownOpen(false);
@@ -27,6 +30,7 @@ const PhoneNumberInput = ({ onChange, userData }) => {
             position: "relative",
             width: "100%",
             maxWidth: "400px",
+            fontSize: "1rem",
         },
         countrySelector: {
             display: "flex",
@@ -74,6 +78,20 @@ const PhoneNumberInput = ({ onChange, userData }) => {
 
     return (
         <div style={styles.container}>
+            {showAlert && (
+                <Alert
+                    severity={SeverError}
+                    onClose={() => setShowAlert(false)}
+                    style={{
+                        position: "fixed",
+                        right: "1%",
+                        bottom: "1vh",
+                        zIndex: 1000,
+                    }}
+                >
+                    {alertMessage}
+                </Alert>
+            )}
             <div
                 style={styles.countrySelector}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -174,12 +192,22 @@ const MyDatePicker = ({ onChange, userData }) => {
             const minValidDate = new Date(today.getFullYear() - 120, 0, 1);
 
             if (selectedDate > today) {
-                alert("Date cannot be in the future");
+                setAlertMessage("Date cannot be in the future");
+                setShowAlert(true);
+                setServerError("error");
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 5000);
                 return;
             }
 
             if (selectedDate < minValidDate) {
-                alert("Please enter a valid birth date");
+                setAlertMessage("Please enter a valid birth date");
+                setShowAlert(true);
+                setServerError("error");
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 5000);
                 return;
             }
         }
@@ -210,16 +238,19 @@ const MyDatePicker = ({ onChange, userData }) => {
                 borderRadius: "8px",
                 backgroundColor: "white",
                 marginTop: "8px",
+                fontSize: "1rem",
             },
             selector: {
                 display: "flex",
+
                 alignItems: "center",
-                justifyContent: "space-between",
+                justifyContent: "flex-start",
                 padding: "8px",
                 border: "1px solid #e0e0e0",
                 borderRadius: "8px",
                 cursor: "pointer",
             },
+
             dropdown: {
                 position: "absolute",
                 top: "100%",
@@ -291,7 +322,7 @@ const MyDatePicker = ({ onChange, userData }) => {
                 placeholder="DD"
             />
             <CustomDropdown
-                value={userData.DOB?.month || "MM"}
+                value={userData.DOB?.month || "Month"}
                 options={months}
                 onChange={(value) => handleDateChange("month", value)}
                 placeholder="MM"
@@ -335,7 +366,10 @@ const TouristFields = ({ userData, onChange }) => {
                 <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
                     Date of Birth*
                 </label>
-                <div className="date-input-group">
+                <div
+                    className="date-input-group"
+                    style={{ alignSelf: "flex-start", marginLeft: "13%" }}
+                >
                     <MyDatePicker onChange={onChange} userData={userData} />
                 </div>
             </div>

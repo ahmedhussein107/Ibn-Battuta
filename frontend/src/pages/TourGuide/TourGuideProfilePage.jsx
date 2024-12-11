@@ -227,8 +227,9 @@ const TourguideProfilePage = () => {
                         picture: response.data.picture, // This should be a string URL
                     }));
 
+                    setImage(response.data.picture);
                     console.log("Updated Touguide Picture:", response.data.picture);
-                    Cookies.set("profileImage", image);
+                    Cookies.set("profileImage", response.data.picture);
                     setTimeout(() => {
                         window.location.reload();
                     }, 5000); // Alert will close after 5 seconds
@@ -912,14 +913,14 @@ const TourguideProfilePage = () => {
             >
                 <button
                     style={{
-                        // marginLeft: "-20vw",
                         height: "5vh",
                         width: "10vw",
                         background: "white",
                         borderRadius: "40px",
                         border: "1px #D00C09 solid",
                         color: "red",
-                        marginLeft: "3vw",
+                        marginLeft: "4vw",
+                        cursor: "pointer",
                     }}
                     onClick={handleDeleteAccount}
                 >
@@ -941,7 +942,8 @@ const TourguideProfilePage = () => {
                         borderRadius: 100,
                         border: "1px black solid",
                         color: "black",
-                        marginRight: "5vw",
+                        marginRight: "6vw",
+                        cursor: "pointer",
                     }}
                     onClick={() => handleChangePassword()}
                 >
@@ -1051,9 +1053,8 @@ const TourguideProfilePage = () => {
                     <div
                         style={{
                             position: "fixed",
-                            top: "50%", // Center vertically
-                            right: "20px", // You can adjust this value to move it left/right
-                            transform: "translateY(-50%)", // Center the alert vertically
+                            right: "1%",
+                            bottom: "1%",
                             zIndex: 1000, // Ensure it's above other content
                             width: "30vw", // Set a suitable width
                             fontSize: "30px",

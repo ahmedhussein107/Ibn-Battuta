@@ -17,17 +17,28 @@ const CreateUserPopUp = ({ userType, isOpen, setIsOpen }) => {
 
     const handleSubmit = async () => {
         try {
+            console.log("username", username);
+            console.log("password", password);
+            if (username === "") {
+                showPopUpAlert("error", "Please enter a username");
+                return;
+            }
+            if (password === "") {
+                showPopUpAlert("error", "Please enter a password");
+                return;
+            }
             await axiosInstance.post(`${userType.toLowerCase()}/create${userType}`, {
                 username,
                 name: username,
                 password,
             });
             showPopUpAlert("success", "User created successfully");
+            setTimeout(() => {
+                setIsOpen(false);
+            }, 500);
         } catch (err) {
             console.log(err);
-            showPopUpAlert("error", err.response.data.message);
-        } finally {
-            //setIsOpen(false);
+            showPopUpAlert("error", "Username already exists!");
         }
     };
 
@@ -36,7 +47,7 @@ const CreateUserPopUp = ({ userType, isOpen, setIsOpen }) => {
 
         setTimeout(() => {
             setPopupAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
-            setIsOpen(false);
+            // setIsOpen(false);
         }, 4000); // Alert will close after 5 seconds
     };
     return (
@@ -48,14 +59,13 @@ const CreateUserPopUp = ({ userType, isOpen, setIsOpen }) => {
             actionText="Create"
             handleSubmit={handleSubmit}
         >
-            <div>
+            <div style={{ minWidth: "25vw" }}>
                 <p style={{ fontWeight: "bold" }}>Username</p>
                 <Box
                     component="form"
                     sx={{
                         "& > :not(style)": { m: 1, width: "25ch" },
                     }}
-                    noValidate
                     autoComplete="off"
                 >
                     <TextField
@@ -63,7 +73,7 @@ const CreateUserPopUp = ({ userType, isOpen, setIsOpen }) => {
                         label="Username"
                         onChange={(e) => setUsername(e.target.value)}
                         style={{
-                            width: "25vw",
+                            width: "100%",
                             height: "4vh",
                             marginTop: "1vh",
                             marginLeft: "0vw",
@@ -82,7 +92,7 @@ const CreateUserPopUp = ({ userType, isOpen, setIsOpen }) => {
                     sx={{
                         "& > :not(style)": { m: 1, width: "25ch" },
                     }}
-                    noValidate
+                    aria-required="true"
                     autoComplete="off"
                 >
                     <TextField
@@ -91,7 +101,7 @@ const CreateUserPopUp = ({ userType, isOpen, setIsOpen }) => {
                         type="password"
                         onChange={(e) => setPassword(e.target.value)}
                         style={{
-                            width: "25vw",
+                            width: "100%",
                             height: "4vh",
                             marginTop: "1vh",
                             marginLeft: "0vw",
@@ -99,32 +109,32 @@ const CreateUserPopUp = ({ userType, isOpen, setIsOpen }) => {
                         }}
                     />
                 </Box>
-                {popupAlert.open && (
-                    <Alert
-                        severity={popupAlert.severity}
-                        onClose={() =>
-                            setPopupAlert({
-                                ...popupAlert,
-                                open: false,
-                            })
-                        }
-                        style={{
-                            marginBottom: "1vh",
-                            fontSize: "22px",
-                            textAlign: "center",
-                            marginTop: "2vh",
-                        }}
-                    >
-                        {popupAlert.message}
-                    </Alert>
-                )}
-
                 {/* <input
                     type="password"
                     placeholder="Enter the password"
                     onChange={(e) => setPassword(e.target.value)}
                 /> */}
             </div>
+            {popupAlert.open && (
+                <Alert
+                    severity={popupAlert.severity}
+                    onClose={() =>
+                        setPopupAlert({
+                            ...popupAlert,
+                            open: false,
+                        })
+                    }
+                    style={{
+                        marginBottom: "1vh",
+                        fontSize: "1rem",
+                        textAlign: "center",
+                        marginTop: "2vh",
+                        width: "90%",
+                    }}
+                >
+                    {popupAlert.message}
+                </Alert>
+            )}
         </PopUp>
     );
 };

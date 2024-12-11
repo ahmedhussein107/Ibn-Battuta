@@ -22,8 +22,8 @@ export const touristNavbarItems = [
     },
     {
         Travel: [
-            { Flights: "tourist/flight/offers" },
-            { Hotels: "tourist/hotel/offers" },
+            { Flights: "/tourist/flight/offers" },
+            { Hotels: "/tourist/hotel/offers" },
         ],
     },
     { Shop: "/shop" },
@@ -33,21 +33,21 @@ export const touristNavbarItems = [
 export const sellerNavbarItems = [
     { Home: "/seller" },
     { Browse: "/shop" },
-    { Inventory: "seller/inventory" },
-    { Analytics: "seller/analytics" },
+    { Inventory: "/seller/inventory" },
+    { Analytics: "/seller/analytics" },
 ];
 
 export const tourGuideNavbarItems = [
     { Home: "/tourGuide" },
     { Browse: [{ Activites: "/activities" }, { Itineraries: "/itineraries" }] },
-    { Assigned: "/tourguide/assigned" },
+    { "My Tours": "/tourguide/assigned" },
     { Analytics: "/tourguide/analytics" },
 ];
 
 export const advertiserNavbarItems = [
     { Home: "/advertiser" },
     { Browse: "/activities" },
-    { Assigned: "/advertiser/assigned" },
+    { "My Activities": "/advertiser/assigned" },
     { Analytics: "/advertiser/analytics" },
 ];
 
@@ -55,7 +55,7 @@ export const governorNavbarItems = [
     { Home: "/governor" },
     { Browse: "/landmarks" },
     {
-        Assigned: [
+        "Tourism Management": [
             { Landmarks: "/governor/landmarks" },
             { Tags: "/governor/landmarkTags" },
         ],

@@ -330,6 +330,7 @@ const CreateProductPage = () => {
                         handleClick={() => {
                             setFormData(defaultData);
                             setImagePreviews([]);
+                            navigate("/seller/home");
                         }}
                         width="auto"
                     />

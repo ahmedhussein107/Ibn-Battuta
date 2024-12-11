@@ -166,7 +166,7 @@ const MyForm = ({
 
             showPopupMessage("Activity created successfully!", false);
 
-            setTimeout(() => navigate("/advertiser/assigned"), 1000);
+            setTimeout(() => navigate("/tourguide/assigned"), 1000);
         } catch (error) {
             console.error("Error creating activity:", error);
             showPopupMessage(
@@ -546,7 +546,7 @@ const MyForm = ({
                     />
                     <Button
                         stylingMode="always-dark"
-                        text="Create Activity"
+                        text="Create Itinerary"
                         handleClick={handleCreate}
                         width="auto"
                     />

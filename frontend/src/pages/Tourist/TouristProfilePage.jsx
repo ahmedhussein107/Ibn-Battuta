@@ -133,8 +133,9 @@ const InfoBoxesContainer = styled.div`
 `;
 
 const WalletIcon = styled.img`
-    width: 100%;
-    height: 100%;
+    width: 85%;
+    height: 85%;
+    margin-left: 5%;
 `;
 const LevelContainer = styled.div`
     font-size: 16px;
@@ -280,6 +281,9 @@ export default function TouristProfilePage() {
     const [tourist, setTourist] = useState(null);
     const [userType, setUserType] = useState("Tourist");
     const [tags, setTags] = useState([]);
+    const defaultImage =
+        "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg";
+    const [image, setImage] = useState(defaultImage);
     const [selectedTags, setSelectedTags] = useState([]);
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
     const [redeemValue, setRedeemValue] = useState(0);
@@ -349,6 +353,7 @@ export default function TouristProfilePage() {
                     address: response.data.address || [],
                     currency: response.data.currency || "",
                 });
+                setImage(response.data.picture || defaultImage);
             })
             .catch((error) => {
                 console.error("Error fetching tourist:", error);
@@ -393,8 +398,16 @@ export default function TouristProfilePage() {
                         ...prev,
                         picture: response.data.picture,
                     }));
-                    Cookies.set("profileImage", image);
-                    window.location.reload();
+
+                    setImage(response.data.picture);
+                    console.log(
+                        "Updated Tourist Profile Picture:",
+                        response.data.picture
+                    );
+                    Cookies.set("profileImage", response.data.picture);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 5000); // Alert will close after 5 seconds
                 })
                 .catch((error) => {
                     console.error("Error uploading picture:", error);
@@ -747,11 +760,7 @@ export default function TouristProfilePage() {
                                         borderRadius: "50%",
                                         overflow: "hidden",
                                         border: "4px solid white",
-                                        backgroundImage: `url(${
-                                            tourist?.picture
-                                                ? tourist.picture
-                                                : "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
-                                        })`,
+                                        backgroundImage: `url(${image})`,
                                         backgroundSize: "cover",
                                         backgroundPosition: "center",
                                         cursor: isEditing ? "pointer" : "default", // Pointer cursor only when isEditing is true
@@ -1044,7 +1053,7 @@ export default function TouristProfilePage() {
                     <InfoBoxesContainer>
                         <RedeemBox>
                             <LevelContainer>
-                                <WalletIcon src="/image 55.png" alt="Wallet Icon" />
+                                <WalletIcon src="/wallet.png" alt="Wallet Icon" />
                             </LevelContainer>
 
                             <PointsSection>

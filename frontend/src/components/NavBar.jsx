@@ -6,6 +6,11 @@ import "../styles/NavBar.css";
 import { useState, useEffect, useRef } from "react";
 import Button from "./Button";
 import axiosInstance from "../api/axiosInstance";
+import TourIcon from "@mui/icons-material/Tour";
+import ChatIcon from "@mui/icons-material/Chat";
+import RowingIcon from "@mui/icons-material/Rowing";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
+import DiscountIcon from "@mui/icons-material/Discount";
 
 import {
     guestNavbarItems,
@@ -104,13 +109,18 @@ const NavBar = () => {
                 if (data.type === "initialNotifications") {
                     console.log("notifications are", data.notifications);
                     setUnreadNotificationCount(data.count);
-                    setNotifications(data.notifications);
+                    setNotifications(
+                        data.notifications.sort(
+                            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                        )
+                    );
                 } else if (data.type === "onlineNotification") {
                     setUnreadNotificationCount((prevCount) => prevCount + 1);
-                    setNotifications((prevNotifications) => [
-                        ...prevNotifications,
-                        data.notification,
-                    ]);
+                    setNotifications((prevNotifications) =>
+                        [...prevNotifications, data.notification].sort(
+                            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                        )
+                    );
                 }
             };
 
@@ -218,16 +228,13 @@ const NavBar = () => {
         <nav className="navbar">
             <img
                 style={{
-                    padding: "0px",
-                    borderRadius: "20px",
-                    height: "5.2vh",
-                    objectFit: "contain",
-                    marginLeft: ".8vw",
+                    borderRadius: "25px",
+                    height: "6.2vh",
+                    marginLeft: "-1%",
                 }}
                 src="/logo.png"
             />
 
-            {/* Center: Navbar items */}
             <div className="navbar-links">
                 {navbarItems.map((item, index) => renderItem(item, index))}
             </div>
@@ -290,14 +297,47 @@ const NavBar = () => {
                                                 )
                                             }
                                         >
-                                            <p className="notification-message">
-                                                {notification.message}
-                                            </p>
-                                            <span className="notification-date">
-                                                {new Date(
-                                                    notification.createdAt
-                                                ).toLocaleString()}
-                                            </span>
+                                            <div className="notifications-icon">
+                                                {(() => {
+                                                    switch (notification.relatedType) {
+                                                        case "Itinerary":
+                                                            return (
+                                                                <TourIcon className="notification-type-icon" />
+                                                            );
+                                                        case "PromoCode":
+                                                            return (
+                                                                <DiscountIcon className="notification-type-icon" />
+                                                            );
+                                                        case "Complaint":
+                                                            return (
+                                                                <ChatIcon className="notification-type-icon" />
+                                                            );
+                                                        case "Activity":
+                                                            return (
+                                                                <RowingIcon className="notification-type-icon" />
+                                                            );
+                                                        case "Product":
+                                                            return (
+                                                                <ProductionQuantityLimitsIcon className="notification-type-icon" />
+                                                            );
+                                                        default:
+                                                            return (
+                                                                <ChatIcon className="notification-type-icon" />
+                                                            ); // Default icon
+                                                    }
+                                                })()}
+                                            </div>
+                                            <div className="notification-content">
+                                                <p className="notification-message">
+                                                    {notification.message}
+                                                </p>
+                                                <span className="notification-date">
+                                                    <i className="fas fa-calendar-alt"></i>
+                                                    {new Date(
+                                                        notification.createdAt
+                                                    ).toLocaleString()}
+                                                </span>
+                                            </div>
                                         </div>
                                     ))
                                 ) : (
