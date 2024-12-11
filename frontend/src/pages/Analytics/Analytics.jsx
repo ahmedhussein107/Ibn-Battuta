@@ -124,6 +124,7 @@ const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) =
     const [isAll, setIsAll] = useState(true);
     const [selectedDate, setSelectedDate] = useState(null);
     const [searchText, setSearchText] = useState(null);
+    const [isRemove, setIsRemove] = useState(false);
 
     const options = _month.map((month, index) => ({
         value: month,
@@ -192,6 +193,7 @@ const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) =
                     handleClick={() => {
                         setIsAll(true);
                         setSelectedMonth("");
+                        setIsRemove(!isRemove);
                     }}
                 />
             </div>
@@ -213,7 +215,11 @@ const Controls = ({ initialTableData, currentTableData, setCurrentTableData }) =
                     isSearchable={false}
                 />
             </div>
-            <DatePicker label="Select a date" setValue={setSelectedDate} />
+            <DatePicker
+                label="Select a date"
+                setValue={setSelectedDate}
+                isRemove={isRemove}
+            />
             <div style={{ width: "30%" }}>
                 <SearchField
                     placeholder={"search by name"}

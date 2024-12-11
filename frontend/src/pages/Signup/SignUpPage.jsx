@@ -7,6 +7,7 @@ import Button from "../../components/Button.jsx";
 import Page2 from "../../components/SignUp/Page2.jsx";
 import TouristFields from "../../components/SignUp/TouristFields.jsx";
 import axiosInstance from "../../api/axiosInstance.js";
+import { Alert } from "@mui/material";
 const SignUpPage = () => {
     const location = useLocation();
     const { userType } = location.state;
@@ -20,6 +21,9 @@ const SignUpPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [userData, setUserData] = useState({});
     const [termsAccepted, setTermsAccepted] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [SeverError, setServerError] = useState("");
     const fileInput1Ref = useRef(null);
     const fileInput2Ref = useRef(null);
     const imageRef = useRef(null);
@@ -71,15 +75,12 @@ const SignUpPage = () => {
         setTermsAccepted(!termsAccepted);
     };
     const handleNextStep = () => {
-        // Get the form element in the current step
         const form = document.querySelector("#form");
 
-        // // Check if the form is valid
-        // if (form && !form.checkValidity()) {
-        // 	// Trigger the browser's built-in validation feedback
-        // 	form.reportValidity();
-        // 	return; // Prevent navigation to the next step if invalid
-        // }
+        if (!userData.email || !userData.password || !userData.username) {
+            alert("Please fill in all required fields. ");
+            return;
+        }
 
         setSetp(step + 1);
     };
@@ -110,33 +111,70 @@ const SignUpPage = () => {
         setIsLoading(true);
         try {
             if (!userData.email || !userData.password || !userData.username) {
-                alert("Please fill in all required fields. ");
+                setAlertMessage("Please fill in all required fields. ");
+                setShowAlert(true);
+                setServerError("error");
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 5000);
                 return;
             }
             if (userData.password.length < 4) {
-                alert("Password must be at least 4 characters long.");
+                setAlertMessage("Password must be at least 4 characters long.");
+                setShowAlert(true);
+                setServerError("error");
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 5000);
                 return;
             }
             if (!termsAccepted) {
-                alert("You must accept the terms and conditions.");
+                setAlertMessage("You must accept the terms and conditions.");
+                setShowAlert(true);
+                setServerError("error");
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 5000);
+                return;
             }
 
             if (userType === "Tourist" && (!userData.DOB || !userData.mobile)) {
-                alert("Please fill in all required fields. ");
+                setAlertMessage("Please fill in all required fields. ");
+                setShowAlert(true);
+                setServerError("error");
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 5000);
                 return;
             }
             if (userType !== "Tourist" && !file1) {
-                alert("You must upload an ID file.");
+                setAlertMessage("You must upload an ID file.");
+                setShowAlert(true);
+                setServerError("error");
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 5000);
                 return;
             }
             if (userType !== "Tourist" && file2.length === 0) {
-                alert(
+                setAlertMessage(
                     "You must upload at least one certificate or taxation registery file."
                 );
+                setShowAlert(true);
+                setServerError("error");
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 5000);
+                return;
                 return;
             }
             if (!termsAccepted) {
-                alert("You must accept the terms and conditions.");
+                setAlertMessage("You must accept the terms and conditions.");
+                setShowAlert(true);
+                setServerError("error");
+                setTimeout(() => {
+                    setShowAlert(false);
+                }, 5000);
                 return;
             }
             if (imageFile) {
@@ -150,10 +188,6 @@ const SignUpPage = () => {
                 console.log("I'm done sleeping!");
                 console.log("ahmed kamal", userData.picture);
             }, 4000);
-
-            console.log("Picture:", imageFile);
-            console.log("User data:", userData);
-            console.log("ahmed kamal", userData.picture);
             if (file1) {
                 const IdPath = await uploadFile(file1, "documents");
                 let certificatesPath = await uploadFiles(file2, "documents");
@@ -169,15 +203,16 @@ const SignUpPage = () => {
                 userData,
                 { withCredentials: true }
             );
-            // Handle the file upload logic here
-            alert("Files submitted successfully!");
-            console.log("File 1:", file1);
-            console.log("Files 2:", file2);
-            console.log("pict", imageFile);
-            navigate("/signin");
+            console.log("111");
+            setAlertMessage("Files submitted successfully!");
+            setShowAlert(true);
+            setServerError("success");
+            setTimeout(() => {
+                setShowAlert(false);
+                navigate("/signin");
+            }, 3000);
         } catch (error) {
             setError(error.response.data.e);
-            console.log(error);
         } finally {
             setIsLoading(false);
         }
@@ -189,6 +224,20 @@ const SignUpPage = () => {
 
     return (
         <div className="signup-container">
+            {showAlert && (
+                <Alert
+                    severity={SeverError}
+                    onClose={() => setShowAlert(false)}
+                    style={{
+                        position: "fixed",
+                        right: "1%",
+                        bottom: "1vh",
+                        zIndex: 1000,
+                    }}
+                >
+                    {alertMessage}
+                </Alert>
+            )}
             <div className="form-container">
                 <h1 style={{ textAlign: "center", color: "var(--accent-color)" }}>
                     Sign Up

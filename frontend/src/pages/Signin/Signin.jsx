@@ -50,6 +50,9 @@ const SigninComponent = () => {
             setAlertMessage("Username or password is incorrect");
             setShowAlert(true);
             setServerError("error");
+            setTimeout(() => {
+                setShowAlert(false);
+            }, 5000);
         }
     };
 

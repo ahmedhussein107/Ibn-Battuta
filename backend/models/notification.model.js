@@ -30,24 +30,10 @@ notificationSchema.pre("save", async function (next) {
 
 		// Use a switch-case to handle validation for each type
 		let exists = false;
-		switch (relatedType) {
-			case "Complaint":
-				exists = await mongoose.model("Complaint").findById(relatedId);
-				break;
-			case "Activity":
-				exists = await mongoose.model("Activity").findById(relatedId);
-				break;
-			case "Event":
-				exists = await mongoose.model("Event").findById(relatedId);
-				break;
-			case "Product":
-				exists = await mongoose.model("Product").findById(relatedId);
-				break;
-			case "PromoCode":
-				exists = await mongoose.model("PromoCode").findById(relatedId);
-				break;
-			default:
-				return next(new Error(`Invalid relatedType: ${relatedType}`));
+		try {
+			exists = await mongoose.model(relatedType).findById(relatedId);
+		} catch (error) {
+			return next(new Error(`Invalid relatedType: ${relatedType}`));
 		}
 
 		if (!exists) {
