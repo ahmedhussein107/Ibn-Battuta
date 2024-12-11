@@ -258,6 +258,7 @@ export const getitineraryBookings = async (req, res) => {
 		}
 		const count = await Booking.countDocuments(query);
 		const bookings = await Booking.find(query)
+			.sort({ createdAt: -1 })
 			.skip(toSkip)
 			.limit(limit)
 			.populate({
@@ -306,6 +307,7 @@ export const getActivityBookings = async (req, res) => {
 		}
 		const count = await Booking.countDocuments(query);
 		const bookings = await Booking.find(query)
+			.sort({ createdAt: -1 }) // Sort by createdAt in descending order
 			.skip(toSkip)
 			.limit(limit)
 			.populate({
@@ -352,6 +354,7 @@ export const getHotelBookings = async (req, res) => {
 		} else {
 			bookings = tourist.hotelBookings;
 		}
+		bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 		const total = bookings.length;
 		const bookingsSlice = total > 0 ? bookings.slice(toSkip, toSkip + limit) : [];
 
@@ -400,6 +403,10 @@ export const getFlightBookings = async (req, res) => {
 				bookings[0].flightOffers[0].itineraries[0].segments[0].departure.at
 			);
 		}
+
+		// Sort bookings by createdAt in descending order
+		bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+		
 		const total = bookings.length;
 		const bookingsSlice = total > 0 ? bookings.slice(toSkip, toSkip + limit) : [];
 
