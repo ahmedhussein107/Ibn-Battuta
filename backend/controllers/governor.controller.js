@@ -40,7 +40,7 @@ export const createGovernor = async (req, res) => {
         console.log("duplicate username");
         return res
             .status(400)
-            .json({ error: "Username already exists. Please choose another one!." });
+            .json({ message: "Username already exists. Choose another one!" });
     }
 
     if (email) {
