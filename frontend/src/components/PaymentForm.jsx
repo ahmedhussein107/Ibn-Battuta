@@ -368,7 +368,6 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
                     Your payment was successfully processed. We’re redirecting you now...
                 </Alert>
             )}
-            {processing && <CircularProgress sx={{ alignSelf: "center" }} />}
             <Box
                 sx={{
                     display: "flex",
@@ -390,6 +389,7 @@ const PaymentForm = ({ amount, currency, handleSuccess, handleFailure }) => {
                 <CustomButton
                     customStyle={{ width: "10vw" }}
                     stylingMode="always-dark"
+                    isLoading={processing}
                     text="Pay"
                     handleClick={handleSubmit}
                 />
