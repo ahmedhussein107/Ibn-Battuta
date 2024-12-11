@@ -25,10 +25,11 @@ import PaginationComponent from "../../components/Pagination";
 import CreateUserPopUp from "./CreateUserPopUp";
 import usePageHeader from "../../components/Header/UseHeaderPage";
 import { use } from "react";
+import PopUp from "../../components/PopUpsGeneric/PopUp";
+import { Alert } from "@mui/material";
 const UserManagement = ({ isAll = true }) => {
-	usePageHeader("/users.png", "User Management");
+	usePageHeader("/users.png", isAll ? "Users List" : "Pending Users");
 	const [users, setUsers] = useState([]);
-	const [message, setMessage] = useState("");
 	const [isDialogOpen, setIsDialogOpen] = useState(false); // Track dialog state
 	const [selectedUser, setSelectedUser] = useState(null); // Track selected user ID
 	const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +39,12 @@ const UserManagement = ({ isAll = true }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [toBeCreatedUserType, setToBeCreatedUserType] = useState("");
 	const maxUserPerPage = 10;
+	const [popupAlert, setPopupAlert] = useState({
+		open: false,
+		severity: "info",
+		message: "",
+	});
+
 	const models = {
 		advertiser: "Advertiser",
 		seller: "Seller",
@@ -71,7 +78,7 @@ const UserManagement = ({ isAll = true }) => {
 			setTotalPages(response.data.totalPages);
 		} catch (error) {
 			console.error("Error fetching users:", error);
-			setMessage("Error fetching users. Please try again.");
+			showPopUpAlert("error", "Error fetching users. Please try again.");
 		}
 	};
 
@@ -84,13 +91,11 @@ const UserManagement = ({ isAll = true }) => {
 			}?userId=${selectedUser._id}`;
 			console.log(uri);
 			await axiosInstance.delete(uri, { withCredentials: true });
-			console.log("3");
-			setMessage("User deleted successfully!");
+			showPopUpAlert("success", "User deleted successfully!");
 			fetchUsers();
 		} catch (error) {
 			console.error("Error deleting user:", error);
-			setMessage("Error deleting user. Please try again.");
-			alert(error.response.data.message);
+			showPopUpAlert("error", error.response.data.message + "!");
 		} finally {
 			setSelectedUser(null);
 			setIsDialogOpen(false);
@@ -106,10 +111,10 @@ const UserManagement = ({ isAll = true }) => {
 				},
 				{ withCredentials: true, params: { userId: touristID } }
 			);
-			setMessage("Points added successfully!");
+			showPopUpAlert("success", "Points added successfully!");
 		} catch (error) {
 			console.error("Error adding point  user:", touristID, error);
-			setMessage("Error adding points. Please try again.");
+			showPopUpAlert("error", "Error adding points. Please try again.");
 		} finally {
 			setIsDialogOpen(false);
 		}
@@ -119,6 +124,15 @@ const UserManagement = ({ isAll = true }) => {
 	const openConfirmationDialog = (user) => {
 		setSelectedUser(user);
 		setIsDialogOpen(true);
+	};
+
+	const showPopUpAlert = (severity, message) => {
+		setPopupAlert({ open: true, severity, message });
+
+		setTimeout(() => {
+			setPopupAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+			// setIsOpen(false);
+		}, 4000); // Alert will close after 5 seconds
 	};
 
 	const closeConfirmationDialog = () => {
@@ -134,7 +148,7 @@ const UserManagement = ({ isAll = true }) => {
 		padding: "4px 8px",
 		borderRadius: "8px",
 		color: "black",
-		fontSize: "0.8rem",
+		fontSize: "1rem",
 		backgroundColor:
 			{
 				admin: "#D1C4E9",
@@ -152,11 +166,11 @@ const UserManagement = ({ isAll = true }) => {
 			const uri = `${user.role.toLowerCase()}/update${models[user.role]}?userId=${user._id}`;
 			console.log(uri);
 			await axiosInstance.put(uri, { isAccepted: true }, { withCredentials: true });
-			setMessage("User Accepted successfully!");
+			showPopUpAlert("success", "User accepted successfully");
 			fetchUsers();
 		} catch (error) {
 			console.error("Error Accepting user:", error);
-			setMessage("Error Accepting user. Please try again.");
+			showPopUpAlert("error", "Error Accepting user. Please try again.");
 		} finally {
 			setSelectedUser(null);
 			setIsDialogOpen(false);
@@ -189,25 +203,23 @@ const UserManagement = ({ isAll = true }) => {
 					<Table>
 						<TableHead>
 							<TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-								{" "}
-								{/* Edit the table head color */}
-								<TableCell>Name</TableCell>
-								<TableCell>Role</TableCell>
-								<TableCell>Email</TableCell>
-								<TableCell>Date</TableCell>
+								<TableCell sx={{ fontSize: "1.3rem" }}>Name</TableCell>
+								<TableCell sx={{ fontSize: "1.3rem" }}>Role</TableCell>
+								<TableCell sx={{ fontSize: "1.3rem" }}>Email</TableCell>
+								<TableCell sx={{ fontSize: "1.3rem" }}>Date</TableCell>
 								{!isAll && (
 									<>
-										<TableCell>ID </TableCell>
-										<TableCell>Documents</TableCell>
+										<TableCell sx={{ fontSize: "1.3rem" }}>ID</TableCell>
+										<TableCell sx={{ fontSize: "1.3rem" }}>Documents</TableCell>
 									</>
 								)}
-								<TableCell></TableCell>
+								<TableCell sx={{ fontSize: "1.3rem" }}></TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{users.map((user) => (
 								<TableRow key={user.id}>
-									<TableCell>
+									<TableCell sx={{ fontSize: "1.2rem" }}>
 										<Box
 											sx={{
 												display: "flex",
@@ -219,11 +231,11 @@ const UserManagement = ({ isAll = true }) => {
 											{user.name}
 										</Box>
 									</TableCell>
-									<TableCell>
+									<TableCell sx={{ fontSize: "1.2rem" }}>
 										<RoleBadge role={user.role}>{user.role}</RoleBadge>
 									</TableCell>
-									<TableCell>{user.email}</TableCell>
-									<TableCell>
+									<TableCell sx={{ fontSize: "1.2rem" }}>{user.email}</TableCell>
+									<TableCell sx={{ fontSize: "1.2rem" }}>
 										{
 											new Date(user.createdAt)
 												.toLocaleString("en-GB")
@@ -232,7 +244,7 @@ const UserManagement = ({ isAll = true }) => {
 									</TableCell>
 									{!isAll && (
 										<>
-											<TableCell>
+											<TableCell sx={{ fontSize: "1.2rem" }}>
 												<FilePresentIcon
 													sx={{
 														marginRight: "0.5rem",
@@ -247,7 +259,7 @@ const UserManagement = ({ isAll = true }) => {
 													id
 												</a>
 											</TableCell>
-											<TableCell>
+											<TableCell sx={{ fontSize: "1.2rem" }}>
 												{user.documents.slice(1).map((doc, index) => (
 													<>
 														<FilePresentIcon
@@ -265,7 +277,7 @@ const UserManagement = ({ isAll = true }) => {
 											</TableCell>
 										</>
 									)}
-									<TableCell align="center">
+									<TableCell align="center" sx={{ fontSize: "1.2rem" }}>
 										{isAll ? (
 											<div>
 												{user.role.toLowerCase() === "tourist" && (
@@ -281,7 +293,7 @@ const UserManagement = ({ isAll = true }) => {
 														}}
 													>
 														<AddIcon />
-														1000,000 EGP
+														1,000,000 EGP
 													</IconButton>
 												)}
 												<IconButton
@@ -291,7 +303,7 @@ const UserManagement = ({ isAll = true }) => {
 														console.log(user._id);
 													}}
 												>
-													<DeleteIcon />
+													<DeleteIcon sx={{ fontSize: "1.8rem" }} />
 												</IconButton>
 											</div>
 										) : (
@@ -303,13 +315,15 @@ const UserManagement = ({ isAll = true }) => {
 														console.log(user._id);
 													}}
 												>
-													<ClearIcon />
+													<ClearIcon sx={{ fontSize: "1.8rem" }} />
 												</IconButton>
 												<IconButton
 													color="success"
-													onClick={() => handleAcceptUser(user)}
+													onClick={() => {
+														handleAcceptUser(user);
+													}}
 												>
-													<CheckIcon />
+													<CheckIcon sx={{ fontSize: "1.8rem" }} />
 												</IconButton>
 											</div>
 										)}
@@ -325,6 +339,27 @@ const UserManagement = ({ isAll = true }) => {
 
 	return (
 		<div className="user-management-container">
+			{popupAlert.open && (
+				<Alert
+					severity={popupAlert.severity}
+					onClose={() =>
+						setPopupAlert({
+							...popupAlert,
+							open: false,
+						})
+					}
+					style={{
+						position: "fixed",
+						right: "1%",
+						bottom: "2%",
+						width: "25%",
+						justifyContent: "center",
+						zIndex: 1000,
+					}}
+				>
+					{popupAlert.message}
+				</Alert>
+			)}
 			<CreateUserPopUp userType={toBeCreatedUserType} isOpen={isOpen} setIsOpen={setIsOpen} />
 			<ActionButtonsForUsers
 				searchText={searchText}
@@ -333,14 +368,14 @@ const UserManagement = ({ isAll = true }) => {
 				setIsOpen={setIsOpen}
 				setUserType={setToBeCreatedUserType}
 			/>
-			{message && <p>{message}</p>}
-
-			<ConfirmationDialog
-				message="Are you sure you want to delete this user?"
-				onConfirm={handleDelete}
-				onCancel={closeConfirmationDialog}
+			<PopUp
 				isOpen={isDialogOpen}
-			/>
+				setIsOpen={setIsDialogOpen}
+				headerText={"Are you sure you want to delete this user?"}
+				cancelText="Cancel"
+				actionText="Delete"
+				handleSubmit={handleDelete}
+			></PopUp>
 			<hr style={{ width: "90%", margin: "1% auto" }} />
 			<CustomTable />
 			<PaginationComponent
