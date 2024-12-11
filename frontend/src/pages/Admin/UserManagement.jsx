@@ -28,7 +28,7 @@ import { use } from "react";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
 import { Alert } from "@mui/material";
 const UserManagement = ({ isAll = true }) => {
-	usePageHeader("/users.png", "User Management");
+	usePageHeader("/users.png", isAll ? "Users List" : "Pending Users");
 	const [users, setUsers] = useState([]);
 	const [isDialogOpen, setIsDialogOpen] = useState(false); // Track dialog state
 	const [selectedUser, setSelectedUser] = useState(null); // Track selected user ID
@@ -148,7 +148,7 @@ const UserManagement = ({ isAll = true }) => {
 		padding: "4px 8px",
 		borderRadius: "8px",
 		color: "black",
-		fontSize: "0.8rem",
+		fontSize: "1rem",
 		backgroundColor:
 			{
 				admin: "#D1C4E9",
@@ -203,25 +203,23 @@ const UserManagement = ({ isAll = true }) => {
 					<Table>
 						<TableHead>
 							<TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-								{" "}
-								{/* Edit the table head color */}
-								<TableCell>Name</TableCell>
-								<TableCell>Role</TableCell>
-								<TableCell>Email</TableCell>
-								<TableCell>Date</TableCell>
+								<TableCell sx={{ fontSize: "1.3rem" }}>Name</TableCell>
+								<TableCell sx={{ fontSize: "1.3rem" }}>Role</TableCell>
+								<TableCell sx={{ fontSize: "1.3rem" }}>Email</TableCell>
+								<TableCell sx={{ fontSize: "1.3rem" }}>Date</TableCell>
 								{!isAll && (
 									<>
-										<TableCell>ID </TableCell>
-										<TableCell>Documents</TableCell>
+										<TableCell sx={{ fontSize: "1.3rem" }}>ID</TableCell>
+										<TableCell sx={{ fontSize: "1.3rem" }}>Documents</TableCell>
 									</>
 								)}
-								<TableCell></TableCell>
+								<TableCell sx={{ fontSize: "1.3rem" }}></TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{users.map((user) => (
 								<TableRow key={user.id}>
-									<TableCell>
+									<TableCell sx={{ fontSize: "1.2rem" }}>
 										<Box
 											sx={{
 												display: "flex",
@@ -233,11 +231,11 @@ const UserManagement = ({ isAll = true }) => {
 											{user.name}
 										</Box>
 									</TableCell>
-									<TableCell>
+									<TableCell sx={{ fontSize: "1.2rem" }}>
 										<RoleBadge role={user.role}>{user.role}</RoleBadge>
 									</TableCell>
-									<TableCell>{user.email}</TableCell>
-									<TableCell>
+									<TableCell sx={{ fontSize: "1.2rem" }}>{user.email}</TableCell>
+									<TableCell sx={{ fontSize: "1.2rem" }}>
 										{
 											new Date(user.createdAt)
 												.toLocaleString("en-GB")
@@ -246,7 +244,7 @@ const UserManagement = ({ isAll = true }) => {
 									</TableCell>
 									{!isAll && (
 										<>
-											<TableCell>
+											<TableCell sx={{ fontSize: "1.2rem" }}>
 												<FilePresentIcon
 													sx={{
 														marginRight: "0.5rem",
@@ -261,7 +259,7 @@ const UserManagement = ({ isAll = true }) => {
 													id
 												</a>
 											</TableCell>
-											<TableCell>
+											<TableCell sx={{ fontSize: "1.2rem" }}>
 												{user.documents.slice(1).map((doc, index) => (
 													<>
 														<FilePresentIcon
@@ -279,7 +277,7 @@ const UserManagement = ({ isAll = true }) => {
 											</TableCell>
 										</>
 									)}
-									<TableCell align="center">
+									<TableCell align="center" sx={{ fontSize: "1.2rem" }}>
 										{isAll ? (
 											<div>
 												{user.role.toLowerCase() === "tourist" && (
@@ -295,7 +293,7 @@ const UserManagement = ({ isAll = true }) => {
 														}}
 													>
 														<AddIcon />
-														1000,000 EGP
+														1,000,000 EGP
 													</IconButton>
 												)}
 												<IconButton
@@ -305,7 +303,7 @@ const UserManagement = ({ isAll = true }) => {
 														console.log(user._id);
 													}}
 												>
-													<DeleteIcon />
+													<DeleteIcon sx={{ fontSize: "1.8rem" }} />
 												</IconButton>
 											</div>
 										) : (
@@ -317,7 +315,7 @@ const UserManagement = ({ isAll = true }) => {
 														console.log(user._id);
 													}}
 												>
-													<ClearIcon />
+													<ClearIcon sx={{ fontSize: "1.8rem" }} />
 												</IconButton>
 												<IconButton
 													color="success"
@@ -325,7 +323,7 @@ const UserManagement = ({ isAll = true }) => {
 														handleAcceptUser(user);
 													}}
 												>
-													<CheckIcon />
+													<CheckIcon sx={{ fontSize: "1.8rem" }} />
 												</IconButton>
 											</div>
 										)}
