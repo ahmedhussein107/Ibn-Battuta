@@ -7,7 +7,7 @@
     display: flex;
     justify-content: space-between; /* Distributes space evenly */
     align-items: center; /* Vertically centers items */
-    padding: 2px 20px; /* Adjust as needed for spacing */
+    padding: 10px 20px; /* Adjust as needed for spacing */
     background-color: var(--background-color); /* TODO: change opacity */
     border-radius: 50px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
