@@ -15,7 +15,7 @@ const FlightCard = ({ trip, airlines, handleClick, mode = 1, bookingNumber }) =>
             flexDirection: "row",
             boxShadow: "0 2px 12px rgba(0,0,0,0.16)",
             borderRadius: "2vh",
-            backgroundColor: "#f7f7f7", // Set the background color
+            backgroundColor: "#fffafa", // Set the background color
         },
         cardLeft: {
             width: "80%",
