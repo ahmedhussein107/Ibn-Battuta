@@ -3,6 +3,7 @@ import Button from "./Button";
 import GenericCard from "./GenericCard";
 import { Rating, Chip } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import orderImage from "../assets/images/order.png";
 import PopUp from "./PopUpsGeneric/PopUp";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +40,7 @@ const CardOrder = ({ order, width = "46vw", height = "26vh", fontSize = "1.5rem"
 	if (isLoading) {
 		return <CircularProgress />;
 	}
-	const Picture =(order.purchases[0] && order.purchases[0].product.pictures[0] )|| "";
+	const Picture = order?.purchases[0]?.product?.pictures[0] || orderImage;
 	const aboveLine = (
 		<div>
 			<div
