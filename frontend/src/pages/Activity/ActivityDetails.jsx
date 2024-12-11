@@ -688,7 +688,10 @@ const ActivityDetails = () => {
                     <ProfileAndDescription
                         mode="Activity"
                         name={advertiserName}
-                        picture={activityData.advertiserID.picture}
+                        picture={
+                            activityData.advertiserID.picture ||
+                            "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
+                        }
                         description={activityData.description}
                         width={"80%"}
                         fontSize={"1.2em"}
