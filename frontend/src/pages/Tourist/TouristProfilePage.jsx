@@ -133,8 +133,9 @@ const InfoBoxesContainer = styled.div`
 `;
 
 const WalletIcon = styled.img`
-    width: 100%;
-    height: 100%;
+    width: 85%;
+    height: 85%;
+    margin-left: 5%;
 `;
 const LevelContainer = styled.div`
     font-size: 16px;
@@ -352,6 +353,7 @@ export default function TouristProfilePage() {
                     address: response.data.address || [],
                     currency: response.data.currency || "",
                 });
+                setImage(response.data.picture || defaultImage);
             })
             .catch((error) => {
                 console.error("Error fetching tourist:", error);
@@ -398,7 +400,10 @@ export default function TouristProfilePage() {
                     }));
 
                     setImage(response.data.picture);
-                    console.log("Updated Tourist Profile Picture:", response.data.picture);
+                    console.log(
+                        "Updated Tourist Profile Picture:",
+                        response.data.picture
+                    );
                     Cookies.set("profileImage", response.data.picture);
                     setTimeout(() => {
                         window.location.reload();
@@ -1048,7 +1053,7 @@ export default function TouristProfilePage() {
                     <InfoBoxesContainer>
                         <RedeemBox>
                             <LevelContainer>
-                                <WalletIcon src="/image 55.png" alt="Wallet Icon" />
+                                <WalletIcon src="/wallet.png" alt="Wallet Icon" />
                             </LevelContainer>
 
                             <PointsSection>
