@@ -104,10 +104,19 @@ export const updateTourGuide = async (req, res) => {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
         if (req.body.email) {
-            await Email.findByIdAndDelete(tourGuide.email);
-            await Email.create({
-                _id: req.body.email,
-            });
+            try {
+                await Email.findByIdAndDelete(tourGuide.email);
+                await Email.create({
+                    _id: req.body.email,
+                });
+            } catch (e) {
+                await Email.create({
+                    _id: tourGuide.email,
+                });
+                return res
+                    .status(400)
+                    .json({ message: "Error updating email", error: e.message });
+            }
         }
 
         // Update tourGuide details
@@ -119,7 +128,11 @@ export const updateTourGuide = async (req, res) => {
             }
         );
 
-        res.status(200).json(updatedtourGuide);
+        res.cookie("profileImage", updateTourGuide.picture, {
+            maxAge: 5 * 60 * 60 * 1000,
+        })
+            .status(200)
+            .json(updatedtourGuide);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

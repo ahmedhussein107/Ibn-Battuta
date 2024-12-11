@@ -16,14 +16,22 @@ landmarkRouter.post("/createLandmark", isAuthenticated, createLandmark);
 
 landmarkRouter.get("/allLandmarks", getAllLandmarks);
 
-landmarkRouter.get("/landmark/:id", getLandmarkById);
+landmarkRouter.get("/landmark", isAuthenticated, getLandmarkById);
 
-landmarkRouter.get("/ticketPricesFromLandmark/:id", getTicketPricesFromLandmark);
+landmarkRouter.get(
+    "/ticketPricesFromLandmark",
+    isAuthenticated,
+    getTicketPricesFromLandmark
+);
 
-landmarkRouter.patch("/updateLandmark/:id", updateLandmark);
+landmarkRouter.patch("/updateLandmark", isAuthenticated, updateLandmark);
 
-landmarkRouter.delete("/deleteLandmark/:id", deleteLandmark);
+landmarkRouter.delete("/deleteLandmark", isAuthenticated, deleteLandmark);
 
-landmarkRouter.get("/getGovernorLandmarks", isAuthenticated, getGovernorLandmarks);
+landmarkRouter.get(
+    "/getGovernorLandmarks",
+    isAuthenticated,
+    getGovernorLandmarks
+);
 
 export default landmarkRouter;

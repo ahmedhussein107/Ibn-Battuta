@@ -5,16 +5,20 @@ import { TimePicker } from "antd";
 import MapPopUp from "../../components/MapPopUp";
 import axiosInstance from "../../api/axiosInstance";
 import { uploadFile } from "../../api/firebase";
-// Styled components
+import Footer from "../../components/Footer";
+import landmarkbackground from "../../assets/backgrounds/landmarksBackground.png";
 import { useNavigate } from "react-router-dom";
 const FormWrapper = styled.div`
-    width: 55%;
-    margin: 20px auto;
-    padding: 200px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    min-height: 100vh; /* Full viewport height */
+    padding: 0;
+    position: relative;
+    width: 100vw; /* Full viewport width */
+    top: 0;
+    left: 0;
 `;
 
 const FormTitle = styled.h2`
@@ -52,11 +56,30 @@ const RemoveButton = styled.button`
         text-decoration: underline;
     }
 `;
-
-const FormGroup = styled.div`
-    margin-bottom: 15px;
+const InfoBoxesContainer = styled.div`
+    margintop: 20px;
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+    align-items: stretch; // Ensures all child elements have the same height
+    align-content: stretch; // Ensures all child elements have the same height
+    width: 100%; // Set the desired width here
 `;
-
+const FormGroup = styled.div`
+    display: flex; // Flex layout for horizontal arrangement
+    flex-direction: column;
+    flex: 1; // Allows it to grow or shrink proportionally
+    background: white;
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+`;
+const ColumnContainter = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+`;
 const Label = styled.label`
     display: block;
     margin-bottom: 8px;
@@ -78,7 +101,23 @@ const Row = styled.div`
 `;
 
 const Button = styled.button`
-    width: 20%;
+    width: 10%;
+    padding: 10px;
+    background: white; /* Set background color to white */
+    color: var(--accent-color); /* Set text color to brown */
+    border: 2px solid var(--accent-color); /* Set border to brown */
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 7vh;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+`;
+
+const Button1 = styled.button`
+    width: 10%;
     padding: 10px;
     background: #4caf50;
     color: white;
@@ -112,15 +151,17 @@ const FileInput = styled.input`
     cursor: pointer;
 `;
 
-const TicketRow = styled(Row)`
+const TicketRow = styled.div`
     justify-content: space-between;
 `;
 
 const DayRow = styled(Row)`
+    margin-top: 10px;
     align-items: center;
     display: flex;
+    justify-content: flex-start;
+    display: flex;
     flex-direction: flex-end;
-    justify-content: flex-end;
 `;
 
 const TimeSelect = styled(TimePicker)`
@@ -159,7 +200,9 @@ export default function LandmarkForm() {
     useEffect(() => {
         const fetchPredefinedTags = async () => {
             try {
-                const response = await axiosInstance.get(`/landmarkTag/allLandmarkTags/`);
+                const response = await axiosInstance.get(
+                    `/landmarkTag/allLandmarkTags/`
+                );
                 console.log(response);
                 let tags = [];
                 for (let tag of response.data) {
@@ -206,12 +249,18 @@ export default function LandmarkForm() {
     const handleImageDrop = (e) => {
         e.preventDefault();
         const files = Array.from(e.dataTransfer.files);
-        setLandmark({ ...landmark, pictures: [...landmark.pictures, ...files] });
+        setLandmark({
+            ...landmark,
+            pictures: [...landmark.pictures, ...files],
+        });
     };
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
-        setLandmark({ ...landmark, pictures: [...landmark.pictures, ...files] });
+        setLandmark({
+            ...landmark,
+            pictures: [...landmark.pictures, ...files],
+        });
     };
 
     const handleSubmit = async (e) => {
@@ -228,7 +277,7 @@ export default function LandmarkForm() {
             axiosInstance.post("/landmark/createLandmark", _landmark, {
                 withCredentials: true,
             });
-            navigate(-1);
+            navigate("/governor/landmarks");
         } catch (err) {}
     };
 
@@ -238,79 +287,72 @@ export default function LandmarkForm() {
             setSelectedTag("");
         }
     };
+    const removeTag = (tagToRemove) => {
+        setTags(tags.filter((tag) => tag !== tagToRemove));
+    };
 
     return (
         <FormWrapper>
-            <FormTitle>Create Landmark</FormTitle>
-            <form onSubmit={handleSubmit}>
-                <FormGroup>
-                    <Label>Landmark Name</Label>
-                    <Input
-                        type="text"
-                        name="name"
-                        value={landmark.name}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </FormGroup>
-
-                <FormGroup>
-                    <Label>Description</Label>
-                    <Input
-                        type="text"
-                        name="description"
-                        value={landmark.description}
-                        onChange={handleInputChange}
-                    />
-                </FormGroup>
-
-                <FormGroup>
-                    <Label>Pictures</Label>
-                    <ImageDropzone
-                        onDrop={handleImageDrop}
-                        onDragOver={(e) => e.preventDefault()}
+            <div
+                style={{
+                    width: "100vw",
+                    height: "35vh",
+                    color: "#FAE2B6",
+                    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${landmarkbackground})`,
+                    backgroundSize: "100% 100%",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                }}
+            >
+                <div style={{ marginLeft: "5%", marginBottom: "2%" }}>
+                    <p
+                        style={{
+                            fontSize: "2.5rem",
+                            marginBottom: "1rem",
+                            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+                            color: "white",
+                            fontWeight: "500",
+                            userSelect: "none",
+                        }}
                     >
-                        Drag & Drop Images Here or Click to Select
-                        <FileInput type="file" multiple onChange={handleImageChange} />
-                    </ImageDropzone>
-                    <ImageList>
-                        {landmark.pictures.map((file, index) => (
-                            <ImageItem key={index}>
-                                {file.name || file} {/* Use file name if available */}
-                                <RemoveButton
-                                    onClick={() => {
-                                        const updatedPictures = [...landmark.pictures];
-                                        updatedPictures.splice(index, 1);
-                                        setLandmark({
-                                            ...landmark,
-                                            pictures: updatedPictures,
-                                        });
-                                    }}
-                                >
-                                    Remove
-                                </RemoveButton>
-                            </ImageItem>
-                        ))}
-                    </ImageList>
-                </FormGroup>
+                        Create a new landmark
+                    </p>
+                </div>
+            </div>
 
-                <TicketRow>
-                    {["foreigner", "native", "student"].map((type) => (
-                        <FormGroup key={type}>
-                            <Label>
-                                {type[0].toUpperCase() + type.slice(1)} Ticket Price
-                            </Label>
-                            <Input
-                                type="number"
-                                value={landmark.ticketPrices[type]}
-                                onChange={(e) => handleTicketPriceChange(e, type)}
-                            />
-                        </FormGroup>
-                    ))}
-                </TicketRow>
+            <form
+                onSubmit={handleSubmit}
+                style={{
+                    width: "80%",
+                    margin: "0 auto",
+                    marginTop: "5%",
+                    flexDirection: "row",
+                }}
+            >
+                <InfoBoxesContainer>
+                    <FormGroup>
+                        <Label>Landmark Name</Label>
+                        <Input
+                            type="text"
+                            name="name"
+                            value={landmark.name}
+                            onChange={handleInputChange}
+                            required
+                            style={{ width: "70%" }} // Adjust width here
+                        />
+                        <Label>Description</Label>
+                        <Input
+                            type="text"
+                            name="description"
+                            value={landmark.description}
+                            onChange={handleInputChange}
+                            style={{ width: "70%" }} // Adjust width here
+                        />
 
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <div>
                         {Object.keys(landmark.openingHours).map((day) => (
                             <DayRow key={day}>
                                 <Label>{day}</Label>
@@ -332,90 +374,206 @@ export default function LandmarkForm() {
                                 />
                             </DayRow>
                         ))}
-                    </div>
-                    {/* add map adder here */}
-                    {isMapOpen && (
-                        <MapPopUp
-                            popUpOpen={isMapOpen}
-                            setPopUpOpen={setIsMapOpen}
-                            mapFunction={mapFunction}
-                        />
-                    )}
-                    <div style={{ width: "30%", marginTop: "30px", marginRight: "10%" }}>
-                        <LocationAdder
-                            title="Pickup Location"
-                            styles={{ width: "100%" }}
-                            location={pickupLocation}
-                            setLocation={setPickupLocation}
-                            setMapFunction={setMapFunction}
-                        />
-                    </div>
-                </div>
-                <div style={{ flex: "1", marginLeft: "5%" }}>
-                    <label>Tags</label>
-                    <div style={{ display: "flex", width: "35%" }}>
-                        <select
-                            value={selectedTag}
-                            onChange={(e) => setSelectedTag(e.target.value)}
+                        <div
                             style={{
-                                flex: 1,
-                                padding: "1vh",
-                                marginLeft: "1vh",
-                                backgroundColor: "#f4e1c1",
-                                border: "2px solid black",
-                                borderRadius: "40px",
+                                display: "flex",
+                                justifyContent: "space-between",
                             }}
                         >
-                            <option value="">Select tag</option>
-                            {predefinedTags.map((tag) => (
-                                <option key={tag} value={tag}>
-                                    {tag}
-                                </option>
-                            ))}
-                        </select>
-                        <button
-                            disabled={!selectedTag}
-                            onClick={addTag}
-                            style={{
-                                marginLeft: "1vh",
-                                padding: "1vh",
-                                backgroundColor: "#f4e1c1",
-                                border: "2px solid black",
-                                borderRadius: "40px",
-                            }}
-                        >
-                            Add
-                        </button>
-                    </div>
-                    <div
-                        style={{
-                            marginTop: "1vh",
-                            display: "flex",
-                            flexWrap: "wrap",
-                            marginLeft: "1vh",
-                            gap: "1vh",
-                        }}
-                    >
-                        {tags.map((tag, index) => (
-                            <span
-                                key={index}
-                                onClick={() => removeTag(tag)}
+                            {/* add map adder here */}
+                            {isMapOpen && (
+                                <MapPopUp
+                                    popUpOpen={isMapOpen}
+                                    setPopUpOpen={setIsMapOpen}
+                                    mapFunction={mapFunction}
+                                />
+                            )}
+                            <div
                                 style={{
-                                    padding: "0.5vh 1vh",
-                                    backgroundColor: "#f4cfbf",
-                                    borderRadius: "8px",
-                                    cursor: "pointer",
+                                    width: "30%",
+                                    marginTop: "30px",
+                                    marginRight: "10%",
                                 }}
                             >
-                                {tag} ✕
-                            </span>
-                        ))}
-                    </div>
-                </div>
+                                <LocationAdder
+                                    title="Pickup Location"
+                                    styles={{ width: "100%" }}
+                                    location={pickupLocation}
+                                    setLocation={setPickupLocation}
+                                    setMapFunction={setMapFunction}
+                                />
+                            </div>
+                        </div>
+                        <div style={{ flex: "1" }}>
+                            <Label>Tags</Label>
+                            <div style={{ display: "flex", width: "35%" }}>
+                                <select
+                                    value={selectedTag}
+                                    onChange={(e) =>
+                                        setSelectedTag(e.target.value)
+                                    }
+                                    style={{
+                                        flex: 1,
+                                        padding: "1vh",
+                                        marginLeft: "1vh",
+                                        backgroundColor: "white", // White background
+                                        border: "1px solid lightgray", // Light gray border
+                                        borderRadius: "01px", // Rounded rectangle shape
+                                        color: "black", // Text color
+                                        fontSize: "1rem", // Adjust font size for readability
+                                        outline: "none", // Remove focus outline
+                                        boxShadow:
+                                            "0 1px 3px rgba(0, 0, 0, 0.1)", // Subtle shadow
+                                    }}
+                                >
+                                    <option value="">Select tag</option>
+                                    {predefinedTags.map((tag) => (
+                                        <option key={tag} value={tag}>
+                                            {tag}
+                                        </option>
+                                    ))}
+                                </select>
+                                <button
+                                    disabled={!selectedTag}
+                                    onClick={addTag}
+                                    style={{
+                                        marginLeft: "1vh",
+                                        padding: "1vh",
+                                        backgroundColor: "#f4e1c1", // Matching color as the Add Tag button
+                                        border: "2px solid black",
+                                        borderRadius: "40px",
+                                    }}
+                                >
+                                    Add
+                                </button>
+                            </div>
+                            <div
+                                style={{
+                                    marginTop: "1vh",
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    marginLeft: "1vh",
+                                    gap: "1vh",
+                                }}
+                            >
+                                {tags.map((tag, index) => (
+                                    <span
+                                        key={index}
+                                        style={{
+                                            padding: "0.5vh 1vh",
+                                            backgroundColor: "#f4e1c1", // Same color as Add Tag button
+                                            borderRadius: "8px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <span style={{ marginRight: "5px" }}>
+                                            {tag}
+                                        </span>
+                                        <span
+                                            onClick={() => removeTag(tag)}
+                                            style={{
+                                                color: "#d32f2f",
+                                                fontWeight: "bold",
+                                                cursor: "pointer",
+                                            }}
+                                        >
+                                            ✕
+                                        </span>
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    </FormGroup>
+                    <ColumnContainter>
+                        <FormGroup>
+                            <Label>Pictures</Label>
+                            <ImageDropzone
+                                onDrop={handleImageDrop}
+                                onDragOver={(e) => e.preventDefault()}
+                            >
+                                Drag & Drop Images Here or Click to Select
+                                <FileInput
+                                    type="file"
+                                    multiple
+                                    onChange={handleImageChange}
+                                />
+                            </ImageDropzone>
+                            <ImageList>
+                                {landmark.pictures.map((file, index) => (
+                                    <ImageItem key={index}>
+                                        {file.name || file}{" "}
+                                        {/* Use file name if available */}
+                                        <RemoveButton
+                                            onClick={() => {
+                                                const updatedPictures = [
+                                                    ...landmark.pictures,
+                                                ];
+                                                updatedPictures.splice(
+                                                    index,
+                                                    1
+                                                );
+                                                setLandmark({
+                                                    ...landmark,
+                                                    pictures: updatedPictures,
+                                                });
+                                            }}
+                                        >
+                                            Remove
+                                        </RemoveButton>
+                                    </ImageItem>
+                                ))}
+                            </ImageList>
+                        </FormGroup>
+                        <FormGroup>
+                            <TicketRow>
+                                {["foreigner", "native", "student"].map(
+                                    (type) => (
+                                        <div key={type}>
+                                            <Label>
+                                                {type[0].toUpperCase() +
+                                                    type.slice(1)}{" "}
+                                                Ticket Price
+                                            </Label>
+                                            <Input
+                                                type="number"
+                                                value={
+                                                    landmark.ticketPrices[type]
+                                                }
+                                                onChange={(e) =>
+                                                    handleTicketPriceChange(
+                                                        e,
+                                                        type
+                                                    )
+                                                }
+                                                style={{
+                                                    width: "80%",
+                                                    height: "5%",
+                                                    marginBottom: "10px",
+                                                }} // Adjust width and height as needed
+                                            />
+                                        </div>
+                                    )
+                                )}
+                            </TicketRow>
+                        </FormGroup>
+                    </ColumnContainter>
+                </InfoBoxesContainer>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                    <Button type="submit">Submit</Button>
+                    <Button
+                        stylingMode="always-light"
+                        text="Cancel"
+                        onClick={() => navigate("/governor/landmarks")}
+                        width="auto"
+                        style={{ marginRight: "75%" }} // Add right margin to the first button
+                    >
+                        Cancel
+                    </Button>
+                    <Button1 type="submit">Submit</Button1>
                 </div>
             </form>
+
+            <Footer />
         </FormWrapper>
     );
 }

@@ -7,6 +7,7 @@ import { Rating } from "@mui/material";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
+import { getProductOwnerName } from "../../../backend/controllers/product.controller";
 const CardProduct = ({
     product,
     width,
@@ -22,6 +23,16 @@ const CardProduct = ({
     const line1 = (
         <div style={{ fontSize: fontSize }}>
             <TitleAndButtons title={product.name} buttons={firstLineButtons} />
+            <div
+                style={{
+                    fontSize: "0.9em",
+                    color: "#666",
+                    marginTop: "4px",
+                    fontStyle: "italic",
+                }}
+            >
+                Seller: {product.ownerID?.name}
+            </div>
         </div>
     );
     const currency = Cookies.get("currency") || "EGP";
