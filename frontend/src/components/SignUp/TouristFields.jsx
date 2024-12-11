@@ -27,6 +27,7 @@ const PhoneNumberInput = ({ onChange, userData }) => {
             position: "relative",
             width: "100%",
             maxWidth: "400px",
+            fontSize: "1rem",
         },
         countrySelector: {
             display: "flex",
@@ -210,16 +211,19 @@ const MyDatePicker = ({ onChange, userData }) => {
                 borderRadius: "8px",
                 backgroundColor: "white",
                 marginTop: "8px",
+                fontSize: "1rem",
             },
             selector: {
                 display: "flex",
+
                 alignItems: "center",
-                justifyContent: "space-between",
+                justifyContent: "flex-start",
                 padding: "8px",
                 border: "1px solid #e0e0e0",
                 borderRadius: "8px",
                 cursor: "pointer",
             },
+
             dropdown: {
                 position: "absolute",
                 top: "100%",
@@ -291,7 +295,7 @@ const MyDatePicker = ({ onChange, userData }) => {
                 placeholder="DD"
             />
             <CustomDropdown
-                value={userData.DOB?.month || "MM"}
+                value={userData.DOB?.month || "Month"}
                 options={months}
                 onChange={(value) => handleDateChange("month", value)}
                 placeholder="MM"
@@ -335,7 +339,10 @@ const TouristFields = ({ userData, onChange }) => {
                 <label style={{ alignSelf: "flex-start", marginLeft: "15%" }}>
                     Date of Birth*
                 </label>
-                <div className="date-input-group">
+                <div
+                    className="date-input-group"
+                    style={{ alignSelf: "flex-start", marginLeft: "13%" }}
+                >
                     <MyDatePicker onChange={onChange} userData={userData} />
                 </div>
             </div>
