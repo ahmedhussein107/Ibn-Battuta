@@ -71,7 +71,7 @@ export const getFreeSpotsHelper = async (id) => {
 
         return mn;
     } catch (error) {
-        throw new Error(error.message);
+        throw new Error(error.message); // Return error to the caller
     }
 };
 
@@ -213,8 +213,8 @@ export const toggleFlaggedItineraries = async (req, res) => {
             `Your Itinerary ${itinerary.name} has been flagged as ${
                 itinerary.isFlagged ? "not " : ""
             }appropriate`,
-            itinerary.advertiserID,
-            "Advertiser",
+            itinerary.tourguideID,
+            "TourGuide",
             itinerary._id,
             "Activity",
             itinerary.isFlagged ? "warning" : "info"

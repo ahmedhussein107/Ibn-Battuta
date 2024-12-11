@@ -501,7 +501,7 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                                 </div>
                                 <Button
                                     stylingMode="always-dark"
-                                    text="Create Activity"
+                                    text="Create Itinerary"
                                     isLoading={isLoading}
                                     customStyle={{ marginTop: "2vh" }}
                                     handleClick={handleSubmit}

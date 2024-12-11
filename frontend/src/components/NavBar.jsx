@@ -180,8 +180,8 @@ const NavBar = () => {
         Cookies.remove("profileImage");
         Cookies.set("currency", "EGP");
         setUserType("Guest");
-
         navigate("/");
+        window.location.reload();
     };
 
     const renderDropdownItem = (label, index, dropdown) => {

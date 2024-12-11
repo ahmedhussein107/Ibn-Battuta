@@ -13,6 +13,7 @@ const DiscountCard = ({
     discountPercentage,
     width,
     height,
+    showButton = true,
 }) => {
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
@@ -41,18 +42,20 @@ const DiscountCard = ({
                 )}
             </div>
 
-            <Button
-                stylingMode="always-dark"
-                text="Book Now"
-                customStyle={{
-                    maxHeight: "40px",
-                    borderRadius: "80px",
-                    padding: "10px",
-                    width: "35%",
-                    marginLeft: "60%",
-                }}
-                handleClick={onClick}
-            />
+            {showButton && (
+                <Button
+                    stylingMode="always-dark"
+                    text="Book Now"
+                    customStyle={{
+                        maxHeight: "40px",
+                        borderRadius: "80px",
+                        padding: "10px",
+                        width: "35%",
+                        marginLeft: "60%",
+                    }}
+                    handleClick={onClick}
+                />
+            )}
 
             {/* Conditionally render the discount badge if there's a discount */}
             {discountPercentage > 0 && (
@@ -79,7 +82,7 @@ const styles = {
         backgroundColor: "#fff",
         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
         textAlign: "center",
-        maxHeight:"20vh"
+        maxHeight: "20vh",
     },
     availableSeats: {
         color: "green",

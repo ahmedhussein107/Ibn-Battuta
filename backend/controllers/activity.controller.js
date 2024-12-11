@@ -1,6 +1,7 @@
 import Activity from "../models/activity.model.js";
 import { buildFilter } from "../utilities/searchUtils.js";
 import { sendNotificationToEmailAndSystem } from "./general.controller.js";
+import Booking from "../models/booking.model.js";
 import TouristBookmark from "../models/touristBookmark.model.js";
 export const getAllActivities = async (req, res) => {
 	const query = buildFilter(req.query);
@@ -41,16 +42,25 @@ export const getActivityById = async (req, res) => {
 export const updateActivity = async (req, res) => {
 	try {
 		const oldActivity = await Activity.findById(req.params.id);
+
+		const existingBookings = await Booking.countDocuments({
+			typeId: req.params.id,
+			bookingType: 'Activity',
+		});
+
+		if (existingBookings > 0) {
+			return res.status(400).json({
+				message: `Cannot update activity. There are ${existingBookings} active bookings for this activity.`
+			});
+		}
+
 		const activity = await Activity.findByIdAndUpdate(req.params.id, req.body, {
 			new: true,
 		});
+
 		const tourists = await TouristBookmark.find({ bookmarkID: req.params.id });
 
-		console.log("i am in activity update");
-		console.log("oldActivity.isOpenForBooking", oldActivity.isOpenForBooking);
-		console.log("req.body.isOpenForBooking", req.body.isOpenForBooking);
 		if (oldActivity.isOpenForBooking === false && req.body.isOpenForBooking === "true") {
-			console.log("i am in if condition");
 			for (let tourist of tourists) {
 				await sendNotificationToEmailAndSystem(
 					"Activity Open for Booking",
@@ -62,6 +72,7 @@ export const updateActivity = async (req, res) => {
 				);
 			}
 		}
+
 		if (activity) {
 			res.status(200).json(activity);
 		} else {
