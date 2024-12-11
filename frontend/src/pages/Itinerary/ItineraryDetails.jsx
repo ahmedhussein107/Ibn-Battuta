@@ -388,7 +388,10 @@ const ItineraryDetails = () => {
                 <div className="profile-refo-container">
                     <ProfileAndDescription
                         name={tourGuideName || "balabizo"}
-                        picture={tourGuidePicture}
+                        picture={
+                            tourGuidePicture ||
+                            "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
+                        }
                         description={itinerary.description}
                         width={"80%"}
                         // height={"50%"}
@@ -405,7 +408,6 @@ const ItineraryDetails = () => {
                                 ratingIds={itinerary.ratings}
                                 width={"100%"}
                                 fontSize={"12px"}
-                                isOpen={false}
                             />
                         </div>
 

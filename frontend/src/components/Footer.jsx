@@ -4,9 +4,7 @@ import { Link } from "react-router-dom";
 export default function Footer() {
     return (
         <footer className="footer">
-            <p className="footer-item">
-                © 2024 Ibn Battuta. All rights reserved.
-            </p>
+            <p className="footer-item">© 2024 Ibn Battuta. All rights reserved.</p>
 
             <div className="footer-item">
                 {" "}
