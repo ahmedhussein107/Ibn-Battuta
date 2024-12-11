@@ -191,6 +191,8 @@ const SelectYourRole = () => {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    backgroundBlendMode: "overlay",
+                    backgroundColor: "rgba(0, 0, 0, 0.4)",
                 }}
             >
                 <Welcome title={"Welcome"} />;

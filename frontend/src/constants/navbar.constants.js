@@ -22,8 +22,8 @@ export const touristNavbarItems = [
     },
     {
         Travel: [
-            { Flights: "tourist/flight/offers" },
-            { Hotels: "tourist/hotel/offers" },
+            { Flights: "/tourist/flight/offers" },
+            { Hotels: "/tourist/hotel/offers" },
         ],
     },
     { Shop: "/shop" },
@@ -33,8 +33,8 @@ export const touristNavbarItems = [
 export const sellerNavbarItems = [
     { Home: "/seller" },
     { Browse: "/shop" },
-    { Inventory: "seller/inventory" },
-    { Analytics: "seller/analytics" },
+    { Inventory: "/seller/inventory" },
+    { Analytics: "/seller/analytics" },
 ];
 
 export const tourGuideNavbarItems = [
