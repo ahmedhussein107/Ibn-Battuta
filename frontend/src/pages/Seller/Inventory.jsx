@@ -127,9 +127,8 @@ const Inventory = () => {
                     onClose={() => setShowAlert(false)}
                     style={{
                         position: "fixed",
-                        left: "50%",
-                        bottom: "12vh",
-                        transform: "translateX(-50%)",
+                        right: "1%",
+                        bottom: "1vh",
                         zIndex: 1000,
                     }}
                 >
@@ -286,6 +285,8 @@ const Inventory = () => {
                                         product={product}
                                         width={"45vw"}
                                         height={"32vh"}
+                                        lowerHeight={"65%"}
+                                        upperHeight={"35%"}
                                         line2={
                                             <div
                                                 style={{
@@ -357,7 +358,7 @@ const Inventory = () => {
                                                     }}
                                                 />
                                                 <CustomButton
-                                                    stylingMode="dark-when-hovered"
+                                                    stylingMode="always-light"
                                                     text={
                                                         product.isArchived
                                                             ? "Unarchive"

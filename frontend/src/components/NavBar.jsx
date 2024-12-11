@@ -218,16 +218,13 @@ const NavBar = () => {
         <nav className="navbar">
             <img
                 style={{
-                    padding: "0px",
-                    borderRadius: "20px",
-                    height: "5.2vh",
-                    objectFit: "contain",
-                    marginLeft: ".8vw",
+                    borderRadius: "25px",
+                    height: "6.2vh",
+                    marginLeft: "-1%",
                 }}
                 src="/logo.png"
             />
 
-            {/* Center: Navbar items */}
             <div className="navbar-links">
                 {navbarItems.map((item, index) => renderItem(item, index))}
             </div>

@@ -12,8 +12,6 @@ const TitleAndButtons = ({ title, buttons }) => {
         >
             <p
                 style={{
-                    marginTop: "1%",
-                    marginBottom: "2%",
                     fontWeight: "bold",
                     fontSize: "1em",
                 }}
