@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import i2 from "../../assets/images/i2.png";
 import i1 from "../../assets/images/iti.png";
 import NavBar from "../../components/NavBar";
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, CircularProgress } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
 import Footer from "../../components/Footer";
@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import CardItinerary from "../../components/CardItinerary";
 import travellerBackground from "../../assets/backgrounds/travellerBackground.png";
 import DeleteButton from "../../components/DeleteButton";
+import { useCurrencyConverter } from "../../hooks/currencyHooks";
 
 const MyItineraries = () => {
     const navigate = useNavigate();
@@ -102,6 +103,12 @@ const MyItineraries = () => {
             console.log(error);
         }
     };
+
+    const { isLoading } = useCurrencyConverter();
+
+    if (isLoading) {
+        return <CircularProgress />;
+    }
 
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>

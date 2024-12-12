@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useParams } from "react";
+import styled, { keyframes } from "styled-components";
 
 import Step1 from "../../components/Itinerary/Step1";
 import Step2 from "../../components/Itinerary/Step2";
@@ -10,9 +11,67 @@ import Footer from "../../components/Footer";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
 import { useNavigate } from "react-router-dom";
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const PopupContainer = styled.div`
+    position: fixed;
+    bottom: 1%;
+    right: 1%;
+    z-index: 1000;
+    animation: ${fadeIn} 0.3s ease;
+    background-color: ${({ isError }) => (isError ? "#f8d7da" : "#d4edda")};
+`;
+
+const PopupContent = styled.div`
+    color: ${({ isError }) => (isError ? "#721c24" : "#155724")};
+    padding: 1em 1.5em;
+    border-radius: 0.25em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 1em;
+`;
+
+const CloseButton = styled.button`
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.2em;
+    cursor: pointer;
+`;
+
+const Popup = ({ message, onClose, isError }) => (
+    <PopupContainer isError={isError}>
+        <PopupContent>
+            {message}
+            <CloseButton onClick={onClose}>×</CloseButton>
+        </PopupContent>
+    </PopupContainer>
+);
+
 const CreateItineraryPage = ({ isEdit = false }) => {
     const [step, setStep] = useState(1); // TODO: step1 should be the default
     const [timelineActivities, setTimelineActivities] = useState([]);
+
+    const [popupMessage, setPopupMessage] = useState("");
+    const [showPopup, setShowPopup] = useState(false);
+    const [isErrorPopup, setIsErrorPopup] = useState(false);
+
+    const showPopupMessage = (message, isError) => {
+        setPopupMessage(message);
+        setIsErrorPopup(isError);
+        setShowPopup(true);
+        setTimeout(() => setShowPopup(false), 1500);
+    };
 
     const itineraryId = isEdit ? useParams().itineraryId : null;
 
@@ -200,6 +259,13 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                 flexDirection: "column",
             }}
         >
+            {showPopup && (
+                <Popup
+                    message={popupMessage}
+                    onClose={() => setShowPopup(false)}
+                    isError={isErrorPopup}
+                />
+            )}
             <div
                 style={{
                     width: "100vw",
@@ -260,12 +326,13 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                     setFormattedDate={setFormattedDate}
                     formattedTime={formattedTime}
                     setFormattedTime={setFormattedTime}
+                    showPopupMessage={showPopupMessage}
                 />
             )}
             {step === 2 && (
                 <Step2
                     setStep={setStep}
-                    convertedDate={new Date()}
+                    convertedDate={startDate}
                     timelineActivities={timelineActivities}
                     setTimelineActivities={setTimelineActivities}
                 />

@@ -13,6 +13,7 @@ const Timeline = ({
     dropOffLocation = "drop off location",
     setShowMorePopupOpen,
     setShowMoreCustomActivity,
+    showPopupMessage,
 }) => {
     const classes = useStyles();
 
@@ -143,7 +144,13 @@ const Timeline = ({
                     stylingMode="always-light"
                     text="Add Activity"
                     handleClick={() => {
-                        setStep(2);
+                        if (pickupTime) setStep(2);
+                        else {
+                            showPopupMessage(
+                                "Please set a pickup time before adding an activity.",
+                                true
+                            );
+                        }
                     }}
                     width="auto"
                 />

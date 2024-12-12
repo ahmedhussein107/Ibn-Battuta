@@ -31,6 +31,7 @@ const Step1 = ({
     setFormattedDate,
     formattedTime,
     setFormattedTime,
+    showPopupMessage,
 }) => {
     const [showMorePopupOpen, setShowMorePopupOpen] = useState(false);
     const [showMoreCustomActivty, setShowMoreCustomActivty] = useState(null);
@@ -117,6 +118,7 @@ const Step1 = ({
                         setFormattedTime={(value) => {
                             setFormattedTime(value);
                         }}
+                        showPopupMessage={showPopupMessage}
                     />
                 </div>
                 <div style={{ width: "30%" }}>
@@ -129,6 +131,7 @@ const Step1 = ({
                         dropOffLocation={dropoffLocation.location}
                         setShowMorePopupOpen={setShowMorePopupOpen}
                         setShowMoreCustomActivity={setShowMoreCustomActivty}
+                        showPopupMessage={showPopupMessage}
                     />
                 </div>
             </div>

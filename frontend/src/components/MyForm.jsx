@@ -16,15 +16,6 @@ import { useCurrencyConverter } from "../hooks/currencyHooks.js";
 import Cookies from "js-cookie";
 import GenericDropDown from "./GenericDropDown.jsx";
 
-const Popup = ({ message, onClose, isError }) => (
-    <PopupContainer isError={isError}>
-        <PopupContent>
-            {message}
-            <CloseButton onClick={onClose}>×</CloseButton>
-        </PopupContent>
-    </PopupContainer>
-);
-
 const defaultData = {
     startDate: null,
     endDate: null,
@@ -63,10 +54,8 @@ const MyForm = ({
     setFormattedDate,
     formattedTime,
     setFormattedTime,
+    showPopupMessage,
 }) => {
-    const [popupMessage, setPopupMessage] = useState("");
-    const [showPopup, setShowPopup] = useState(false);
-    const [isErrorPopup, setIsErrorPopup] = useState(false);
     const [showDateModal, setShowDateModal] = useState(false);
     const [showTimeModal, setShowTimeModal] = useState(false);
     const [startTime, setStartTime] = useState(null);
@@ -87,10 +76,13 @@ const MyForm = ({
 
     const navigate = useNavigate();
 
-    const addTag = () => {
+    const addTag = (event) => {
+        event.preventDefault();
         if (selectedTag && !tags.includes(selectedTag)) {
             setTags([...tags, selectedTag]);
             setSelectedTag("");
+        } else {
+            showPopupMessage(`${selectedTag} already exists`, true);
         }
     };
 
@@ -108,6 +100,9 @@ const MyForm = ({
     };
 
     const handleTimesChange = (start) => {
+        if (!startDate) {
+            return;
+        }
         const parsedStartTime = convertTo24System(start);
         let newStartDate = new Date(startDate);
         newStartDate.setHours(parsedStartTime.hours, parsedStartTime.minutes);
@@ -117,6 +112,7 @@ const MyForm = ({
         setFormattedTime(`${startString}`);
     };
     const handleDatesChange = (start) => {
+        if (!start) return;
         let newStartDate = new Date(start);
         if (startTime) {
             const parsedStartTime = convertTo24System(startTime);
@@ -125,6 +121,7 @@ const MyForm = ({
         setStartDate(newStartDate);
         const startString = start ? start.toLocaleDateString() : "";
         setFormattedDate(`${startString}`);
+        setShowDateModal(false);
     };
 
     useEffect(() => {
@@ -139,13 +136,6 @@ const MyForm = ({
 
         fetchTags();
     }, []);
-
-    const showPopupMessage = (message, isError) => {
-        setPopupMessage(message);
-        setIsErrorPopup(isError);
-        setShowPopup(true);
-        setTimeout(() => setShowPopup(false), 3000);
-    };
 
     const handleCreate = async (e) => {
         e.preventDefault();
@@ -184,14 +174,6 @@ const MyForm = ({
 
     return (
         <PageContainer>
-            {showPopup && (
-                <Popup
-                    message={popupMessage}
-                    onClose={() => setShowPopup(false)}
-                    isError={isErrorPopup}
-                />
-            )}
-
             <form
                 style={{}}
                 onSubmit={(e) => {
@@ -279,6 +261,7 @@ const MyForm = ({
                                     style={{
                                         display: "flex",
                                         flexDirection: "row",
+                                        width: "80%",
                                         // alignItems: "center",
                                         justifyContent: "space-between",
                                         gap: "8rem",
@@ -287,7 +270,7 @@ const MyForm = ({
                                     <div
                                         style={{
                                             position: "relative",
-                                            width: "100%",
+                                            width: "60%",
                                         }}
                                     >
                                         <input
@@ -320,7 +303,7 @@ const MyForm = ({
                                             onClick={() => setShowDateModal(true)}
                                         />
                                     </div>
-                                    <div style={{ position: "relative", width: "100%" }}>
+                                    <div style={{ position: "relative", width: "60%" }}>
                                         <input
                                             type="text"
                                             value={formattedTime}
@@ -363,7 +346,15 @@ const MyForm = ({
                             />
                             <TimeModal
                                 isOpen={showTimeModal}
-                                onClose={() => setShowTimeModal(false)}
+                                onClose={() => {
+                                    if (!startTime) {
+                                        showPopupMessage(
+                                            "Please select a date first.",
+                                            true
+                                        );
+                                    }
+                                    setShowTimeModal(false);
+                                }}
                                 startTime={startTime}
                                 endTime={endTime}
                                 onTimesChange={handleTimesChange}
@@ -424,7 +415,9 @@ const MyForm = ({
                                         />
                                         <button
                                             type="button"
-                                            onClick={addTag}
+                                            onClick={(e) => {
+                                                addTag(e);
+                                            }}
                                             disabled={!selectedTag}
                                             style={{
                                                 padding: "1vh 2vh",
@@ -556,44 +549,6 @@ const MyForm = ({
         </PageContainer>
     );
 };
-
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
-const PopupContainer = styled.div`
-    position: fixed;
-    top: 8em;
-    right: 1em;
-    z-index: 1000;
-    animation: ${fadeIn} 0.3s ease;
-    background-color: ${({ isError }) => (isError ? "#f8d7da" : "#d4edda")};
-`;
-
-const PopupContent = styled.div`
-    color: ${({ isError }) => (isError ? "#721c24" : "#155724")};
-    padding: 1em 1.5em;
-    border-radius: 0.25em;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    gap: 1em;
-`;
-
-const CloseButton = styled.button`
-    background: transparent;
-    border: none;
-    color: inherit;
-    font-size: 1.2em;
-    cursor: pointer;
-`;
 
 const PageContainer = styled.div`
     width: 100%;
