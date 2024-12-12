@@ -5,7 +5,6 @@ import TagsIcon from "@mui/icons-material/LocalOffer";
 import Button from "./Button";
 import GenericCard from "./GenericCard";
 import TitleAndButtons from "./TitleAndButtons";
-import TruncatedText from "./TruncatedText";
 import { Rating } from "@mui/material";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
@@ -128,8 +127,8 @@ const CardItinerary = ({
                     stylingMode={type}
                     width={width}
                     handleClick={onClick}
-                    customStyle={{ ...styles, alignSelf: "center" }}
-                    height="6vh"
+                    customStyle={{ ...styles, alignSelf: "center", fontSize: ".9em" }}
+                    height="4vh"
                 />
             ))}
         </div>
