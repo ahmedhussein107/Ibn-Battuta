@@ -7,7 +7,7 @@ import axiosInstance from "../../api/axiosInstance";
 import { uploadFile } from "../../api/firebase";
 import Footer from "../../components/Footer";
 import landmarkbackground from "../../assets/backgrounds/landmarksBackground.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PhotosUpload from "../../components/PhotosUpload.jsx";
 import CurrencyDropdown from "../../components/CurrencyDropdownList.jsx";
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
@@ -17,6 +17,7 @@ import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton"; // Ensure this is imported for the close button
 import CloseIcon from "@mui/icons-material/Close";
 import GenericDropDown from "../../components/GenericDropDown.jsx";
+import moment from "moment";
 
 const FormWrapper = styled.div`
     display: flex;
@@ -152,12 +153,12 @@ const OpeningHoursSection = styled.div`
 `;
 
 const CustomAlert = ({ message, severity, open, onClose }) => {
-    // Automatically close the alert after a specified duration (e.g., 3000ms)
+    // Automatically close the alert after a specified duration (e.g., 500ms)
     useEffect(() => {
         if (open) {
             const timer = setTimeout(() => {
                 onClose(); // Close the alert after the duration
-            }, 3000); // Duration in milliseconds
+            }, 500); // Duration in milliseconds
 
             return () => clearTimeout(timer); // Cleanup the timer when unmounting or when `open` changes
         }
@@ -205,8 +206,9 @@ const CustomAlert = ({ message, severity, open, onClose }) => {
     );
 };
 
-export default function LandmarkForm() {
+export default function LandmarkForm({ isEdit = false }) {
     const navigate = useNavigate();
+
     const [landmark, setLandmark] = useState({
         name: "",
         description: "",
@@ -224,27 +226,90 @@ export default function LandmarkForm() {
         },
     });
 
-    const [pickupLocation, setPickupLocation] = useState({
+    const [location, setLocation] = useState({
         latitude: 0,
         longitude: 0,
         location: "",
     });
 
+    const [isMapOpen, setIsMapOpen] = useState(false);
+    const [mapFunction, setMapFunction] = useState(null);
+
     const [tags, setTags] = useState([]);
     const [selectedTag, setSelectedTag] = useState("");
     const [predefinedTags, setPredefinedTags] = useState([]);
-    const [selectedCurrency, setSelectedCurrency] = useState("");
+
+    useEffect(() => {
+        console.log(mapFunction);
+        if (mapFunction) setIsMapOpen(true);
+    }, [mapFunction]);
+
+    let landmarkId = "";
+    if (isEdit) landmarkId = useParams().landmarkId;
+
+    useEffect(() => {
+        function parseObject(obj) {
+            if (Array.isArray(obj)) {
+                return obj.map(parseObject); // Recursively handle arrays
+            } else if (obj && typeof obj === "object" && !(obj instanceof Date)) {
+                return Object.fromEntries(
+                    Object.entries(obj).map(([key, value]) => {
+                        // Check if the value is a date string
+                        if (typeof value === "string" && !isNaN(Date.parse(value))) {
+                            return [key, moment(value)];
+                        }
+                        // Recursively parse nested objects
+                        return [key, parseObject(value)];
+                    })
+                );
+            }
+            // Return the value as-is if not an array or object
+            return obj;
+        }
+
+        const fetchLandmark = async (landmarkId) => {
+            try {
+                console.log("id: ", landmarkId);
+                const response = await axiosInstance.get(
+                    `/landmark/landmark/${landmarkId}`,
+                    { withCredentials: true }
+                );
+                const { governorID, createdAt, updatedAt, tags, ...landmarkData } =
+                    response.data;
+                const formattedLandmarkData = parseObject(landmarkData);
+                console.log(formattedLandmarkData);
+                setLandmark(formattedLandmarkData);
+                setLocation({
+                    latitude: formattedLandmarkData.latitude,
+                    longitude: formattedLandmarkData.longitude,
+                    location: formattedLandmarkData.location,
+                });
+                setTags(tags);
+            } catch (error) {
+                console.log("error fetching landmark", error);
+                showAlert("Error fetching landmark", "error");
+            }
+        };
+
+        if (isEdit) {
+            fetchLandmark(landmarkId);
+        }
+    }, []);
+
     const currency = Cookies.get("currency") || "EGP";
-    const { isLoading, formatPrice, convertPrice } =
-        useCurrencyConverter(currency);
+    const [selectedCurrency, setSelectedCurrency] = useState(currency);
+    const { isLoading, formatPrice, convertPrice } = useCurrencyConverter(currency);
+
     const [alertOpen, setAlertOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const [alertSeverity, setAlertSeverity] = useState("info");
+
     const showAlert = (message, severity = "info") => {
         setAlertMessage(message);
         setAlertSeverity(severity);
         setAlertOpen(true);
     };
+
     const handleCloseAlert = () => {
         setAlertOpen(false);
     };
@@ -252,9 +317,7 @@ export default function LandmarkForm() {
     useEffect(() => {
         const fetchPredefinedTags = async () => {
             try {
-                const response = await axiosInstance.get(
-                    `/landmarkTag/allLandmarkTags/`
-                );
+                const response = await axiosInstance.get(`/landmarkTag/allLandmarkTags/`);
                 console.log(response);
                 let tags = [];
                 for (let tag of response.data) {
@@ -268,13 +331,6 @@ export default function LandmarkForm() {
         fetchPredefinedTags();
     }, []);
 
-    const [isMapOpen, setIsMapOpen] = useState(false);
-    const [mapFunction, setMapFunction] = useState(null);
-    useEffect(() => {
-        console.log(mapFunction);
-        if (mapFunction) setIsMapOpen(true);
-    }, [mapFunction]);
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setLandmark({ ...landmark, [name]: value });
@@ -284,7 +340,10 @@ export default function LandmarkForm() {
         const { value } = e.target;
         setLandmark({
             ...landmark,
-            ticketPrices: { ...landmark.ticketPrices, [type]: value },
+            ticketPrices: {
+                ...landmark.ticketPrices,
+                [type]: convertPrice(value, "EGP", selectedCurrency),
+            },
         });
     };
     const handleImageAdd = (newImages) => {
@@ -308,7 +367,7 @@ export default function LandmarkForm() {
             console.log(landmark);
             let _landmark = {
                 ...landmark,
-                location: pickupLocation.location,
+                location: location.location,
                 tags: tags, // Pass the tags state directly
             };
             const uploadedPictures = [];
@@ -318,9 +377,19 @@ export default function LandmarkForm() {
             }
             _landmark = { ..._landmark, pictures: uploadedPictures };
 
-            await axiosInstance.post("/landmark/createLandmark", _landmark, {
-                withCredentials: true,
-            });
+            if (isEdit) {
+                await axiosInstance.patch(
+                    `/landmark/updateLandmark/${landmarkId}`,
+                    _landmark,
+                    {
+                        withCredentials: true,
+                    }
+                );
+            } else {
+                await axiosInstance.post("/landmark/createLandmark", _landmark, {
+                    withCredentials: true,
+                });
+            }
 
             // Show success alert before navigating
             showAlert("Landmark created successfully", "success");
@@ -331,11 +400,14 @@ export default function LandmarkForm() {
         }
     };
 
-    const addTag = () => {
+    const addTag = (e) => {
+        e.preventDefault();
         if (selectedTag && !tags.includes(selectedTag)) {
             setTags([...tags, selectedTag]);
             setSelectedTag("");
             console.log("Selected Tags after adding:", [...tags, selectedTag]); // Log the updated tags
+        } else {
+            showAlert(`${selectedTag} already added to the tag list`, "error");
         }
     };
 
@@ -352,11 +424,12 @@ export default function LandmarkForm() {
             return updatedTags; // Return the updated tags array
         });
     };
+
     const handleTimeChange = (day, type, time) => {
-        const openTime =
-            type === "open" ? time : landmark.openingHours[day].open;
-        const closeTime =
-            type === "close" ? time : landmark.openingHours[day].close;
+        console.log("time: ", time);
+
+        const openTime = type === "open" ? time : landmark.openingHours[day].open;
+        const closeTime = type === "close" ? time : landmark.openingHours[day].close;
 
         // Check if the selected open time is after close time
         if (type === "open" && closeTime && time && time.isAfter(closeTime)) {
@@ -489,9 +562,7 @@ export default function LandmarkForm() {
                                         marginBottom: "5px", // Spacing between day rows
                                     }}
                                 >
-                                    <Label style={{ marginBottom: "0px" }}>
-                                        {day}
-                                    </Label>
+                                    <Label style={{ marginBottom: "0px" }}>{day}</Label>
                                     <div
                                         style={{
                                             display: "flex",
@@ -501,30 +572,18 @@ export default function LandmarkForm() {
                                         }}
                                     >
                                         <TimeSelect
-                                            value={
-                                                landmark.openingHours[day].open
-                                            }
+                                            value={landmark.openingHours[day].open}
                                             onChange={(time) =>
-                                                handleTimeChange(
-                                                    day,
-                                                    "open",
-                                                    time
-                                                )
+                                                handleTimeChange(day, "open", time)
                                             }
                                             placeholder="Open"
                                             format="HH:mm"
                                             style={{ flex: 1 }} // Allow TimeSelect components to grow
                                         />
                                         <TimeSelect
-                                            value={
-                                                landmark.openingHours[day].close
-                                            }
+                                            value={landmark.openingHours[day].close}
                                             onChange={(time) =>
-                                                handleTimeChange(
-                                                    day,
-                                                    "close",
-                                                    time
-                                                )
+                                                handleTimeChange(day, "close", time)
                                             }
                                             placeholder="Close"
                                             format="HH:mm"
@@ -559,8 +618,8 @@ export default function LandmarkForm() {
                                 <LocationAdder
                                     title="Location"
                                     styles={{ width: "100%" }} // Full width
-                                    location={pickupLocation}
-                                    setLocation={setPickupLocation}
+                                    location={location}
+                                    setLocation={setLocation}
                                     setMapFunction={setMapFunction}
                                 />
                             </div>
@@ -570,9 +629,7 @@ export default function LandmarkForm() {
                             <div style={{ display: "flex", width: "100%" }}>
                                 <select
                                     value={selectedTag}
-                                    onChange={(e) =>
-                                        setSelectedTag(e.target.value)
-                                    }
+                                    onChange={(e) => setSelectedTag(e.target.value)}
                                     style={{
                                         flex: 1,
                                         padding: "1vh",
@@ -583,8 +640,7 @@ export default function LandmarkForm() {
                                         color: "black",
                                         fontSize: "1rem",
                                         outline: "none",
-                                        boxShadow:
-                                            "0 1px 3px rgba(0, 0, 0, 0.1)",
+                                        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
                                     }}
                                 >
                                     <option value="">Select tag</option>
@@ -596,7 +652,9 @@ export default function LandmarkForm() {
                                 </select>
                                 <button
                                     disabled={!selectedTag}
-                                    onClick={addTag}
+                                    onClick={(e) => {
+                                        addTag(e);
+                                    }}
                                     style={{
                                         marginLeft: "1vh",
                                         padding: "1vh",
@@ -628,9 +686,7 @@ export default function LandmarkForm() {
                                             alignItems: "center",
                                         }}
                                     >
-                                        <span style={{ marginRight: "5px" }}>
-                                            {tag}
-                                        </span>
+                                        <span style={{ marginRight: "5px" }}>{tag}</span>
                                         <span
                                             onClick={() => removeTag(tag)}
                                             style={{
@@ -665,34 +721,26 @@ export default function LandmarkForm() {
                                 setSelectedCurrency={setSelectedCurrency}
                             />
                             <TicketRow>
-                                {["foreigner", "native", "student"].map(
-                                    (type) => (
-                                        <div key={type}>
-                                            <Label>
-                                                {type[0].toUpperCase() +
-                                                    type.slice(1)}{" "}
-                                                Ticket Price
-                                            </Label>
-                                            <Input
-                                                type="number"
-                                                value={
-                                                    landmark.ticketPrices[type]
-                                                }
-                                                onChange={(e) =>
-                                                    handleTicketPriceChange(
-                                                        e,
-                                                        type
-                                                    )
-                                                }
-                                                style={{
-                                                    width: "80%",
-                                                    height: "5%",
-                                                    marginBottom: "10px",
-                                                }}
-                                            />
-                                        </div>
-                                    )
-                                )}
+                                {["foreigner", "native", "student"].map((type) => (
+                                    <div key={type}>
+                                        <Label>
+                                            {type[0].toUpperCase() + type.slice(1)} Ticket
+                                            Price
+                                        </Label>
+                                        <Input
+                                            type="number"
+                                            value={landmark.ticketPrices[type]}
+                                            onChange={(e) =>
+                                                handleTicketPriceChange(e, type)
+                                            }
+                                            style={{
+                                                width: "80%",
+                                                height: "5%",
+                                                marginBottom: "10px",
+                                            }}
+                                        />
+                                    </div>
+                                ))}
                             </TicketRow>
                         </FormGroup>
                     </ColumnContainter>
@@ -700,16 +748,16 @@ export default function LandmarkForm() {
 
                 <div
                     style={{
+                        width: "100%",
                         display: "flex",
                         justifyContent: "center",
-                        width: "100%",
+                        alignItems: "center",
                     }}
                 >
                     <Button
                         stylingMode="always-light"
                         text="Cancel"
                         onClick={() => navigate("/governor/landmarks")}
-                        width="auto"
                         style={{ marginRight: "75%" }}
                     >
                         Cancel
