@@ -193,7 +193,7 @@ const SigninComponent = () => {
                     style={{
                         position: "fixed",
                         right: "1%",
-                        bottom: "25vh",
+                        bottom: "1%",
                         width: "25vw",
                         zIndex: 1000,
                     }}
