@@ -16,8 +16,8 @@ import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton"; // Ensure this is imported for the close button
 import CloseIcon from "@mui/icons-material/Close";
-import GenericDropDown from "../../components/GenericDropDown.jsx";
 import moment from "moment";
+import Button from "../../components/Button.jsx";
 
 const FormWrapper = styled.div`
     display: flex;
@@ -85,39 +85,6 @@ const Row = styled.div`
     flex-wrap: wrap;
     gap: 20px;
     margin-bottom: 15px;
-`;
-
-const Button = styled.button`
-    width: 10%;
-    padding: 10px;
-    background: white; /* Set background color to white */
-    color: var(--accent-color); /* Set text color to brown */
-    border: 2px solid var(--accent-color); /* Set border to brown */
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 7vh;
-
-    &:hover {
-        transform: scale(1.1);
-    }
-`;
-
-const Button1 = styled.button`
-    width: 10%;
-    padding: 10px;
-    background: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 7vh;
-    background-color: var(--accent-color);
-
-    &:hover {
-        transform: scale(1.1);
-    }
 `;
 
 const TicketRow = styled.div`
@@ -238,6 +205,8 @@ export default function LandmarkForm({ isEdit = false }) {
     const [tags, setTags] = useState([]);
     const [selectedTag, setSelectedTag] = useState("");
     const [predefinedTags, setPredefinedTags] = useState([]);
+
+    const [processing, setProcessing] = useState(false);
 
     useEffect(() => {
         console.log(mapFunction);
@@ -370,6 +339,7 @@ export default function LandmarkForm({ isEdit = false }) {
                 location: location.location,
                 tags: tags, // Pass the tags state directly
             };
+            setProcessing(true);
             const uploadedPictures = [];
             for (const photo of landmark.pictures) {
                 const uploadedPath = await uploadFile(photo.file, "landmarks");
@@ -397,6 +367,8 @@ export default function LandmarkForm({ isEdit = false }) {
             navigate("/governor/landmarks");
         } catch (err) {
             showAlert("Error submitting landmark. Please try again.", "error");
+        } finally {
+            setProcessing(false);
         }
     };
 
@@ -748,7 +720,7 @@ export default function LandmarkForm({ isEdit = false }) {
 
                 <div
                     style={{
-                        width: "100%",
+                        width: "10%",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
@@ -757,12 +729,15 @@ export default function LandmarkForm({ isEdit = false }) {
                     <Button
                         stylingMode="always-light"
                         text="Cancel"
-                        onClick={() => navigate("/governor/landmarks")}
-                        style={{ marginRight: "75%" }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button1 type="submit">Submit</Button1>
+                        handleClick={() => navigate("/governor/landmarks")}
+                        customStyle={{ marginRight: "75%" }}
+                    />
+                    <Button
+                        stylingMode="always-dark"
+                        text="Submit"
+                        isLoading={processing}
+                        handleClick={handleSubmit}
+                    />
                 </div>
             </form>
 
