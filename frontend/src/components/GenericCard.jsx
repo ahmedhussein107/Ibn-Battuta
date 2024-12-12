@@ -49,7 +49,7 @@ const GenericCard = ({
                             display: "flex",
                             flexDirection: "column",
                             height: upperHeight,
-                            justifyContent: "space-around",
+                            justifyContent: "space-between",
                         }}
                     >
                         {aboveLine}

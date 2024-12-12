@@ -173,6 +173,7 @@ const Inventory = () => {
                         }}
                     />
                 </div>
+
                 <div
                     style={{
                         position: "absolute",

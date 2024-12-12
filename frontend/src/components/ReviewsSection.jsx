@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axiosInstance from "../../api/axiosInstance";
+import axiosInstance from "../api/axiosInstance.js";
 
 const ReviewsSection = ({
     ratingIds,
@@ -9,6 +9,7 @@ const ReviewsSection = ({
     fontSize,
     reviewsPerPage = 3,
     isOpen = true,
+    paginationButtonsMarginTop
 }) => {
     const [reviews, setReviews] = useState([]);
     const [showReviews, setShowReviews] = useState(isOpen);
@@ -17,9 +18,9 @@ const ReviewsSection = ({
     useEffect(() => {
         const fetchReviews = async () => {
             try {
+                console.log(ratingIds);
                 const reviewsData = await Promise.all(
                     ratingIds.map(async (ratingID) => {
-                        // Fetch rating details
                         const ratingResponse = await axiosInstance.get(
                             `rating/getRating/${ratingID}`
                         );
@@ -28,7 +29,6 @@ const ReviewsSection = ({
                         if (rating === undefined) return;
                         const tourist = rating.touristID;
 
-                        // Construct review object
                         return {
                             reviewer: (tourist && tourist.name) || "Anonymous User",
                             profilePic: (tourist && tourist.profilePic) || null,
@@ -167,12 +167,14 @@ const ReviewsSection = ({
                             <PaginationButton
                                 onClick={handlePrevPage}
                                 disabled={currentPage === 0}
+                                style={{"--paginationButtonsMarginTop" : paginationButtonsMarginTop}}
                             >
                                 Backward
                             </PaginationButton>
                             <PaginationButton
                                 onClick={handleNextPage}
                                 disabled={currentPage === totalPages - 1}
+                                style={{"--paginationButtonsMarginTop" : paginationButtonsMarginTop}}
                             >
                                 Forward
                             </PaginationButton>
@@ -363,6 +365,7 @@ const PaginationButton = styled.button`
     background: none;
     border: 1px solid #0066cc;
     color: #0066cc;
+    margin-top: var(--paginationButtonsMarginTop);
     padding: 0.5em 1em;
     font-size: 1em;
     cursor: pointer;

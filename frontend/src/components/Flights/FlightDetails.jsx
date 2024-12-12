@@ -104,7 +104,7 @@ const FlightDetails = ({ flightData, airlines }) => {
                 }}
             >
                 <div style={{ flex: 1 }}>
-                    <div style={{ position: "absolute", top: "1vh", left: "2vh" }}>
+                    <div style={{}}>
                         <span style={{ fontWeight: "bold", color: "#333" }}>
                             Outbound
                         </span>
@@ -138,33 +138,37 @@ const FlightDetails = ({ flightData, airlines }) => {
                         airlineName={airlines[outboundItinerary.segments[0].carrierCode]}
                     />
 
-                    <div style={{ position: "absolute", bottom: "1vh", left: "2vh" }}>
-                        <span style={{ fontWeight: "bold", color: "#333" }}>Arrives</span>
-                        <span
-                            style={{
-                                color: "#757575",
-                                marginLeft: "0.2vw",
-                                marginTop: "0.2vh",
-                                fontWeight: "normal",
-                            }}
-                        >
-                            {outboundArrivalDate}
-                        </span>
-                    </div>
-                    <div style={{ position: "absolute", bottom: "1vh", left: "30vh" }}>
-                        <span style={{ fontWeight: "bold", color: "#333" }}>
-                            | Journey Duration
-                        </span>
-                        <span
-                            style={{
-                                color: "#757575",
-                                marginLeft: "0.2vw",
-                                marginTop: "0.2vh",
-                                fontWeight: "normal",
-                            }}
-                        >
-                            {formatDuration(outboundItinerary.duration)}
-                        </span>
+                    <div style={{ display: "flex", flexDirection: "row", gap: "5vw" }}>
+                        <div style={{}}>
+                            <span style={{ fontWeight: "bold", color: "#333" }}>
+                                Arrives
+                            </span>
+                            <span
+                                style={{
+                                    color: "#757575",
+                                    marginLeft: "0.2vw",
+                                    marginTop: "0.2vh",
+                                    fontWeight: "normal",
+                                }}
+                            >
+                                {outboundArrivalDate}
+                            </span>
+                        </div>
+                        <div style={{}}>
+                            <span style={{ fontWeight: "bold", color: "#333" }}>
+                                | Journey Duration
+                            </span>
+                            <span
+                                style={{
+                                    color: "#757575",
+                                    marginLeft: "0.2vw",
+                                    marginTop: "0.2vh",
+                                    fontWeight: "normal",
+                                }}
+                            >
+                                {formatDuration(outboundItinerary.duration)}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -186,7 +190,7 @@ const FlightDetails = ({ flightData, airlines }) => {
                     }}
                 >
                     <div style={{ flex: 1 }}>
-                        <div style={{ position: "absolute", top: "1vh", left: "2vh" }}>
+                        <div style={{}}>
                             <span style={{ fontWeight: "bold", color: "#333" }}>
                                 Return
                             </span>
@@ -222,37 +226,39 @@ const FlightDetails = ({ flightData, airlines }) => {
                             }
                         />
 
-                        <div style={{ position: "absolute", bottom: "1vh", left: "2vh" }}>
-                            <span style={{ fontWeight: "bold", color: "#333" }}>
-                                Arrives
-                            </span>
-                            <span
-                                style={{
-                                    color: "#757575",
-                                    marginLeft: "0.2vw",
-                                    marginTop: "0.2vh",
-                                    fontWeight: "normal",
-                                }}
-                            >
-                                {returnArrivalDate}
-                            </span>
-                        </div>
                         <div
-                            style={{ position: "absolute", bottom: "1vh", left: "30vh" }}
+                            style={{ display: "flex", flexDirection: "row", gap: "5vw" }}
                         >
-                            <span style={{ fontWeight: "bold", color: "#333" }}>
-                                | Journey Duration
-                            </span>
-                            <span
-                                style={{
-                                    color: "#757575",
-                                    marginLeft: "0.2vw",
-                                    marginTop: "0.2vh",
-                                    fontWeight: "normal",
-                                }}
-                            >
-                                {formatDuration(returnItinerary.duration)}
-                            </span>
+                            <div style={{}}>
+                                <span style={{ fontWeight: "bold", color: "#333" }}>
+                                    Arrives
+                                </span>
+                                <span
+                                    style={{
+                                        color: "#757575",
+                                        marginLeft: "0.2vw",
+                                        marginTop: "0.2vh",
+                                        fontWeight: "normal",
+                                    }}
+                                >
+                                    {returnArrivalDate}
+                                </span>
+                            </div>
+                            <div style={{}}>
+                                <span style={{ fontWeight: "bold", color: "#333" }}>
+                                    | Journey Duration
+                                </span>
+                                <span
+                                    style={{
+                                        color: "#757575",
+                                        marginLeft: "0.2vw",
+                                        marginTop: "0.2vh",
+                                        fontWeight: "normal",
+                                    }}
+                                >
+                                    {formatDuration(returnItinerary.duration)}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
