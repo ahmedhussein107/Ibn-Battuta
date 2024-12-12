@@ -576,12 +576,12 @@ const GovernorProfilePage = () => {
                     <div
                         style={{
                             position: "fixed",
-                            top: "50%", // Center vertically
-                            right: "20px", // You can adjust this value to move it left/right
-                            transform: "translateY(-50%)", // Center the alert vertically
-                            zIndex: 1000, // Ensure it's above other content
-                            width: "30vw", // Set a suitable width
-                            fontSize: "30px",
+                            right: "1%",
+                            bottom: "2%",
+                            width: "25%",
+                            justifyContent: "center",
+
+                            zIndex: 1000,
                         }}
                     >
                         <Alert

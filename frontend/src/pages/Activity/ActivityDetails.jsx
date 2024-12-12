@@ -20,7 +20,7 @@ import Button from "../../components/Button.jsx";
 import Cookies from "js-cookie";
 
 // Itinerary-related components
-import ReviewsSection from "../Itinerary/ReviewsSection.jsx";
+import ReviewsSection from "../../components/ReviewsSection.jsx";
 import CheckoutPopup from "../../components/CheckoutPopup.jsx";
 import ProfileAndDescription from "../Itinerary/ProfileAndDescription.jsx";
 import activityDefaultBackground from "../../assets/backgrounds/activity-details-background-temp.png";
