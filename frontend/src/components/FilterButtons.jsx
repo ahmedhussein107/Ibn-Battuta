@@ -5,6 +5,7 @@ const FilterButtons = ({
         console.log("buttonclick handle needs to be fixed");
     },
     customStyle = {},
+    fontSize = "1rem",
 }) => {
     return (
         <div style={{ ...buttonGroupStyle, ...customStyle }}>
@@ -12,7 +13,11 @@ const FilterButtons = ({
                 <button
                     key={button}
                     onClick={() => handleChooseType(button)}
-                    style={selected === button ? selectedButtonStyle : buttonStyle}
+                    style={
+                        selected === button
+                            ? { ...selectedButtonStyle, fontSize }
+                            : { ...buttonStyle, fontSize }
+                    }
                 >
                     {button}
                 </button>

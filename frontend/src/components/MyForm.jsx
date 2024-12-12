@@ -138,36 +138,6 @@ const MyForm = ({
         fetchTags();
     }, []);
 
-    const handleCreate = async (e) => {
-        e.preventDefault();
-
-        if (!name || !description || !formattedDate || !formattedTime || !price) {
-            console.log("popup does not work");
-            showPopupMessage("Please fill out all required details.", true);
-            return;
-        }
-
-        if (tags.length === 0) {
-            showPopupMessage("Please select at least one tag.", true);
-            return;
-        }
-
-        try {
-            await handleSubmit();
-
-            showPopupMessage("Activity created successfully!", false);
-
-            setTimeout(() => navigate("/tourguide/assigned"), 1000);
-        } catch (error) {
-            console.error("Error creating activity:", error);
-            showPopupMessage(
-                error.response?.data?.message ||
-                    "Error creating activity. Please try again.",
-                true
-            );
-        }
-    };
-
     const inputStyles = {
         width: "100%", // Or a specific value like "20rem"
         height: "3rem",
@@ -530,23 +500,6 @@ const MyForm = ({
                         </FormSection>
                     </div>
                 </FormContainer>
-                <ButtonGroup>
-                    <Button
-                        stylingMode="dark-when-hovered"
-                        text="Cancel"
-                        handleClick={() => {
-                            navigate(-1);
-                        }}
-                        width="auto"
-                    />
-                    <Button
-                        stylingMode="always-dark"
-                        text={isEdit ? "Update Itinerary" : "Create Itinerary"}
-                        isLoading={processing}
-                        handleClick={handleCreate}
-                        width="auto"
-                    />
-                </ButtonGroup>
             </form>
         </PageContainer>
     );
