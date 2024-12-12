@@ -65,70 +65,59 @@ const Timeline = ({
                     </div>
                 </div>
 
-                <TransitionGroup>
-                    {timelineActivities.map((activity, index) => (
-                        <>
-                            <CSSTransition key={index} timeout={100} classNames="scale">
-                                <div className={classes.timelineItem}>
-                                    <div className={classes.starMarker}>
-                                        <svg
-                                            className={classes.starIcon}
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                fill="white"
-                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className={classes.timelineContent}>
-                                        <h3 className={classes.title}>
-                                            {activity.activity.name}
-                                        </h3>
-                                        <p className={classes.details}>
-                                            from:{" "}
-                                            {activity.startTime.toLocaleString("en-US", {
-                                                month: "short",
-                                                day: "numeric",
-                                                year: "numeric",
-                                                hour: "numeric",
-                                                minute: "2-digit",
-                                                hour12: true,
-                                            })}
-                                        </p>
-                                        <p className={classes.details}>
-                                            to:{" "}
-                                            {activity.endTime.toLocaleString("en-US", {
-                                                month: "short",
-                                                day: "numeric",
-                                                year: "numeric",
-                                                hour: "numeric",
-                                                minute: "2-digit",
-                                                hour12: true,
-                                            })}
-                                        </p>
-                                        <p
-                                            className={classes.details}
-                                            onClick={() => handleShowMore(index)}
-                                            style={{
-                                                cursor: "pointer",
-                                                color: "var(--accent-color)",
-                                            }}
-                                        >
-                                            Show more
-                                        </p>
-                                    </div>
-                                    <button
-                                        onClick={() => handleDeleteActivity(index)}
-                                        className={classes.deleteButton}
-                                    >
-                                        <FaTrash />
-                                    </button>
-                                </div>
-                            </CSSTransition>
-                        </>
-                    ))}
-                </TransitionGroup>
+                {timelineActivities.map((activity, index) => (
+                    <div className={classes.timelineItem}>
+                        <div className={classes.starMarker}>
+                            <svg className={classes.starIcon} viewBox="0 0 24 24">
+                                <path
+                                    fill="white"
+                                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                />
+                            </svg>
+                        </div>
+                        <div className={classes.timelineContent}>
+                            <h3 className={classes.title}>{activity.activity.name}</h3>
+                            <p className={classes.details}>
+                                from:{" "}
+                                {activity.startTime.toLocaleString("en-US", {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                    hour: "numeric",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                })}
+                            </p>
+                            <p className={classes.details}>
+                                to:{" "}
+                                {activity.endTime.toLocaleString("en-US", {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                    hour: "numeric",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                })}
+                            </p>
+                            <p
+                                className={classes.details}
+                                onClick={() => handleShowMore(index)}
+                                style={{
+                                    cursor: "pointer",
+                                    color: "var(--accent-color)",
+                                }}
+                            >
+                                Show more
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => handleDeleteActivity(index)}
+                            className={classes.deleteButton}
+                        >
+                            <FaTrash />
+                        </button>
+                    </div>
+                ))}
 
                 <div className={classes.timelineItem}>
                     <div className={classes.dropoffMarker}></div>
