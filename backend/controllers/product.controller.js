@@ -118,7 +118,7 @@ export const searchProducts = async (req, res) => {
         let products = await Product.find({
             ...query,
             isArchived: false,
-        }).populate("ownerID ratings");
+        }).populate("ownerID");
         if (rating) {
             const bounds = rating.split("-");
             const minRating = bounds[0] ? parseInt(bounds[0]) : -1;

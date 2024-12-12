@@ -17,7 +17,7 @@ import profileBackground from "../../assets/backgrounds/profile_bg.jpeg";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import EditIcon from "@mui/icons-material/Edit";
-import ReviewsSection from "../../pages/Itinerary/ReviewsSection.jsx";
+import ReviewsSection from "../../components/ReviewsSection.jsx";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 
