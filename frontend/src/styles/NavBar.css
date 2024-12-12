@@ -255,6 +255,11 @@
 .notification-item.read {
     background-color: #fff;
 }
+/* .notification-item.warning :hover,
+.notification-item.read :hover,
+.notification-item.info :hover {
+    background-color: green;
+} */
 
 .notification-item p {
     margin: 0;
@@ -272,4 +277,11 @@
     text-align: center;
     font-size: 0.9rem;
     color: gray;
+}
+
+.notification-item:hover {
+    border-radius: 8px;
+    cursor: pointer;
+    scale: 1.005;
+    background-color: rgb(215, 212, 214);
 }
