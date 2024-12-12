@@ -412,7 +412,6 @@ const AdvertiserProfilePage = () => {
                         picture: response.data.picture, // This should be a string URL
                     }));
 
-
                     setImage(response.data.picture);
                     console.log("Updated Touguide Picture:", response.data.picture);
                     Cookies.set("profileImage", response.data.picture);
@@ -564,7 +563,7 @@ const AdvertiserProfilePage = () => {
                                                 backgroundColor: "#9c4f21",
                                                 color: "white",
                                                 border: "none",
-                                                borderRadius: "20px",
+                                                borderRadius: "20vh",
                                                 width: "45%",
                                                 height: "5vh",
                                                 cursor: "pointer",
@@ -611,8 +610,13 @@ const AdvertiserProfilePage = () => {
                         )}
                     </ProfileDetailsBox>
                     <ProfileDetailsBox>
-                        <ProfileDetailsContainer style={{ marginBottom: "100px" }}>
-                            <h2>About The Company</h2>
+                        <ProfileDetailsContainer
+                            style={{
+                                marginBottom: "100px",
+                                marginLeft: "30px",
+                            }}
+                        >
+                            <h2 style={{ marginBottom: "10px" }}>About The Company</h2>
                             {isEditing1 ? (
                                 <div>
                                     <p style={{ marginBottom: "16px" }}>
@@ -649,7 +653,7 @@ const AdvertiserProfilePage = () => {
                                                 backgroundColor: "#9c4f21",
                                                 color: "white",
                                                 border: "none",
-                                                borderRadius: "20px",
+                                                borderRadius: "20vh",
                                                 width: "45%",
                                                 height: "5vh",
                                                 cursor: "pointer",
@@ -676,7 +680,8 @@ const AdvertiserProfilePage = () => {
                                     cursor: "pointer", // Make it look clickable
                                     fontSize: "24px", // Adjust the size as needed
                                     color: "#000", // Optional: Customize the color
-                                    margin: "10px", // Optional: Add spacing
+                                    marginLeft: "8vw", // Optional: Add spacing
+                                    marginTop: "1vh", // Optional: Add spacing
                                 }}
                                 titleAccess="Edit Profile" // Optional: Add tooltip for accessibility
                             />
