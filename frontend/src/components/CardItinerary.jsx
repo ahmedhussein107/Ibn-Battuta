@@ -11,14 +11,13 @@ import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
 import {useNavigate} from "react-router-dom";
 
-
-
 const CardItinerary = ({
     itinerary,
     width,
     height,
     firstLineButtons = [],
     bottomButtons = [],
+    isEditable = false
 }) => {
     const image = itinerary.picture;
     const Line1 = () => (
@@ -212,7 +211,7 @@ const CardItinerary = ({
         <div style={{ display: "flex", flexDirection: "column" }}>
                 <Line1 />
                 <Line2 />
-                <Line3 />
+                {!isEditable && <Line3 />}
         </div>
     );
 

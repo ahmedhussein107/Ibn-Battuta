@@ -42,7 +42,7 @@ const MapPopUp = ({ popUpOpen, setPopUpOpen, mapFunction }) => {
             >
                 <div
                     style={{
-                        width: "90%",
+                        width: "30vw",
                         height: "130%",
                         display: "flex",
                         marginLeft: "2.5vh",
