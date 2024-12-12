@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import axiosInstance from "../api/axiosInstance";
 import DateModal from "./DateModal.jsx";
 import TimeModal from "./TimeModal.jsx";
 import Button from "./Button.jsx";
-import usePageHeader from "./Header/UseHeaderPage.jsx";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useNavigate } from "react-router-dom";
@@ -55,6 +54,7 @@ const MyForm = ({
     formattedTime,
     setFormattedTime,
     showPopupMessage,
+    processing,
 }) => {
     const [showDateModal, setShowDateModal] = useState(false);
     const [showTimeModal, setShowTimeModal] = useState(false);
@@ -541,6 +541,7 @@ const MyForm = ({
                     <Button
                         stylingMode="always-dark"
                         text="Create Itinerary"
+                        isLoading={processing}
                         handleClick={handleCreate}
                         width="auto"
                     />

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import i2 from "../../assets/images/i2.png";
 import i1 from "../../assets/images/iti.png";
-import NavBar from "../../components/NavBar";
 import { Avatar, Button, CircularProgress } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import SearchIcon from "@mui/icons-material/Search";
@@ -11,7 +10,6 @@ import SwapVert from "@mui/icons-material/SwapVert";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import CardItinerary from "../../components/CardItinerary";
-import travellerBackground from "../../assets/backgrounds/travellerBackground.png";
 import DeleteButton from "../../components/DeleteButton";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
 
@@ -80,6 +78,7 @@ const MyItineraries = () => {
                 prevItineraries.filter((itinerary) => itinerary._id !== itineraryID)
             );
         } catch (error) {
+            console.log(error);
             alert("Error deleting itinerary");
         }
     };
@@ -249,7 +248,6 @@ const MyItineraries = () => {
                                             ID={itinerary._id}
                                         />,
                                     ],
-
                                 ]}
                                 isEditable={true}
                                 bottomButtons={[

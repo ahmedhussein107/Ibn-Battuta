@@ -32,6 +32,7 @@ const Step1 = ({
     formattedTime,
     setFormattedTime,
     showPopupMessage,
+    processing,
 }) => {
     const [showMorePopupOpen, setShowMorePopupOpen] = useState(false);
     const [showMoreCustomActivty, setShowMoreCustomActivty] = useState(null);
@@ -119,6 +120,7 @@ const Step1 = ({
                             setFormattedTime(value);
                         }}
                         showPopupMessage={showPopupMessage}
+                        processing={processing}
                     />
                 </div>
                 <div style={{ width: "30%" }}>
