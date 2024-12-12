@@ -18,8 +18,12 @@ const Timeline = ({
     const classes = useStyles();
 
     const handleDeleteActivity = (index) => {
-        // const curActivity = timelineActivities[index];
-        setTimelineActivities(timelineActivities.filter((_, ind) => ind !== index));
+        const curActivity = timelineActivities[index];
+        console.log("curActivity", curActivity);
+        console.log("timeline activities", timelineActivities);
+        const newTimeLine = timelineActivities.filter((activity, ind) => ind !== index);
+        console.log("newTimeLine", newTimeLine);
+        setTimelineActivities(newTimeLine);
     };
 
     const handleShowMore = (index) => {
@@ -122,11 +126,6 @@ const Timeline = ({
                                     </button>
                                 </div>
                             </CSSTransition>
-
-                            {/* Add a timeline line below each activity, except the last one */}
-                            {index < timelineActivities.length - 1 && (
-                                <div className={classes.timelineLine}></div>
-                            )}
                         </>
                     ))}
                 </TransitionGroup>

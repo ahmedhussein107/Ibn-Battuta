@@ -5,11 +5,11 @@ import TagsIcon from "@mui/icons-material/LocalOffer";
 import Button from "./Button";
 import GenericCard from "./GenericCard";
 import TitleAndButtons from "./TitleAndButtons";
-import {Avatar, Rating} from "@mui/material";
+import { Avatar, Rating } from "@mui/material";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const CardItinerary = ({
     itinerary,
@@ -17,7 +17,7 @@ const CardItinerary = ({
     height,
     firstLineButtons = [],
     bottomButtons = [],
-    isEditable = false
+    isEditable = false,
 }) => {
     const image = itinerary.picture;
     const Line1 = () => (
@@ -36,7 +36,7 @@ const CardItinerary = ({
         >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
                 <LocationIcon style={{ fontSize: "0.8rem" }} />
-                <span>{itinerary.location}</span>
+                <span>{itinerary.pickupLocation}</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
                 <LanguageIcon style={{ fontSize: "0.8rem" }} />
@@ -53,8 +53,6 @@ const CardItinerary = ({
     const tourGuidePic = itinerary.tourguideID.picture;
     const navigate = useNavigate();
 
-
-
     const Line3 = () => {
         const containerStyle = {
             display: "flex",
@@ -68,19 +66,19 @@ const CardItinerary = ({
         const clickableStyle = {
             cursor: "pointer",
             transition: "transform 0.2s ease, opacity 0.2s ease",
-            ':hover': {
-                transform: 'scale(1.05)',
+            ":hover": {
+                transform: "scale(1.05)",
                 opacity: 0.8,
-            }
+            },
         };
 
         const nameHoverStyle = {
             ...clickableStyle,
-            color: 'inherit',
-            ':hover': {
-                ...clickableStyle[':hover'],
-                color: 'blue',
-            }
+            color: "inherit",
+            ":hover": {
+                ...clickableStyle[":hover"],
+                color: "blue",
+            },
         };
 
         const onTourGuideClick = () => {
@@ -95,22 +93,22 @@ const CardItinerary = ({
                     sx={{
                         width: "1.4em",
                         height: "1.4em",
-                        ...clickableStyle
+                        ...clickableStyle,
                     }}
                     onClick={onTourGuideClick}
                 />
                 <p
                     style={{
-                        cursor: 'pointer',
-                        color: 'black',
-                        transition: 'color 0.3s ease',
-                        ':hover': {
-                            color: 'blue'
-                        }
+                        cursor: "pointer",
+                        color: "black",
+                        transition: "color 0.3s ease",
+                        ":hover": {
+                            color: "blue",
+                        },
                     }}
                     onClick={onTourGuideClick}
-                    onMouseEnter={(e) => e.target.style.color = 'blue'}
-                    onMouseLeave={(e) => e.target.style.color = 'black'}
+                    onMouseEnter={(e) => (e.target.style.color = "blue")}
+                    onMouseLeave={(e) => (e.target.style.color = "black")}
                 >
                     {tourGuideName}
                 </p>
@@ -118,9 +116,8 @@ const CardItinerary = ({
         );
     };
 
-
     const description = (
-        <p style={{width: "100%", height: "60%", fontSize: "1rem", overflow: "hidden"}}>
+        <p style={{ width: "100%", height: "60%", fontSize: "1rem", overflow: "hidden" }}>
             {itinerary.description}
         </p>
     );
@@ -209,9 +206,9 @@ const CardItinerary = ({
 
     const aboveLine = (
         <div style={{ display: "flex", flexDirection: "column" }}>
-                <Line1 />
-                <Line2 />
-                {!isEditable && <Line3 />}
+            <Line1 />
+            <Line2 />
+            {!isEditable && <Line3 />}
         </div>
     );
 
