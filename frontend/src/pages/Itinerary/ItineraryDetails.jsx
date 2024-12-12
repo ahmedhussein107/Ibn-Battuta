@@ -59,6 +59,7 @@ const ItineraryDetails = () => {
     const [alert, setAlert] = useState({ open: false, severity: "info", message: "" });
 
     const [isCheckoutPopupOpen, setIsCheckoutPopupOpen] = useState(false);
+    const [showReviews, setShowReviews] = useState(false);
 
     //For mangaing page logic
     const [BookPopUp, setBookPopUp] = useState(false);
@@ -408,6 +409,7 @@ const ItineraryDetails = () => {
                                 ratingIds={itinerary.ratings}
                                 width={"100%"}
                                 fontSize={"12px"}
+                                isOpen={showReviews}
                             />
                         </div>
 
