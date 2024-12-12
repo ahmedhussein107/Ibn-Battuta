@@ -5,7 +5,7 @@ import axiosInstance from "../../api/axiosInstance";
 import Cookies from "js-cookie";
 
 // Components relevant to this file
-import ReviewsSection from "./ReviewsSection.jsx";
+import ReviewsSection from "../../components/ReviewsSection.jsx";
 import ProfileAndDescription from "./ProfileAndDescription.jsx";
 import CyclicPhotoDisplay from "./CyclicPhotoDisplay.jsx";
 
@@ -59,6 +59,7 @@ const ItineraryDetails = () => {
     const [alert, setAlert] = useState({ open: false, severity: "info", message: "" });
 
     const [isCheckoutPopupOpen, setIsCheckoutPopupOpen] = useState(false);
+    const [showReviews, setShowReviews] = useState(false);
 
     //For mangaing page logic
     const [BookPopUp, setBookPopUp] = useState(false);
@@ -408,6 +409,7 @@ const ItineraryDetails = () => {
                                 ratingIds={itinerary.ratings}
                                 width={"100%"}
                                 fontSize={"12px"}
+                                isOpen={showReviews}
                             />
                         </div>
 

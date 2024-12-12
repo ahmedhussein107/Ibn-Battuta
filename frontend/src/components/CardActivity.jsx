@@ -75,11 +75,20 @@ const CardActivity = ({
     const bookingAvaliable = (
         <p
             style={{
-                color: activity.isOpenForBooking ? "green" : "red",
+                color:
+                    activity.isOpenForBooking &&
+                    activity.freeSpots > 0 &&
+                    !activity.isFlagged
+                        ? "green"
+                        : "red",
                 fontSize: "0.8rem",
             }}
         >
-            {activity.isOpenForBooking ? "Booking availabe" : "Booking not availabe"}
+            {activity.isFlagged
+                ? "Flagged by Admin"
+                : activity.isOpenForBooking && activity.freeSpots > 0
+                ? "Booking availabe"
+                : "Booking not available"}
         </p>
     );
     const availableSeats = (

@@ -54,19 +54,33 @@ export const getTourGuides = async (req, res) => {
 };
 
 export const getTourGuideById = async (req, res) => {
-    const tourguideId = req.user.userId;
     try {
-        const tourGuide = await TourGuide.findById(tourguideId);
+        const userId = req.user.userId;
+        const username = req.params.username;
+        const tourGuide = await TourGuide.findOne({ username });
+        console.log("UserNameeee: ", username);
+        console.log("hello", tourGuide);
         if (tourGuide) {
             const { isAccepted, documents, createdAt, updatedAt, __v, ...others } =
                 tourGuide._doc;
-            res.status(200).json(others);
+            res.status(200).json({ ...others, isEditable: userId == tourGuide._id });
         } else {
             res.status(404).json({ e: "TourGuide not found" });
         }
     } catch (e) {
         //console.log(e.message);
         res.status(400).json({ e: e.message });
+    }
+};
+
+export const getUserName = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const tourGuide = await TourGuide.findById(userId);
+        res.status(200).json({username: tourGuide.username});
+
+    } catch (error) {
+        res.status(400).json({message: error.message});
     }
 };
 

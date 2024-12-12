@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import Cookies from "js-cookie";
 import Alert from "@mui/material/Alert";
-import { set } from "mongoose";
+
 const SigninComponent = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -193,8 +193,9 @@ const SigninComponent = () => {
                     style={{
                         position: "fixed",
                         right: "1%",
-                        bottom: "25vh",
+                        bottom: "1%",
                         width: "25vw",
+                        fontSize: "1.2rem",
                         zIndex: 1000,
                     }}
                 >

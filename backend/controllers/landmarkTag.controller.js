@@ -1,4 +1,5 @@
 import LandmarkTag from "../models/landmarkTag.model.js";
+import Landmark from "../models/landmark.model.js";
 import { buildFilter } from "../utilities/searchUtils.js";
 
 export const createLandmarkTag = async (req, res) => {
@@ -42,12 +43,18 @@ export const updateLandmarkTag = async (req, res) => {
 			try {
 				// If the tag ID does not exist in the database, create a new tag
 				const updatedTag = await LandmarkTag.create(req.body);
-
+				const landmarks = await Landmark.find({ tags: { $in: [tagId] } });
+				landmarks.forEach(async (landmark) => {
+					landmark.tags = landmark.tags.map((tag) =>
+						tag === tagId ? updatedTag._id : tag
+					);
+					await landmark.save();
+				});
 				// Return the updated tag
-				res.json(updatedTag);
+				res.status(200).json(updatedTag);
 			} catch (error) {
 				// If the tag ID already exists in the database, update the existing tag
-				const updatedTag = await Tag.create({ _id: tagId });
+				const updatedTag = await LandmarkTag.create({ _id: tagId });
 				res.status(500).json({ message: "Updated tag already exists" });
 			}
 		} else {
@@ -67,6 +74,11 @@ export const deleteLandmarkTag = async (req, res) => {
 
 		// Check if any document was deleted
 		if (result.deletedCount > 0) {
+			const landmarks = await Landmark.find({ tags: { $in: [tagId] } });
+			landmarks.forEach(async (landmark) => {
+				landmark.tags = landmark.tags.filter((tag) => tag !== tagId);
+				await landmark.save();
+			});
 			res.status(200).json({ message: "Tag deleted successfully" });
 		} else {
 			res.status(404).json({ message: "Tag not found" });

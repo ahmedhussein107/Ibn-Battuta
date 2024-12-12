@@ -10,6 +10,7 @@ import SearchField from "../../components/SearchField/SearchField";
 import categoryBackground from "../../assets/backgrounds/tags.png";
 import CustomButton from "../../components/Button";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
+import Alert from "@mui/material/Alert";
 
 import axiosInstance from "../../api/axiosInstance";
 import Footer from "../../components/Footer";
@@ -21,6 +22,11 @@ const ViewCategories = () => {
     const [newCategory, setNewCategory] = useState("");
     const [editingCategory, setEditingCategory] = useState(null);
     const [editedCategoryName, setEditedCategoryName] = useState("");
+    const [alert, setAlert] = useState({
+        open: false,
+        severity: "info",
+        message: "",
+    });
 
     const handleOpen = () => {
         setOpen(true);
@@ -36,10 +42,12 @@ const ViewCategories = () => {
             .post("/category/createCategory", { _id: newCategory })
             .then((res) => {
                 console.log("Category created: ", res.data);
+                showAlert("success", "Category created successfully!");
                 setCategories([...Categories, res.data]);
             })
             .catch((error) => {
                 console.error("Error creating category: ", error);
+                showAlert("error", error.response.data.message);
             });
         setOpen(false);
         setNewCategory("");
@@ -59,6 +67,7 @@ const ViewCategories = () => {
             })
             .catch((error) => {
                 console.error("Error fetching Categories: ", error);
+                showAlert("error", error.response.data.message);
             });
     };
 
@@ -71,12 +80,14 @@ const ViewCategories = () => {
             .delete(`/category/deleteCategory/${categoryId}`)
             .then((res) => {
                 console.log("Category deleted: ", res.data);
+                showAlert("success", "Category deleted successfully!");
                 setCategories(
                     Categories.filter((category) => category._id !== categoryId)
                 );
             })
             .catch((error) => {
                 console.error("Error deleting category: ", error);
+                showAlert("error", error.response.data.message);
             });
     };
 
@@ -97,6 +108,7 @@ const ViewCategories = () => {
             })
             .then((res) => {
                 console.log("Category updated: ", res.data);
+                showAlert("success", "Category updated successfully!");
                 // Update the categories list with the new name
                 setCategories(
                     Categories.map((category) =>
@@ -109,8 +121,18 @@ const ViewCategories = () => {
             })
             .catch((error) => {
                 console.error("Error updating category: ", error);
+                showAlert("error", error.message.data.message);
                 setEditingCategory(null);
             });
+    };
+
+    const showAlert = (severity, message) => {
+        setAlert({ open: true, severity, message });
+
+        setTimeout(() => {
+            setAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+            // setIsOpen(false);
+        }, 4000); // Alert will close after 5 seconds
     };
 
     return (
@@ -161,7 +183,7 @@ const ViewCategories = () => {
                         onChange={(e) => setNewCategory(e.target.value)}
                         sx={{
                             "& .MuiOutlinedInput-root": {
-                                borderRadius: "20px",
+                                borderRadius: "10px",
                                 backgroundColor: "#FFFFFF",
                             },
                         }}
@@ -196,9 +218,10 @@ const ViewCategories = () => {
                         borderRadius: "60px",
                         fontSize: "1rem",
                         textAlign: "center",
-                        padding: "8px 12px", // Adjust padding to control the button's height
+                        marginTop: "2vh",
+                        // padding: "4px 12px", // Adjust padding to control the button's height
                         lineHeight: "1", // Ensure text line-height doesn't increase height
-                        height: "40px", // Optional: explicitly set height
+                        height: "4vh", // Optional: explicitly set height
                     }}
                     icon={
                         <AddIcon sx={{ verticalAlign: "middle", marginRight: "5px" }} />
@@ -331,6 +354,26 @@ const ViewCategories = () => {
                     </Box>
                 </Paper>
             </div>
+            {alert.open && (
+                <Alert
+                    severity={alert.severity}
+                    onClose={() =>
+                        alert({
+                            ...alert,
+                            open: false,
+                        })
+                    }
+                    style={{
+                        position: "fixed",
+                        right: "1%",
+                        bottom: "1%",
+                        width: "25vw",
+                        zIndex: 1000,
+                    }}
+                >
+                    {alert.message}
+                </Alert>
+            )}
             <Footer />
         </div>
     );

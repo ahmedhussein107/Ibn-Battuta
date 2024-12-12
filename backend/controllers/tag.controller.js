@@ -1,3 +1,5 @@
+import Activity from "../models/activity.model.js";
+import Itinerary from "../models/itinerary.model.js";
 import Tag from "../models/tag.model.js";
 import { buildFilter } from "../utilities/searchUtils.js";
 
@@ -53,13 +55,26 @@ export const updateTag = async (req, res) => {
 			try {
 				// If the tag ID does not exist in the database, create a new tag
 				const updatedTag = await Tag.create(req.body);
-
+				const activities = await Activity.find({ tags: { $in: [tagId] } });
+				activities.forEach(async (activity) => {
+					activity.tags = activity.tags.map((tag) =>
+						tag === tagId ? updatedTag._id : tag
+					);
+					await activity.save();
+				});
+				const itineraries = await Itinerary.find({ tags: { $in: [tagId] } });
+				itineraries.forEach(async (itinerary) => {
+					itinerary.tags = itinerary.tags.map((tag) =>
+						tag === tagId ? updatedTag._id : tag
+					);
+					await itinerary.save();
+				});
 				// Return the updated tag
-				res.json(updatedTag);
+				res.status(200).json(updatedTag);
 			} catch (error) {
 				// If the tag ID already exists in the database, update the existing tag
 				const updatedTag = await Tag.create({ _id: tagId });
-				res.status(500).json({ message: "Updated tag already exists" });
+				res.status(400).json({ message: "Updated tag already exists" });
 			}
 		} else {
 			res.status(404).json({ message: "Tag not found" });
@@ -78,6 +93,16 @@ export const deleteTag = async (req, res) => {
 
 		// Check if any document was deleted
 		if (result.deletedCount > 0) {
+			const activities = await Activity.find({ tags: { $in: [tagId] } });
+			activities.forEach(async (activity) => {
+				activity.tags = activity.tags.filter((tag) => tag !== tagId);
+				await activity.save();
+			});
+			const itineraries = await Itinerary.find({ tags: { $in: [tagId] } });
+			itineraries.forEach(async (itinerary) => {
+				itinerary.tags = itinerary.tags.filter((tag) => tag !== tagId);
+				await itinerary.save();
+			});
 			res.status(200).json({ message: "Tag deleted successfully" });
 		} else {
 			res.status(404).json({ message: "Tag not found" });

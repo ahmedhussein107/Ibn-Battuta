@@ -7,18 +7,22 @@ import { Rating } from "@mui/material";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
-import { getProductOwnerName } from "../../../backend/controllers/product.controller";
+import ReviewsSection from "./ReviewsSection";
+import PopUp from "./PopUpsGeneric/PopUp.jsx";
+
 const CardProduct = ({
-    product,
-    width,
-    height,
-    firstLineButtons,
-    controlButtons,
-    lowerHeight = "68%",
-    upperHeight = "30%",
-    line2 = <></>,
-    fontSize = "1.5rem",
-}) => {
+                         product,
+                         width,
+                         height,
+                         firstLineButtons,
+                         controlButtons,
+                         lowerHeight = "68%",
+                         upperHeight = "30%",
+                         line2 = <></>,
+                         fontSize = "1.5rem",
+                     }) => {
+    const [isRatingsPopupOpen, setIsRatingsPopupOpen] = useState(false);
+
     const image = product.pictures[0];
     const line1 = (
         <div style={{ fontSize: fontSize, marginTop: "2%" }}>
@@ -27,9 +31,11 @@ const CardProduct = ({
     );
     const currency = Cookies.get("currency") || "EGP";
     const { isLoading, formatPrice } = useCurrencyConverter(currency);
+
     if (isLoading) {
         return <CircularProgress />;
     }
+
     const description = (
         <TruncatedText
             text={product.description}
@@ -38,13 +44,28 @@ const CardProduct = ({
             fontSize={"2vh"}
         />
     );
+
     const rating = Math.floor(product.rating);
     const ratings = (
         <div style={{ display: "flex", flexDirection: "row" }}>
             <Rating name="read-only" value={rating} readOnly />
-            <p style={{ marginLeft: "5%", marginTop: "0%" }}>{product.ratings.length}</p>
+            <p
+                style={{
+                    marginLeft: "5%",
+                    marginTop: "0%",
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    color: 'blue'
+                }}
+                onClick={() => {
+                    setIsRatingsPopupOpen(true);
+                }}
+            >
+                {product.ratings.length}
+            </p>
         </div>
     );
+
     const availableProducts = (
         <p
             style={{
@@ -55,6 +76,7 @@ const CardProduct = ({
             {product.quantity} in stock
         </p>
     );
+
     const price = (
         <div
             style={{
@@ -66,6 +88,7 @@ const CardProduct = ({
             <p style={{ marginLeft: "5%" }}>{formatPrice(product.price)}</p>
         </div>
     );
+
     const buttons = (
         <div
             style={{
@@ -80,18 +103,38 @@ const CardProduct = ({
             {controlButtons}
         </div>
     );
+
     const card = (
-        <GenericCard
-            image={image}
-            aboveLine={[line1, line2]}
-            bottomLeft={[description, ratings]}
-            bottomRight={[availableProducts, buttons]}
-            width={width}
-            height={height}
-            upperHeight={upperHeight}
-            lowerHeight={lowerHeight}
-        />
+        <>
+            <GenericCard
+                image={image}
+                aboveLine={[line1, line2]}
+                bottomLeft={[description, ratings]}
+                bottomRight={[availableProducts, buttons]}
+                width={width}
+                height={height}
+                upperHeight={upperHeight}
+                lowerHeight={lowerHeight}
+            />
+
+            <PopUp
+                isOpen={isRatingsPopupOpen}
+                setIsOpen={setIsRatingsPopupOpen}
+                headerText={`Ratings for ${product.name}`}
+                containsFooter={false}
+            >
+                <ReviewsSection
+                    ratingIds={product.ratings}
+                    width="30vw"
+                    height="50vh"
+                    fontSize="0.8rem"
+                    paginationButtonsMarginTop="-50vh"
+                    reviewsPerPage={1}
+                />
+            </PopUp>
+        </>
     );
+
     return card;
 };
 

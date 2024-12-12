@@ -60,63 +60,79 @@ const FlightJourney = ({ flight, airlineName }) => {
 
     return (
         <>
-            {flight.segments.map((segment, index) => {
-                const departureTime = new Date(segment.departure.at).toLocaleTimeString(
-                    "en-UK",
-                    { hour: "2-digit", minute: "2-digit" }
-                );
-                const departureLocation = `${segment.departure.iataCode}`;
-                const departureTerminal = segment.departure.terminal || "1";
-                const arrivalTime = new Date(segment.arrival.at).toLocaleTimeString(
-                    "en-UK",
-                    { hour: "2-digit", minute: "2-digit" }
-                );
-                const arrivalLocation = `${segment.arrival.iataCode}`;
-                const arrivalTerminal = segment.arrival.terminal || "1";
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "3vh",
+                    marginBottom: "5vh",
+                }}
+            >
+                {flight.segments.map((segment, index) => {
+                    const departureTime = new Date(
+                        segment.departure.at
+                    ).toLocaleTimeString("en-UK", { hour: "2-digit", minute: "2-digit" });
+                    const departureLocation = `${segment.departure.iataCode}`;
+                    const departureTerminal = segment.departure.terminal || "1";
+                    const arrivalTime = new Date(segment.arrival.at).toLocaleTimeString(
+                        "en-UK",
+                        { hour: "2-digit", minute: "2-digit" }
+                    );
+                    const arrivalLocation = `${segment.arrival.iataCode}`;
+                    const arrivalTerminal = segment.arrival.terminal || "1";
 
-                return (
-                    <div key={index} style={{ marginBottom: "0" }}>
-                        <FlightInfoDisplay
-                            airlineName={airlineName}
-                            duration={formatDuration(segment.duration)}
-                            departureTime={departureTime}
-                            departureLocation={departureLocation}
-                            departureTerminal={departureTerminal}
-                            arrivalTime={arrivalTime}
-                            arrivalLocation={arrivalLocation}
-                            arrivalTerminal={arrivalTerminal}
-                        />
+                    return (
+                        <div
+                            key={index}
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                //alignItems: "center",
+                                gap: "3vh",
+                            }}
+                        >
+                            <FlightInfoDisplay
+                                airlineName={airlineName}
+                                duration={formatDuration(segment.duration)}
+                                departureTime={departureTime}
+                                departureLocation={departureLocation}
+                                departureTerminal={departureTerminal}
+                                arrivalTime={arrivalTime}
+                                arrivalLocation={arrivalLocation}
+                                arrivalTerminal={arrivalTerminal}
+                            />
 
-                        {index < flight.segments.length - 1 && (
-                            <div style={{ marginTop: "0" }}>
-                                <div
-                                    style={{
-                                        width: "48vw",
-                                        height: "6vh",
-
-                                        display: "flex",
-                                        alignItems: "center",
-                                        paddingLeft: "3vw",
-                                        border: "1px solid #333",
-                                        borderRadius: "1vh",
-                                        backgroundColor: "#ECD1B4",
-                                    }}
-                                >
-                                    <span
+                            {index < flight.segments.length - 1 && (
+                                <div style={{ marginTop: "0" }}>
+                                    <div
                                         style={{
-                                            fontSize: "1.2rem",
-                                            color: "#9C4F21",
-                                            fontWeight: "normal",
+                                            width: "48vw",
+                                            height: "6vh",
+
+                                            display: "flex",
+                                            alignItems: "center",
+                                            paddingLeft: "3vw",
+                                            border: "1px solid #333",
+                                            borderRadius: "1vh",
+                                            backgroundColor: "#ECD1B4",
                                         }}
                                     >
-                                        {formattedLayoverTime} Connect in airport
-                                    </span>
+                                        <span
+                                            style={{
+                                                fontSize: "1.2rem",
+                                                color: "#9C4F21",
+                                                fontWeight: "normal",
+                                            }}
+                                        >
+                                            {formattedLayoverTime} Connect in airport
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                );
-            })}
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
         </>
     );
 };
