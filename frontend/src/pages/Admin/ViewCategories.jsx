@@ -150,6 +150,7 @@ const ViewCategories = () => {
                     isOpen={open}
                     setIsOpen={setOpen}
                     headerText={"Add new category"}
+                    actionText="Add"
                     handleSubmit={handleAddCategory}
                 >
                     <TextField
@@ -193,17 +194,25 @@ const ViewCategories = () => {
                     width="14%"
                     customStyle={{
                         borderRadius: "60px",
-                        // border: "2px solid black",
                         fontSize: "1rem",
                         textAlign: "center",
+                        padding: "8px 12px", // Adjust padding to control the button's height
+                        lineHeight: "1", // Ensure text line-height doesn't increase height
+                        height: "40px", // Optional: explicitly set height
                     }}
                     icon={
-                        <AddIcon
-                            sx={{ verticalAlign: "middle", marginRight: "5px" }}
-                        />
+                        <AddIcon sx={{ verticalAlign: "middle", marginRight: "5px" }} />
                     }
                 />
             </div>
+            {/* Horizontal Line */}
+            <hr
+                style={{
+                    margin: "15px 8%",
+                    border: "0",
+                    borderTop: "2px solid #ccc",
+                }}
+            />
             {/* Categories Grid Section */}
             <div
                 style={{
@@ -236,9 +245,7 @@ const ViewCategories = () => {
                                         <TextField
                                             value={editedCategoryName}
                                             onChange={(e) =>
-                                                setEditedCategoryName(
-                                                    e.target.value
-                                                )
+                                                setEditedCategoryName(e.target.value)
                                             }
                                             variant="standard"
                                             InputProps={{
@@ -270,9 +277,7 @@ const ViewCategories = () => {
                                                     },
                                                 }}
                                                 onClick={() =>
-                                                    handleEditConfirm(
-                                                        category._id
-                                                    )
+                                                    handleEditConfirm(category._id)
                                                 }
                                             />
                                             <CancelIcon
@@ -297,29 +302,25 @@ const ViewCategories = () => {
                                         >
                                             <EditIcon
                                                 sx={{
-                                                    fontSize: 16,
+                                                    fontSize: 26,
                                                     cursor: "pointer",
-                                                    color: "#666666",
+                                                    color: "#9C4F21",
                                                     ":hover": {
                                                         color: "#333333",
                                                     },
                                                 }}
-                                                onClick={() =>
-                                                    handleEditStart(category)
-                                                }
+                                                onClick={() => handleEditStart(category)}
                                             />
                                             <DeleteIcon
                                                 sx={{
-                                                    fontSize: 16,
+                                                    fontSize: 26,
                                                     cursor: "pointer",
-                                                    color: "#666666",
+                                                    color: "#9C4F21",
                                                     ":hover": {
                                                         color: "#333333",
                                                     },
                                                 }}
-                                                onClick={() =>
-                                                    handleDelete(category._id)
-                                                }
+                                                onClick={() => handleDelete(category._id)}
                                             />
                                         </Box>
                                     )
@@ -378,7 +379,7 @@ const styles = {
         "& .MuiChip-label": {
             padding: 0,
         },
-        border: "1px solid #666666",
+        border: "1px solid #9C4F21",
     },
 };
 

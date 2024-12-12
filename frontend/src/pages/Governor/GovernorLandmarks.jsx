@@ -8,16 +8,19 @@ import CardLandmark from "../../components/CardLandmark";
 import ShareAndMark from "../../components/ShareAndMark";
 import DeleteButton from "../../components/DeleteButton";
 import { Button } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
+import PopUp from "../../components/PopUpsGeneric/PopUp";
 
-const governorLandmark = () => {
+const GovernorLandmark = () => {
     const [landmarks, setLandmarks] = useState([]);
-
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+        useState(false);
+    const [landmarkToDelete, setLandmarkToDelete] = useState(null);
     const itemsPerPage = 6;
-
     const navigate = useNavigate();
 
     const fetchLandmarks = async () => {
@@ -34,6 +37,7 @@ const governorLandmark = () => {
             );
             console.log("response", response.data);
             setLandmarks(response.data);
+            setTotalPages(response.data.totalPages);
         } catch (error) {
             console.error("Error fetching landmarks:", error);
         }
@@ -42,6 +46,32 @@ const governorLandmark = () => {
     useEffect(() => {
         fetchLandmarks();
     }, [currentPage]);
+
+    const handleDeleteLandmark = (landmark) => {
+        setLandmarkToDelete(landmark);
+        setIsDeleteConfirmationOpen(true);
+    };
+
+    const handleDeleteLandmarkConfirm = async () => {
+        try {
+            if (landmarkToDelete) {
+                await axiosInstance.delete(
+                    `/landmark/deleteLandmark/${landmarkToDelete}`,
+                    {
+                        withCredentials: true,
+                    }
+                );
+
+                setLandmarks((prevLandmarks) =>
+                    prevLandmarks.filter((lm) => lm.id !== landmarkToDelete.id)
+                );
+                setIsDeleteConfirmationOpen(false);
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error("Error deleting landmark:", error);
+        }
+    };
 
     return (
         <div
@@ -115,12 +145,34 @@ const governorLandmark = () => {
                 <div style={{ width: "100vw" }}>
                     {landmarks.map((landmark) => {
                         return (
-                            <div style={{ marginBottom: "3vh" }}>
+                            <div
+                                style={{ marginBottom: "3vh" }}
+                                key={landmark.id}
+                            >
                                 <CardLandmark
                                     landmark={landmark}
                                     width={"95%"}
                                     height={"40vh"}
-                                    firstLineButtons={[<DeleteButton />]}
+                                    firstLineButtons={[
+                                        <EditIcon
+                                            style={{
+                                                cursor: "pointer",
+                                                fontSize: "24px",
+                                                color: "#000",
+                                                margin: "10px",
+                                            }}
+                                            titleAccess="Edit Profile"
+                                            onClick={() =>
+                                                navigate(
+                                                    `/governor/edit-landmark/${landmark._id}]`
+                                                )
+                                            } // Replace with the correct path and use landmark ID
+                                        />,
+                                        <DeleteButton
+                                            deleteHandler={handleDeleteLandmark} // Pass the delete handler
+                                            ID={landmark._id} // Pass the ID of the landmark
+                                        />,
+                                    ]}
                                 />
                             </div>
                         );
@@ -137,8 +189,17 @@ const governorLandmark = () => {
                 />
             </div>
             <Footer />
+
+            {/* Delete Confirmation Popup */}
+            <PopUp
+                isOpen={isDeleteConfirmationOpen}
+                setIsOpen={setIsDeleteConfirmationOpen}
+                headerText={"Are you sure you want to delete this landmark?"}
+                actionText={"Confirm"}
+                handleSubmit={handleDeleteLandmarkConfirm}
+            />
         </div>
     );
 };
 
-export default governorLandmark;
+export default GovernorLandmark;

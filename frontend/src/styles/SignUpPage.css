@@ -12,6 +12,9 @@
     align-items: center; /* Center vertically */
     justify-content: center; /* Center horizontally */
     overflow: visible;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+    background-color: rgba(0, 0, 0, 0.3);
 }
 /* .signup-container input {
     width: 50%;
@@ -22,7 +25,7 @@
     overflow: visible;
 }
 .form-container {
-    background: rgba(255, 255, 255, 0.8); /* White background with transparency */
+    background: rgba(255, 255, 255, 0.6); /* White background with transparency */
     padding: var(--spacing-large);
     border-radius: var(--border-radius); /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, var(--opacity-transparent)); /* Slight shadow for depth */

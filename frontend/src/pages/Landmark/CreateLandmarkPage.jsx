@@ -306,10 +306,14 @@ export default function LandmarkForm() {
         e.preventDefault();
         try {
             console.log(landmark);
-            let _landmark = { ...landmark, locatoin: pickupLocation.location };
+            let _landmark = {
+                ...landmark,
+                location: pickupLocation.location,
+                tags: tags, // Pass the tags state directly
+            };
             const uploadedPictures = [];
-            for (const file of landmark.pictures) {
-                const uploadedPath = await uploadFile(file, "yapath");
+            for (const photo of landmark.pictures) {
+                const uploadedPath = await uploadFile(photo.file, "landmarks");
                 uploadedPictures.push(uploadedPath);
             }
             _landmark = { ..._landmark, pictures: uploadedPictures };

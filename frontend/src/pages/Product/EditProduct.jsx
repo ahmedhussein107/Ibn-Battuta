@@ -1,4 +1,4 @@
-import React, { useState,  useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import axiosInstance from "../../api/axiosInstance";
 import { uploadFiles } from "../../api/firebase";
@@ -8,6 +8,8 @@ import usePageHeader from "../../components/Header/UseHeaderPage.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import PopUp from "../../components/PopUpsGeneric/PopUp.jsx";
+import TextField from "@mui/material/TextField";
+import CurrencyDropdown from "../../components/CurrencyDropdownList.jsx";
 
 const EditProductPage = () => {
     const { productId } = useParams(); // Get product ID from URL
@@ -18,16 +20,20 @@ const EditProductPage = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [isErrorPopup, setIsErrorPopup] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedCurrency, setSelectedCurrency] = useState("");
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axiosInstance.get(`/product/getProduct/${productId}`, {
-                    withCredentials: true,
-                });
-                
+                const response = await axiosInstance.get(
+                    `/product/getProduct/${productId}`,
+                    {
+                        withCredentials: true,
+                    }
+                );
+
                 const product = response.data;
-                
+
                 // Set form data from existing product
                 setFormData({
                     name: product.name,
@@ -42,11 +48,9 @@ const EditProductPage = () => {
                 const previews = product.pictures.map((url, index) => ({
                     id: `existing-${index}`,
                     url,
-                    isExisting: true
+                    isExisting: true,
                 }));
                 setImagePreviews(previews);
-                
-
             } catch (error) {
                 console.error("Error fetching product:", error);
                 showPopupMessage("Error loading product details.", true);
@@ -87,11 +91,11 @@ const EditProductPage = () => {
         try {
             // Handle new file uploads
             const newFiles = imagePreviews
-                .filter(preview => !preview.isExisting)
-                .map(preview => preview.file);
-            
-                setIsLoading(true);
-                
+                .filter((preview) => !preview.isExisting)
+                .map((preview) => preview.file);
+
+            setIsLoading(true);
+
             let uploadedFileUrls = [];
             if (newFiles.length > 0) {
                 uploadedFileUrls = await uploadFiles(newFiles, "products");
@@ -99,15 +103,14 @@ const EditProductPage = () => {
 
             // Combine existing and new picture URLs
             const existingPictures = imagePreviews
-                .filter(preview => preview.isExisting)
-                .map(preview => preview.url);
+                .filter((preview) => preview.isExisting)
+                .map((preview) => preview.url);
 
             const finalFormData = {
                 ...formData,
                 pictures: [...existingPictures, ...uploadedFileUrls],
             };
 
-           
             const response = await axiosInstance.patch(
                 `/product/updateProduct/${productId}`,
                 finalFormData
@@ -133,12 +136,15 @@ const EditProductPage = () => {
         setImagePreviews((prev) => prev.filter((image) => image.id !== idToRemove));
     };
 
+    const inputStyles = {
+        width: "100%", // Or a specific value like "20rem"
+        height: "3rem",
+    };
+
     usePageHeader(
         "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzB8fHNvdXZlbmlyJTIwc2hvcHxlbnwwfHwwfHx8MA%3D%3D",
         "Edit Product"
     );
-
-    
 
     return (
         <PageContainer>
@@ -156,36 +162,74 @@ const EditProductPage = () => {
                         <FormSection>
                             <InputGroup>
                                 <Label>Product Name</Label>
-                                <Input
-                                    type="text"
+                                <TextField
                                     name="name"
-                                    placeholder="Insert name here..."
+                                    id="outlined-basic"
+                                    // label="Insert title here..."
+                                    variant="outlined"
                                     value={formData.name}
                                     onChange={handleInputChange}
+                                    style={inputStyles}
                                 />
                             </InputGroup>
 
                             <InputGroup>
                                 <Label>Description</Label>
-                                <TextArea
+                                <TextField
                                     name="description"
-                                    placeholder="Insert description here...."
+                                    id="outlined-basic"
+                                    //  label="Insert description here...."
+                                    variant="outlined"
                                     value={formData.description}
                                     onChange={handleInputChange}
+                                    style={inputStyles}
                                 />
                             </InputGroup>
-                        </FormSection>
 
-                        <FormSection>
                             <FlexGroup>
-                                <Label>Price</Label>
-                                <Input
-                                    type="number"
-                                    name="price"
-                                    placeholder="Insert price here..."
-                                    value={formData.price}
-                                    onChange={handleInputChange}
-                                />
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column", // Stacks children vertically
+                                        width: "100%", // Ensures the text field takes up the full width
+                                        gap: "1rem", // Adds spacing between elements
+                                    }}
+                                >
+                                    <Label>Price</Label>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column", // Stacks children vertically
+                                            width: "100%", // Ensures the text field takes up the full width
+                                            gap: "1rem", // Adds spacing between elements
+                                        }}
+                                    >
+                                        <CurrencyDropdown
+                                            selectedCurrency={selectedCurrency}
+                                            setSelectedCurrency={setSelectedCurrency}
+                                            style={{
+                                                width: "100%", // Ensures the text field takes up the full width
+                                            }}
+                                        />
+
+                                        <TextField
+                                            name="price"
+                                            id="outlined-basic"
+                                            //  label="Insert Price here..."
+                                            variant="outlined"
+                                            type="number"
+                                            value={formData.price}
+                                            onChange={handleInputChange}
+                                            style={{
+                                                width: "100%", // Ensures the text field takes up the full width
+                                            }}
+                                            inputProps={{
+                                                step: "0.01", // Allows decimal values if needed
+                                                min: "0", // Enforces a minimum value of 0
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                             </FlexGroup>
 
                             <FlexGroup>
@@ -203,7 +247,8 @@ const EditProductPage = () => {
                                         onChange={(e) =>
                                             setFormData({
                                                 ...formData,
-                                                quantity: parseInt(e.target.value, 10) || 0,
+                                                quantity:
+                                                    parseInt(e.target.value, 10) || 0,
                                             })
                                         }
                                         style={{
@@ -260,9 +305,11 @@ const EditProductPage = () => {
                                             cursor: "pointer",
                                             fontSize: "1em",
                                             fontWeight: "500",
-                                            color: formData.isArchived ? "#a83232" : "#333",
+                                            color: formData.isArchived
+                                                ? "#a83232"
+                                                : "#333",
                                             backgroundColor: formData.isArchived
-                                                ? "#fcd8d8"
+                                                ? "#d9a56c"
                                                 : "transparent",
                                             borderRadius: "1em",
                                             transition: "all 0.3s ease",
@@ -282,9 +329,11 @@ const EditProductPage = () => {
                                             cursor: "pointer",
                                             fontSize: "1em",
                                             fontWeight: "500",
-                                            color: !formData.isArchived ? "#a83232" : "#333",
+                                            color: !formData.isArchived
+                                                ? "#a83232"
+                                                : "#333",
                                             backgroundColor: !formData.isArchived
-                                                ? "#fcd8d8"
+                                                ? "#d9a56c"
                                                 : "transparent",
                                             borderRadius: "1em",
                                             transition: "all 0.3s ease",
@@ -302,7 +351,11 @@ const EditProductPage = () => {
                     <Button
                         stylingMode="dark-when-hovered"
                         text="Cancel"
-                        handleClick={() => navigate(`/${Cookies.get("userType").toLowerCase()}/inventory`)}
+                        handleClick={() =>
+                            navigate(
+                                `/${Cookies.get("userType").toLowerCase()}/inventory`
+                            )
+                        }
                         width="auto"
                     />
                     <Button
@@ -374,10 +427,10 @@ const FormContainer = styled.div`
 `;
 
 const FormSection = styled.div`
-    background: #faf4f4;
+    background: #ffffff;
     padding: clamp(1em, 3vw, 2em);
     border-radius: 1em;
-    box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.3);
     margin-bottom: 2em;
 `;
 
@@ -438,7 +491,7 @@ const StockControl = styled.div`
 `;
 
 const StockButton = styled.button`
-    background-color: #f28b82;
+    background-color: #9c4f21;
     color: #fff;
     padding: 0.5rem;
     font-size: 1.2rem;
@@ -448,7 +501,8 @@ const StockButton = styled.button`
     cursor: pointer;
 
     &:hover {
-        background-color: #d77d7d;
+        color: black;
+        background-color: #d9a56c;
     }
 `;
 

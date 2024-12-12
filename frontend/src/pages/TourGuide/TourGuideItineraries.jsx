@@ -251,12 +251,13 @@ const MyItineraries = () => {
                                                 `/tourguide/edit-itinerary/${itinerary._id}`
                                             ),
                                         type: "always-dark",
-                                        width: "70%",
+                                        width: "50%",
                                         styles: {
                                             display: "flex",
                                             justifyContent: "center",
                                             alignItems: "center",
                                             padding: "0.5em",
+                                            fontSize: "0.8rem",
                                         },
                                     },
                                     {
@@ -266,7 +267,7 @@ const MyItineraries = () => {
                                         onClick: () =>
                                             activateItineraryHandler(itinerary._id),
                                         type: "always-light",
-                                        width: "70%",
+                                        width: "50%",
                                         styles: {
                                             marginTop: "2%",
                                             color: itinerary.isActivated
@@ -279,6 +280,7 @@ const MyItineraries = () => {
                                             justifyContent: "center",
                                             alignItems: "center",
                                             padding: "0.5em",
+                                            fontSize: "0.8rem",
                                         },
                                     },
                                 ]}

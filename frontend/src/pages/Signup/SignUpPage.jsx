@@ -78,7 +78,13 @@ const SignUpPage = () => {
         const form = document.querySelector("#form");
 
         if (!userData.email || !userData.password || !userData.username) {
-            alert("Please fill in all required fields. ");
+            setAlertMessage("Please fill in all required fields. ");
+            setShowAlert(true);
+            setServerError("error");
+            setTimeout(() => {
+                setShowAlert(false);
+            }, 5000);
+            return;
             return;
         }
 
