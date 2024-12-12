@@ -313,7 +313,7 @@ const TourguideProfilePage = () => {
                             style={{
                                 display: "flex",
                                 justifyContent: "flex-start", // Align items to the left
-                                height: "80vh",
+                                height: "auto",
                                 flexDirection: "column",
                                 width: "45vw",
                                 backgroundColor: "#FFFFFF",
