@@ -205,7 +205,7 @@ const UserManagement = ({ isAll = true }) => {
                 >
                     <Table>
                         <TableHead>
-                            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+                            <TableRow sx={{ backgroundColor: "#FAE2B6" }}>
                                 <TableCell sx={{ fontSize: "1.3rem" }}>Name</TableCell>
                                 <TableCell sx={{ fontSize: "1.3rem" }}>Role</TableCell>
                                 <TableCell sx={{ fontSize: "1.3rem" }}>Email</TableCell>
@@ -319,7 +319,10 @@ const UserManagement = ({ isAll = true }) => {
                                                     }}
                                                 >
                                                     <DeleteIcon
-                                                        sx={{ fontSize: "1.8rem" }}
+                                                        sx={{
+                                                            fontSize: "1.8rem",
+                                                            color: "#9C4F21",
+                                                        }}
                                                     />
                                                 </IconButton>
                                             </div>
