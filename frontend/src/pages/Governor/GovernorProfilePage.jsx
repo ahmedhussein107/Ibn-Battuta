@@ -6,13 +6,10 @@ import profileBackground from "../../assets/backgrounds/profile_bg.jpeg";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import EditIcon from "@mui/icons-material/Edit";
-import ProfileButton from "../../components/ProfileButtons";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { uploadFile } from "../../api/firebase.js";
-import axios from "axios";
 import Button from "../../components/Button";
 import Alert from "@mui/material/Alert";
 
@@ -140,7 +137,7 @@ const GovernorProfilePage = () => {
                 showPopUpAlert("success", "Password changed successfully");
                 setTimeout(() => {
                     setIsPopUpOpen(false); // Close the popup after a delay
-                }, 5000);
+                }, 500);
 
                 // Clear input fields after submission
                 setCurrentPassword("");
@@ -200,14 +197,14 @@ const GovernorProfilePage = () => {
         setAlert({ open: true, severity, message });
         setTimeout(() => {
             setAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
-        }, 8000); // Alert will close after 5 seconds
+        }, 500); // Alert will close after 5 seconds
     };
 
     const showPopUpAlert = (severity, message) => {
         setPopupAlert({ open: true, severity, message });
         setTimeout(() => {
             setPopupAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
-        }, 8000); // Alert will close after 5 seconds
+        }, 500); // Alert will close after 5 seconds
     };
 
     const handleCancelChanges = () => {
@@ -223,8 +220,8 @@ const GovernorProfilePage = () => {
             <div
                 style={{
                     display: "flex",
-                    justifyContent: "flex-start", // Align items to the left
-                    height: "40vh",
+                    justifyContent: "space-between", // Align items to the left
+                    height: "50vh",
                     flexDirection: "column",
                     width: "50vw",
                     backgroundColor: "#FFFFFF",
@@ -239,7 +236,7 @@ const GovernorProfilePage = () => {
                         style={{
                             display: "flex",
                             flexDirection: "column",
-                            width: "100%",
+                            width: "50%",
                         }}
                     >
                         <div
@@ -290,10 +287,11 @@ const GovernorProfilePage = () => {
                     </div>
                     <div
                         style={{
-                            width: "70vw",
-                            marginTop: "7vh",
-                            marginRight: "8vw",
-                            fontSize: "25px",
+                            width: "100%",
+                            fontSize: "1.2rem",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "2vh",
                         }}
                     >
                         <h3>Profile Details</h3>
@@ -473,95 +471,104 @@ const GovernorProfilePage = () => {
                     actionText={"Confirm"}
                     handleSubmit={PopUpAction}
                 >
-                    <label style={{ marginLeft: "2vw" }}>Current Password:</label>
-                    <Box
-                        component="form"
-                        sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <TextField
-                            id="outlined-password-input"
-                            type="password"
-                            label="Current Password"
-                            name="Current Password"
-                            value={currentPassword}
-                            onChange={handleCurrentPasswordChange}
-                            style={{
-                                width: "25vw",
-                                height: "4vh",
-                                marginTop: "1vh",
-                                marginLeft: "2vw",
-                                marginBottom: "2vh",
-                            }}
-                        />
-                    </Box>
-                    <label style={{ marginLeft: "2vw" }}>New Password:</label>
-                    <Box
-                        component="form"
-                        sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <TextField
-                            id="outlined-password-input"
-                            label="New Password"
-                            type="password"
-                            name="New Password"
-                            value={newPassword}
-                            onChange={handleNewPasswordChange}
-                            style={{
-                                width: "25vw",
-                                height: "4vh",
-                                marginTop: "1vh",
-                                marginLeft: "2vw",
-                                marginBottom: "2vh",
-                            }}
-                        />
-                    </Box>
-                    <label style={{ marginLeft: "2vw" }}>Confirm New Password:</label>
-                    <Box
-                        component="form"
-                        sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <TextField
-                            id="outlined-password-input"
-                            label="Confirm New Password"
-                            type="password"
-                            name="Confirm New Password"
-                            onChange={handleConfirmNewPasswordChange}
-                            value={confirmNewPassword}
-                            style={{
-                                width: "25vw",
-                                height: "4vh",
-                                marginTop: "1vh",
-                                marginLeft: "2vw",
-                                marginBottom: "2vh",
-                            }}
-                        />
-                    </Box>
-
-                    {popupAlert.open && (
-                        <Alert
-                            severity={popupAlert.severity}
-                            onClose={() =>
-                                setPopupAlert({
-                                    ...popupAlert,
-                                    open: false,
-                                })
-                            }
-                            style={{
-                                marginBottom: "1vh",
-                                fontSize: "22px",
-                                textAlign: "center",
-                                marginTop: "2vh",
-                            }}
-                        >
-                            {popupAlert.message}
-                        </Alert>
-                    )}
+                    <div style={{ display: "flex", flexDirection: "column", gap: "3vh" }}>
+                        <div>
+                            <label style={{ marginLeft: "2vw" }}>Current Password:</label>
+                            <Box
+                                component="form"
+                                sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+                                noValidate
+                                autoComplete="off"
+                            >
+                                <TextField
+                                    id="outlined-password-input"
+                                    type="password"
+                                    label="Current Password"
+                                    name="Current Password"
+                                    value={currentPassword}
+                                    onChange={handleCurrentPasswordChange}
+                                    style={{
+                                        width: "25vw",
+                                        height: "4vh",
+                                        marginTop: "1vh",
+                                        marginLeft: "2vw",
+                                        marginBottom: "2vh",
+                                    }}
+                                />
+                            </Box>
+                        </div>
+                        <div>
+                            <label style={{ marginLeft: "2vw" }}>New Password:</label>
+                            <Box
+                                component="form"
+                                sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+                                noValidate
+                                autoComplete="off"
+                            >
+                                <TextField
+                                    id="outlined-password-input"
+                                    label="New Password"
+                                    type="password"
+                                    name="New Password"
+                                    value={newPassword}
+                                    onChange={handleNewPasswordChange}
+                                    style={{
+                                        width: "25vw",
+                                        height: "4vh",
+                                        marginTop: "1vh",
+                                        marginLeft: "2vw",
+                                        marginBottom: "2vh",
+                                    }}
+                                />
+                            </Box>
+                        </div>
+                        <div>
+                            <label style={{ marginLeft: "2vw" }}>
+                                Confirm New Password:
+                            </label>
+                            <Box
+                                component="form"
+                                sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+                                noValidate
+                                autoComplete="off"
+                            >
+                                <TextField
+                                    id="outlined-password-input"
+                                    label="Confirm New Password"
+                                    type="password"
+                                    name="Confirm New Password"
+                                    onChange={handleConfirmNewPasswordChange}
+                                    value={confirmNewPassword}
+                                    style={{
+                                        width: "25vw",
+                                        height: "4vh",
+                                        marginTop: "1vh",
+                                        marginLeft: "2vw",
+                                        marginBottom: "2vh",
+                                    }}
+                                />
+                            </Box>
+                        </div>
+                        {popupAlert.open && (
+                            <Alert
+                                severity={popupAlert.severity}
+                                onClose={() =>
+                                    setPopupAlert({
+                                        ...popupAlert,
+                                        open: false,
+                                    })
+                                }
+                                style={{
+                                    marginBottom: "1vh",
+                                    fontSize: "22px",
+                                    textAlign: "center",
+                                    marginTop: "2vh",
+                                }}
+                            >
+                                {popupAlert.message}
+                            </Alert>
+                        )}
+                    </div>
                 </PopUp>
             </div>
             <div>
@@ -569,12 +576,12 @@ const GovernorProfilePage = () => {
                     <div
                         style={{
                             position: "fixed",
-                            top: "50%", // Center vertically
-                            right: "20px", // You can adjust this value to move it left/right
-                            transform: "translateY(-50%)", // Center the alert vertically
-                            zIndex: 1000, // Ensure it's above other content
-                            width: "30vw", // Set a suitable width
-                            fontSize: "30px",
+                            right: "1%",
+                            bottom: "2%",
+                            width: "25%",
+                            justifyContent: "center",
+
+                            zIndex: 1000,
                         }}
                     >
                         <Alert
