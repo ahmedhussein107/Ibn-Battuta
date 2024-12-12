@@ -55,6 +55,7 @@ const MyForm = ({
     setFormattedTime,
     showPopupMessage,
     processing,
+    isEdit,
 }) => {
     const [showDateModal, setShowDateModal] = useState(false);
     const [showTimeModal, setShowTimeModal] = useState(false);
@@ -540,7 +541,7 @@ const MyForm = ({
                     />
                     <Button
                         stylingMode="always-dark"
-                        text="Create Itinerary"
+                        text={isEdit ? "Update Itinerary" : "Create Itinerary"}
                         isLoading={processing}
                         handleClick={handleCreate}
                         width="auto"

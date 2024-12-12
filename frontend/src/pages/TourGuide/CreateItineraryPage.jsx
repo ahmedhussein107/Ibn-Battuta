@@ -103,47 +103,8 @@ const CreateItineraryPage = ({ isEdit = false }) => {
     const { convertPrice } = useCurrencyConverter();
 
     useEffect(() => {
-        let totalPrice = convertPrice(price, "EGP", currency);
-        let picture = "https://cdn-icons-png.flaticon.com/512/7603/7603006.png";
-        timelineActivities.forEach((activity) => {
-            if (activity.activityType === "Activity") {
-                totalPrice += Number(activity.activity.price);
-                if (activity.activity.picture) {
-                    picture = activity.activity.picture;
-                }
-            }
-        });
-        const itineraryData = {
-            name,
-            activities: timelineActivities,
-            price: totalPrice,
-            description,
-            pickuplongitude: pickupLocation.longitude,
-            pickuplatitude: pickupLocation.latitude,
-            pickupLocation: pickupLocation.location,
-            dropOfflongitude: dropoffLocation.longitude,
-            dropOfflatitude: dropoffLocation.latitude,
-            dropOffLocation: dropoffLocation.location,
-            startDate, // TODO: convert to ISODate()
-            endDate: timelineActivities[timelineActivities.length - 1]?.endTime,
-            tags,
-            accessibility: accessibility.join(","),
-            language,
-            picture,
-        };
-
-        console.log("itineraryData", itineraryData);
-    }, [
-        name,
-        price,
-        description,
-        pickupLocation,
-        dropoffLocation,
-        startDate,
-        tags,
-        accessibility,
-        language,
-    ]);
+        console.log("timelineActivities after updating", timelineActivities);
+    }, [timelineActivities]);
 
     useEffect(() => {
         if (itineraryId) {
@@ -154,6 +115,7 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                         `/itinerary/getItinerary/${itineraryId}`
                     );
                     const itinerary = response.data;
+                    console.log("itinerary", itinerary);
 
                     const activities = itinerary.activities.map(async (activity) => {
                         const type = activity.activityType;
@@ -192,31 +154,15 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                     setDropoffLocation({
                         latitude: itinerary.dropOfflatitude,
                         longitude: itinerary.dropOfflongitude,
-                        location: itinerary.dropoffLocation,
+                        location: itinerary.dropOffLocation,
                     });
 
-                    setStartDate(new Date(itinerary.startDate));
-                    setTags(itinerary.tags.split(","));
-                    setAccessibility(itinerary.accessibility.split(","));
                     setLanguage(itinerary.language);
-                    setCurrency(itinerary.currency);
-                    setFormattedDate(itinerary.startDate.toLocaleDateString());
+                    setCurrency("EGP");
 
-                    function formatTime12Hour(date) {
-                        const hours = date.getHours(); // Get hours in 24-hour format
-                        const minutes = date.getMinutes(); // Get minutes
-                        const period = hours >= 12 ? "PM" : "AM"; // Determine AM or PM
-
-                        // Convert hours to 12-hour format
-                        const hours12 = hours % 12 || 12; // Replace 0 with 12 for midnight
-
-                        // Ensure minutes are two digits
-                        const formattedMinutes = minutes.toString().padStart(2, "0");
-
-                        return `${hours12}:${formattedMinutes} ${period}`;
-                    }
-
-                    setFormattedTime(formatTime12Hour(itinerary.startDate));
+                    setStartDate(new Date(itinerary.startDate));
+                    setTags(itinerary.tags);
+                    setAccessibility(itinerary.accessibility.join(","));
                 } catch (error) {
                     console.error("Error fetching itinerary:", error);
                 }
@@ -225,6 +171,32 @@ const CreateItineraryPage = ({ isEdit = false }) => {
             fetchItinerary();
         }
     }, []);
+
+    const transformISODate = (isoDateString) => {
+        const date = new Date(isoDateString);
+        const startDate = date;
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = hours >= 12 ? "PM" : "AM";
+        let formattedHours = hours % 12;
+        formattedHours = formattedHours === 0 ? 12 : formattedHours;
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+        const startTime = `${formattedHours}:${formattedMinutes} ${period}`;
+        return {
+            date: startDate,
+            time: startTime,
+        };
+    };
+
+    useEffect(() => {
+        if (startDate) {
+            const { date: newStartDate, time: newStartTime } =
+                transformISODate(startDate);
+            setFormattedDate(newStartDate.toLocaleDateString());
+            setFormattedTime(newStartTime);
+        }
+    }, [startDate]);
 
     const [processing, setProcessing] = useState(false);
 
@@ -261,29 +233,38 @@ const CreateItineraryPage = ({ isEdit = false }) => {
             dropOffLocation: dropoffLocation.location,
             startDate: startDate.toISOString(),
             endDate: endDate.toISOString(),
-            tags: tags.join(","),
-            accessibility: accessibility.join(","),
+            tags: tags,
+            accessibility: accessibility.split(","),
             language,
             picture,
         };
 
         console.log("itineraryData", itineraryData);
 
-        if (isEdit) {
-            const response = await axiosInstance.patch(
-                "/itinerary/updateItinerary/" + itineraryId,
-                { ...itineraryData }
+        try {
+            if (isEdit) {
+                const response = await axiosInstance.patch(
+                    "/itinerary/updateItinerary/" + itineraryId,
+                    { ...itineraryData }
+                );
+            } else {
+                const response = await axiosInstance.post(
+                    "/itinerary/createItinerary",
+                    { ...itineraryData },
+                    { withCredentials: true }
+                );
+            }
+            navigate("/tourguide/assigned");
+        } catch (error) {
+            console.error("Error creating itinerary:", error);
+            showPopupMessage(
+                error.response?.data?.message ||
+                    "Error creating itinerary. Please try again.",
+                true
             );
-        } else {
-            const response = await axiosInstance.post(
-                "/itinerary/createItinerary",
-                { ...itineraryData },
-                { withCredentials: true }
-            );
+        } finally {
+            setProcessing(false);
         }
-
-        setProcessing(false);
-        navigate("/tourguide/assigned");
     };
 
     return (
@@ -365,6 +346,7 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                     setFormattedTime={setFormattedTime}
                     showPopupMessage={showPopupMessage}
                     processing={processing}
+                    isEdit={isEdit}
                 />
             )}
             {step === 2 && (
