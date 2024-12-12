@@ -15,7 +15,7 @@ import SearchField from "../../components/SearchField/SearchField";
 import Sorter from "../../components/Sorter";
 import RatingRange from "../../components/RatingRange";
 import CheckboxList from "../../components/CheckBoxList";
-import { Alert } from "@mui/material";
+import { Alert, TextField } from "@mui/material";
 import Button from "../Button";
 import LocationAdder from "../LocationAdder";
 import MapPopUp from "../MapPopUp";
@@ -51,7 +51,9 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
     const [location, setLocation] = useState("");
 
     const [error, setError] = useState(null);
-
+    const [alertMessage, setAlertMessage] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [SeverError, setServerError] = useState("");
     const classes = useStyles();
 
     const fetchTags = async () => {
@@ -393,6 +395,24 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                 );
 
                 data.pictures = pictures;
+                if (data.pictures.length === 0) {
+                    setAlertMessage("Please upload at least one image");
+                    setShowAlert(true);
+                    setServerError("info");
+                    setTimeout(() => {
+                        setShowAlert(false);
+                    }, 5000);
+                    return;
+                }
+                if (!data.name || !data.description || !data.location) {
+                    setAlertMessage("Please fill in all the required fields");
+                    setShowAlert(true);
+                    setServerError("error");
+                    setTimeout(() => {
+                        setShowAlert(false);
+                    }, 5000);
+                    return;
+                }
                 const response = await axiosInstance.post(
                     "/customActivity/createCustomActivity",
                     data,
@@ -418,100 +438,108 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
 
         return (
             <>
+                {showAlert && (
+                    <Alert
+                        severity={SeverError}
+                        onClose={() => setShowAlert(false)}
+                        style={{
+                            position: "fixed",
+                            right: "1%",
+                            bottom: "1%",
+                            width: "25vw",
+                            fontSize: "1.2rem",
+                            zIndex: 9000,
+                        }}
+                    >
+                        {alertMessage}
+                    </Alert>
+                )}
                 <PopUp
                     isOpen={popUpOpen}
                     setIsOpen={setPopUpOpen}
-                    headerText={"Create new Custom Activity"}
+                    headerText={"Create New Custom Activity"}
                     containsActionButton={false}
                     containsFooter={false}
                 >
                     <div
                         style={{
-                            marginBottom: "2vh",
-                            width: "50vw",
+                            width: "30vw",
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
+                            maxHeight: "70vh",
+                            overflowY: "auto",
                         }}
                     >
-                        <div
-                            style={{
-                                width: "80%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                            }}
-                        >
-                            <div
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    width: "55%",
-                                }}
-                            >
-                                <label
-                                    style={{
-                                        display: "block",
-                                        marginBottom: "0.5vh",
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Name*
-                                </label>
-                                <input
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    placeholder="Insert title here..."
-                                    style={{
-                                        width: "100%",
-                                        padding: "1vh",
-                                        borderRadius: "1vh",
-                                        border: "0.1vh solid #ccc",
-                                    }}
-                                />
-                                <label
-                                    style={{
-                                        display: "block",
-                                        marginBottom: "0.5vh",
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Description*
-                                </label>
-                                <textarea
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    placeholder="Insert description here..."
-                                    style={{
-                                        width: "100%",
-                                        padding: "1vh",
-                                        borderRadius: "1vh",
-                                        border: "0.1vh solid #ccc",
-                                        resize: "vertical",
-                                    }}
-                                />
-                                <div style={{ width: "100%" }}>
-                                    <LocationAdder
-                                        title={"activity location"}
-                                        location={actLocation}
-                                        setLocation={setActLocation}
-                                        setMapFunction={setMapFunction}
-                                    />
-                                </div>
-                                <Button
-                                    stylingMode="always-dark"
-                                    text="Create Itinerary"
-                                    isLoading={isLoading}
-                                    customStyle={{ marginTop: "2vh" }}
-                                    handleClick={handleSubmit}
-                                />
-                            </div>
+                        <div style={{ width: "80%", marginBottom: "1vh" }}>
                             <PhotosUpload
                                 label="Activity Photos"
                                 imagePreviews={imagePreviews}
                                 onImageAdd={handleImageAdd}
                                 onImageRemove={handleImageRemove}
+                            />
+                        </div>
+
+                        <div
+                            style={{
+                                width: "80%",
+                                display: "flex",
+                                flexDirection: "column",
+                            }}
+                        >
+                            <label
+                                style={{
+                                    fontWeight: "bold",
+                                    marginBottom: "0.5vh",
+                                }}
+                            >
+                                Name*
+                            </label>
+                            <TextField
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Insert title here..."
+                                style={{
+                                    width: "100%",
+                                    borderRadius: "1vh",
+                                    margin: "0.5vh 0",
+                                }}
+                            />
+                            <label
+                                style={{
+                                    display: "block",
+                                    fontWeight: "bold",
+                                    marginBottom: "0.5vh",
+                                }}
+                            >
+                                Description*
+                            </label>
+                            <TextField
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder="Insert description here..."
+                                style={{
+                                    width: "100%",
+                                    borderRadius: "1vh",
+                                    margin: "0.5vh 0",
+                                    resize: "vertical",
+                                }}
+                            />
+                            <div style={{ width: "100%", marginBottom: "1vh" }}>
+                                <LocationAdder
+                                    title={"Activity Location"}
+                                    location={actLocation}
+                                    setLocation={setActLocation}
+                                    setMapFunction={setMapFunction}
+                                />
+                            </div>
+                            <Button
+                                stylingMode="always-dark"
+                                text="Create Activity"
+                                isLoading={isLoading}
+                                customStyle={{ marginTop: "1vh" }}
+                                handleClick={handleSubmit}
                             />
                         </div>
                     </div>
