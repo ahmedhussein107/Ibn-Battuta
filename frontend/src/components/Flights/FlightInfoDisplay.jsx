@@ -14,113 +14,69 @@ const FlightInfoDisplay = ({
 }) => {
     return (
         <>
-            {/* Airline shape component */}
-            <FlightDetailShape airlineName={airlineName} />
-
-            {/* Duration of the flight */}
             <div
                 style={{
-                    position: "relative",
-                    bottom: "10vh",
-                    left: "9vh",
-                    transform: "translateY(50%)",
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "1vw",
+                    marginLeft: "10%",
                 }}
             >
-                <span
-                    style={{
-                        color: "#757575",
-                        marginLeft: "0.2vw",
-                        fontWeight: "normal",
-                    }}
-                >
-                    {duration}
-                </span>
-            </div>
+                {/* Airline shape component */}
+                <FlightDetailShape airlineName={airlineName} duration={duration} />
 
-            {/* Departure time and location */}
-            <div style={{}}>
-                <span
+                {/* Departure time and location */}
+                <div
                     style={{
-                        position: "relative",
-                        bottom: "16vh",
-                        left: "23vh",
-                        transform: "translateY(50%)",
-                        color: "black",
-                        marginLeft: "0.2vw",
-                        fontWeight: "normal",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "6vh",
+                        marginTop: "2.5vh",
                     }}
                 >
-                    {departureTime}
-                </span>
-                <span
-                    style={{
-                        position: "relative",
-                        bottom: "16vh",
-                        left: "25vh",
-                        transform: "translateY(50%)",
-                        color: "black",
-                        marginLeft: "0.2vw",
-                        fontWeight: "normal",
-                    }}
-                >
-                    {departureLocation}
-                </span>
-                <span
-                    style={{
-                        position: "relative",
-                        bottom: "16vh",
-                        left: "27vh",
-                        transform: "translateY(50%)",
-                        color: "black",
-                        marginLeft: "0.2vw",
-                        fontWeight: "normal",
-                    }}
-                >
-                    Terminal {departureTerminal}
-                </span>
-            </div>
+                    <div>
+                        <span
+                            style={{
+                                color: "black",
+                                marginLeft: "0.2vw",
+                                fontWeight: "normal",
+                            }}
+                        >
+                            {departureTime} &nbsp; &nbsp;
+                        </span>
+                        <span
+                            style={{
+                                color: "black",
+                                marginLeft: "0.2vw",
+                                fontWeight: "normal",
+                            }}
+                        >
+                            {`${departureLocation} (Terminal ${departureTerminal})`}
+                        </span>
+                    </div>
 
-            {/* Arrival time and location */}
-            <div>
-                <span
-                    style={{
-                        position: "relative",
-                        bottom: "11vh",
-                        left: "23vh",
-                        transform: "translateY(50%)",
-                        color: "black",
-                        marginLeft: "0.2vw",
-                        fontWeight: "normal",
-                    }}
-                >
-                    {arrivalTime}
-                </span>
-                <span
-                    style={{
-                        position: "relative",
-                        bottom: "11vh",
-                        left: "25vh",
-                        transform: "translateY(50%)",
-                        color: "black",
-                        marginLeft: "0,2vw",
-                        fontWeight: "normal",
-                    }}
-                >
-                    {arrivalLocation}
-                </span>
-                <span
-                    style={{
-                        position: "relative",
-                        bottom: "11vh",
-                        left: "27vh",
-                        transform: "translateY(50%)",
-                        color: "black",
-                        marginLeft: "0.2vw",
-                        fontWeight: "normal",
-                    }}
-                >
-                    Terminal {arrivalTerminal}
-                </span>
+                    {/* Arrival time and location */}
+                    <div>
+                        <span
+                            style={{
+                                color: "black",
+                                marginLeft: "0.2vw",
+                                fontWeight: "normal",
+                            }}
+                        >
+                            {arrivalTime} &nbsp; &nbsp;
+                        </span>
+                        <span
+                            style={{
+                                color: "black",
+                                marginLeft: "0.2vw",
+                                fontWeight: "normal",
+                            }}
+                        >
+                            {`${arrivalLocation} (Terminal ${arrivalTerminal})`}
+                        </span>
+                    </div>
+                </div>
             </div>
         </>
     );

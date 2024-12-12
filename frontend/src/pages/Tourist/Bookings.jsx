@@ -48,8 +48,8 @@ const Bookings = () => {
                 }. 
                                  Do you want to book a limousine to hotel ${
                                      hotel.name
-                                 } for 1000 
-                                 ${hotel.currency || currency}?`;
+                                 } for ${formatPrice(1000, hotel.currency || currency)} 
+                                 ?`;
                 setPopupContent(content);
             } else if (location.state?.tab == "Flights") {
                 setPopupOpen(true);
@@ -59,7 +59,7 @@ const Bookings = () => {
                                  in ${
                                      hotel.chosenCity.name
                                  }. Do you want to book this package for 
-                                 1000 ${hotel.currency || currency}?`;
+                                  ${formatPrice(1000, hotel.currency || currency)}?`;
                 setPopupContent(content);
             }
         }
@@ -131,7 +131,7 @@ const Bookings = () => {
         fetchBookings();
     }, [selected, filter]);
     const currency = Cookies.get("currency") || "EGP";
-    const { isLoading } = useCurrencyConverter();
+    const { isLoading, formatPrice } = useCurrencyConverter(currency);
 
     if (isLoading) {
         return <CircularProgress />;

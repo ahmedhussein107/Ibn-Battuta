@@ -684,7 +684,7 @@ const ActivityDetails = () => {
                 mode="activity"
                 title={activityData.name}
                 category={activityData.category}
-                isOpen={activityData.isOpenForBooking}
+                isOpen={activityData.isOpenForBooking && activityData.freeSpots > 0}
                 bookmark={handleBookmark}
                 isBookmarked={isBookmarked}
                 showBookmark={userType === "Tourist"}

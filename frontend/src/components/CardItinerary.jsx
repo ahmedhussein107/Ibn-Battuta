@@ -86,7 +86,11 @@ const CardItinerary = ({
     const bookingAvaliable = (
         <div style={{ marginBottom: "0%", fontSize: "2vh" }}>
             {itinerary.isActivated ? (
-                <p style={{ color: "green", marginTop: "0%" }}>Booking Available</p>
+                !itinerary.isFlagged ? (
+                    <p style={{ color: "green", marginTop: "0%" }}>Booking Available</p>
+                ) : (
+                    <p style={{ color: "red", marginTop: "0%" }}>Flagged By Admin</p>
+                )
             ) : (
                 <p style={{ color: "red", marginTop: "0%" }}>Booking not Available</p>
             )}
