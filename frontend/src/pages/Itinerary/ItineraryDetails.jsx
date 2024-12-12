@@ -5,7 +5,7 @@ import axiosInstance from "../../api/axiosInstance";
 import Cookies from "js-cookie";
 
 // Components relevant to this file
-import ReviewsSection from "./ReviewsSection.jsx";
+import ReviewsSection from "../../components/ReviewsSection.jsx";
 import ProfileAndDescription from "./ProfileAndDescription.jsx";
 import CyclicPhotoDisplay from "./CyclicPhotoDisplay.jsx";
 
