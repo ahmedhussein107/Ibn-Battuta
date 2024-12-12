@@ -216,10 +216,14 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem", setError }) 
     );
 
     const aboveLine = (
-        <div style={{ fontSize: fontSize }}>
-            <FirstLine />
-            <SecondLine />
-            <ThirdLine />
+        <div style={{ fontSize: fontSize, display: "flex", flexDirection: "column" }}>
+            <div>
+                <FirstLine />
+                <SecondLine />
+            </div>
+            <div style={{marginTop: "5%"}}>
+                <ThirdLine />
+            </div>
         </div>
     );
 
@@ -450,8 +454,8 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem", setError }) 
                 bottomRight={<></>}
                 width={width}
                 height={height}
-                upperHeight="44%"
-                lowerHeight="54%"
+                upperHeight="35%"
+                lowerHeight="68%"
                 bottomLeftWidth="100%"
                 bottomRightWidth="0%"
             />

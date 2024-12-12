@@ -249,7 +249,9 @@ const MyItineraries = () => {
                                             ID={itinerary._id}
                                         />,
                                     ],
+
                                 ]}
+                                isEditable={true}
                                 bottomButtons={[
                                     {
                                         text: "Edit",
