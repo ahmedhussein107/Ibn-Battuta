@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaMapMarkerAlt, FaTrash, FaMapMarkerAlt as LocationIcon } from "react-icons/fa";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { createUseStyles } from "react-jss";
 import Button from "./Button";
 

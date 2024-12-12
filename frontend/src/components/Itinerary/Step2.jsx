@@ -6,10 +6,6 @@ import axiosInstance from "../../api/axiosInstance";
 import { uploadFiles } from "../../api/firebase";
 import CardActivity from "../CardActivity";
 import CardCustomActivity from "../CardCustomActivity";
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import SideBar from "../../components/SideBar/SideBar";
 import SearchField from "../../components/SearchField/SearchField";
 import Sorter from "../../components/Sorter";
@@ -377,7 +373,8 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
 
         const [imagePreviews, setImagePreviews] = useState([]);
 
-        const handleSubmit = async () => {
+        const handleSubmit = async (e) => {
+            e.preventDefault();
             try {
                 const data = {
                     name,
@@ -539,7 +536,9 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                                 text="Create Activity"
                                 isLoading={isLoading}
                                 customStyle={{ marginTop: "1vh" }}
-                                handleClick={handleSubmit}
+                                handleClick={(e) => {
+                                    handleSubmit(e);
+                                }}
                             />
                         </div>
                     </div>

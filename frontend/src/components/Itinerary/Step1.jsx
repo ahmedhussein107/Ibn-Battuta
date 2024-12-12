@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Timeline from "../Timeline";
 import MyForm from "../MyForm";
+import PopUp from "../PopUpsGeneric/PopUp";
+import CardCustomActivity from "../CardCustomActivity";
 
 const Step1 = ({
     setStep,
@@ -52,7 +54,7 @@ const Step1 = ({
                 <div
                     style={{
                         padding: "2em",
-                        width: "90%",
+                        width: "40vw",
                         maxHeight: "80vh",
                         overflowY: "auto",
                     }}
