@@ -776,7 +776,7 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                     setStep(1);
                 }}
                 width="10%"
-                customStyle={{ marginBottom: "2vh" }}
+                customStyle={{ marginBottom: "2vh", marginLeft: "32vw" }}
             />
         </div>
     );
@@ -912,8 +912,8 @@ const useStyles = createUseStyles({
         transition: "all 0.3s ease",
     },
     activeTab: {
-        backgroundColor: "#ff5b24",
-        color: "white",
+        backgroundColor: "#FCF3E2",
+        color: "black",
     },
     inactiveTab: {
         backgroundColor: "white",
