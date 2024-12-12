@@ -77,16 +77,29 @@ const NavBar = () => {
     const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
     const [notifications, setNotifications] = useState([]);
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [username, setUsername] = useState("");
     const navigate = useNavigate();
     const [dropdownRef, notificationIconRef] = useClickOutside(() => {
         setIsNotificationOpen(false);
     });
-    useEffect(() => {
+    const fetchUsername = async () => {
+        try {
+            const response = await axiosInstance.get("/tourguide/getTourGuideUsername",
+                {withCredentials: true});
+            setUsername(response.data.username);
+            console.log("Ahmed Kamal: ", username);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect( () => {
         const cookieUserType = Cookies.get("userType") || "Guest";
         console.log("User type from cookie:", cookieUserType);
         if (cookieUserType && cookieUserType !== "undefined") {
             setUserType(cookieUserType);
         }
+        if (cookieUserType === "TourGuide") fetchUsername();
     }, []);
 
     useEffect(() => {
@@ -223,6 +236,7 @@ const NavBar = () => {
             </Link>
         );
     };
+
 
     return (
         <nav className="navbar">
@@ -372,7 +386,7 @@ const NavBar = () => {
                                     })
                                 ) : userType === "Guest" ? null : (
                                     <Link
-                                        to={`/${userType.toLowerCase()}/profile`}
+                                        to={`/${userType.toLowerCase()}/profile/${username}`}
                                         className="dropdown-item"
                                     >
                                         {"My Profile"}

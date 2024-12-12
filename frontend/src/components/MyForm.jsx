@@ -278,16 +278,16 @@ const MyForm = ({
                                 <div
                                     style={{
                                         display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        width: "16rem",
+                                        flexDirection: "row",
+                                        // alignItems: "center",
+                                        justifyContent: "space-between",
+                                        gap: "8rem",
                                     }}
                                 >
                                     <div
                                         style={{
                                             position: "relative",
                                             width: "100%",
-                                            marginBottom: "1rem",
                                         }}
                                     >
                                         <input
@@ -310,7 +310,7 @@ const MyForm = ({
                                         <CalendarTodayIcon
                                             style={{
                                                 position: "absolute",
-                                                left: "15vw",
+                                                left: "18vw",
                                                 top: "50%",
                                                 transform: "translateY(-50%)",
                                                 cursor: "pointer",
@@ -341,7 +341,7 @@ const MyForm = ({
                                         <AccessTimeIcon
                                             style={{
                                                 position: "absolute",
-                                                left: "15vw",
+                                                left: "18vw",
                                                 top: "50%",
                                                 transform: "translateY(-50%)",
                                                 cursor: "pointer",
@@ -371,7 +371,7 @@ const MyForm = ({
                                 showEndTime={false}
                             />
                             <InputGroup>
-                                <div style={{ marginTop: "3vh" }}>
+                                <div style={{ marginTop: "3vh", gap: "3vh" }}>
                                     {isMapOpen && (
                                         <MapPopUp
                                             popUpOpen={isMapOpen}
@@ -402,19 +402,20 @@ const MyForm = ({
                                 style={{
                                     display: "flex",
                                     alignItems: "flex-start",
-                                    gap: "2vh",
+                                    flexDirection: "column",
+                                    gap: ".6vh",
                                     minHeight: "9vh",
                                 }}
                             >
-                                <Label
-                                    style={{
-                                        paddingTop: "1vh",
-                                    }}
-                                >
-                                    Tags
-                                </Label>
+                                <Label>Tags</Label>
                                 <div style={{ flex: 1 }}>
-                                    <div style={{ display: "flex", gap: "1vh" }}>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            gap: "1vh",
+                                            width: "50vw",
+                                        }}
+                                    >
                                         <GenericDropDown
                                             options={allTags}
                                             selectedItem={selectedTag}
@@ -494,7 +495,7 @@ const MyForm = ({
                                         display: "flex",
                                         flexDirection: "column", // Stacks children vertically
                                         width: "100%", // Ensures the text field takes up the full width
-                                        gap: "1rem", // Adds spacing between elements
+                                        gap: ".1rem", // Adds spacing between elements
                                     }}
                                 >
                                     <Label>Price</Label>

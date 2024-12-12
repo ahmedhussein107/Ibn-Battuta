@@ -4,7 +4,7 @@ import axiosInstance from "../../api/axiosInstance";
 import Footer from "../../components/Footer";
 import ProfileButton from "../../components/ProfileButtons";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import Rating from "@mui/material/Rating";
@@ -25,6 +25,7 @@ const TourguideProfilePage = () => {
     const [response, setResponse] = useState(null);
     const [userType, setUserType] = useState("TourGuide");
     const [isEditing, setIsEditing] = useState(false);
+    const [isEditable, setIsEditable] = useState(false);
     const [isPrevEditing, setIsPrevEditing] = useState(false);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
@@ -54,10 +55,13 @@ const TourguideProfilePage = () => {
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
 
+    const { username } = useParams();
+    console.log("in profile");
     useEffect(() => {
         axiosInstance
-            .get("/tourguide/tourGuide", { withCredentials: true })
+            .get(`/tourguide/tourGuide/${username}`, { withCredentials: true })
             .then((response) => {
+                setIsEditable(response.data.isEditable);
                 setResponse(response.data);
                 setFormData({
                     name: response.data.name,
@@ -347,7 +351,7 @@ const TourguideProfilePage = () => {
                                             backgroundPosition: "center",
                                             marginTop: "2vh",
                                             marginLeft: "1vh",
-                                            cursor: "pointer", // Indicate clickability
+                                            cursor: isEditing ? "pointer" : "",
                                         }}
                                         onClick={isEditing ? handleImageClick : undefined}
                                     />
@@ -544,7 +548,7 @@ const TourguideProfilePage = () => {
                                         )}
                                     </p>
                                 </div>
-                                <EditIcon
+                                {isEditable && <EditIcon
                                     style={{
                                         marginTop: "-1vh",
                                         marginRight: "0vw",
@@ -552,7 +556,7 @@ const TourguideProfilePage = () => {
                                         cursor: "pointer",
                                     }}
                                     onClick={handleEditProfileSubmit}
-                                />
+                                />}
                             </div>
                             <div
                                 style={{
@@ -637,7 +641,7 @@ const TourguideProfilePage = () => {
                 {/* Updated Previous Work Section */}
                 <div>
                     <h3>Previous Work</h3>
-                    {!isPrevEditing && (
+                    {!isPrevEditing && isEditable && (
                         <EditIcon
                             style={{
                                 marginLeft: "85vw",
@@ -891,7 +895,7 @@ const TourguideProfilePage = () => {
                     </div>
                 </div>
             </div>
-            <hr
+            {isEditable && <> <hr
                 style={{
                     width: "90vw",
                     borderTop: "2px solid #ccc",
@@ -899,7 +903,7 @@ const TourguideProfilePage = () => {
                     marginLeft: "4.5vw",
                 }}
             />
-            <div
+             <div
                 style={{
                     display: "flex",
                     direction: "row",
@@ -1047,7 +1051,7 @@ const TourguideProfilePage = () => {
                         </Alert>
                     )}
                 </PopUp>
-            </div>
+            </div></>}
             <div>
                 {alert.open && (
                     <div

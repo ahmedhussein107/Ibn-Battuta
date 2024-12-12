@@ -17,24 +17,20 @@ const GovernorLandmark = () => {
     const [landmarks, setLandmarks] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
-        useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const [landmarkToDelete, setLandmarkToDelete] = useState(null);
     const itemsPerPage = 6;
     const navigate = useNavigate();
 
     const fetchLandmarks = async () => {
         try {
-            const response = await axiosInstance.get(
-                `/landmark/getGovernorLandmarks`,
-                {
-                    params: {
-                        page: currentPage,
-                        limit: itemsPerPage,
-                    },
-                    withCredentials: true,
-                }
-            );
+            const response = await axiosInstance.get(`/landmark/getGovernorLandmarks`, {
+                params: {
+                    page: currentPage,
+                    limit: itemsPerPage,
+                },
+                withCredentials: true,
+            });
             console.log("response", response.data);
             setLandmarks(response.data);
             setTotalPages(response.data.totalPages);
@@ -145,10 +141,7 @@ const GovernorLandmark = () => {
                 <div style={{ width: "100vw" }}>
                     {landmarks.map((landmark) => {
                         return (
-                            <div
-                                style={{ marginBottom: "3vh" }}
-                                key={landmark.id}
-                            >
+                            <div style={{ marginBottom: "3vh" }} key={landmark.id}>
                                 <CardLandmark
                                     landmark={landmark}
                                     width={"95%"}
@@ -164,7 +157,7 @@ const GovernorLandmark = () => {
                                             titleAccess="Edit Profile"
                                             onClick={() =>
                                                 navigate(
-                                                    `/governor/edit-landmark/${landmark._id}]`
+                                                    `/governor/edit-landmark/${landmark._id}`
                                                 )
                                             } // Replace with the correct path and use landmark ID
                                         />,

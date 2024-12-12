@@ -8,6 +8,7 @@ import ActivityDetails from "../pages/Activity/ActivityDetails";
 import Itineraries from "../pages/Itinerary/Itineraries";
 import ItineraryDetails from "../pages/Itinerary/ItineraryDetails";
 import Demo from "../pages/Demo.jsx";
+import TourGuideProfilePage from "../pages/TourGuide/TourGuideProfilePage.jsx";
 
 const publicRoutes = [
     { path: "/", element: <HomePage /> },
@@ -19,6 +20,7 @@ const publicRoutes = [
     { path: "/activity-details/:activityId", element: <ActivityDetails /> },
     { path: "/itineraries", element: <Itineraries /> },
     { path: "/itinerary-details/:itineraryId", element: <ItineraryDetails /> },
+    { path: "/tourguide/profile/:username", element: <TourGuideProfilePage /> },
     { path: "/demo", element: <Demo /> },
 ];
 export default publicRoutes;

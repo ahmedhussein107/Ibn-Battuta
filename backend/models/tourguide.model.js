@@ -33,6 +33,8 @@ const tourGuideSchema = new mongoose.Schema(
     { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
+tourGuideSchema.index({username: 1});
+
 tourGuideSchema.methods.addRating = async function (rating) {
     this.ratings.push(rating);
     this.sumOfRatings += rating.rating;
