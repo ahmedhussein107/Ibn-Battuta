@@ -7,7 +7,7 @@ export const createCategory = async (req, res) => {
         const category = await Category.create(req.body);
         res.status(201).json(category);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ message: error.message });
     }
 };
 
@@ -16,7 +16,7 @@ export const getCategories = async (req, res) => {
         const categories = await Category.find();
         res.status(200).json(categories);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ message: error.message });
     }
 };
 export const getCategoryByID = async (req, res) => {

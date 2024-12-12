@@ -195,6 +195,7 @@ const SigninComponent = () => {
                         right: "1%",
                         bottom: "1%",
                         width: "25vw",
+                        fontSize: "1.2rem",
                         zIndex: 1000,
                     }}
                 >

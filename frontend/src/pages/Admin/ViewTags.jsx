@@ -10,6 +10,7 @@ import SearchField from "../../components/SearchField/SearchField";
 import tagsBackground from "../../assets/backgrounds/tags.png";
 import CustomButton from "../../components/Button";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
+import Alert from "@mui/material/Alert";
 
 import axiosInstance from "../../api/axiosInstance";
 import Footer from "../../components/Footer";
@@ -21,6 +22,11 @@ const ViewTags = () => {
     const [tagName, setTagName] = useState("");
     const [editingTag, setEditingTag] = useState(null);
     const [editedTagName, setEditedTagName] = useState("");
+    const [alert, setAlert] = useState({
+        open: false,
+        severity: "info",
+        message: "",
+    });
 
     const handleOpen = () => {
         setOpen(true);
@@ -37,9 +43,11 @@ const ViewTags = () => {
             .then((res) => {
                 console.log("Tag created: ", res.data);
                 setTags([...tags, res.data]);
+                showAlert("success", "Tag created successfully!");
             })
             .catch((error) => {
                 console.error("Error creating tag: ", error);
+                showAlert("error", "Error creating tag!");
             });
         setOpen(false);
         setNewTag("");
@@ -59,6 +67,7 @@ const ViewTags = () => {
             })
             .catch((error) => {
                 console.error("Error fetching tags: ", error);
+                showAlert("error", "Error fetching tags!");
             });
     };
 
@@ -74,9 +83,11 @@ const ViewTags = () => {
             .then((res) => {
                 console.log("Tag deleted: ", res.data);
                 setTags(tags.filter((tag) => tag._id !== tagId));
+                showAlert("success", "Tag deleted successfully!");
             })
             .catch((error) => {
                 console.error("Error deleting tag: ", error);
+                showAlert("error", "Error deleting tag!");
             });
     };
 
@@ -95,6 +106,7 @@ const ViewTags = () => {
             .put(`/tag/updateTag/${tagId}`, { _id: editedTagName })
             .then((res) => {
                 console.log("Tag updated: ", res.data);
+                showAlert("success", "Tag updated successfully!");
                 setTags(
                     tags.map((tag) =>
                         tag._id === tagId ? { ...tag, _id: editedTagName } : tag
@@ -104,8 +116,18 @@ const ViewTags = () => {
             })
             .catch((error) => {
                 console.error("Error updating tag: ", error);
+                showAlert("error", "Error updating tag!");
                 setEditingTag(null);
             });
+    };
+
+    const showAlert = (severity, message) => {
+        setAlert({ open: true, severity, message });
+
+        setTimeout(() => {
+            setAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+            // setIsOpen(false);
+        }, 4000); // Alert will close after 5 seconds
     };
 
     return (
@@ -126,7 +148,7 @@ const ViewTags = () => {
                         onChange={(e) => setNewTag(e.target.value)}
                         sx={{
                             "& .MuiOutlinedInput-root": {
-                                borderRadius: "20px",
+                                borderRadius: "10px",
                                 backgroundColor: "#FFFFFF",
                             },
                         }}
@@ -189,9 +211,11 @@ const ViewTags = () => {
                     width="10%"
                     customStyle={{
                         borderRadius: "60px",
-                        fontSize: "1rem",
+                        fontSize: "20px",
+                        width: "9vw",
                         textAlign: "center",
-                        padding: "8px 12px", // Adjust padding to control the button's height
+                        marginTop: "2vh",
+                        // padding: "8px 12px", // Adjust padding to control the button's height
                         lineHeight: "1", // Ensure text line-height doesn't increase height
                         height: "40px", // Optional: explicitly set height
                     }}
@@ -296,6 +320,26 @@ const ViewTags = () => {
                     </Box>
                 </Paper>
             </div>
+            {alert.open && (
+                <Alert
+                    severity={alert.severity}
+                    onClose={() =>
+                        alert({
+                            ...alert,
+                            open: false,
+                        })
+                    }
+                    style={{
+                        position: "fixed",
+                        right: "1%",
+                        bottom: "1%",
+                        width: "25vw",
+                        zIndex: 1000,
+                    }}
+                >
+                    {alert.message}
+                </Alert>
+            )}
             <Footer />
         </div>
     );
