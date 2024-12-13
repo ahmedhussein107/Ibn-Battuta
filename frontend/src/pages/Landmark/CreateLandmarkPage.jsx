@@ -4,7 +4,7 @@ import LocationAdder from "../../components/LocationAdder";
 import { TimePicker } from "antd";
 import MapPopUp from "../../components/MapPopUp";
 import axiosInstance from "../../api/axiosInstance";
-import { uploadFile } from "../../api/firebase";
+import { uploadFile, uploadFiles } from "../../api/firebase";
 import Footer from "../../components/Footer";
 import landmarkbackground from "../../assets/backgrounds/landmarksBackground.png";
 import { useNavigate, useParams } from "react-router-dom";
@@ -247,7 +247,20 @@ export default function LandmarkForm({ isEdit = false }) {
                     response.data;
                 const formattedLandmarkData = parseObject(landmarkData);
                 console.log(formattedLandmarkData);
-                setLandmark(formattedLandmarkData);
+
+                const databaseImagePreviews = response.data.pictures.map(
+                    (pictureUrl, index) => ({
+                        id: `db-${Date.now()}-${index}`,
+                        url: pictureUrl,
+                        file: null,
+                        isFromDatabase: true,
+                    })
+                );
+
+                setLandmark({
+                    ...formattedLandmarkData,
+                    pictures: databaseImagePreviews,
+                });
                 setLocation({
                     latitude: formattedLandmarkData.latitude,
                     longitude: formattedLandmarkData.longitude,
@@ -315,12 +328,15 @@ export default function LandmarkForm({ isEdit = false }) {
             },
         });
     };
+
     const handleImageAdd = (newImages) => {
+        const newLandmarkPictures = [...landmark.pictures, ...newImages];
+        console.log("after update:", newLandmarkPictures);
         setLandmark((prev) => ({
             ...prev,
-            pictures: [...prev.pictures, ...newImages],
+            pictures: newLandmarkPictures,
         }));
-        console.log(landmark.pictures); // Log the current pictures state
+        console.log("before update:", landmark.pictures); // Log the current pictures state
     };
 
     const handleImageRemove = (idToRemove) => {
@@ -332,22 +348,40 @@ export default function LandmarkForm({ isEdit = false }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setProcessing(true);
+
         try {
-            console.log(landmark);
+            const newFiles = landmark.pictures
+                .filter((preview) => preview.file !== null)
+                .map((preview) => preview.file);
+
+            console.log("new files: ", newFiles);
+
+            const uploadedFileUrls =
+                newFiles.length > 0 ? await uploadFiles(newFiles, "activities") : [];
+
+            console.log("uploadedFileUrls: ", uploadedFileUrls);
+
+            const finalPictures = [
+                ...landmark.pictures
+                    .filter((preview) => preview.isFromDatabase)
+                    .map((preview) => preview.url),
+                ...uploadedFileUrls,
+            ];
+
+            console.log("finalPictures: ", finalPictures);
+
             let _landmark = {
                 ...landmark,
+                pictures: finalPictures,
                 location: location.location,
                 tags: tags, // Pass the tags state directly
             };
-            setProcessing(true);
-            const uploadedPictures = [];
-            for (const photo of landmark.pictures) {
-                const uploadedPath = await uploadFile(photo.file, "landmarks");
-                uploadedPictures.push(uploadedPath);
-            }
-            _landmark = { ..._landmark, pictures: uploadedPictures };
+
+            console.log("the landmark is: ", _landmark);
 
             if (isEdit) {
+                console.log("landmarkId", landmarkId);
                 await axiosInstance.patch(
                     `/landmark/updateLandmark/${landmarkId}`,
                     _landmark,
@@ -366,6 +400,7 @@ export default function LandmarkForm({ isEdit = false }) {
 
             navigate("/governor/landmarks");
         } catch (err) {
+            console.log("error submitting landmark", err);
             showAlert("Error submitting landmark. Please try again.", "error");
         } finally {
             setProcessing(false);
