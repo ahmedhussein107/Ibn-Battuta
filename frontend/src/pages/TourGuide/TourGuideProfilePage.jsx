@@ -4,7 +4,7 @@ import axiosInstance from "../../api/axiosInstance";
 import Footer from "../../components/Footer";
 import ProfileButton from "../../components/ProfileButtons";
 import Cookies from "js-cookie";
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import Rating from "@mui/material/Rating";
@@ -28,6 +28,7 @@ const TourguideProfilePage = () => {
     const [isEditable, setIsEditable] = useState(false);
     const [isPrevEditing, setIsPrevEditing] = useState(false);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const defaultImage =
         "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg";
@@ -213,7 +214,9 @@ const TourguideProfilePage = () => {
         const file = event.target.files[0];
         if (file) {
             const formData = new FormData();
+            setIsLoading(true);
             const image = await uploadFile(file, "tourguide-profile-pictures");
+            setIsLoading(false);
             formData.append("picture", image);
 
             axiosInstance
@@ -313,7 +316,7 @@ const TourguideProfilePage = () => {
                             style={{
                                 display: "flex",
                                 justifyContent: "flex-start", // Align items to the left
-                                height: "80vh",
+                                height: "auto",
                                 flexDirection: "column",
                                 width: "45vw",
                                 backgroundColor: "#FFFFFF",
@@ -392,10 +395,12 @@ const TourguideProfilePage = () => {
                                         width: "70vw",
                                         marginTop: "-2vh",
                                         marginRight: "5vw",
-                                        fontSize: "25px",
+                                        fontSize: "1.3rem",
                                     }}
                                 >
-                                    <h3>Profile Details</h3>
+                                    <h3 style={{ marginBottom: "2vh" }}>
+                                        Profile Details
+                                    </h3>
                                     <p>
                                         {isEditing && (
                                             <div
@@ -403,9 +408,10 @@ const TourguideProfilePage = () => {
                                                     display: "flex",
                                                     flexDirection: "column",
                                                     alignItems: "flex-start",
+                                                    fontSize: "1rem",
                                                 }}
                                             >
-                                                <strong>Name:</strong>
+                                                <strong>Name: </strong>
                                                 <Box
                                                     component="form"
                                                     sx={{
@@ -435,8 +441,8 @@ const TourguideProfilePage = () => {
                                             </div>
                                         )}
                                     </p>
-                                    <p style={{ marginTop: "2vh" }}>
-                                        <strong>Email:</strong>
+                                    <p style={{ marginTop: "2vh", fontSize: "1rem" }}>
+                                        <strong>Email: </strong>
                                         {isEditing ? (
                                             <Box
                                                 component="form"
@@ -467,7 +473,7 @@ const TourguideProfilePage = () => {
                                             response?.email || "No email provided"
                                         )}
                                     </p>
-                                    <p style={{ marginTop: "2vh" }}>
+                                    <p style={{ marginTop: "2vh", fontSize: "1rem" }}>
                                         <strong>Mobile Number:</strong>{" "}
                                         {isEditing ? (
                                             <Box
@@ -506,7 +512,7 @@ const TourguideProfilePage = () => {
                                             response?.mobile || "No number provided"
                                         )}
                                     </p>
-                                    <p style={{ marginTop: "2vh" }}>
+                                    <p style={{ marginTop: "2vh", fontSize: "1rem" }}>
                                         <strong>Years Of Experience:</strong>{" "}
                                         {isEditing ? (
                                             <Box
@@ -548,15 +554,17 @@ const TourguideProfilePage = () => {
                                         )}
                                     </p>
                                 </div>
-                                {isEditable && <EditIcon
-                                    style={{
-                                        marginTop: "-1vh",
-                                        marginRight: "0vw",
-                                        fontSize: "2vw",
-                                        cursor: "pointer",
-                                    }}
-                                    onClick={handleEditProfileSubmit}
-                                />}
+                                {isEditable && (
+                                    <EditIcon
+                                        style={{
+                                            marginTop: "-1vh",
+                                            marginRight: "0vw",
+                                            fontSize: "1.3rem",
+                                            cursor: "pointer",
+                                        }}
+                                        onClick={handleEditProfileSubmit}
+                                    />
+                                )}
                             </div>
                             <div
                                 style={{
@@ -591,6 +599,7 @@ const TourguideProfilePage = () => {
                                             }
                                         }
                                         handleClick={handleSaveChanges}
+                                        isLoading={isLoading}
                                     />
                                 )}
                             </div>
@@ -599,7 +608,6 @@ const TourguideProfilePage = () => {
                             style={{
                                 display: "flex",
                                 justifyContent: "flex-start", // Align items to the left
-                                height: "3fit-content",
                                 flexDirection: "column",
                                 width: "35vw",
                                 backgroundColor: "#FFFFFF",
@@ -615,8 +623,9 @@ const TourguideProfilePage = () => {
                                 ratingIds={ratings}
                                 height={"100%"}
                                 width={"100%"}
-                                fontSize={"12px"}
+                                fontSize={"0.8rem"}
                                 reviewsPerPage={2}
+                                isOpen={false}
                             />
                         </div>
                     </div>
@@ -645,7 +654,7 @@ const TourguideProfilePage = () => {
                         <EditIcon
                             style={{
                                 marginLeft: "85vw",
-                                fontSize: "2vw",
+                                fontSize: "1.3rem",
                                 cursor: "pointer",
                             }}
                             onClick={handlePrevEditProfileSubmit}
@@ -821,7 +830,7 @@ const TourguideProfilePage = () => {
                                   style={{
                                       textAlign: "center",
                                       fontWeight: "bold",
-                                      fontSize: "20px",
+                                      fontSize: "1rem",
                                       marginTop: "2vw",
                                   }}
                               >
@@ -836,7 +845,7 @@ const TourguideProfilePage = () => {
                                 textAlign: "center",
                                 marginLeft: "-3vw",
                                 marginTop: "4vh",
-                                fontSize: "1.5em",
+                                fontSize: "1.2em",
                             }}
                         >
                             <Fab
@@ -895,163 +904,170 @@ const TourguideProfilePage = () => {
                     </div>
                 </div>
             </div>
-            {isEditable && <> <hr
-                style={{
-                    width: "90vw",
-                    borderTop: "2px solid #ccc",
-                    marginTop: "1vh",
-                    marginLeft: "4.5vw",
-                }}
-            />
-             <div
-                style={{
-                    display: "flex",
-                    direction: "row",
-                    justifyContent: "space-between",
-                    gap: "3vw",
-                    alignItems: "center",
-                    // width: "100%",
-                    marginTop: "2vw",
-                    marginBottom: "2vw",
-                }}
-            >
-                <button
-                    style={{
-                        height: "5vh",
-                        width: "10vw",
-                        background: "white",
-                        borderRadius: "40px",
-                        border: "1px #D00C09 solid",
-                        color: "red",
-                        marginLeft: "4vw",
-                        cursor: "pointer",
-                    }}
-                    onClick={handleDeleteAccount}
-                >
-                    Delete Account
-                </button>
-                <PopUp
-                    isOpen={isDeleteConfirmationOpen}
-                    setIsOpen={setIsDeleteConfirmationOpen}
-                    headerText={"Are you sure you want to delete your account?"}
-                    actionText={"Confirm"}
-                    handleSubmit={handleDeleteAccountConfirm}
-                ></PopUp>
-
-                <button
-                    style={{
-                        background: "white",
-                        height: "5vh",
-                        width: "10vw",
-                        borderRadius: 100,
-                        border: "1px black solid",
-                        color: "black",
-                        marginRight: "6vw",
-                        cursor: "pointer",
-                    }}
-                    onClick={() => handleChangePassword()}
-                >
-                    Change Password
-                </button>
-
-                <PopUp
-                    isOpen={isPopUpOpen}
-                    setIsOpen={setIsPopUpOpen}
-                    headerText={"Change Password"}
-                    actionText={"Confirm"}
-                    handleSubmit={PopUpAction}
-                >
-                    <label style={{ marginLeft: "2vw" }}>Current Password:</label>
-                    <Box
-                        component="form"
-                        sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-                        noValidate
-                        autoComplete="off"
+            {isEditable && (
+                <>
+                    {" "}
+                    <hr
+                        style={{
+                            width: "90vw",
+                            borderTop: "2px solid #ccc",
+                            marginTop: "1vh",
+                            marginLeft: "4.5vw",
+                        }}
+                    />
+                    <div
+                        style={{
+                            display: "flex",
+                            direction: "row",
+                            justifyContent: "space-between",
+                            gap: "3vw",
+                            alignItems: "center",
+                            // width: "100%",
+                            marginTop: "2vw",
+                            marginBottom: "2vw",
+                        }}
                     >
-                        <TextField
-                            id="outlined-password-input"
-                            type="password"
-                            label="Current Password"
-                            name="Current Password"
-                            value={currentPassword}
-                            onChange={handleCurrentPasswordChange}
+                        <button
                             style={{
-                                width: "25vw",
-                                height: "4vh",
-                                marginTop: "1vh",
-                                marginLeft: "2vw",
-                                marginBottom: "2vh",
+                                height: "5vh",
+                                width: "10vw",
+                                background: "white",
+                                borderRadius: "40px",
+                                border: "1px #D00C09 solid",
+                                color: "red",
+                                marginLeft: "4vw",
+                                cursor: "pointer",
                             }}
-                        />
-                    </Box>
-                    <label style={{ marginLeft: "2vw" }}>New Password:</label>
-                    <Box
-                        component="form"
-                        sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <TextField
-                            id="outlined-password-input"
-                            label="New Password"
-                            type="password"
-                            name="New Password"
-                            value={newPassword}
-                            onChange={handleNewPasswordChange}
-                            style={{
-                                width: "25vw",
-                                height: "4vh",
-                                marginTop: "1vh",
-                                marginLeft: "2vw",
-                                marginBottom: "2vh",
-                            }}
-                        />
-                    </Box>
-                    <label style={{ marginLeft: "2vw" }}>Confirm New Password:</label>
-                    <Box
-                        component="form"
-                        sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <TextField
-                            id="outlined-password-input"
-                            label="Confirm New Password"
-                            type="password"
-                            name="Confirm New Password"
-                            onChange={handleConfirmNewPasswordChange}
-                            value={confirmNewPassword}
-                            style={{
-                                width: "25vw",
-                                height: "4vh",
-                                marginTop: "1vh",
-                                marginLeft: "2vw",
-                                marginBottom: "2vh",
-                            }}
-                        />
-                    </Box>
-
-                    {popupAlert.open && (
-                        <Alert
-                            severity={popupAlert.severity}
-                            onClose={() =>
-                                setPopupAlert({
-                                    ...popupAlert,
-                                    open: false,
-                                })
-                            }
-                            style={{
-                                marginBottom: "1vh",
-                                fontSize: "22px",
-                                textAlign: "center",
-                                marginTop: "2vh",
-                            }}
+                            onClick={handleDeleteAccount}
                         >
-                            {popupAlert.message}
-                        </Alert>
-                    )}
-                </PopUp>
-            </div></>}
+                            Delete Account
+                        </button>
+                        <PopUp
+                            isOpen={isDeleteConfirmationOpen}
+                            setIsOpen={setIsDeleteConfirmationOpen}
+                            headerText={"Are you sure you want to delete your account?"}
+                            actionText={"Confirm"}
+                            handleSubmit={handleDeleteAccountConfirm}
+                        ></PopUp>
+
+                        <button
+                            style={{
+                                background: "white",
+                                height: "5vh",
+                                width: "10vw",
+                                borderRadius: 100,
+                                border: "1px black solid",
+                                color: "black",
+                                marginRight: "6vw",
+                                cursor: "pointer",
+                            }}
+                            onClick={() => handleChangePassword()}
+                        >
+                            Change Password
+                        </button>
+
+                        <PopUp
+                            isOpen={isPopUpOpen}
+                            setIsOpen={setIsPopUpOpen}
+                            headerText={"Change Password"}
+                            actionText={"Confirm"}
+                            handleSubmit={PopUpAction}
+                        >
+                            <label style={{ marginLeft: "2vw" }}>Current Password:</label>
+                            <Box
+                                component="form"
+                                sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+                                noValidate
+                                autoComplete="off"
+                            >
+                                <TextField
+                                    id="outlined-password-input"
+                                    type="password"
+                                    label="Current Password"
+                                    name="Current Password"
+                                    value={currentPassword}
+                                    onChange={handleCurrentPasswordChange}
+                                    style={{
+                                        width: "25vw",
+                                        height: "4vh",
+                                        marginTop: "1vh",
+                                        marginLeft: "2vw",
+                                        marginBottom: "2vh",
+                                    }}
+                                />
+                            </Box>
+                            <label style={{ marginLeft: "2vw" }}>New Password:</label>
+                            <Box
+                                component="form"
+                                sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+                                noValidate
+                                autoComplete="off"
+                            >
+                                <TextField
+                                    id="outlined-password-input"
+                                    label="New Password"
+                                    type="password"
+                                    name="New Password"
+                                    value={newPassword}
+                                    onChange={handleNewPasswordChange}
+                                    style={{
+                                        width: "25vw",
+                                        height: "4vh",
+                                        marginTop: "1vh",
+                                        marginLeft: "2vw",
+                                        marginBottom: "2vh",
+                                    }}
+                                />
+                            </Box>
+                            <label style={{ marginLeft: "2vw" }}>
+                                Confirm New Password:
+                            </label>
+                            <Box
+                                component="form"
+                                sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+                                noValidate
+                                autoComplete="off"
+                            >
+                                <TextField
+                                    id="outlined-password-input"
+                                    label="Confirm New Password"
+                                    type="password"
+                                    name="Confirm New Password"
+                                    onChange={handleConfirmNewPasswordChange}
+                                    value={confirmNewPassword}
+                                    style={{
+                                        width: "25vw",
+                                        height: "4vh",
+                                        marginTop: "1vh",
+                                        marginLeft: "2vw",
+                                        marginBottom: "2vh",
+                                    }}
+                                />
+                            </Box>
+
+                            {popupAlert.open && (
+                                <Alert
+                                    severity={popupAlert.severity}
+                                    onClose={() =>
+                                        setPopupAlert({
+                                            ...popupAlert,
+                                            open: false,
+                                        })
+                                    }
+                                    style={{
+                                        marginBottom: "1vh",
+                                        fontSize: "1.2rem",
+                                        textAlign: "center",
+                                        marginTop: "2vh",
+                                    }}
+                                >
+                                    {popupAlert.message}
+                                </Alert>
+                            )}
+                        </PopUp>
+                    </div>
+                </>
+            )}
             <div>
                 {alert.open && (
                     <div
@@ -1061,7 +1077,7 @@ const TourguideProfilePage = () => {
                             bottom: "1%",
                             zIndex: 1000, // Ensure it's above other content
                             width: "30vw", // Set a suitable width
-                            fontSize: "30px",
+                            fontSize: "1.4rem",
                         }}
                     >
                         <Alert
@@ -1075,374 +1091,6 @@ const TourguideProfilePage = () => {
             </div>
             <Footer />
         </div>
-
-        //     <div
-        //         style={{
-        //             width: "100vw",
-        //             position: "absolute",
-        //             top: "0",
-        //             left: "0",
-        //         }}
-        //     >
-        //         <div
-        //             style={{
-        //                 width: "100vw",
-        //                 height: "30vh",
-        //                 backgroundImage: `url(${profileBackground})`,
-        //                 backgroundSize: "100% 100%",
-        //                 backgroundPosition: "center",
-        //                 backgroundRepeat: "no-repeat",
-        //             }}
-        //         ></div>
-        //         <div>
-        //             <div
-        //                 style={{
-        //                     width: "10vw",
-        //                     height: "10vw",
-        //                     borderRadius: "50%",
-        //                     overflow: "hidden",
-        //                     border: "4px solid white",
-        //                     marginTop: "-10vh",
-        //                     marginLeft: "45%",
-        //                     backgroundImage: `url(${image})`,
-        //                     backgroundSize: "cover",
-        //                     backgroundPosition: "center",
-        //                     cursor: "pointer", // Add cursor pointer to indicate clickability
-        //                 }}
-        //                 onClick={handleImageClick} // Add onClick to trigger file input
-        //             ></div>
-
-        //             {/* Hidden File Input for Profile Image Upload */}
-        //             <input
-        //                 type="file"
-        //                 accept="image/*"
-        //                 style={{ display: "none" }}
-        //                 ref={fileInputRef}
-        //                 onChange={handleImageChange}
-        //             />
-        //         </div>
-        //         <div style={{ marginTop: "-8vh", marginLeft: "5vw" }}>
-        //             <Typography component="legend"></Typography>
-        //             <Rating name="read-only" value={value} readOnly />
-        //             <p>{value === null ? "No ratings yet" : value.toFixed(1) + "/5"}</p>
-        //         </div>
-        //         <div>
-        //             {isEditing ? (
-        //                 <h2
-        //                     style={{
-        //                         marginTop: "-1vw",
-        //                         padding: "1vw",
-        //                         textAlign: "center",
-        //                     }}
-        //                 >
-        //                     <div>
-        //                         <input
-        //                             type="text"
-        //                             id="name"
-        //                             name="name"
-        //                             value={formData.name}
-        //                             onChange={handleChange}
-        //                         />
-        //                     </div>
-        //                 </h2>
-        //             ) : (
-        //                 <h2
-        //                     style={{
-        //                         marginTop: "-1vw",
-        //                         padding: "1vw",
-        //                         textAlign: "center",
-        //                     }}
-        //                 >
-        //                     {response?.name || "name not provided"}
-        //                 </h2>
-        //             )}
-        //             <p
-        //                 style={{
-        //                     color: "gray",
-        //                     marginTop: "-2.5vh",
-        //                     textAlign: "center",
-        //                 }}
-        //             >
-        //                 @{response?.username || "username not provided"}
-        //             </p>
-        //             <hr
-        //                 style={{
-        //                     width: "90%",
-        //                     borderTop: "2px solid #ccc",
-        //                     marginTop: "2vh",
-        //                     marginLeft: "5vw",
-        //                 }}
-        //             />
-        //             <div
-        //                 style={{
-        //                     width: "60%",
-        //                     textAlign: "left",
-        //                     marginTop: "-2vw",
-        //                     padding: "3vw",
-        //                 }}
-        //             >
-        //                 <h3>Profile Details</h3>
-        //                 <p>
-        //                     <strong>Email:</strong>{" "}
-        //                     {isEditing ? (
-        //                         <input
-        //                             type="email"
-        //                             name="email"
-        //                             value={formData.email}
-        //                             onChange={handleChange}
-        //                         />
-        //                     ) : (
-        //                         response?.email || "No email provided"
-        //                     )}
-        //                 </p>
-        //                 <p>
-        //                     <strong>Mobile Number:</strong>{" "}
-        //                     {isEditing ? (
-        //                         <input
-        //                             type="text"
-        //                             name="mobile"
-        //                             value={formData.mobile}
-        //                             onChange={handleChange}
-        //                         />
-        //                     ) : (
-        //                         response?.mobile || "No mobile number provided"
-        //                     )}
-        //                 </p>
-        //                 <p>
-        //                     <strong>Years Of Experience:</strong>{" "}
-        //                     {isEditing ? (
-        //                         <input
-        //                             type="number"
-        //                             name="yearsOfExperience"
-        //                             value={formData.yearsOfExperience}
-        //                             onChange={handleChange}
-        //                         />
-        //                     ) : (
-        //                         response?.yearsOfExperience ||
-        //                         "No experience info provided"
-        //                     )}
-        //                 </p>
-        //                 {/* Button to add new experience */}
-
-        //         {/* Updated Previous Work Section */}
-        //         <div style={{ marginBottom: "6vw" }}>
-        //             <h3>Previous Work</h3>
-
-        //             {formData.previousWork.length > 0
-        //                 ? formData.previousWork.map((work, index) => (
-        //                       <div
-        //                           key={index}
-        //                           style={{
-        //                               border: "1px solid #ccc",
-        //                               padding: "1vw",
-        //                               marginBottom: "1vw",
-        //                               borderRadius: "8px",
-        //                               position: "relative", // For positioning the delete icon
-        //                           }}
-        //                       >
-        //                           <p>
-        //                               <strong>Title:</strong>{" "}
-        //                               {isEditing ? (
-        //                                   <input
-        //                                       type="text"
-        //                                       value={work.title}
-        //                                       onChange={(e) =>
-        //                                           handlePreviousWorkChange(
-        //                                               index,
-        //                                               "title",
-        //                                               e.target.value
-        //                                           )
-        //                                       }
-        //                                   />
-        //                               ) : (
-        //                                   work.title || "No title provided"
-        //                               )}
-        //                           </p>
-        //                           <p>
-        //                               <strong>Duration:</strong>{" "}
-        //                               {isEditing ? (
-        //                                   <input
-        //                                       type="number"
-        //                                       value={work.duration}
-        //                                       onChange={(e) =>
-        //                                           handlePreviousWorkChange(
-        //                                               index,
-        //                                               "duration",
-        //                                               e.target.value
-        //                                           )
-        //                                       }
-        //                                   />
-        //                               ) : (
-        //                                   `${work.duration || 0} months`
-        //                               )}
-        //                           </p>
-        //                           <p>
-        //                               <strong>Description:</strong>{" "}
-        //                               {isEditing ? (
-        //                                   <textarea
-        //                                       value={work.description}
-        //                                       onChange={(e) =>
-        //                                           handlePreviousWorkChange(
-        //                                               index,
-        //                                               "description",
-        //                                               e.target.value
-        //                                           )
-        //                                       }
-        //                                       rows={4}
-        //                                       style={{
-        //                                           width: "100%",
-        //                                           resize: "vertical",
-        //                                       }}
-        //                                   />
-        //                               ) : (
-        //                                   work.description ||
-        //                                   "No description provided"
-        //                               )}
-        //                           </p>
-
-        //                           {/* Delete icon */}
-        //                           {isEditing && (
-        //                               <button
-        //                                   onClick={() =>
-        //                                       handleDeleteExperience(index)
-        //                                   }
-        //                                   style={{
-        //                                       position: "absolute",
-        //                                       top: "10px",
-        //                                       right: "10px",
-        //                                       cursor: "pointer",
-        //                                       background: "transparent",
-        //                                       border: "none",
-        //                                       color: "red",
-        //                                       fontSize: "1.2em",
-        //                                   }}
-        //                               >
-        //                                   <DeleteIcon />
-        //                               </button>
-        //                           )}
-        //                       </div>
-        //                   ))
-        //                 : // Only show this message if not editing and no experience
-        //                   !isEditing && <p>No previous work provided</p>}
-
-        //             {isEditing && (
-        //                 <button
-        //                     onClick={handleAddNewExperience}
-        //                     style={{
-        //                         padding: "1vw 2vw",
-        //                         backgroundColor: "white",
-        //                         color: "black",
-        //                         border: "1px solid black",
-        //                         borderRadius: "40px",
-        //                         cursor: "pointer",
-        //                         marginBottom: "2vw",
-        //                         marginLeft: "auto",
-        //                     }}
-        //                 >
-        //                     Add New Experience
-        //                 </button>
-        //             )}
-        //         </div>
-        //     </div>
-        // </div>
-        //         <div>
-        //             <ProfileButton
-        //                 buttonType="changePassword"
-        //                 onClick={() => handleChangePassword()}
-        //             />
-        //             <PopUp
-        //                 isOpen={isPopUpOpen}
-        //                 setIsOpen={setIsPopUpOpen}
-        //                 headerText={"Change Password"}
-        //                 actionText={"Confirm"}
-        //                 handleSubmit={PopUpAction}
-        //             >
-        //                 <label>Current Password:</label>
-        //                 <input
-        //                     type="password"
-        //                     name="Current Password"
-        //                     placeholder="Current Password"
-        //                     onChange={handleCurrentPasswordChange}
-        //                     value={currentPassword}
-        //                     style={{
-        //                         width: "80%", // Full width
-        //                         padding: "1vw", // Padding for better spacing
-        //                         marginBottom: "1vw", // Space between inputs
-        //                         border: "1px solid #ccc", // Border style
-        //                         borderRadius: "4px", // Rounded corners
-        //                         alignItems: "center", // Align text to center
-        //                     }}
-        //                 />
-        //                 <label>New Password:</label>
-        //                 <input
-        //                     type="password"
-        //                     name="New Password"
-        //                     placeholder="Current Password"
-        //                     onChange={handleNewPasswordChange}
-        //                     value={newPassword}
-        //                     style={{
-        //                         width: "80%", // Full width
-        //                         padding: "1vw", // Padding for better spacing
-        //                         marginBottom: "1vw", // Space between inputs
-        //                         border: "1px solid #ccc", // Border style
-        //                         borderRadius: "4px", // Rounded corners
-        //                     }}
-        //                 />
-        //                 <label>Confirm New Password:</label>
-        //                 <input
-        //                     type="password"
-        //                     name="Confirm New Password"
-        //                     placeholder="Current Password"
-        //                     onChange={handleConfirmNewPasswordChange}
-        //                     value={confirmNewPassword}
-        //                     style={{
-        //                         width: "80%", // Full width
-        //                         padding: "1vw", // Padding for better spacing
-        //                         marginBottom: "1vw", // Space between inputs
-        //                         border: "1px solid #ccc", // Border style
-        //                         borderRadius: "4px", // Rounded corners
-        //                     }}
-        //                 />
-        //             </PopUp>
-
-        //             <ProfileButton
-        //                 buttonType="deleteAccount"
-        //                 onClick={handleDeleteAccount}
-        //             />
-        //             <PopUp
-        //                 isOpen={isDeleteConfirmationOpen}
-        //                 setIsOpen={setIsDeleteConfirmationOpen}
-        //                 headerText={"Are you sure you want to delete your account?"}
-        //                 actionText={"Confirm"}
-        //                 handleSubmit={handleDeleteAccountConfirm}
-        //             ></PopUp>
-        //             {/* {isEditing ? (
-        //                 <ProfileButton
-        //                     buttonType="saveProfile"
-        //                     onClick={handleSaveChanges}
-        //                 />
-        //             ) : (
-        //                 <ProfileButton
-        //                     buttonType="editProfile"
-        //                     onClick={handleEditProfileSubmit}
-        //                 />
-        //             )} */}
-        //         </div>
-        //     </div>
-        //     <div style={{ position: "fixed", top: 0, left: "9%" }}>
-        //         <Navbar />
-        //     </div>
-        //     <div
-        //         style={{
-        //             position: "fixed",
-        //             bottom: 0,
-        //             width: "100vw",
-        //             left: 0,
-        //         }}
-        //     >
-        //         <Footer />
-        //     </div>
-        // </>
     );
 };
 

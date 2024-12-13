@@ -13,7 +13,7 @@ import { uploadFile } from "../../api/firebase.js";
 
 import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
-//import Box from "@mui/material/Box";
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
 //import CheckIcon from "@mui/icons-material/Check";
@@ -136,7 +136,7 @@ const CustomAlert = ({ message, severity, open, onClose }) => {
         if (open) {
             const timer = setTimeout(() => {
                 onClose(); // Close the alert after the duration
-            }, 3000); // Duration in milliseconds
+            }, 5000); // Duration in milliseconds
 
             return () => clearTimeout(timer); // Cleanup the timer when unmounting or when `open` changes
         }
@@ -518,14 +518,19 @@ const AdvertiserProfilePage = () => {
                                     <p style={{ marginBottom: "16px" }}>
                                         <strong>Company Website:</strong>
                                         <TextField
-                                            variant="outlined"
-                                            size="small"
+                                            id="outlined"
+                                            placeholder="Placeholder"
+                                            multiline
                                             fullWidth
+                                            size="small"
                                             name="website"
                                             label="Company Website"
                                             value={formData.website}
                                             onChange={handleChange}
-                                            style={{ marginTop: "8px" }}
+                                            style={{
+                                                marginTop: "8px",
+                                                height: "fit-content",
+                                            }}
                                         />
                                     </p>
                                     <p style={{ marginBottom: "16px" }}>
@@ -620,16 +625,29 @@ const AdvertiserProfilePage = () => {
                             {isEditing1 ? (
                                 <div>
                                     <p style={{ marginBottom: "16px" }}>
-                                        <TextField
-                                            variant="outlined"
-                                            size="small"
-                                            fullWidth
-                                            name="companyProfile"
-                                            label="Company Profile"
-                                            value={formData.companyProfile}
-                                            onChange={handleChange1}
-                                            style={{ marginTop: "8px" }}
-                                        />
+                                        <Box
+                                            component="form"
+                                            sx={{
+                                                "& .MuiTextField-root": {
+                                                    m: 1,
+                                                    // width: "25ch", // Remove this line
+                                                },
+                                            }}
+                                            noValidate
+                                            autoComplete="off"
+                                        >
+                                            <TextField
+                                                variant="outlined" // Use "outlined" for the outlined variant
+                                                size="small"
+                                                multiline // Add this prop if you want a textarea
+                                                rows={4} // Specify the number of rows for the textarea
+                                                name="companyProfile"
+                                                label="Company Profile"
+                                                value={formData.companyProfile}
+                                                onChange={handleChange1}
+                                                fullWidth // Keep this if you want the TextField to be full width
+                                            />
+                                        </Box>
                                     </p>
                                     <p style={{ marginBottom: "16px" }}>
                                         <button

@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useParams } from "react";
+import React, { useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
 
 import Step1 from "../../components/Itinerary/Step1";
 import Step2 from "../../components/Itinerary/Step2";
@@ -8,11 +9,69 @@ import axiosInstance from "../../api/axiosInstance";
 import Footer from "../../components/Footer";
 
 import { useCurrencyConverter } from "../../hooks/currencyHooks.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const PopupContainer = styled.div`
+    position: fixed;
+    bottom: 1%;
+    right: 1%;
+    z-index: 3000;
+    animation: ${fadeIn} 0.3s ease;
+    background-color: ${({ isError }) => (isError ? "#f8d7da" : "#d4edda")};
+`;
+
+const PopupContent = styled.div`
+    color: ${({ isError }) => (isError ? "#721c24" : "#155724")};
+    padding: 1em 1.5em;
+    border-radius: 0.25em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 1em;
+`;
+
+const CloseButton = styled.button`
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.2em;
+    cursor: pointer;
+`;
+
+const Popup = ({ message, onClose, isError }) => (
+    <PopupContainer isError={isError}>
+        <PopupContent>
+            {message}
+            <CloseButton onClick={onClose}>×</CloseButton>
+        </PopupContent>
+    </PopupContainer>
+);
 
 const CreateItineraryPage = ({ isEdit = false }) => {
     const [step, setStep] = useState(1); // TODO: step1 should be the default
     const [timelineActivities, setTimelineActivities] = useState([]);
+
+    const [popupMessage, setPopupMessage] = useState("");
+    const [showPopup, setShowPopup] = useState(false);
+    const [isErrorPopup, setIsErrorPopup] = useState(false);
+
+    const showPopupMessage = (message, isError) => {
+        setPopupMessage(message);
+        setIsErrorPopup(isError);
+        setShowPopup(true);
+        setTimeout(() => setShowPopup(false), 3000);
+    };
 
     const itineraryId = isEdit ? useParams().itineraryId : null;
 
@@ -44,47 +103,8 @@ const CreateItineraryPage = ({ isEdit = false }) => {
     const { convertPrice } = useCurrencyConverter();
 
     useEffect(() => {
-        let totalPrice = convertPrice(price, "EGP", currency);
-        let picture = "https://cdn-icons-png.flaticon.com/512/7603/7603006.png";
-        timelineActivities.forEach((activity) => {
-            if (activity.activityType === "Activity") {
-                totalPrice += Number(activity.activity.price);
-                if (activity.activity.picture) {
-                    picture = activity.activity.picture;
-                }
-            }
-        });
-        const itineraryData = {
-            name,
-            activities: timelineActivities,
-            price: totalPrice,
-            description,
-            pickuplongitude: pickupLocation.longitude,
-            pickuplatitude: pickupLocation.latitude,
-            pickupLocation: pickupLocation.location,
-            dropOfflongitude: dropoffLocation.longitude,
-            dropOfflatitude: dropoffLocation.latitude,
-            dropOffLocation: dropoffLocation.location,
-            startDate, // TODO: convert to ISODate()
-            endDate: timelineActivities[timelineActivities.length - 1]?.endTime,
-            tags,
-            accessibility: accessibility.join(","),
-            language,
-            picture,
-        };
-
-        console.log("itineraryData", itineraryData);
-    }, [
-        name,
-        price,
-        description,
-        pickupLocation,
-        dropoffLocation,
-        startDate,
-        tags,
-        accessibility,
-        language,
-    ]);
+        console.log("timelineActivities after updating", timelineActivities);
+    }, [timelineActivities]);
 
     useEffect(() => {
         if (itineraryId) {
@@ -95,6 +115,7 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                         `/itinerary/getItinerary/${itineraryId}`
                     );
                     const itinerary = response.data;
+                    console.log("itinerary", itinerary);
 
                     const activities = itinerary.activities.map(async (activity) => {
                         const type = activity.activityType;
@@ -116,27 +137,35 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                         };
                     });
 
-                    const resolvedActivities = await Promise.all(activities);
+                    let resolvedActivities = await Promise.all(activities);
+                    resolvedActivities.sort((a, b) => {
+                        return new Date(a.startTime) - new Date(b.startTime);
+                    });
                     setTimelineActivities(resolvedActivities);
 
                     // Set other state variables based on the fetched itinerary
                     setName(itinerary.name);
-                    setPrice(itinerary.price);
+                    setPrice(convertPrice(itinerary.price, "EGP", itinerary.currency));
                     setDescription(itinerary.description);
+
                     setPickupLocation({
                         latitude: itinerary.pickuplatitude,
                         longitude: itinerary.pickuplongitude,
                         location: itinerary.pickupLocation,
                     });
+
                     setDropoffLocation({
                         latitude: itinerary.dropOfflatitude,
                         longitude: itinerary.dropOfflongitude,
-                        location: itinerary.dropoffLocation,
+                        location: itinerary.dropOffLocation,
                     });
-                    setStartDate(new Date(itinerary.startDate));
-                    setTags(itinerary.tags.split(","));
-                    setAccessibility(itinerary.accessibility.split(","));
+
                     setLanguage(itinerary.language);
+                    setCurrency("EGP");
+
+                    setStartDate(new Date(itinerary.startDate));
+                    setTags(itinerary.tags);
+                    setAccessibility(itinerary.accessibility.join(","));
                 } catch (error) {
                     console.error("Error fetching itinerary:", error);
                 }
@@ -146,9 +175,40 @@ const CreateItineraryPage = ({ isEdit = false }) => {
         }
     }, []);
 
-    const handleSubmit = async (currency) => {
-        let totalPrice = convertPrice(price, "EGP");
+    const transformISODate = (isoDateString) => {
+        const date = new Date(isoDateString);
+        const startDate = date;
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = hours >= 12 ? "PM" : "AM";
+        let formattedHours = hours % 12;
+        formattedHours = formattedHours === 0 ? 12 : formattedHours;
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+        const startTime = `${formattedHours}:${formattedMinutes} ${period}`;
+        return {
+            date: startDate,
+            time: startTime,
+        };
+    };
+
+    useEffect(() => {
+        if (startDate) {
+            const { date: newStartDate, time: newStartTime } =
+                transformISODate(startDate);
+            setFormattedDate(newStartDate.toLocaleDateString());
+            setFormattedTime(newStartTime);
+        }
+    }, [startDate]);
+
+    const [processing, setProcessing] = useState(false);
+
+    const handleSubmit = async () => {
+        let totalPrice = convertPrice(price, currency, "EGP");
         let picture = "https://cdn-icons-png.flaticon.com/512/7603/7603006.png";
+
+        setProcessing(true);
+
         timelineActivities.forEach((activity) => {
             if (activity.activityType === "Activity") {
                 totalPrice += Number(activity.activity.price);
@@ -176,18 +236,28 @@ const CreateItineraryPage = ({ isEdit = false }) => {
             dropOffLocation: dropoffLocation.location,
             startDate: startDate.toISOString(),
             endDate: endDate.toISOString(),
-            tags: tags.join(","),
-            accessibility: accessibility.join(","),
+            tags: tags,
+            accessibility: accessibility,
             language,
             picture,
         };
+
         console.log("itineraryData", itineraryData);
-        const response = await axiosInstance.post(
-            "/itinerary/createItinerary",
-            { ...itineraryData },
-            { withCredentials: true }
-        );
+
+        if (isEdit) {
+            const response = await axiosInstance.patch(
+                "/itinerary/updateItinerary/" + itineraryId,
+                { ...itineraryData }
+            );
+        } else {
+            const response = await axiosInstance.post(
+                "/itinerary/createItinerary",
+                { ...itineraryData },
+                { withCredentials: true }
+            );
+        }
         navigate("/tourguide/assigned");
+        setProcessing(false);
     };
 
     return (
@@ -200,6 +270,13 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                 flexDirection: "column",
             }}
         >
+            {showPopup && (
+                <Popup
+                    message={popupMessage}
+                    onClose={() => setShowPopup(false)}
+                    isError={isErrorPopup}
+                />
+            )}
             <div
                 style={{
                     width: "100vw",
@@ -226,7 +303,7 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                             userSelect: "none",
                         }}
                     >
-                        Create a new Itinerary
+                        {isEdit ? "Edit your Itinerary" : "Create a new Itinerary"}
                     </p>
                 </div>
             </div>
@@ -260,14 +337,19 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                     setFormattedDate={setFormattedDate}
                     formattedTime={formattedTime}
                     setFormattedTime={setFormattedTime}
+                    showPopupMessage={showPopupMessage}
+                    processing={processing}
+                    setIsProcessing={setProcessing}
+                    isEdit={isEdit}
                 />
             )}
             {step === 2 && (
                 <Step2
                     setStep={setStep}
-                    convertedDate={new Date()}
+                    convertedDate={startDate}
                     timelineActivities={timelineActivities}
                     setTimelineActivities={setTimelineActivities}
+                    showPopupMessage={showPopupMessage}
                 />
             )}
             <Footer />

@@ -1,5 +1,6 @@
 import Itinerary from "../models/itinerary.model.js";
 import Activity from "../models/activity.model.js";
+import Booking from "../models/booking.model.js";
 import TouristBookmark from "../models/touristBookmark.model.js";
 import { genericSearch, buildFilter } from "../utilities/searchUtils.js";
 import { sendNotificationToEmailAndSystem } from "./general.controller.js";
@@ -97,6 +98,17 @@ export const updateItinerary = async (req, res) => {
 		// Validate if the request body is not empty
 		if (!req.body || Object.keys(req.body).length === 0) {
 			return res.status(400).json({ message: "No data to update" });
+		}
+
+		const existingBookings = await Booking.countDocuments({
+			typeId: req.params.id,
+			bookingType: "Itinerary",
+		});
+
+		if (existingBookings > 0) {
+			return res.status(400).json({
+				message: `Cannot update itinerary. There are ${existingBookings} active bookings for this itinerary.`,
+			});
 		}
 
 		// Find and update the itinerary by ID

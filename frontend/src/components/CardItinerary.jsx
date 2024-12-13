@@ -5,24 +5,27 @@ import TagsIcon from "@mui/icons-material/LocalOffer";
 import Button from "./Button";
 import GenericCard from "./GenericCard";
 import TitleAndButtons from "./TitleAndButtons";
-import { Rating } from "@mui/material";
+import { Avatar, Rating } from "@mui/material";
 import Cookies from "js-cookie";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../hooks/currencyHooks";
+import { useNavigate } from "react-router-dom";
+
 const CardItinerary = ({
     itinerary,
     width,
     height,
     firstLineButtons = [],
     bottomButtons = [],
+    isEditable = false,
 }) => {
     const image = itinerary.picture;
-    const line1 = (
+    const Line1 = () => (
         <div style={{ fontSize: "1.2rem" }}>
             <TitleAndButtons title={itinerary.name} buttons={firstLineButtons} />
         </div>
     );
-    const line2 = (
+    const Line2 = () => (
         <div
             style={{
                 display: "flex",
@@ -33,7 +36,7 @@ const CardItinerary = ({
         >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
                 <LocationIcon style={{ fontSize: "0.8rem" }} />
-                <span>{itinerary.location}</span>
+                <span>{itinerary.pickupLocation}</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
                 <LanguageIcon style={{ fontSize: "0.8rem" }} />
@@ -45,6 +48,73 @@ const CardItinerary = ({
             </div>
         </div>
     );
+
+    const tourGuideName = itinerary.tourguideID.name;
+    const tourGuidePic = itinerary.tourguideID.picture;
+    const navigate = useNavigate();
+
+    const Line3 = () => {
+        const containerStyle = {
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            padding: "1%",
+            gap: "1rem",
+            fontSize: "0.8em",
+        };
+
+        const clickableStyle = {
+            cursor: "pointer",
+            transition: "transform 0.2s ease, opacity 0.2s ease",
+            ":hover": {
+                transform: "scale(1.05)",
+                opacity: 0.8,
+            },
+        };
+
+        const nameHoverStyle = {
+            ...clickableStyle,
+            color: "inherit",
+            ":hover": {
+                ...clickableStyle[":hover"],
+                color: "blue",
+            },
+        };
+
+        const onTourGuideClick = () => {
+            navigate(`/tourguide/profile/${itinerary.tourguideID.username}`);
+        };
+
+        return (
+            <div style={containerStyle}>
+                <Avatar
+                    alt={tourGuideName}
+                    src={tourGuidePic}
+                    sx={{
+                        width: "1.4em",
+                        height: "1.4em",
+                        ...clickableStyle,
+                    }}
+                    onClick={onTourGuideClick}
+                />
+                <p
+                    style={{
+                        cursor: "pointer",
+                        color: "black",
+                        transition: "color 0.3s ease",
+                        ":hover": {
+                            color: "blue",
+                        },
+                    }}
+                    onClick={onTourGuideClick}
+                    onMouseEnter={(e) => (e.target.style.color = "blue")}
+                    onMouseLeave={(e) => (e.target.style.color = "black")}
+                >
+                    {tourGuideName}
+                </p>
+            </div>
+        );
+    };
 
     const description = (
         <p style={{ width: "100%", height: "60%", fontSize: "1rem", overflow: "hidden" }}>
@@ -134,10 +204,18 @@ const CardItinerary = ({
         </div>
     );
 
+    const aboveLine = (
+        <div style={{ display: "flex", flexDirection: "column" }}>
+            <Line1 />
+            <Line2 />
+            {!isEditable && <Line3 />}
+        </div>
+    );
+
     const card = (
         <GenericCard
             image={image}
-            aboveLine={[line1, line2]}
+            aboveLine={aboveLine}
             bottomLeft={[description, accessibility, ratings]}
             bottomRight={[bookingAvaliable, price, buttons]}
             width={width}

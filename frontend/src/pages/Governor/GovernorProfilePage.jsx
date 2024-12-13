@@ -197,14 +197,14 @@ const GovernorProfilePage = () => {
         setAlert({ open: true, severity, message });
         setTimeout(() => {
             setAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
-        }, 500); // Alert will close after 5 seconds
+        }, 8000); // Alert will close after 5 seconds
     };
 
     const showPopUpAlert = (severity, message) => {
         setPopupAlert({ open: true, severity, message });
         setTimeout(() => {
             setPopupAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
-        }, 500); // Alert will close after 5 seconds
+        }, 8000); // Alert will close after 5 seconds
     };
 
     const handleCancelChanges = () => {
