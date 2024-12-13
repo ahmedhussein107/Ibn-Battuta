@@ -137,7 +137,10 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                         };
                     });
 
-                    const resolvedActivities = await Promise.all(activities);
+                    let resolvedActivities = await Promise.all(activities);
+                    resolvedActivities.sort((a, b) => {
+                        return new Date(a.startTime) - new Date(b.startTime);
+                    });
                     setTimelineActivities(resolvedActivities);
 
                     // Set other state variables based on the fetched itinerary

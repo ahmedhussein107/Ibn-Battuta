@@ -165,6 +165,7 @@ const Step1 = ({
                         setFormattedTime={(value) => {
                             setFormattedTime(value);
                         }}
+                        timelineActivities={timelineActivities}
                         showPopupMessage={showPopupMessage}
                         processing={processing}
                         isEdit={isEdit}

@@ -53,6 +53,7 @@ const MyForm = ({
     setFormattedDate,
     formattedTime,
     setFormattedTime,
+    timelineActivities,
     showPopupMessage,
     processing,
     isEdit,
@@ -108,6 +109,17 @@ const MyForm = ({
         const parsedStartTime = convertTo24System(start);
         let newStartDate = new Date(startDate);
         newStartDate.setHours(parsedStartTime.hours, parsedStartTime.minutes);
+        if (
+            timelineActivities &&
+            timelineActivities.length > 0 &&
+            timelineActivities[0].startTime < newStartDate
+        ) {
+            showPopupMessage(
+                "The start time must be after the start time of the first activity",
+                true
+            );
+            return;
+        }
         setStartDate(newStartDate);
         setStartTime(start);
         const startString = start || "";
@@ -119,6 +131,17 @@ const MyForm = ({
         if (startTime) {
             const parsedStartTime = convertTo24System(startTime);
             newStartDate.setHours(parsedStartTime.hours, parsedStartTime.minutes);
+        }
+        if (
+            timelineActivities &&
+            timelineActivities.length > 0 &&
+            timelineActivities[0].startTime < newStartDate
+        ) {
+            showPopupMessage(
+                "The start time must be after the start time of the first activity",
+                true
+            );
+            return;
         }
         setStartDate(newStartDate);
         const startString = start ? start.toLocaleDateString() : "";
