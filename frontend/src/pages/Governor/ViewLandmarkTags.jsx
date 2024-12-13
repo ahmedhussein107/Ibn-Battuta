@@ -10,9 +10,65 @@ import SearchField from "../../components/SearchField/SearchField";
 import tagsBackground from "../../assets/backgrounds/tags.png";
 import CustomButton from "../../components/Button";
 import PopUp from "../../components/PopUpsGeneric/PopUp";
-
+import Alert from "@mui/material/Alert";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton"; // Ensure this is imported for the close button
 import axiosInstance from "../../api/axiosInstance";
 import Footer from "../../components/Footer";
+
+const CustomAlert = ({ message, severity, open, onClose }) => {
+    // Automatically close the alert after a specified duration (e.g., 500ms)
+    useEffect(() => {
+        if (open) {
+            const timer = setTimeout(() => {
+                onClose(); // Close the alert after the duration
+            }, 500); // Duration in milliseconds
+
+            return () => clearTimeout(timer); // Cleanup the timer when unmounting or when `open` changes
+        }
+    }, [open, onClose]);
+
+    return (
+        <>
+            {open && ( // Render the alert only if it is open
+                <div
+                    style={{
+                        position: "fixed", // Fixed position to keep it in view
+                        bottom: "5vh", // Distance from the bottom of the page
+                        right: "10vh", // Distance from the right of the page
+                        zIndex: 2000, // Ensure it is on top of other elements
+                    }}
+                >
+                    <Collapse in={open}>
+                        <Alert
+                            severity={severity || "info"}
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={onClose}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{
+                                mb: 2,
+                                minHeight: "5vh", // Minimum height for better visibility
+                                height: "auto", // Allow height to expand
+                                width: "60vh", // Fixed width to prevent excessive stretching
+                                fontSize: "1rem", // Adjust text size as needed
+                                padding: "10px 15px", // Padding for content space
+                            }}
+                        >
+                            {message}
+                        </Alert>
+                    </Collapse>
+                </div>
+            )}
+        </>
+    );
+};
 
 const ViewLandmarkTags = () => {
     const [tags, setTags] = useState([]);
@@ -32,14 +88,20 @@ const ViewLandmarkTags = () => {
     };
 
     const handleAddTag = () => {
+        if (newTag.trim() === "") {
+            showAlert("Tag cannot be empty!", "error");
+            return;
+        }
         axiosInstance
             .post("/landmarkTag/createLandmarkTag", { _id: newTag })
             .then((res) => {
                 console.log("Tag created: ", res.data);
                 setTags([...tags, res.data]);
+                showAlert("Tag created successfully!", "success");
             })
             .catch((error) => {
                 console.error("Error creating tag: ", error);
+                showAlert("Error creating tag!", "error");
             });
         setOpen(false);
         setNewTag("");
@@ -63,9 +125,7 @@ const ViewLandmarkTags = () => {
     };
 
     useEffect(() => {
-        // setTags(result);
         fetchTags();
-        // console.log(tagName);
     }, [tagName]);
 
     const handleDelete = (tagId) => {
@@ -74,9 +134,11 @@ const ViewLandmarkTags = () => {
             .then((res) => {
                 console.log("Tag deleted: ", res.data);
                 setTags(tags.filter((tag) => tag._id !== tagId));
+                showAlert("Tag deleted successfully!", "success");
             })
             .catch((error) => {
                 console.error("Error deleting tag: ", error);
+                showAlert("Error deleting tag!", "error");
             });
     };
 
@@ -90,9 +152,25 @@ const ViewLandmarkTags = () => {
         setEditedTagName("");
     };
 
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [alertSeverity, setAlertSeverity] = useState("info");
+
+    const showAlert = (message, severity = "info") => {
+        setAlertMessage(message);
+        setAlertSeverity(severity);
+        setAlertOpen(true);
+    };
+
+    const handleCloseAlert = () => {
+        setAlertOpen(false);
+    };
+
     const handleEditConfirm = (tagId) => {
         axiosInstance
-            .put(`/landmarkTag/updateLandmarkTag/${tagId}`, { _id: editedTagName })
+            .put(`/landmarkTag/updateLandmarkTag/${tagId}`, {
+                _id: editedTagName,
+            })
             .then((res) => {
                 console.log("Tag updated: ", res.data);
                 setTags(
@@ -101,21 +179,30 @@ const ViewLandmarkTags = () => {
                     )
                 );
                 setEditingTag(null);
+                showAlert("Tag updated successfully!", "success");
             })
             .catch((error) => {
                 console.error("Error updating tag: ", error);
                 setEditingTag(null);
+                showAlert("Error updating tag!", "error");
             });
     };
 
     return (
         <div style={styles.container}>
+            <CustomAlert
+                message={alertMessage}
+                severity={alertSeverity}
+                open={alertOpen}
+                onClose={handleCloseAlert}
+            />
             {open && (
                 <PopUp
                     isOpen={open}
                     setIsOpen={setOpen}
                     headerText={"Add new tag"}
-                    handleSubmit={handleAddTag}
+                    handleSubmit={() => handleAddTag()}
+                    showAlert={showAlert}
                 >
                     <TextField
                         autoFocus
@@ -129,6 +216,8 @@ const ViewLandmarkTags = () => {
                                 backgroundColor: "#FFFFFF",
                             },
                         }}
+                        error={!newTag.trim()}
+                        helperText={!newTag.trim() ? "Tag cannot be empty" : ""}
                     />
                 </PopUp>
             )}
@@ -181,9 +270,7 @@ const ViewLandmarkTags = () => {
                 <CustomButton
                     stylingMode="dark-when-hovered"
                     text={"New Tag"}
-                    handleClick={() => {
-                        setOpen(true);
-                    }}
+                    handleClick={handleOpen}
                     isLoading={false}
                     width="10%"
                     customStyle={{
@@ -193,12 +280,20 @@ const ViewLandmarkTags = () => {
                         textAlign: "center",
                     }}
                     icon={
-                        <AddIcon sx={{ verticalAlign: "middle", marginRight: "5px" }} />
+                        <AddIcon
+                            sx={{ verticalAlign: "middle", marginRight: "5px" }}
+                        />
                     }
                 />
             </div>
 
-            <div style={{ display: "flex", justifyContent: "center", height: "60vh" }}>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    height: "60vh",
+                }}
+            >
                 <Paper
                     elevation={3}
                     sx={{
@@ -226,7 +321,9 @@ const ViewLandmarkTags = () => {
                                                 setEditedTagName(e.target.value)
                                             }
                                             variant="standard"
-                                            InputProps={{ disableUnderline: true }}
+                                            InputProps={{
+                                                disableUnderline: true,
+                                            }}
                                             sx={{ width: "100%" }}
                                         />
                                     ) : (
@@ -236,45 +333,71 @@ const ViewLandmarkTags = () => {
                                 sx={styles.chip}
                                 deleteIcon={
                                     editingTag === tag._id ? (
-                                        <Box sx={{ display: "flex", gap: 0.5, mr: 1 }}>
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                gap: 0.5,
+                                                mr: 1,
+                                            }}
+                                        >
                                             <CheckIcon
                                                 sx={{
                                                     fontSize: 16,
                                                     cursor: "pointer",
                                                     color: "#666666",
-                                                    ":hover": { color: "#333333" },
+                                                    ":hover": {
+                                                        color: "#333333",
+                                                    },
                                                 }}
-                                                onClick={() => handleEditConfirm(tag._id)}
+                                                onClick={() =>
+                                                    handleEditConfirm(tag._id)
+                                                }
                                             />
                                             <CancelIcon
                                                 sx={{
                                                     fontSize: 16,
                                                     cursor: "pointer",
                                                     color: "#666666",
-                                                    ":hover": { color: "#333333" },
+                                                    ":hover": {
+                                                        color: "#333333",
+                                                    },
                                                 }}
                                                 onClick={handleEditCancel}
                                             />
                                         </Box>
                                     ) : (
-                                        <Box sx={{ display: "flex", gap: 0.5, mr: 1 }}>
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                gap: 0.5,
+                                                mr: 1,
+                                            }}
+                                        >
                                             <EditIcon
                                                 sx={{
                                                     fontSize: 16,
                                                     cursor: "pointer",
                                                     color: "#666666",
-                                                    ":hover": { color: "#333333" },
+                                                    ":hover": {
+                                                        color: "#333333",
+                                                    },
                                                 }}
-                                                onClick={() => handleEditStart(tag)}
+                                                onClick={() =>
+                                                    handleEditStart(tag)
+                                                }
                                             />
                                             <DeleteIcon
                                                 sx={{
                                                     fontSize: 16,
                                                     cursor: "pointer",
                                                     color: "#666666",
-                                                    ":hover": { color: "#333333" },
+                                                    ":hover": {
+                                                        color: "#333333",
+                                                    },
                                                 }}
-                                                onClick={() => handleDelete(tag._id)}
+                                                onClick={() =>
+                                                    handleDelete(tag._id)
+                                                }
                                             />
                                         </Box>
                                     )
