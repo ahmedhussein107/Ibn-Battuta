@@ -49,7 +49,9 @@ const GenericCard = ({
                             display: "flex",
                             flexDirection: "column",
                             height: upperHeight,
-                            justifyContent: "space-between",
+                            justifyContent: "center",
+                            gap: "20%",
+                            marginTop: "1%",
                         }}
                     >
                         {aboveLine}

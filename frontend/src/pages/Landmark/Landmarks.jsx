@@ -149,7 +149,7 @@ const Landmarks = () => {
                             userSelect: "none",
                         }}
                     >
-                        LandMarks
+                        Landmarks
                     </p>
                 </div>
             </div>
