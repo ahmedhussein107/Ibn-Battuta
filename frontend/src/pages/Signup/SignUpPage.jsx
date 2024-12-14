@@ -7,6 +7,8 @@ import Button from "../../components/Button.jsx";
 import Page2 from "../../components/SignUp/Page2.jsx";
 import TouristFields from "../../components/SignUp/TouristFields.jsx";
 import axiosInstance from "../../api/axiosInstance.js";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 import { Alert } from "@mui/material";
 const SignUpPage = () => {
     const location = useLocation();

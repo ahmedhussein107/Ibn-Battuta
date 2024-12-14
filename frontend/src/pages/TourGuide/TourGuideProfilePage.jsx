@@ -671,6 +671,7 @@ const TourguideProfilePage = () => {
                                       marginBottom: "1vw",
                                       borderRadius: "8px",
                                       position: "relative", // For positioning the delete icon
+                                      //height: "33vh",
                                   }}
                               >
                                   <p>
@@ -767,7 +768,9 @@ const TourguideProfilePage = () => {
                                           >
                                               <TextField
                                                   id="outlined-basic"
-                                                  label="Years Of Experience"
+                                                  multiline
+                                                  //rows={2}
+                                                  label="Description"
                                                   value={work.description}
                                                   onChange={(e) =>
                                                       handlePreviousWorkChange(

@@ -21,7 +21,7 @@ const tourGuideSchema = new mongoose.Schema(
         previousWork: [
             {
                 title: { type: String, required: true },
-                duration: { type: Number, required: true },
+                duration: { type: Number },
                 description: { type: String, default: null },
             },
         ],
@@ -33,7 +33,7 @@ const tourGuideSchema = new mongoose.Schema(
     { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-tourGuideSchema.index({username: 1});
+tourGuideSchema.index({ username: 1 });
 
 tourGuideSchema.methods.addRating = async function (rating) {
     this.ratings.push(rating);
