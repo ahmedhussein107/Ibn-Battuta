@@ -175,7 +175,7 @@ const AllActivities = () => {
                                 height: "4.8vh",
                                 marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
-                                bgcolor: orange[700],
+                                bgcolor: "#9C4F21",
                             }}
                         >
                             <SearchIcon />

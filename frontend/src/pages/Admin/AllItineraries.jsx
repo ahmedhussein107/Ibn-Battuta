@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import i2 from "../../assets/images/i2.png";
-import i1 from "../../assets/images/iti.png";
+import i1 from "../../assets/backgrounds/itineraries.png";
 import NavBar from "../../components/NavBar";
 import { Avatar, Button } from "@mui/material";
 import { orange } from "@mui/material/colors";
@@ -17,47 +17,8 @@ import travellerBackground from "../../assets/backgrounds/travellerBackground.pn
 const AllItineraries = () => {
     const navigate = useNavigate();
 
-    const [itineraries, setitineraries] = useState([
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair", "Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair", "Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-    ]);
+    const [itineraries, setitineraries] = useState([]);
+
     const [searchedTerm, setSearchedTerm] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
 
@@ -138,7 +99,7 @@ const AllItineraries = () => {
                         zIndex: -1,
                     }}
                 />
-                <img
+                {/* <img
                     src={i2}
                     style={{
                         position: "absolute",
@@ -149,7 +110,7 @@ const AllItineraries = () => {
                         pointerEvents: "none",
                         zIndex: 0, // This will place the second image on top of the first
                     }}
-                />
+                /> */}
 
                 <div
                     style={{
@@ -198,7 +159,7 @@ const AllItineraries = () => {
                                 height: "4.8vh",
                                 marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
-                                bgcolor: orange[700],
+                                bgcolor: "#9C4F21",
                             }}
                         >
                             <SearchIcon />
