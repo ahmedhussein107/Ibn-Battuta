@@ -36,15 +36,11 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
                 gap: "2vw",
             }}
         >
-            <div
-                style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
                 <LocationIcon style={{ fontSize: iconSize }} />
                 <span>{landmark.location}</span>
             </div>
-            <div
-                style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5vw" }}>
                 <TagsIcon style={{ fontSize: iconSize }} />
                 <span>{landmark.tags.join(", ")}</span>
             </div>
@@ -67,10 +63,11 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
             style={{
                 display: "flex",
                 flexDirection: "column",
-                backgroundColor: "#f5f7fa",
+                //backgroundColor: "#FAE2B6",
                 borderRadius: "1vw",
-                padding: "3vh 2vw",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                padding: "1vh 1vw",
+                border: "2px solid #E0E3E7",
+                //boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
             }}
         >
             <div
@@ -84,7 +81,7 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
                 <ConfirmationNumberIcon
                     style={{
                         marginRight: "1vw",
-                        color: "#4299e1",
+                        color: "#9C4F21",
                         fontSize: "2vh",
                     }}
                 />
@@ -118,12 +115,12 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
                             textTransform: "capitalize",
                             fontWeight: "500",
                             color: "#34495e",
-                            fontSize: "1.5vh",
+                            fontSize: "1.3vh",
                         }}
                     >
                         {key.toString().charAt(0).toUpperCase() +
                             key.toString().slice(1) +
-                            " : "}
+                            ":"}
                     </span>
                     <span
                         style={{
@@ -132,7 +129,7 @@ const CardLandmark = ({ landmark, width, height, firstLineButtons = [] }) => {
                             fontSize: "1.5vh",
                         }}
                     >
-                        {formatPrice(landmark.ticketPrices[key])}
+                        &nbsp; {formatPrice(landmark.ticketPrices[key])}
                     </span>
                 </div>
             ))}

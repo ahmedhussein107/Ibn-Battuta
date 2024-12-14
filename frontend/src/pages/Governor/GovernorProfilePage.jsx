@@ -165,6 +165,7 @@ const GovernorProfilePage = () => {
             const formData = new FormData();
             const image = await uploadFile(file, "governor-profile-pictures");
             formData.append("picture", image);
+            setImage(image);
 
             axiosInstance
                 .put("/governor/updateGovernor", formData, {

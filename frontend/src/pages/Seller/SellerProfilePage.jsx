@@ -12,7 +12,7 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { uploadFile } from "../../api/firebase.js";
 import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
-//import Box from "@mui/material/Box";
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
 //import CheckIcon from "@mui/icons-material/Check";
@@ -513,11 +513,13 @@ const SellerProfilePage = () => {
                                         </button>
                                         <button
                                             style={{
-                                                padding: "10px 20px",
+                                                width: "45%",
+                                                height: "5vh",
+                                                // padding: "10px 20px",
                                                 backgroundColor: "#9c4f21",
                                                 color: "white",
                                                 border: "none",
-                                                borderRadius: "20px",
+                                                borderRadius: "20vh",
                                                 cursor: "pointer",
                                                 marginTop: "10px",
                                             }}
@@ -554,12 +556,37 @@ const SellerProfilePage = () => {
                         )}
                     </ProfileDetailsBox>
                     <ProfileDetailsBox>
-                        <ProfileDetailsContainer style={{ marginBottom: "100px" }}>
+                        <ProfileDetailsContainer style={{}}>
                             <h2>About me</h2>
                             {isEditing1 ? (
                                 <div>
                                     <p style={{ marginBottom: "16px" }}>
-                                        <TextField
+                                        <p style={{ marginBottom: "16px" }}>
+                                            <Box
+                                                component="form"
+                                                sx={{
+                                                    "& .MuiTextField-root": {
+                                                        m: 1,
+                                                        // width: "25ch", // Remove this line
+                                                    },
+                                                }}
+                                                noValidate
+                                                autoComplete="off"
+                                            >
+                                                <TextField
+                                                    variant="outlined" // Use "outlined" for the outlined variant
+                                                    size="small"
+                                                    multiline // Add this prop if you want a textarea
+                                                    rows={4} // Specify the number of rows for the textarea
+                                                    name="description"
+                                                    label="Description"
+                                                    value={formData.description}
+                                                    onChange={handleChange1}
+                                                    fullWidth // Keep this if you want the TextField to be full width
+                                                />
+                                            </Box>
+                                        </p>
+                                        {/* <TextField
                                             variant="outlined"
                                             size="small"
                                             fullWidth
@@ -568,15 +595,27 @@ const SellerProfilePage = () => {
                                             value={formData.description}
                                             onChange={handleChange1}
                                             style={{ marginTop: "8px" }}
-                                        />
+                                        /> */}
                                     </p>
-                                    <p style={{ marginBottom: "16px" }}>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            direction: "row",
+                                            marginTop: "13vh",
+                                            marginLeft: "6vw",
+                                            gap: "1vw",
+                                            width: "100%",
+                                        }}
+                                    >
                                         <button
                                             style={{
+                                                width: "45%",
+                                                height: "5vh",
                                                 background: "white",
                                                 borderRadius: "20vh",
                                                 border: "0.1vh solid #9c4f21",
                                                 color: "#9c4f21",
+                                                //marginRight: "2vw",
                                             }}
                                             onClick={() => {
                                                 setIsEditing1(false); // Set editing mode to false
@@ -586,19 +625,21 @@ const SellerProfilePage = () => {
                                         </button>
                                         <button
                                             style={{
-                                                padding: "10px 20px",
+                                                width: "45%",
+                                                height: "5vh",
+                                                // padding: "10px 20px",
                                                 backgroundColor: "#9c4f21",
                                                 color: "white",
                                                 border: "none",
-                                                borderRadius: "20px",
+                                                borderRadius: "20vh",
                                                 cursor: "pointer",
-                                                marginTop: "10px",
+                                                //marginTop: "5vh",
                                             }}
                                             onClick={handleSaveChanges1}
                                         >
                                             Save Changes
                                         </button>
-                                    </p>
+                                    </div>
                                 </div>
                             ) : (
                                 <p>
@@ -614,7 +655,9 @@ const SellerProfilePage = () => {
                                     cursor: "pointer", // Make it look clickable
                                     fontSize: "24px", // Adjust the size as needed
                                     color: "#000", // Optional: Customize the color
-                                    margin: "10px", // Optional: Add spacing
+                                    marginLeft: "20vw", // Optional: Add spacing
+                                    marginTop: "1vh", // Optional: Add spacing
+                                    //margin: "10px", // Optional: Add spacing
                                 }}
                                 titleAccess="Edit Profile" // Optional: Add tooltip for accessibility
                             />
