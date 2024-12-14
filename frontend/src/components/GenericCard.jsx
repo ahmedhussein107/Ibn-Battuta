@@ -50,7 +50,7 @@ const GenericCard = ({
                             flexDirection: "column",
                             height: upperHeight,
                             justifyContent: "center",
-                            gap: "20%",
+                            gap: "15%",
                         }}
                     >
                         {aboveLine}
