@@ -1,4 +1,3 @@
-
 ![WhatsApp Image 2024-12-08 at 5 59 48 PM](https://github.com/user-attachments/assets/88406ce0-0de2-4b43-9e92-a16eaba79f50)
 
 # Ibn-Battuta
@@ -30,8 +29,10 @@ Our codebase adheres to clean and consistent coding standards to ensure readabil
 ![Screenshot 2024-12-09 044414](https://github.com/user-attachments/assets/9a6799f1-1df0-48ff-bd05-8b12ccf663b2)
 ![Screenshot 2024-12-09 044358](https://github.com/user-attachments/assets/e4b426d1-ef40-4864-8187-7dafc39b51f3)
 ![Screenshot 2024-12-09 044347](https://github.com/user-attachments/assets/9ba45856-7a4b-46e7-88ac-e9ad378de6c6)
-![Screenshot 2024-12-09 044225](https://github.com/user-attachments/assets/3016a649-665a-4b18-8cd4-256f8495459a)
-![Screenshot 2024-12-09 044026](https://github.com/user-attachments/assets/c14fc4d2-e0b7-4d37-b3ab-9a09f4d7cf84)
+![Screenshot 2024-12-14 094214](https://github.com/user-attachments/assets/4e85064c-ad6e-4f5a-b9c4-ade845707b36)
+![Screenshot 2024-12-14 094433](https://github.com/user-attachments/assets/6aeba29b-03bb-453e-bb86-260ab85df3fc)
+![Screenshot 2024-12-14 094747](https://github.com/user-attachments/assets/c0866300-5b77-4cfe-a7c8-79cf0dcb41f2)
+
 
 
 ## Tech and Frameworks Used 🛠️
@@ -109,7 +110,8 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
 
     -Find activities and destinations tailored to your needs with accessibility filters and categorized tags.
 ## Code Examples 
-- Tourist Model
+<details>
+<summary>- Tourist Model</summary>
   
         import { mongoose } from "mongoose";
 
@@ -234,8 +236,9 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
 
         export default mongoose.model("Tourist", touristSchema);
 
-
--Tourist Controller :
+</details>
+<details>
+<summary>-Tourist Controller :</summary>
 
 
       import Tourist from "../models/tourist.model.js";
@@ -583,7 +586,7 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
       } catch (e) {
           res.status(400).json({ e: e.message });
       }
-  };
+      };
 
       export const changeTouristPassword = async (req, res) => {
           const touristId = req.user.userId; // Assuming userId is stored in the req.user object after authentication
@@ -622,7 +625,7 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
               .json("An error occurred while changing the password");
       }
     };
-
+</details>
 
 ## Installation
 
@@ -664,58 +667,12 @@ cd your-repository
 
 ## API Refrences 
 
-Below are some of the API endpoints used in the project. Each endpoint is organized by functionality and includes details about the request method, URL, parameters, and responses.
+Below are some of the API endpoints used in the project. Each endpoint is organized by its related model, functionality and includes details about the request method and URL.
 
--  Category 
-
-    -Get All Category
-
-    -  Endpoint: GET /category/allCategories
-    -   Request Body
-          
-           {
-       
-        "_id": "food",
-       
-        "createdAt": "2024-10-06T20:38:57.308Z",
-       
-        "updatedAt": "2024-10-06T20:38:57.308Z",
-       
-        "__v": 0
-        
-        },
-
-        {
-       
-        "_id": "Beaches",
-       
-        "createdAt": "2024-10-10T03:56:44.980Z",
-       
-        "updatedAt": "2024-10-10T03:56:44.980Z",
-       
-        "__v": 0
-    
-        },
-
-- User Management
-    
-    -   User Login
-
-        -Endpoint: POST /user/login
-        -Request Body 
-            
-            {
-            
-            "email": "user@example.com",
-            
-            "password": "password123"
-            
-            }
-  - all routes
-
-  <details>
-      <summary>Activity routes</summary>
-      <br>
+<details>
+  <summary>Activity routes</summary>
+  <br>
+  
      const activityRouter = express.Router();
 
     activityRouter.post("/createActivity", isAuthenticated, createActivity);
@@ -733,11 +690,12 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
     activityRouter.get("/getUpcomingActivities", getUpcomingActivities);
 
     activityRouter.patch("/toggleFlag/:id", toggleFlaggedActivities);
-    </details>
+</details>
      
-     <details>
-      <summary>Admin routes</summary>
-      <br>
+ <details>
+  <summary>Admin routes</summary>
+  <br>
+     
       const adminRouter = express.Router();
 
     adminRouter.post("/createAdmin", createAdmin);
@@ -753,59 +711,62 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
     adminRouter.get("/getAdminById", isAuthenticated, getAdminById);
 
     adminRouter.put("/changeAdminPassword", isAuthenticated, changeAdminPassword);
-    </details>
+</details>
 
-     <details>
-      <summary>Analytics routes</summary>
-      <br>
+ <details>
+  <summary>Analytics routes</summary>
+  <br>
+     
       const analyticsRouter = express.Router();
 
     analyticsRouter.get("/getAnalytics", isAuthenticated, getAnalytics);
-    </details>
+</details>
 
-     <details>
-      <summary>Booking routes</summary>
-      <br>
-      bookingRouter.get("/getBookings", getBookings);
+ <details>
+  <summary>Booking routes</summary>
+  <br>
+  
+     bookingRouter.get("/getBookings", getBookings);
 
-        bookingRouter.post("/createBooking", isAuthenticated, createBooking);
+    bookingRouter.post("/createBooking", isAuthenticated, createBooking);
 
-        bookingRouter.get("/getBooking/:id", getBooking);
+    bookingRouter.get("/getBooking/:id", getBooking);
 
-        bookingRouter.patch("/updateBooking/:id", updateBooking);
+    bookingRouter.patch("/updateBooking/:id", updateBooking);
 
-        bookingRouter.patch("/completeBooking/:id", isAuthenticated, completeBooking);
+    bookingRouter.patch("/completeBooking/:id", isAuthenticated, completeBooking);
 
-        bookingRouter.patch("/redeemPoints/:id", redeemPoints);
+    bookingRouter.patch("/redeemPoints/:id", redeemPoints);
 
-        bookingRouter.delete("/deleteBooking/:id", deleteBooking);
+    bookingRouter.delete("/deleteBooking/:id", deleteBooking);
 
-        bookingRouter.delete("/deleteBookings", deleteBookings);
+    bookingRouter.delete("/deleteBookings", deleteBookings);
 
-        bookingRouter.get("/getItineraryBookings", isAuthenticated, getitineraryBookings);
+    bookingRouter.get("/getItineraryBookings", isAuthenticated, getitineraryBookings);
 
-        bookingRouter.get("/getActivityBookings", isAuthenticated, getActivityBookings);
+    bookingRouter.get("/getActivityBookings", isAuthenticated, getActivityBookings);
 
-        bookingRouter.get("/getHotelBookings", isAuthenticated, getHotelBookings);
+    bookingRouter.get("/getHotelBookings", isAuthenticated, getHotelBookings);
 
-        bookingRouter.get("/getFlightBookings", isAuthenticated, getFlightBookings);
+    bookingRouter.get("/getFlightBookings", isAuthenticated, getFlightBookings);
 
-        bookingRouter.get(
-            "/checkPossiblePackageFlight",
-            isAuthenticated,
-            checkPossiblePackageFlight
-        );
+    bookingRouter.get(
+        "/checkPossiblePackageFlight",
+        isAuthenticated,
+        checkPossiblePackageFlight
+    );
 
-        bookingRouter.get(
-            "/checkPossiblePackageHotel",
-            isAuthenticated,
-            checkPossiblePackageHotel
-        );
-    </details>
+    bookingRouter.get(
+        "/checkPossiblePackageHotel",
+        isAuthenticated,
+        checkPossiblePackageHotel
+    );
+</details>
 
-     <details>
-      <summary>Categoey routes</summary>
-      <br>
+ <details>
+  <summary>Categoey routes</summary>
+  <br>
+     
       const categoryRouter = express.Router();
 
     categoryRouter.post("/createCategory", createCategory);
@@ -814,12 +775,12 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
     categoryRouter.delete("/deleteCategory/:id", deleteCategory);
     categoryRouter.get("/getCategoryByID/:id", getCategoryByID);
     categoryRouter.get("/searchCategories", searchCategories);
-      import { isAuthenticated } from "../routers.middleware/authentication.js";
 
-    </details>
-     <details>
-      <summary>Comment routes</summary>
-      <br>
+</details>
+ <details>
+  <summary>Comment routes</summary>
+  <br>
+     
       const commentRouter = express.Router();
 
     commentRouter.post("/createcomment", isAuthenticated, createComment);
@@ -838,86 +799,90 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 
     commentRouter.post("/replyToComment/:commentID", replyToComment);
     import { isAuthenticated } from "../routers.middleware/authentication.js";
+</details>
+
+ <details>
+      <summary>Complaint routes</summary>
+  <br>
+    
+     const complaintRouter = express.Router();
+
+    complaintRouter.post("/createComplaint", isAuthenticated, createComplaint);
+
+    complaintRouter.get("/getComplaints", getAllComplaints);
+
+    complaintRouter.get("/getComplaint/:id", getComplaintById);
+    complaintRouter.get("/getComplaintAlongWithReplies/:id", getComplaintAlongWithReplies);
+
+    complaintRouter.put("/updateComplaint/:id", updateComplaintById);
+
+    complaintRouter.delete("/deleteComplaint/:id", deleteComplaintById);
+
+    complaintRouter.get("/getComplaintsOfTourist/:id", isAuthenticated, getTouristComplaints);
+
+    complaintRouter.get("/getSomeComplaints", isAuthenticated, getSomeComplaints);
     </details>
-    import { isAuthenticated } from "../routers.middleware/authentication.js";
 
-     <details>
-          <summary>Complaint routes</summary>
-      <br>
-      const complaintRouter = express.Router();
-
-        complaintRouter.post("/createComplaint", isAuthenticated, createComplaint);
-
-        complaintRouter.get("/getComplaints", getAllComplaints);
-
-        complaintRouter.get("/getComplaint/:id", getComplaintById);
-        complaintRouter.get("/getComplaintAlongWithReplies/:id", getComplaintAlongWithReplies);
-
-        complaintRouter.put("/updateComplaint/:id", updateComplaintById);
-
-        complaintRouter.delete("/deleteComplaint/:id", deleteComplaintById);
-
-        complaintRouter.get("/getComplaintsOfTourist/:id", isAuthenticated, getTouristComplaints);
-
-        complaintRouter.get("/getSomeComplaints", isAuthenticated, getSomeComplaints);
-        </details>
-
-  <details>
-        <summary>Custom Activity routes</summary>
-       <br>
+</details>
+<details>
+    <summary>Custom Activity routes</summary>
+   <br>
+  
       const customActivityRouter = express.Router();
 
-        customActivityRouter.post("/createCustomActivity", isAuthenticated, createCustomActivity);
+    customActivityRouter.post("/createCustomActivity", isAuthenticated, createCustomActivity);
 
    customActivityRouter.get("/getAllCustomActivities", getCustomActivities);
 
-    customActivityRouter.get("/getCustomActivity/:id", getCustomActivityById);
+   customActivityRouter.get("/getCustomActivity/:id", getCustomActivityById);
 
      customActivityRouter.patch("/updateCustomActivity/:id", updateCustomActivity);
 
-      customActivityRouter.delete("/deleteCustomActivity/:id", deleteCustomActivity);
+  customActivityRouter.delete("/deleteCustomActivity/:id", deleteCustomActivity);
 
-      customActivityRouter.get(
-            "/getCustomActivityByTourGuideId",
-            isAuthenticated,
-            getCustomActivityByTourGuideId
-        );
-   </details>
+  customActivityRouter.get(
+        "/getCustomActivityByTourGuideId",
+        isAuthenticated,
+        getCustomActivityByTourGuideId
+    );
+</details>
 
-     <details>
+<details>
           <summary>General routes</summary>
           <br>
+          
           generalRouter.put("/changePassword", changePassword);
         generalRouter.post("/login", login);
         generalRouter.post("/createOTP", createOTPandSendEmail);
         generalRouter.post("/verifyOTP", verifyOTP);
         import { isAuthenticated } from "../routers.middleware/authentication.js";
-
-        </details>
+</details>
   
-     <details>
-          <summary>Governor routes</summary>
-          <br>
-          const governorRouter = express.Router();
+ <details>
+      <summary>Governor routes</summary>
+      <br>
+      
+     const governorRouter = express.Router();
 
-        governorRouter.post("/createGovernor", createGovernor);
+    governorRouter.post("/createGovernor", createGovernor);
 
-        governorRouter.get("/getGovernors", getGovernors);
-    
-        governorRouter.get("/getGovernor", isAuthenticated, getGovernor);
+    governorRouter.get("/getGovernors", getGovernors);
 
-        governorRouter.delete("/deleteGovernor", isAuthenticated, deleteGovernor);
+    governorRouter.get("/getGovernor", isAuthenticated, getGovernor);
 
-        governorRouter.put("/updateGovernor", isAuthenticated, updateGovernor);
+    governorRouter.delete("/deleteGovernor", isAuthenticated, deleteGovernor);
 
-        governorRouter.put("/changeGovernorPassword", isAuthenticated, changeGovernorPassword);
-        </details>
-   
+    governorRouter.put("/updateGovernor", isAuthenticated, updateGovernor);
 
-        <details>
-          <summary>Itinerary routes</summary>
-          <br>
-          const itineraryRouter = express.Router();
+    governorRouter.put("/changeGovernorPassword", isAuthenticated, changeGovernorPassword);
+</details>
+
+
+  <details>
+        <summary>Itinerary routes</summary>
+        <br>
+          
+      const itineraryRouter = express.Router();
 
         itineraryRouter.post("/createItinerary", isAuthenticated, createItinerary);
 
@@ -943,9 +908,9 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 
         itineraryRouter.patch("/toggleActive/:id", toggleActivatedItineraries);
         import { isAuthenticated } from "../routers.middleware/authentication.js";
-        </details>
+  </details>
   
-        <details>
+  <details>
           <summary>Landmark routes</summary>
           <br>
           const landmarkRouter = express.Router();
@@ -963,12 +928,13 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
         landmarkRouter.delete("/deleteLandmark/:id", deleteLandmark);
 
         landmarkRouter.get("/getGovernorLandmarks", isAuthenticated, getGovernorLandmarks);
-        </details>
+</details>
 
 <details>
       <summary>Tag routes</summary>
       <br>
-      const landmarkTagRouter = express.Router();
+     
+    const landmarkTagRouter = express.Router();
 
     landmarkTagRouter.post("/createLandmarkTag", createLandmarkTag);
 
@@ -981,13 +947,15 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
     landmarkTagRouter.get("/getLandmarkTag/:id", getLandmarkTag);
 
     landmarkTagRouter.get("/searchLandmarkTag", searchLandmarkTags);
-    </details>
+</details>
     
-     <details>
+<details>
       <summary>Order routes</summary>
       <br>
-      const orderRouter = express.Router();
-      orderRouter.post("/createOrder", isAuthenticated, createOrder);
+      
+    const orderRouter = express.Router();
+      
+    orderRouter.post("/createOrder", isAuthenticated, createOrder);
 
     orderRouter.get("/getOrders", isAuthenticated, getOrders);
 
@@ -1003,60 +971,64 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 
     orderRouter.patch("/addRating/:id", addRatingToProduct);
     import { isAuthenticated } from "../routers.middleware/authentication.js";
-    </details>
+</details>
 
-    <details>
+<details>
       <summary>Product routes</summary>
       <br>
-      const productRouter = express.Router();
+          
+        const productRouter = express.Router();
 
-    productRouter.post("/createProduct", isAuthenticated, createProduct);
+        productRouter.post("/createProduct", isAuthenticated, createProduct);
+    
+        productRouter.get("/getAllProducts", getAllProducts);
+    
+        productRouter.get("/getProduct/:id", getProduct);
+    
+        productRouter.patch("/updateProduct/:id", updateProduct);
+    
+        productRouter.delete("/deleteProduct/:id", deleteProduct);
+    
+        productRouter.delete("/deleteProducts", deleteProducts);
+    
+        productRouter.get("/search", searchProducts);
+    
+        productRouter.patch("/archiveProduct/:id", archeiveProduct);
+    
+        productRouter.patch("/unarchiveProduct/:id", unarcheiveProduct);
+    
+        productRouter.get("/getProductsById", isAuthenticated, getProductsById);
+</details>
 
-    productRouter.get("/getAllProducts", getAllProducts);
+<details>
+    <summary>Promo code routes</summary>
+    <br>
+    
+        promoCodeRouter.post("/validatePromoCode", isAuthenticated, validatePromoCode);
+        promoCodeRouter.post("/applyPromoCode", isAuthenticated, applyPromoCode);
+        promoCodeRouter.post("/createPromoCode", createGeneralPromoCode);
+</details>
+<details>
+    <summary>Rating routes</summary>
+    <br>
+    
+        const ratingRouter = express.Router();
+        ratingRouter.post("/createRating", createRating);
+        ratingRouter.get("/getRating/:id", getRatingById);
+        ratingRouter.get("/getRatings", getRatings);
+        ratingRouter.patch("/updateRating/:id", updateRating);
+        ratingRouter.delete("/deleteRating/:id", deleteRating);
+        ratingRouter.post("/rateProduct/:id", isAuthenticated, rateProduct);
+        ratingRouter.post("/rateTourGuide/:id", isAuthenticated, rateTourGuide);
+        ratingRouter.post("/rateItinerary/:id", isAuthenticated, rateItinerary);
+        ratingRouter.post("/rateActivity/:id", isAuthenticated, rateActivity);
+</details>
 
-    productRouter.get("/getProduct/:id", getProduct);
-
-    productRouter.patch("/updateProduct/:id", updateProduct);
-
-    productRouter.delete("/deleteProduct/:id", deleteProduct);
-
-    productRouter.delete("/deleteProducts", deleteProducts);
-
-    productRouter.get("/search", searchProducts);
-
-    productRouter.patch("/archiveProduct/:id", archeiveProduct);
-
-    productRouter.patch("/unarchiveProduct/:id", unarcheiveProduct);
-
-    productRouter.get("/getProductsById", isAuthenticated, getProductsById);
-    </details>
-
-    <details>
-      <summary>Promo code routes</summary>
-      <br>
-      promoCodeRouter.post("/validatePromoCode", isAuthenticated, validatePromoCode);
-    promoCodeRouter.post("/applyPromoCode", isAuthenticated, applyPromoCode);
-    promoCodeRouter.post("/createPromoCode", createGeneralPromoCode);
-    </details>
-    <details>
-      <summary>Rating routes</summary>
-      <br>
-      const ratingRouter = express.Router();
-    ratingRouter.post("/createRating", createRating);
-    ratingRouter.get("/getRating/:id", getRatingById);
-    ratingRouter.get("/getRatings", getRatings);
-    ratingRouter.patch("/updateRating/:id", updateRating);
-    ratingRouter.delete("/deleteRating/:id", deleteRating);
-    ratingRouter.post("/rateProduct/:id", isAuthenticated, rateProduct);
-    ratingRouter.post("/rateTourGuide/:id", isAuthenticated, rateTourGuide);
-    ratingRouter.post("/rateItinerary/:id", isAuthenticated, rateItinerary);
-    ratingRouter.post("/rateActivity/:id", isAuthenticated, rateActivity);
-    </details>
-
-     <details>
+<details>
       <summary>Seller routes</summary>
       <br>
-      const sellerRouter = express.Router();
+      
+    const sellerRouter = express.Router();
 
     sellerRouter.post("/createSeller", createSeller);
 
@@ -1071,12 +1043,13 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
     sellerRouter.put("/changeSellerPassword", isAuthenticated, changeSellerPassword);
 
     sellerRouter.get("/documents", getSellersDocuments);
-    </details>
+</details>
 
-     <details>
+<details>
       <summary>Preference  Tag routes</summary>
       <br>
-      const tagRouter = express.Router();
+    
+    const tagRouter = express.Router();
 
     tagRouter.post("/createTag", createTag);
 
@@ -1089,89 +1062,113 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
     tagRouter.get("/getTagByID/:id", getTagByID);
 
     tagRouter.get("/searchTags", searchTags);
-    </details>
+</details>
+<details>
+    <summary>Tourguide routes</summary>
+    
+    const tourGuideRouter = express.Router();
+    
+    tourGuideRouter.post("/createTourGuide", createTourGuide);
+    
+    tourGuideRouter.get("/getTourGuides", getTourGuides);
+    
+    tourGuideRouter.get("/tourGuide", isAuthenticated, getTourGuideById);
+    
+    tourGuideRouter.put("/updateTourGuide", isAuthenticated, updateTourGuide);
+    
+    tourGuideRouter.delete("/deleteTourGuide", isAuthenticated, deleteTourGuide);
+    
+    tourGuideRouter.put("/changeTourguidePassword", isAuthenticated, changeTourguidePassword);
+    
+    tourGuideRouter.get("/documents", getTourGuidesDocuments);
+    
+    tourGuideRouter.get("/tourGuide/:id", getTourGuide);
+</details>
+<details>
+    <summary>Tourist routes</summary>
+    
+    const touristRouter = express.Router();
+    
+    touristRouter.get("/getTourists", getTourists);
+    
+    touristRouter.post("/createTourist", createTourist);
+    
+    touristRouter.get("/tourist", isAuthenticated, getTouristById);
+    
+    touristRouter.put("/updateTourist", isAuthenticated, updateTourist);
+    
+    touristRouter.delete("/deleteTourist", isAuthenticated, deleteTourist);
+    
+    touristRouter.post("/redeemPoints", isAuthenticated, redeemPoints);
+    
+    touristRouter.post("/addPreference", isAuthenticated, addPreference);
+    
+    touristRouter.delete("/removePreference", isAuthenticated, removePreference);
+    
+    touristRouter.patch("/updatePassword", isAuthenticated, changeTouristPassword);
+</details>
+<details>
+    <summary>Tourist Bookmark routes</summary>
+    
+    const touristBookmarkRouter = express.Router();
+    
+    touristBookmarkRouter.post("/bookmark", isAuthenticated, toggleBookmark);
+    
+    touristBookmarkRouter.post("/getBookmarkStatus", isAuthenticated, getBookmarkStatus);
+    
+    touristBookmarkRouter.get("/getActivityBookmarks", isAuthenticated, getActivityBookmarks);
+    
+    touristBookmarkRouter.get(
+        "/getItineraryBookmarks",
+        isAuthenticated,
+        getItineraryBookmarks
+    );
+    import { isAuthenticated } from "../routers.middleware/authentication.js";
+</details>
 
-const tourGuideRouter = express.Router();
+<details>
+<summary>Tourist Cart routes</summary>
 
-tourGuideRouter.post("/createTourGuide", createTourGuide);
+    const touristCartRouter = express.Router();
+    
+    touristCartRouter.get("/getCart", isAuthenticated, getTouristCart);
+    
+    touristCartRouter.post("/updateCart", isAuthenticated, updateTouristCart);
+    
+    touristCartRouter.delete("/clearCart", isAuthenticated, deleteTouristCart);
+    
+    touristCartRouter.delete(
+        "/deleteProduct/:id",
+        isAuthenticated,
+        deleteItemFromTouristCart
+    );
+</details>
 
-tourGuideRouter.get("/getTourGuides", getTourGuides);
+<details>
+    <summary>Tourist Wishlist routes</summary>
+    
+    const touristWishlistRouter = express.Router();
+    
+    touristWishlistRouter.post("/wishlist", isAuthenticated, toggleWishlist);
+    
+    touristWishlistRouter.post("/getProductsStatus", isAuthenticated, getProductsStatus);
+    
+    touristWishlistRouter.get("/getWishlistProducts", isAuthenticated, getWishlistProducts);
+</details>
 
-tourGuideRouter.get("/tourGuide", isAuthenticated, getTourGuideById);
+<details>
+    <summary>Username routes</summary>
+    
+    const usernameRouter = express.Router();
 
-tourGuideRouter.put("/updateTourGuide", isAuthenticated, updateTourGuide);
+    usernameRouter.post("/createUsername", createUsername);
 
-tourGuideRouter.delete("/deleteTourGuide", isAuthenticated, deleteTourGuide);
+    usernameRouter.get("/allUsernames", getUsernames);
 
-tourGuideRouter.put("/changeTourguidePassword", isAuthenticated, changeTourguidePassword);
+    usernameRouter.put("/updateUsername", updateUsername);
 
-tourGuideRouter.get("/documents", getTourGuidesDocuments);
-
-tourGuideRouter.get("/tourGuide/:id", getTourGuide);
-const touristRouter = express.Router();
-
-touristRouter.get("/getTourists", getTourists);
-
-touristRouter.post("/createTourist", createTourist);
-
-touristRouter.get("/tourist", isAuthenticated, getTouristById);
-
-touristRouter.put("/updateTourist", isAuthenticated, updateTourist);
-
-touristRouter.delete("/deleteTourist", isAuthenticated, deleteTourist);
-
-touristRouter.post("/redeemPoints", isAuthenticated, redeemPoints);
-
-touristRouter.post("/addPreference", isAuthenticated, addPreference);
-
-touristRouter.delete("/removePreference", isAuthenticated, removePreference);
-
-touristRouter.patch("/updatePassword", isAuthenticated, changeTouristPassword);
-const touristBookmarkRouter = express.Router();
-
-touristBookmarkRouter.post("/bookmark", isAuthenticated, toggleBookmark);
-
-touristBookmarkRouter.post("/getBookmarkStatus", isAuthenticated, getBookmarkStatus);
-
-touristBookmarkRouter.get("/getActivityBookmarks", isAuthenticated, getActivityBookmarks);
-
-touristBookmarkRouter.get(
-    "/getItineraryBookmarks",
-    isAuthenticated,
-    getItineraryBookmarks
-);
-mport { isAuthenticated } from "../routers.middleware/authentication.js";
-
-const touristCartRouter = express.Router();
-
-touristCartRouter.get("/getCart", isAuthenticated, getTouristCart);
-
-touristCartRouter.post("/updateCart", isAuthenticated, updateTouristCart);
-
-touristCartRouter.delete("/clearCart", isAuthenticated, deleteTouristCart);
-
-touristCartRouter.delete(
-    "/deleteProduct/:id",
-    isAuthenticated,
-    deleteItemFromTouristCart
-);
-const touristWishlistRouter = express.Router();
-
-touristWishlistRouter.post("/wishlist", isAuthenticated, toggleWishlist);
-
-touristWishlistRouter.post("/getProductsStatus", isAuthenticated, getProductsStatus);
-
-touristWishlistRouter.get("/getWishlistProducts", isAuthenticated, getWishlistProducts);
-const usernameRouter = express.Router();
-
-usernameRouter.post("/createUsername", createUsername);
-
-usernameRouter.get("/allUsernames", getUsernames);
-
-usernameRouter.put("/updateUsername", updateUsername);
-
-usernameRouter.delete("/deleteUsername", deleteUsername);
-
+    usernameRouter.delete("/deleteUsername", deleteUsername);
+</details>
 ## Tests
 - We use Postman to manually test all our api references by making sure the response is as expected. We use it as some kind of sanity-check.
 - Here are some examples:
