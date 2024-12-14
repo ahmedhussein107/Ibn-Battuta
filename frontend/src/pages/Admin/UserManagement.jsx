@@ -61,7 +61,7 @@ const UserManagement = ({ isAll = true }) => {
 
     useEffect(() => {
         fetchUsers();
-    }, [currentPage, searchText, isAll]);
+    }, [currentPage, searchText, isAll, isOpen]);
 
     const fetchUsers = async () => {
         try {
