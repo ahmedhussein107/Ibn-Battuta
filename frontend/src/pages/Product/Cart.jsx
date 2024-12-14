@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 import usePageHeader from "../../components/Header/UseHeaderPage";
-import background from "../../assets/backgrounds/shopBackground.png";
+import background from "../../assets/backgrounds/shopBackground.jpg";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";

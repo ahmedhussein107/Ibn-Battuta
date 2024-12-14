@@ -312,8 +312,8 @@ const Inventory = () => {
                                         product={product}
                                         width={"45vw"}
                                         height={"32vh"}
-                                        lowerHeight={"65%"}
-                                        upperHeight={"35%"}
+                                        lowerHeight={"60%"}
+                                        upperHeight={"40%"}
                                         line2={
                                             <div
                                                 style={{
@@ -398,16 +398,16 @@ const Inventory = () => {
                                                         justifyContent: "center",
                                                         alignItems: "center",
                                                         color: product.isArchived
-                                                            ? "red"
-                                                            : "green",
+                                                            ? "green"
+                                                            : "red",
                                                         borderColor: product.isArchived
-                                                            ? "red"
-                                                            : "green",
+                                                            ? "green"
+                                                            : "red",
                                                         "&:hover": {
                                                             backgroundColor:
                                                                 product.isArchived
-                                                                    ? "red"
-                                                                    : "green",
+                                                                    ? "green"
+                                                                    : "red",
                                                         },
                                                     }}
                                                     handleClick={() => {
