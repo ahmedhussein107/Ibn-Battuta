@@ -210,7 +210,8 @@ const SignUpPage = () => {
                 { withCredentials: true }
             );
             console.log("111");
-            setAlertMessage("Files submitted successfully!");
+            // setAlertMessage("Files submitted successfully!");
+            setAlertMessage("Account created successfully!");
             setShowAlert(true);
             setServerError("success");
             setTimeout(() => {
