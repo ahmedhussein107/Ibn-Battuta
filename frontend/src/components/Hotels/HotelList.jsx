@@ -8,7 +8,6 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import Footer from "../Footer";
-import i1 from "../../assets/backgrounds/HH.png";
 const room = {
     name: "Grand City Hotel",
     address: "123 Main Street, New York, USA",
@@ -32,6 +31,8 @@ const room = {
 };
 
 const HotelList = () => {
+    //usePageHeader(i1, "Hotels");
+
     const [rooms, setRooms] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
     const [chosenCity, setChosenCity] = useState(null);
@@ -81,6 +82,8 @@ const HotelList = () => {
     };
 
     const handleSearchButton = () => {
+        console.log("Chosen city when clicked is:", chosenCity);
+
         const newParams = {
             lat: chosenCity?.geoCode?.latitude || lat,
             lng: chosenCity?.geoCode?.longitude || lng,
@@ -101,6 +104,7 @@ const HotelList = () => {
             end: searchParams.get("end") || "",
             guests: getGuestCount(),
         };
+        console.log("newParams", newParams);
         setLat(newParams.lat);
         setLng(newParams.lng);
         setStart(newParams.start);
@@ -110,35 +114,30 @@ const HotelList = () => {
     }, [searchParams]);
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
+            {/* Background Image */}
             <div
                 style={{
                     width: "100vw",
-                    height: "40vh",
-                    color: "#FAE2B6",
+                    height: "30vh",
                     backgroundImage: `url(${i1})`,
-                    backgroundSize: "100% 100%",
+                    backgroundSize: "100% auto",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-end",
                 }}
             >
-                <div style={{ marginLeft: "40%", marginBottom: "5%" }}>
-                    <h1
-                        style={{
-                            fontSize: "6rem",
-                            fontWeight: "bold",
-                            marginBottom: "1rem",
-                            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
-                            fontFamily: "serif",
-                            userSelect: "none",
-                        }}
-                    >
-                        Hotels
-                    </h1>
-                </div>
+                <h1
+                    style={{
+                        padding: "18vh", // Reduces top padding
+                        fontSize: "3.2vh",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        marginBottom: "2vh",
+                        color: "white",
+                    }}
+                >
+                    Hotels
+                </h1>
             </div>
             <div className="hotel-list-with-controls">
                 <HotelsControls
