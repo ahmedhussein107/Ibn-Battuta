@@ -79,16 +79,7 @@ export const createTourist = async (req, res) => {
             req.body.password = hashedPassword;
             const { address, ...body } = req.body;
             const newTourist = await Tourist.create(body);
-            assignCookies(
-                res,
-                "Tourist",
-                newTourist._id,
-                newTourist.picture,
-                newTourist.currency,
-                newTourist.email
-            )
-                .status(201)
-                .json({ message: "Sign up successful" });
+            res.status(201).json({ message: "Sign up successful", user: newTourist });
         } else {
             if (username) {
                 res.status(400).json({ e: "Username already exists" });

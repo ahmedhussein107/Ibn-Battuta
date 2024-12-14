@@ -43,27 +43,29 @@ import { PORT, MONGO_URI } from "./config/config.js";
 
 import expressWs from "express-ws";
 import { sendNotificationCountToUser, setupWebSocketRoutes } from "./routes/ws.router.js";
+import { setupOrderDeliveryScheduledJobs } from "./controllers/order.controller.js";
 
 const app = expressWs(express()).app;
 
 connect(MONGO_URI)
-    .then(() => {
-        app.listen(PORT, () => {
-            console.log(`Connected to DB`);
-            console.log(`Listening to port ${PORT}`);
-        });
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+	.then(() => {
+		app.listen(PORT, () => {
+			console.log(`Connected to DB`);
+			console.log(`Listening to port ${PORT}`);
+		});
+	})
+	.catch((err) => {
+		console.log(err);
+	});
 
 setupWebSocketRoutes(app);
 setupPromoCodeScheduledJobs();
+setupOrderDeliveryScheduledJobs();
 
 app.use(cookieParser());
 const corsOptions = {
-    origin: "http://localhost:5173",
-    credentials: true,
+	origin: "http://localhost:5173",
+	credentials: true,
 };
 
 app.use(cors(corsOptions));
