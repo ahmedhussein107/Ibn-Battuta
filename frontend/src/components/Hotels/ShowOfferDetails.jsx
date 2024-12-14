@@ -111,17 +111,6 @@ const ShowOfferDetails = () => {
 
     return (
         <div className="hotel-details-page-container">
-            {/* {packagePopup && (
-				<PopUp
-					isOpen={packagePopup}
-					setIsOpen={setPackagePopup}
-					headerText="Do you want to book a package?"
-					handleSubmit={handleSubmit}
-					handleOnClose={handleSubmit}
-				>
-					<p>{`You are booking a flight to ${hotel.chosenCity.name}. Do you want to book a limousine to hotel ${hotel.name} for 1000 ${hotel.currency}?`}</p>
-				</PopUp>
-			)} */}
             <CheckoutPopup
                 isOpen={isCheckoutPopupOpen}
                 setIsOpen={setIsCheckoutPopupOpen}
