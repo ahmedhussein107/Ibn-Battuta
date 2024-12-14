@@ -400,18 +400,18 @@ const Step2 = ({
 
         const [imagePreviews, setImagePreviews] = useState(
             localStorage.getItem("imagePreviews")
-                ? JSON.stringify(localStorage.getItem("imagePreviews"))
+                ? JSON.parse(localStorage.getItem("imagePreviews"))
                 : []
         );
         const handleSubmit = async (e) => {
             e.preventDefault();
 
             try {
-                if(name ===""){
+                if (customActivityName === "") {
                     alert("Please enter activty name");
                     return;
                 }
-                if(description ===""){
+                if (description === "") {
                     alert("Please enter activty description");
                     return;
                 }
@@ -457,6 +457,9 @@ const Step2 = ({
                     }
                 );
                 setCustomActivities((prev) => [...prev, response.data]);
+                localStorage.removeItem("imagePreviews");
+                localStorage.removeItem("customActivityName");
+                localStorage.removeItem("description");
                 setPopUpOpen(false);
             } catch (err) {
                 console.log(err);
