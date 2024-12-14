@@ -2,7 +2,7 @@ import React from "react";
 import "./HotelList.css";
 import HotelCard from "./HotelCard";
 import usePageHeader from "../Header/UseHeaderPage";
-import i1 from "../../assets/backgrounds/bookings_bg.png";
+import i1 from "../../assets/backgrounds/hotels.jpg";
 import HotelsControls from "./HotelsControls";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -39,6 +39,7 @@ const HotelList = () => {
     const [lng, setLng] = useState(searchParams.get("lng") || "");
     const [start, setStart] = useState(searchParams.get("start") || "");
     const [end, setEnd] = useState(searchParams.get("end") || "");
+    const [isLoading, setIsLoading] = useState(false);
 
     // Parse guest count with a fallback
     const getGuestCount = () => {
@@ -53,6 +54,7 @@ const HotelList = () => {
         console.log("Fetching hotel bookings with params:", params);
 
         try {
+            setIsLoading(true);
             const response = await axiosInstance.get(url, {
                 params,
                 withCredentials: true,
@@ -73,6 +75,8 @@ const HotelList = () => {
         } catch (err) {
             console.error("Error fetching rooms:", err);
             setRooms([]);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -147,6 +151,7 @@ const HotelList = () => {
                     onSearch={handleSearchButton}
                     chosenCity={chosenCity}
                     setChosenCity={setChosenCity}
+                    isLoading={isLoading}
                 />
 
                 <div className="hotel-list-container">

@@ -33,7 +33,7 @@ const Flights = () => {
     const [returnDate, setReturnDate] = useState(null); // Return Date
     const [departureAirport, setDepartureAirport] = useState(""); // Departure Airport
     const [arrivalAirport, setArrivalAirport] = useState(""); // Departure Airport
-    const [adults, setAdults] = useState(0); // Number of adults
+    const [adults, setAdults] = useState(1); // Number of adults
     const [children, setChildren] = useState(0); // Number of children
     const [flightOffers, setFlightOffers] = useState([]);
     const [airlines, setAirlines] = useState([]);
