@@ -16,6 +16,7 @@ import SuccessfulBooking from "../../components/SuccessfulBooking.jsx";
 import DateRangeDisplay from "../../components/DateRangeDisplay.jsx";
 import DiscountCard from "../../components/DiscountCard.jsx";
 import Button from "../../components/Button.jsx";
+import activitiesBackground from "../../assets/backgrounds/activities.png";
 
 import Cookies from "js-cookie";
 
@@ -642,7 +643,7 @@ const ActivityDetails = () => {
                     },
                 ]}
                 successDirectUrl={"/tourist/bookings"}
-                headerImage={activityData.pictures[0]}
+                headerImage={activitiesBackground}
                 state={{ tab: "Activities" }}
                 handleOnMount={async () => {
                     console.log("handleOnMount called");

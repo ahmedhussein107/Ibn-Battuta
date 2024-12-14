@@ -1,6 +1,7 @@
 .hotel-list-with-controls {
     width: 90%;
-    padding-top: 40vh;
+    margin-top: 3%;
+    margin-left: 3.5%;
 }
 .hotel-list-container {
     display: flex;
@@ -8,7 +9,7 @@
     align-items: center; /* Center items horizontally */
     justify-content: center; /* Center items vertically */
     margin: 20px; /* Optional spacing around the container */
-    margin-top: 60px;
+    /* margin-top: 60px; */
     width: 100%;
     padding-right: 3vw;
 }
@@ -18,7 +19,7 @@
     grid-template-columns: repeat(3, 1fr); /* Two columns */
     gap: 16px; /* Space between each card */
     width: 100%;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     justify-content: center;
     align-items: center;
 }
