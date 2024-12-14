@@ -124,7 +124,7 @@ const FlightControls = ({
                         <PersonIcon
                             sx={{ verticalAlign: "middle", marginRight: "5px" }}
                         />
-                        <span>adult count</span>
+                        <span>Adults</span>
                     </span>{" "}
                     <div className="hotels-controls-counter">
                         <IconButton

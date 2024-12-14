@@ -20,8 +20,8 @@ const HotelsControls = ({
     onSearch,
     chosenCity,
     setChosenCity,
+    isLoading,
 }) => {
-    const [isSearching, setIsSearching] = useState(false);
     const [searchCity, setSearchCity] = useState("");
 
     const handleSearch = async () => {
@@ -32,8 +32,6 @@ const HotelsControls = ({
             console.log("i am here at handle search after");
         } catch (err) {
             console.error("Error searching hotels:", err);
-        } finally {
-            setIsSearching(false);
         }
     };
     const handleRangechange = (_, dateStrings) => {
@@ -57,7 +55,7 @@ const HotelsControls = ({
             <div className="hotels-controls-adult-counter">
                 <span className="icon-text">
                     <PersonIcon sx={{ verticalAlign: "middle", marginRight: "5px" }} />
-                    <span>adult count</span>
+                    <span>Adults</span>
                 </span>{" "}
                 <div className="hotels-controls-counter">
                     <IconButton
@@ -75,9 +73,9 @@ const HotelsControls = ({
             <Button
                 stylingMode="always-dark"
                 text={"Find Hotel"}
-                handleClick={handleSearch}
-                isLoading={isSearching}
-                disabled={isSearching}
+                handleClick={onSearch}
+                isLoading={isLoading}
+                //disabled={isLoading}
                 customStyle={{
                     width: "173px",
                     height: "3rem",
