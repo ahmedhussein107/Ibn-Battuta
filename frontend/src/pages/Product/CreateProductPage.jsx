@@ -37,7 +37,7 @@ const CreateProductPage = () => {
     const [isErrorPopup, setIsErrorPopup] = useState(false);
     const [selectedCurrency, setSelectedCurrency] = useState("");
     const currency = Cookies.get("currency") || "EGP";
-
+    const { convertPrice } = useCurrencyConverter(currency);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
