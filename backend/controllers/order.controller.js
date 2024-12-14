@@ -194,7 +194,7 @@ export const getOrdersByUser = async (req, res) => {
 
 // Set up scheduled jobs
 export const setupOrderDeliveryScheduledJobs = () => {
-	cron.schedule("*/2 * * * *", async () => {
+	cron.schedule("*/5 * * * *", async () => {
 		await deliverOrders();
 	});
 };
