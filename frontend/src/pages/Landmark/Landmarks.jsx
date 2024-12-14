@@ -17,7 +17,6 @@ const Landmarks = () => {
     const [name, setName] = useState("");
     const [searchedTag, setSearchedTag] = useState("");
     const [location, setLocation] = useState("");
-
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 6;

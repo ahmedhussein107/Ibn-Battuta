@@ -22,12 +22,12 @@ const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
                 Latitude: locationlatitude,
             };
 
-            const pictures = await uploadFiles(
-                imagePreviews.map((preview) => preview.file),
-                `customActivities/${name}`
-            );
+            // const pictures = await uploadFiles(
+            //     imagePreviews.map((preview) => preview.file),
+            //     `customActivities/${name}`
+            // );
+            // data.pictures = pictures;
 
-            data.pictures = pictures;
             const response = await axiosInstance.post(
                 "/customActivity/createCustomActivity",
                 data,
@@ -162,12 +162,12 @@ const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
                         />
                     </div>
                     <div style={{ width: "45%", height: "60%" }}>
-                        <PhotosUpload
+                        {/* <PhotosUpload
                             label="Activity Photos"
                             imagePreviews={imagePreviews}
                             onImageAdd={handleImageAdd}
                             onImageRemove={handleImageRemove}
-                        />
+                        /> */}
                     </div>
                 </div>
             </PopUp>

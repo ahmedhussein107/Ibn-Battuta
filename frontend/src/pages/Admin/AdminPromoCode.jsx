@@ -127,7 +127,7 @@ const AdminPromoCode = () => {
             >
                 <p
                     style={{
-                        color: "#9C5F11",
+                        color: "#9C4F21",
                         fontWeight: "bold",
                         marginLeft: "-29vw",
                         fontSize: "25px",
@@ -146,7 +146,7 @@ const AdminPromoCode = () => {
                 />
                 <p
                     style={{
-                        color: "#9C5F11",
+                        color: "#9C4F21",
                         fontWeight: "bold",
                         marginLeft: "-31vw",
                         fontSize: "25px",
@@ -166,7 +166,7 @@ const AdminPromoCode = () => {
                 />
                 <p
                     style={{
-                        color: "#9C5F11",
+                        color: "#9C4F21",
                         fontWeight: "bold",
                         marginLeft: "-29vw",
                         fontSize: "25px",

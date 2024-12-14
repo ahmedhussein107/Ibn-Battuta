@@ -712,294 +712,385 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
             
             }
   - all routes
- 
-    const activityRouter = express.Router();
 
-activityRouter.post("/createActivity", isAuthenticated, createActivity);
+  <details>
+      <summary>Activity routes</summary>
+      <br>
+     const activityRouter = express.Router();
 
-activityRouter.get("/getActivity/:id", getActivityById);
+    activityRouter.post("/createActivity", isAuthenticated, createActivity);
 
-activityRouter.get("/getAllActivities", getAllActivities);
+    activityRouter.get("/getActivity/:id", getActivityById);
 
-activityRouter.patch("/updateActivity/:id", updateActivity);
+    activityRouter.get("/getAllActivities", getAllActivities);
 
-activityRouter.get("/getAdvertiserActivities/", isAuthenticated, getAdvertiserActivities);
+    activityRouter.patch("/updateActivity/:id", updateActivity);
 
-activityRouter.delete("/deleteActivity/:id", deleteActivity);
+    activityRouter.get("/getAdvertiserActivities/", isAuthenticated, getAdvertiserActivities);
 
-activityRouter.get("/getUpcomingActivities", getUpcomingActivities);
+    activityRouter.delete("/deleteActivity/:id", deleteActivity);
 
-activityRouter.patch("/toggleFlag/:id", toggleFlaggedActivities);
+    activityRouter.get("/getUpcomingActivities", getUpcomingActivities);
 
-const adminRouter = express.Router();
+    activityRouter.patch("/toggleFlag/:id", toggleFlaggedActivities);
+    </details>
+     
+     <details>
+      <summary>Admin routes</summary>
+      <br>
+      const adminRouter = express.Router();
 
-adminRouter.post("/createAdmin", createAdmin);
+    adminRouter.post("/createAdmin", createAdmin);
 
-adminRouter.get("/getAdmins", getAdmins);
+    adminRouter.get("/getAdmins", getAdmins);
 
-adminRouter.get("/getUsers", getUsers);
+    adminRouter.get("/getUsers", getUsers);
 
-adminRouter.delete("/deleteAdmin", isAuthenticated, deleteAdmin);
+    adminRouter.delete("/deleteAdmin", isAuthenticated, deleteAdmin);
 
-adminRouter.put("/updateAdmin", isAuthenticated, updateAdmin);
+    adminRouter.put("/updateAdmin", isAuthenticated, updateAdmin);
 
-adminRouter.get("/getAdminById", isAuthenticated, getAdminById);
+    adminRouter.get("/getAdminById", isAuthenticated, getAdminById);
 
-adminRouter.put("/changeAdminPassword", isAuthenticated, changeAdminPassword);
-const analyticsRouter = express.Router();
+    adminRouter.put("/changeAdminPassword", isAuthenticated, changeAdminPassword);
+    </details>
 
-analyticsRouter.get("/getAnalytics", isAuthenticated, getAnalytics);
-bookingRouter.get("/getBookings", getBookings);
+     <details>
+      <summary>Analytics routes</summary>
+      <br>
+      const analyticsRouter = express.Router();
 
-bookingRouter.post("/createBooking", isAuthenticated, createBooking);
+    analyticsRouter.get("/getAnalytics", isAuthenticated, getAnalytics);
+    </details>
 
-bookingRouter.get("/getBooking/:id", getBooking);
+     <details>
+      <summary>Booking routes</summary>
+      <br>
+      bookingRouter.get("/getBookings", getBookings);
 
-bookingRouter.patch("/updateBooking/:id", updateBooking);
+        bookingRouter.post("/createBooking", isAuthenticated, createBooking);
 
-bookingRouter.patch("/completeBooking/:id", isAuthenticated, completeBooking);
+        bookingRouter.get("/getBooking/:id", getBooking);
 
-bookingRouter.patch("/redeemPoints/:id", redeemPoints);
+        bookingRouter.patch("/updateBooking/:id", updateBooking);
 
-bookingRouter.delete("/deleteBooking/:id", deleteBooking);
+        bookingRouter.patch("/completeBooking/:id", isAuthenticated, completeBooking);
 
-bookingRouter.delete("/deleteBookings", deleteBookings);
+        bookingRouter.patch("/redeemPoints/:id", redeemPoints);
 
-bookingRouter.get("/getItineraryBookings", isAuthenticated, getitineraryBookings);
+        bookingRouter.delete("/deleteBooking/:id", deleteBooking);
 
-bookingRouter.get("/getActivityBookings", isAuthenticated, getActivityBookings);
+        bookingRouter.delete("/deleteBookings", deleteBookings);
 
-bookingRouter.get("/getHotelBookings", isAuthenticated, getHotelBookings);
+        bookingRouter.get("/getItineraryBookings", isAuthenticated, getitineraryBookings);
 
-bookingRouter.get("/getFlightBookings", isAuthenticated, getFlightBookings);
+        bookingRouter.get("/getActivityBookings", isAuthenticated, getActivityBookings);
 
-bookingRouter.get(
-    "/checkPossiblePackageFlight",
-    isAuthenticated,
-    checkPossiblePackageFlight
-);
+        bookingRouter.get("/getHotelBookings", isAuthenticated, getHotelBookings);
 
-bookingRouter.get(
-    "/checkPossiblePackageHotel",
-    isAuthenticated,
-    checkPossiblePackageHotel
-);
-const categoryRouter = express.Router();
+        bookingRouter.get("/getFlightBookings", isAuthenticated, getFlightBookings);
 
-categoryRouter.post("/createCategory", createCategory);
-categoryRouter.get("/allCategories", getCategories);
-categoryRouter.put("/updateCategory/:id", updateCategory);
-categoryRouter.delete("/deleteCategory/:id", deleteCategory);
-categoryRouter.get("/getCategoryByID/:id", getCategoryByID);
-categoryRouter.get("/searchCategories", searchCategories);
+        bookingRouter.get(
+            "/checkPossiblePackageFlight",
+            isAuthenticated,
+            checkPossiblePackageFlight
+        );
 
-import { isAuthenticated } from "../routers.middleware/authentication.js";
+        bookingRouter.get(
+            "/checkPossiblePackageHotel",
+            isAuthenticated,
+            checkPossiblePackageHotel
+        );
+    </details>
 
-const commentRouter = express.Router();
+     <details>
+      <summary>Categoey routes</summary>
+      <br>
+      const categoryRouter = express.Router();
 
-commentRouter.post("/createcomment", isAuthenticated, createComment);
+    categoryRouter.post("/createCategory", createCategory);
+    categoryRouter.get("/allCategories", getCategories);
+    categoryRouter.put("/updateCategory/:id", updateCategory);
+    categoryRouter.delete("/deleteCategory/:id", deleteCategory);
+    categoryRouter.get("/getCategoryByID/:id", getCategoryByID);
+    categoryRouter.get("/searchCategories", searchCategories);
+      import { isAuthenticated } from "../routers.middleware/authentication.js";
 
-commentRouter.get("/getCommentByID/:id", getCommentById);
+    </details>
+     <details>
+      <summary>Comment routes</summary>
+      <br>
+      const commentRouter = express.Router();
 
-commentRouter.get("/getComments", getComments);
+    commentRouter.post("/createcomment", isAuthenticated, createComment);
 
-commentRouter.get("/getComplaintComments/:id", getComplaintComments);
+    commentRouter.get("/getCommentByID/:id", getCommentById);
 
-commentRouter.put("/updateComment/:id", updateComment);
+    commentRouter.get("/getComments", getComments);
 
-commentRouter.delete("/deleteComment/:id", deleteComment);
+    commentRouter.get("/getComplaintComments/:id", getComplaintComments);
 
-commentRouter.post("/replyToComplaint/:complaintID", replyToComplaint);
+    commentRouter.put("/updateComment/:id", updateComment);
 
-commentRouter.post("/replyToComment/:commentID", replyToComment);
-import { isAuthenticated } from "../routers.middleware/authentication.js";
+    commentRouter.delete("/deleteComment/:id", deleteComment);
 
-const complaintRouter = express.Router();
+    commentRouter.post("/replyToComplaint/:complaintID", replyToComplaint);
 
-complaintRouter.post("/createComplaint", isAuthenticated, createComplaint);
+    commentRouter.post("/replyToComment/:commentID", replyToComment);
+    import { isAuthenticated } from "../routers.middleware/authentication.js";
+    </details>
+    import { isAuthenticated } from "../routers.middleware/authentication.js";
 
-complaintRouter.get("/getComplaints", getAllComplaints);
+     <details>
+          <summary>Complaint routes</summary>
+      <br>
+      const complaintRouter = express.Router();
 
-complaintRouter.get("/getComplaint/:id", getComplaintById);
-complaintRouter.get("/getComplaintAlongWithReplies/:id", getComplaintAlongWithReplies);
+        complaintRouter.post("/createComplaint", isAuthenticated, createComplaint);
 
-complaintRouter.put("/updateComplaint/:id", updateComplaintById);
+        complaintRouter.get("/getComplaints", getAllComplaints);
 
-complaintRouter.delete("/deleteComplaint/:id", deleteComplaintById);
+        complaintRouter.get("/getComplaint/:id", getComplaintById);
+        complaintRouter.get("/getComplaintAlongWithReplies/:id", getComplaintAlongWithReplies);
 
-complaintRouter.get("/getComplaintsOfTourist/:id", isAuthenticated, getTouristComplaints);
+        complaintRouter.put("/updateComplaint/:id", updateComplaintById);
 
-complaintRouter.get("/getSomeComplaints", isAuthenticated, getSomeComplaints);
+        complaintRouter.delete("/deleteComplaint/:id", deleteComplaintById);
 
-const customActivityRouter = express.Router();
+        complaintRouter.get("/getComplaintsOfTourist/:id", isAuthenticated, getTouristComplaints);
 
-customActivityRouter.post("/createCustomActivity", isAuthenticated, createCustomActivity);
-customActivityRouter.get("/getAllCustomActivities", getCustomActivities);
-customActivityRouter.get("/getCustomActivity/:id", getCustomActivityById);
-customActivityRouter.patch("/updateCustomActivity/:id", updateCustomActivity);
-customActivityRouter.delete("/deleteCustomActivity/:id", deleteCustomActivity);
-customActivityRouter.get(
-    "/getCustomActivityByTourGuideId",
-    isAuthenticated,
-    getCustomActivityByTourGuideId
-);
+        complaintRouter.get("/getSomeComplaints", isAuthenticated, getSomeComplaints);
+        </details>
 
-generalRouter.put("/changePassword", changePassword);
-generalRouter.post("/login", login);
-generalRouter.post("/createOTP", createOTPandSendEmail);
-generalRouter.post("/verifyOTP", verifyOTP);
-import { isAuthenticated } from "../routers.middleware/authentication.js";
+  <details>
+        <summary>Custom Activity routes</summary>
+       <br>
+      const customActivityRouter = express.Router();
 
-const governorRouter = express.Router();
+        customActivityRouter.post("/createCustomActivity", isAuthenticated, createCustomActivity);
 
-governorRouter.post("/createGovernor", createGovernor);
+   customActivityRouter.get("/getAllCustomActivities", getCustomActivities);
 
-governorRouter.get("/getGovernors", getGovernors);
+    customActivityRouter.get("/getCustomActivity/:id", getCustomActivityById);
 
-governorRouter.get("/getGovernor", isAuthenticated, getGovernor);
+     customActivityRouter.patch("/updateCustomActivity/:id", updateCustomActivity);
 
-governorRouter.delete("/deleteGovernor", isAuthenticated, deleteGovernor);
+      customActivityRouter.delete("/deleteCustomActivity/:id", deleteCustomActivity);
 
-governorRouter.put("/updateGovernor", isAuthenticated, updateGovernor);
+      customActivityRouter.get(
+            "/getCustomActivityByTourGuideId",
+            isAuthenticated,
+            getCustomActivityByTourGuideId
+        );
+   </details>
 
-governorRouter.put("/changeGovernorPassword", isAuthenticated, changeGovernorPassword);
-const orderRouter = express.Router();
+     <details>
+          <summary>General routes</summary>
+          <br>
+          generalRouter.put("/changePassword", changePassword);
+        generalRouter.post("/login", login);
+        generalRouter.post("/createOTP", createOTPandSendEmail);
+        generalRouter.post("/verifyOTP", verifyOTP);
+        import { isAuthenticated } from "../routers.middleware/authentication.js";
 
-const itineraryRouter = express.Router();
+        </details>
+  
+     <details>
+          <summary>Governor routes</summary>
+          <br>
+          const governorRouter = express.Router();
 
-itineraryRouter.post("/createItinerary", isAuthenticated, createItinerary);
+        governorRouter.post("/createGovernor", createGovernor);
 
-itineraryRouter.patch("/updateItinerary/:id", updateItinerary);
+        governorRouter.get("/getGovernors", getGovernors);
+    
+        governorRouter.get("/getGovernor", isAuthenticated, getGovernor);
 
-itineraryRouter.delete("/deleteItinerary/:id", deleteItinerary);
+        governorRouter.delete("/deleteGovernor", isAuthenticated, deleteGovernor);
 
-itineraryRouter.get("/getAllItineraries", getItineraries);
+        governorRouter.put("/updateGovernor", isAuthenticated, updateGovernor);
 
-itineraryRouter.get("/getItinerary/:id", getItineraryById);
+        governorRouter.put("/changeGovernorPassword", isAuthenticated, changeGovernorPassword);
+        </details>
+   
 
-itineraryRouter.get("/getUpcomingItineraries", getUpcomingItineraries);
+        <details>
+          <summary>Itinerary routes</summary>
+          <br>
+          const itineraryRouter = express.Router();
 
-itineraryRouter.get("/getTourGuideItinerary/", isAuthenticated, getTourGuideItinerary);
+        itineraryRouter.post("/createItinerary", isAuthenticated, createItinerary);
 
-itineraryRouter.get("/searchItineraries", searchItineraries);
+        itineraryRouter.patch("/updateItinerary/:id", updateItinerary);
+    
+        itineraryRouter.delete("/deleteItinerary/:id", deleteItinerary);
 
-itineraryRouter.delete("/", deleteItineraries);
+        itineraryRouter.get("/getAllItineraries", getItineraries);
+    
+        itineraryRouter.get("/getItinerary/:id", getItineraryById);
 
-itineraryRouter.get("/getFreeSpots/:id", getFreeSpots);
+        itineraryRouter.get("/getUpcomingItineraries", getUpcomingItineraries);
 
-itineraryRouter.patch("/toggleFlag/:id", toggleFlaggedItineraries);
+        itineraryRouter.get("/getTourGuideItinerary/", isAuthenticated, getTourGuideItinerary);
 
-itineraryRouter.patch("/toggleActive/:id", toggleActivatedItineraries);
-[6:00 am, 09/12/2024] Robekty ❤️‍🔥🥝🍊 🐯❤️‍🔥: import { isAuthenticated } from "../routers.middleware/authentication.js";
+        itineraryRouter.get("/searchItineraries", searchItineraries);
 
-const landmarkRouter = express.Router();
+        itineraryRouter.delete("/", deleteItineraries);
 
-landmarkRouter.post("/createLandmark", createLandmark);
+        itineraryRouter.get("/getFreeSpots/:id", getFreeSpots);
 
-landmarkRouter.get("/allLandmarks", getAllLandmarks);
+        itineraryRouter.patch("/toggleFlag/:id", toggleFlaggedItineraries);
 
-landmarkRouter.get("/landmark/:id", getLandmarkById);
+        itineraryRouter.patch("/toggleActive/:id", toggleActivatedItineraries);
+        import { isAuthenticated } from "../routers.middleware/authentication.js";
+        </details>
+  
+        <details>
+          <summary>Landmark routes</summary>
+          <br>
+          const landmarkRouter = express.Router();
 
-landmarkRouter.get("/ticketPricesFromLandmark/:id", getTicketPricesFromLandmark);
+        landmarkRouter.post("/createLandmark", createLandmark);
+    
+        landmarkRouter.get("/allLandmarks", getAllLandmarks);
 
-landmarkRouter.patch("/updateLandmark/:id", updateLandmark);
+        landmarkRouter.get("/landmark/:id", getLandmarkById);
 
-landmarkRouter.delete("/deleteLandmark/:id", deleteLandmark);
+        landmarkRouter.get("/ticketPricesFromLandmark/:id", getTicketPricesFromLandmark);
 
-landmarkRouter.get("/getGovernorLandmarks", isAuthenticated, getGovernorLandmarks);
-const landmarkTagRouter = express.Router();
+        landmarkRouter.patch("/updateLandmark/:id", updateLandmark);
 
-landmarkTagRouter.post("/createLandmarkTag", createLandmarkTag);
+        landmarkRouter.delete("/deleteLandmark/:id", deleteLandmark);
 
-landmarkTagRouter.get("/allLandmarkTags", getLandmarkTags);
+        landmarkRouter.get("/getGovernorLandmarks", isAuthenticated, getGovernorLandmarks);
+        </details>
 
-landmarkTagRouter.put("/updateLandmarkTag/:id", updateLandmarkTag);
+<details>
+      <summary>Tag routes</summary>
+      <br>
+      const landmarkTagRouter = express.Router();
 
-landmarkTagRouter.delete("/deleteLandmarkTag/:id", deleteLandmarkTag);
+    landmarkTagRouter.post("/createLandmarkTag", createLandmarkTag);
 
-landmarkTagRouter.get("/getLandmarkTag/:id", getLandmarkTag);
+    landmarkTagRouter.get("/allLandmarkTags", getLandmarkTags);
 
-landmarkTagRouter.get("/searchLandmarkTag", searchLandmarkTags);
+    landmarkTagRouter.put("/updateLandmarkTag/:id", updateLandmarkTag);
 
-orderRouter.post("/createOrder", isAuthenticated, createOrder);
+    landmarkTagRouter.delete("/deleteLandmarkTag/:id", deleteLandmarkTag);
 
-orderRouter.get("/getOrders", isAuthenticated, getOrders);
+    landmarkTagRouter.get("/getLandmarkTag/:id", getLandmarkTag);
 
-orderRouter.get("/getOrder/:id", getOrderByID);
+    landmarkTagRouter.get("/searchLandmarkTag", searchLandmarkTags);
+    </details>
+    
+     <details>
+      <summary>Order routes</summary>
+      <br>
+      const orderRouter = express.Router();
+      orderRouter.post("/createOrder", isAuthenticated, createOrder);
 
-orderRouter.patch("/updateOrder/:id", updateOrder);
+    orderRouter.get("/getOrders", isAuthenticated, getOrders);
 
-orderRouter.patch("/completeOrder/:id", completeOrder);
+    orderRouter.get("/getOrder/:id", getOrderByID);
 
-orderRouter.delete("/deleteOrder/:id", deleteOrder);
+    orderRouter.patch("/updateOrder/:id", updateOrder);
 
-orderRouter.get("/getMyOrders", isAuthenticated, getOrdersByUser);
+    orderRouter.patch("/completeOrder/:id", completeOrder);
 
-orderRouter.patch("/addRating/:id", addRatingToProduct);
-import { isAuthenticated } from "../routers.middleware/authentication.js";
-const productRouter = express.Router();
+    orderRouter.delete("/deleteOrder/:id", deleteOrder);
 
-productRouter.post("/createProduct", isAuthenticated, createProduct);
+    orderRouter.get("/getMyOrders", isAuthenticated, getOrdersByUser);
 
-productRouter.get("/getAllProducts", getAllProducts);
+    orderRouter.patch("/addRating/:id", addRatingToProduct);
+    import { isAuthenticated } from "../routers.middleware/authentication.js";
+    </details>
 
-productRouter.get("/getProduct/:id", getProduct);
+    <details>
+      <summary>Product routes</summary>
+      <br>
+      const productRouter = express.Router();
 
-productRouter.patch("/updateProduct/:id", updateProduct);
+    productRouter.post("/createProduct", isAuthenticated, createProduct);
 
-productRouter.delete("/deleteProduct/:id", deleteProduct);
+    productRouter.get("/getAllProducts", getAllProducts);
 
-productRouter.delete("/deleteProducts", deleteProducts);
+    productRouter.get("/getProduct/:id", getProduct);
 
-productRouter.get("/search", searchProducts);
+    productRouter.patch("/updateProduct/:id", updateProduct);
 
-productRouter.patch("/archiveProduct/:id", archeiveProduct);
+    productRouter.delete("/deleteProduct/:id", deleteProduct);
 
-productRouter.patch("/unarchiveProduct/:id", unarcheiveProduct);
+    productRouter.delete("/deleteProducts", deleteProducts);
 
-productRouter.get("/getProductsById", isAuthenticated, getProductsById);
-promoCodeRouter.post("/validatePromoCode", isAuthenticated, validatePromoCode);
-promoCodeRouter.post("/applyPromoCode", isAuthenticated, applyPromoCode);
-promoCodeRouter.post("/createPromoCode", createGeneralPromoCode);
-const ratingRouter = express.Router();
+    productRouter.get("/search", searchProducts);
 
-ratingRouter.post("/createRating", createRating);
-ratingRouter.get("/getRating/:id", getRatingById);
-ratingRouter.get("/getRatings", getRatings);
-ratingRouter.patch("/updateRating/:id", updateRating);
-ratingRouter.delete("/deleteRating/:id", deleteRating);
-ratingRouter.post("/rateProduct/:id", isAuthenticated, rateProduct);
-ratingRouter.post("/rateTourGuide/:id", isAuthenticated, rateTourGuide);
-ratingRouter.post("/rateItinerary/:id", isAuthenticated, rateItinerary);
-ratingRouter.post("/rateActivity/:id", isAuthenticated, rateActivity);
-const sellerRouter = express.Router();
+    productRouter.patch("/archiveProduct/:id", archeiveProduct);
 
-sellerRouter.post("/createSeller", createSeller);
+    productRouter.patch("/unarchiveProduct/:id", unarcheiveProduct);
 
-sellerRouter.get("/getSellers", getSellers);
+    productRouter.get("/getProductsById", isAuthenticated, getProductsById);
+    </details>
 
-sellerRouter.get("/getSellerById", isAuthenticated, getSellerById);
+    <details>
+      <summary>Promo code routes</summary>
+      <br>
+      promoCodeRouter.post("/validatePromoCode", isAuthenticated, validatePromoCode);
+    promoCodeRouter.post("/applyPromoCode", isAuthenticated, applyPromoCode);
+    promoCodeRouter.post("/createPromoCode", createGeneralPromoCode);
+    </details>
+    <details>
+      <summary>Rating routes</summary>
+      <br>
+      const ratingRouter = express.Router();
+    ratingRouter.post("/createRating", createRating);
+    ratingRouter.get("/getRating/:id", getRatingById);
+    ratingRouter.get("/getRatings", getRatings);
+    ratingRouter.patch("/updateRating/:id", updateRating);
+    ratingRouter.delete("/deleteRating/:id", deleteRating);
+    ratingRouter.post("/rateProduct/:id", isAuthenticated, rateProduct);
+    ratingRouter.post("/rateTourGuide/:id", isAuthenticated, rateTourGuide);
+    ratingRouter.post("/rateItinerary/:id", isAuthenticated, rateItinerary);
+    ratingRouter.post("/rateActivity/:id", isAuthenticated, rateActivity);
+    </details>
 
-sellerRouter.put("/updateSeller", isAuthenticated, updateSeller);
+     <details>
+      <summary>Seller routes</summary>
+      <br>
+      const sellerRouter = express.Router();
 
-sellerRouter.delete("/deleteSeller", isAuthenticated, deleteSeller);
+    sellerRouter.post("/createSeller", createSeller);
 
-sellerRouter.put("/changeSellerPassword", isAuthenticated, changeSellerPassword);
+    sellerRouter.get("/getSellers", getSellers);
 
-sellerRouter.get("/documents", getSellersDocuments);
-const tagRouter = express.Router();
+    sellerRouter.get("/getSellerById", isAuthenticated, getSellerById);
 
-tagRouter.post("/createTag", createTag);
+    sellerRouter.put("/updateSeller", isAuthenticated, updateSeller);
 
-tagRouter.get("/allTags", getTag);
+    sellerRouter.delete("/deleteSeller", isAuthenticated, deleteSeller);
 
-tagRouter.put("/updateTag/:id", updateTag);
+    sellerRouter.put("/changeSellerPassword", isAuthenticated, changeSellerPassword);
 
-tagRouter.delete("/deleteTag/:id", deleteTag);
+    sellerRouter.get("/documents", getSellersDocuments);
+    </details>
 
-tagRouter.get("/getTagByID/:id", getTagByID);
+     <details>
+      <summary>Preference  Tag routes</summary>
+      <br>
+      const tagRouter = express.Router();
 
-tagRouter.get("/searchTags", searchTags);
+    tagRouter.post("/createTag", createTag);
+
+    tagRouter.get("/allTags", getTag);
+
+    tagRouter.put("/updateTag/:id", updateTag);
+
+    tagRouter.delete("/deleteTag/:id", deleteTag);
+
+    tagRouter.get("/getTagByID/:id", getTagByID);
+
+    tagRouter.get("/searchTags", searchTags);
+    </details>
+
 const tourGuideRouter = express.Router();
 
 tourGuideRouter.post("/createTourGuide", createTourGuide);
