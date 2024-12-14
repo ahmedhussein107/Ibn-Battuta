@@ -41,6 +41,8 @@ const CreateProductPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const { convertPrice } = useCurrencyConverter();
+
     const navigate = useNavigate();
     const handleInputChange = (e) => {
         const { name, value } = e.target;
