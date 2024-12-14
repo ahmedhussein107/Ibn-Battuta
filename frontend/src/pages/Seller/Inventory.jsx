@@ -55,18 +55,14 @@ const Inventory = () => {
 
     const buildQuery = () => {
         const query = {};
-        const buildQuery = () => {
-            const query = {};
 
-            if (searchedTerm) {
-                query.name = "~" + searchedTerm;
-            }
-            if (searchedTerm) {
-                query.name = "~" + searchedTerm;
-            }
+        if (searchedTerm) {
+            query.name = "~" + searchedTerm;
+        }
+        if (searchedTerm) {
+            query.name = "~" + searchedTerm;
+        }
 
-            return query;
-        };
         return query;
     };
 
@@ -74,14 +70,7 @@ const Inventory = () => {
         const query = buildQuery();
         fetchData(query);
     }, [searchedTerm]);
-    useEffect(() => {
-        const query = buildQuery();
-        fetchData(query);
-    }, [searchedTerm]);
 
-    useEffect(() => {
-        sortProducts(products);
-    }, [sortBy]);
     useEffect(() => {
         sortProducts(products);
     }, [sortBy]);
