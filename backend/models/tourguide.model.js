@@ -20,7 +20,7 @@ const tourGuideSchema = new mongoose.Schema(
         yearsOfExperience: { type: Number, default: null },
         previousWork: [
             {
-                title: { type: String, required: true },
+                title: { type: String },
                 duration: { type: Number },
                 description: { type: String, default: null },
             },

@@ -121,7 +121,7 @@ const MyItinenrary = () => {
                         // this is to prevent the text from being highlighted when clicked
                     }}
                 >
-                    My Itinenrary
+                    My Itineraries
                 </div>
 
                 <div
