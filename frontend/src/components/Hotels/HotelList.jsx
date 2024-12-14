@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import Footer from "../Footer";
-import i1 from "../../assets/backgrounds/HH.png";
+import i2 from "../../assets/backgrounds/HH.png";
 const room = {
     name: "Grand City Hotel",
     address: "123 Main Street, New York, USA",
@@ -106,13 +106,13 @@ const HotelList = () => {
     }, [searchParams]);
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div>
             <div
                 style={{
                     width: "100vw",
                     height: "40vh",
                     color: "#FAE2B6",
-                    backgroundImage: `url(${i1})`,
+                    backgroundImage: `url(${i2})`,
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
