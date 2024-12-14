@@ -78,7 +78,7 @@ export const adminNavbarItems = [
             { Itineraries: "/admin/itineraries" },
             { Landmarks: "/landmarks" },
             { Products: "/shop" },
-            { Analytics: "/admin/analytics" },
+            // { Analytics: "/admin/analytics" },
         ],
     },
     {

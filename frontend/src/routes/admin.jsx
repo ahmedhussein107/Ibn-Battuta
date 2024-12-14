@@ -46,7 +46,7 @@ const adminRoutes = [
         element: <UserManagement isAll={false} />,
     },
     { path: "/admin/users/new", element: <AddNewUser /> },
-    { path: "/admin/analytics", element: <Analytics /> },
+    // { path: "/admin/analytics", element: <Analytics /> },
 ];
 
 export default adminRoutes;
