@@ -23,7 +23,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 const TourguideProfilePage = () => {
     const [response, setResponse] = useState(null);
-    const [userType, setUserType] = useState("TourGuide");
+    const [userType, setUserType] = useState(Cookies.get("userType") || "Guest");
     const [isEditing, setIsEditing] = useState(false);
     const [isEditable, setIsEditable] = useState(false);
     const [isPrevEditing, setIsPrevEditing] = useState(false);
@@ -59,8 +59,19 @@ const TourguideProfilePage = () => {
     const { username } = useParams();
     console.log("in profile");
     useEffect(() => {
+        let credentials = false;
+        let path = "";
+        if (userType == "Guest") {
+            credentials = false;
+            path = `/tourguide/tourGuide/${username}`;
+        } else {
+            credentials = true;
+            path = `/tourguide/tourGuideLoggedIn/${username}`;
+        }
         axiosInstance
-            .get(`/tourguide/tourGuide/${username}`, { withCredentials: true })
+            .get(path, {
+                withCredentials: credentials,
+            })
             .then((response) => {
                 setIsEditable(response.data.isEditable);
                 setResponse(response.data);
