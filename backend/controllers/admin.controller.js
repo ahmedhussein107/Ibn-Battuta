@@ -150,22 +150,7 @@ export const updateAdmin = async (req, res) => {
 // Deleting an admin
 export const deleteAdmin = async (req, res) => {
     const adminId = req.query.userId;
-    try {
-        const admin = await Admin.findByIdAndDelete(adminId);
-        if (admin) {
-            // Delete email associated with the governor
-            await Email.findByIdAndDelete(admin.email);
-
-            // Delete username associated with the governor
-            await Username.findByIdAndDelete(admin.username);
-
-            res.json({ message: "Admin deleted successfully" });
-        } else {
-            res.status(404).json({ message: "Admin not found" });
-        }
-    } catch (e) {
-        res.status(500).json({ message: e.message });
-    }
+    res.status(404).json({ message: "Admin Cannot delete other admins" });
 };
 
 export const getAdminById = async (req, res) => {

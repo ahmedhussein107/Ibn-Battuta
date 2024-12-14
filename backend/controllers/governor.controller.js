@@ -5,18 +5,17 @@ import Admin from "../models/admin.model.js";
 
 import bcrypt from "bcrypt";
 export const deleteGovernor = async (req, res) => {
+    console.log("deleteGovernor");
     let governorId = req.user.userId;
+    console.log("governorId", governorId);
     const admin = await Admin.findById(req.user.userId);
     if (admin) {
         governorId = req.query.userId;
     }
+    console.log("governorId", governorId);
     try {
         const governor = await Governor.findByIdAndDelete(governorId);
-
         if (governor) {
-            // Delete email associated with the governor
-            await Email.findByIdAndDelete(governor.email);
-
             // Delete username associated with the governor
             await Username.findByIdAndDelete(governor.username);
 

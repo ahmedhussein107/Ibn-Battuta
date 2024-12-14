@@ -103,6 +103,7 @@ const AddNewUser = () => {
             if (response.status === 201) {
                 setMessage(`${accountType} created successfully.`);
             }
+            window.location.reload();
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setMessage(error.response.data.error);
