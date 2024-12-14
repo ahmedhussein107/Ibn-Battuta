@@ -275,12 +275,12 @@ const Itineraries = () => {
                             <CardItinerary
                                 itinerary={itinerary}
                                 width="60vw"
-                                height="32vh"
+                                height="35vh"
                                 firstLineButtons={[
                                     <ShareAndMark
                                         width="1.2vw"
                                         height="1.2vw"
-                                        styles={{ padding: "0.5vh" }}
+                                        styles={{ padding: "2vh" }}
                                         id={itinerary.id}
                                         direction={`/itinerary-details/${itinerary.id}`}
                                         isBookmarked={bookmarkStatus[itinerary.id]}
@@ -293,8 +293,7 @@ const Itineraries = () => {
                                 bottomButtons={[
                                     {
                                         text:
-                                            userType !== "Tourist" &&
-                                            userType !== "Guest"
+                                            userType !== "Tourist" && userType !== "Guest"
                                                 ? "View Details"
                                                 : "Book Now",
                                         onClick: () =>

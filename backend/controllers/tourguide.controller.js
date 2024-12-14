@@ -55,7 +55,7 @@ export const getTourGuides = async (req, res) => {
 
 export const getTourGuideById = async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user?.userId;
         const username = req.params.username;
         const tourGuide = await TourGuide.findOne({ username });
         console.log("UserNameeee: ", username);
@@ -77,10 +77,9 @@ export const getUserName = async (req, res) => {
     try {
         const userId = req.user.userId;
         const tourGuide = await TourGuide.findById(userId);
-        res.status(200).json({username: tourGuide.username});
-
+        res.status(200).json({ username: tourGuide.username });
     } catch (error) {
-        res.status(400).json({message: error.message});
+        res.status(400).json({ message: error.message });
     }
 };
 

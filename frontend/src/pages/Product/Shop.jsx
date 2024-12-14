@@ -8,7 +8,7 @@ import PriceRange from "../../components/PriceRange.jsx";
 import RatingRange from "../../components/RatingRange.jsx";
 import Footer from "../../components/Footer.jsx";
 import { useNavigate, useLocation } from "react-router-dom"; //REMOVE
-import shopBackground from "../../assets/backgrounds/shopBackground.png";
+import shopBackground from "../../assets/backgrounds/shopBackground.jpg";
 import ShareAndMark from "../../components/ShareAndMark.jsx";
 import CardProduct from "../../components/CardProduct.jsx";
 import CustomButton from "../../components/Button.jsx";

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import i1 from "../../assets/images/inventory.png";
+import i1 from "../../assets/backgrounds/bookings_bg.png";
 import i2 from "../../assets/images/i2.png";
 import NavBar from "../../components/NavBar";
 import { Avatar } from "@mui/material";
@@ -160,7 +160,7 @@ const Inventory = () => {
                             zIndex: -1,
                         }}
                     />
-                    <img
+                    {/* <img
                         src={i2}
                         style={{
                             position: "absolute",
@@ -171,22 +171,9 @@ const Inventory = () => {
                             pointerEvents: "none",
                             zIndex: 0, // This will place the second image on top of the first
                         }}
-                    />
+                    /> */}
                 </div>
 
-                <div
-                    style={{
-                        position: "absolute",
-                        top: "18vh",
-                        left: "46.5vw",
-                        fontSize: "3.2vh",
-                        fontWeight: "bold",
-                        color: "White",
-                        pointerEvents: "none",
-                    }}
-                >
-                    Inventory
-                </div>
                 <div
                     style={{
                         position: "absolute",
@@ -232,7 +219,7 @@ const Inventory = () => {
                                 height: "4.6vh",
                                 marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
-                                bgcolor: orange[700],
+                                bgcolor: "#9C4F21",
                             }}
                         >
                             <SearchIcon />
@@ -312,8 +299,8 @@ const Inventory = () => {
                                         product={product}
                                         width={"45vw"}
                                         height={"32vh"}
-                                        lowerHeight={"65%"}
-                                        upperHeight={"35%"}
+                                        lowerHeight={"60%"}
+                                        upperHeight={"40%"}
                                         line2={
                                             <div
                                                 style={{
@@ -398,16 +385,16 @@ const Inventory = () => {
                                                         justifyContent: "center",
                                                         alignItems: "center",
                                                         color: product.isArchived
-                                                            ? "red"
-                                                            : "green",
+                                                            ? "green"
+                                                            : "red",
                                                         borderColor: product.isArchived
-                                                            ? "red"
-                                                            : "green",
+                                                            ? "green"
+                                                            : "red",
                                                         "&:hover": {
                                                             backgroundColor:
                                                                 product.isArchived
-                                                                    ? "red"
-                                                                    : "green",
+                                                                    ? "green"
+                                                                    : "red",
                                                         },
                                                     }}
                                                     handleClick={() => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../../components/Pagination";
-import bookingsBackground from "../../assets/backgrounds/bookingsBackground.png";
+import bookingsBackground from "../../assets/backgrounds/bookings_bg.png";
 import Footer from "../../components/Footer";
 import CardBooking from "../../components/CardBooking";
 import TouristHotelBookings from "../../components/Hotels/TouristHotelBookings";

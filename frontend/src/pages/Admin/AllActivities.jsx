@@ -10,6 +10,7 @@ import Button from "@mui/material/Button";
 import SwapVert from "@mui/icons-material/SwapVert";
 import FlagIcon from "@mui/icons-material/Flag";
 import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
+import activitiesBackground from "../../assets/backgrounds/activities.png";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import CardActivity from "../../components/CardActivity";
@@ -88,7 +89,7 @@ const AllActivities = () => {
     return (
         <div style={{ position: "absolute", left: 0, top: 0 }}>
             <div>
-                <div style={{ position: "relative" }}>
+                {/* <div style={{ position: "relative" }}>
                     <img
                         src={i1}
                         style={{
@@ -110,21 +111,36 @@ const AllActivities = () => {
                             zIndex: 0, // This will place the second image on top of the first
                         }}
                     />
-                </div>
-
+                </div> */}
                 <div
                     style={{
-                        position: "absolute",
-                        top: "18vh",
-                        left: "45vw",
-                        fontSize: "3.2vh",
-                        fontWeight: "bold",
-                        color: "White",
-                        pointerEvents: "none",
-                        // this is to prevent the text from being highlighted when clicked
+                        width: "100vw",
+                        height: "30vh",
+                        color: "#FAE2B6",
+                        backgroundImage: `url(${activitiesBackground})`,
+                        backgroundSize: "100% 100%",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
                     }}
                 >
-                    All Activities
+                    <div style={{ marginBottom: "2%" }}>
+                        <p
+                            style={{
+                                fontSize: "2.5rem",
+                                marginBottom: "1rem",
+                                textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+                                color: "white",
+                                fontWeight: "bold",
+                                userSelect: "none",
+                            }}
+                        >
+                            Activities
+                        </p>
+                    </div>
                 </div>
 
                 <div
@@ -159,7 +175,7 @@ const AllActivities = () => {
                                 height: "4.8vh",
                                 marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
-                                bgcolor: orange[700],
+                                bgcolor: "#9C4F21",
                             }}
                         >
                             <SearchIcon />
@@ -230,9 +246,9 @@ const AllActivities = () => {
                                     {
                                         text: "View Details",
                                         onClick: () =>
-                                            navigate(
-                                                `/activity-details/${activity.id}`
-                                            ),
+                                            navigate(`/activity-details`, {
+                                                state: activity,
+                                            }),
                                         type: "always-dark",
                                         width: "70%",
                                         styles: {

@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import ReviewsSection from "../../components/ReviewsSection.jsx";
 import ProfileAndDescription from "./ProfileAndDescription.jsx";
 import CyclicPhotoDisplay from "./CyclicPhotoDisplay.jsx";
+import itineraryBackground from "../../assets/backgrounds/itineraries.png";
 
 // Top-level components
 import ItineraryAndActivityHeader from "../../components/ItineraryAndActivityHeader.jsx";
@@ -337,7 +338,7 @@ const ItineraryDetails = () => {
                     },
                 ]}
                 successDirectUrl={"/tourist/bookings"}
-                headerImage={photoList[0]}
+                headerImage={itineraryBackground}
                 state={{ tab: "Itineraries" }}
                 handleOnMount={async () => {
                     console.log("handleOnMount called");

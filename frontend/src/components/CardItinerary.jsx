@@ -49,8 +49,8 @@ const CardItinerary = ({
         </div>
     );
 
-    const tourGuideName = itinerary.tourguideID.name;
-    const tourGuidePic = itinerary.tourguideID.picture;
+    const tourGuideName = itinerary?.tourguideID?.name;
+    const tourGuidePic = itinerary?.tourguideID?.picture;
     const navigate = useNavigate();
 
     const Line3 = () => {

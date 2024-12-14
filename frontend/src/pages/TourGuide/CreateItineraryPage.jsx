@@ -26,7 +26,7 @@ const PopupContainer = styled.div`
     position: fixed;
     bottom: 1%;
     right: 1%;
-    z-index: 1000;
+    z-index: 3000;
     animation: ${fadeIn} 0.3s ease;
     background-color: ${({ isError }) => (isError ? "#f8d7da" : "#d4edda")};
 `;
@@ -70,7 +70,7 @@ const CreateItineraryPage = ({ isEdit = false }) => {
         setPopupMessage(message);
         setIsErrorPopup(isError);
         setShowPopup(true);
-        setTimeout(() => setShowPopup(false), 1500);
+        setTimeout(() => setShowPopup(false), 3000);
     };
 
     const itineraryId = isEdit ? useParams().itineraryId : null;
@@ -137,7 +137,10 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                         };
                     });
 
-                    const resolvedActivities = await Promise.all(activities);
+                    let resolvedActivities = await Promise.all(activities);
+                    resolvedActivities.sort((a, b) => {
+                        return new Date(a.startTime) - new Date(b.startTime);
+                    });
                     setTimelineActivities(resolvedActivities);
 
                     // Set other state variables based on the fetched itinerary
@@ -234,37 +237,27 @@ const CreateItineraryPage = ({ isEdit = false }) => {
             startDate: startDate.toISOString(),
             endDate: endDate.toISOString(),
             tags: tags,
-            accessibility: accessibility.split(","),
+            accessibility: accessibility,
             language,
             picture,
         };
 
         console.log("itineraryData", itineraryData);
 
-        try {
-            if (isEdit) {
-                const response = await axiosInstance.patch(
-                    "/itinerary/updateItinerary/" + itineraryId,
-                    { ...itineraryData }
-                );
-            } else {
-                const response = await axiosInstance.post(
-                    "/itinerary/createItinerary",
-                    { ...itineraryData },
-                    { withCredentials: true }
-                );
-            }
-            navigate("/tourguide/assigned");
-        } catch (error) {
-            console.error("Error creating itinerary:", error);
-            showPopupMessage(
-                error.response?.data?.message ||
-                    "Error creating itinerary. Please try again.",
-                true
+        if (isEdit) {
+            const response = await axiosInstance.patch(
+                "/itinerary/updateItinerary/" + itineraryId,
+                { ...itineraryData }
             );
-        } finally {
-            setProcessing(false);
+        } else {
+            const response = await axiosInstance.post(
+                "/itinerary/createItinerary",
+                { ...itineraryData },
+                { withCredentials: true }
+            );
         }
+        navigate("/tourguide/assigned");
+        setProcessing(false);
     };
 
     return (
@@ -310,7 +303,7 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                             userSelect: "none",
                         }}
                     >
-                        Create a new Itinerary
+                        {isEdit ? "Edit your Itinerary" : "Create a new Itinerary"}
                     </p>
                 </div>
             </div>
@@ -346,6 +339,7 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                     setFormattedTime={setFormattedTime}
                     showPopupMessage={showPopupMessage}
                     processing={processing}
+                    setIsProcessing={setProcessing}
                     isEdit={isEdit}
                 />
             )}
@@ -355,6 +349,7 @@ const CreateItineraryPage = ({ isEdit = false }) => {
                     convertedDate={startDate}
                     timelineActivities={timelineActivities}
                     setTimelineActivities={setTimelineActivities}
+                    showPopupMessage={showPopupMessage}
                 />
             )}
             <Footer />

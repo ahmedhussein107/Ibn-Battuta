@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import Timeline from "../Timeline";
 import MyForm from "../MyForm";
+import PopUp from "../PopUpsGeneric/PopUp";
+import CardCustomActivity from "../CardCustomActivity";
+import Button from "../Button";
+import { useNavigate } from "react-router-dom";
 
 const Step1 = ({
     setStep,
@@ -33,10 +37,13 @@ const Step1 = ({
     setFormattedTime,
     showPopupMessage,
     processing,
+    setIsProcessing,
     isEdit,
 }) => {
     const [showMorePopupOpen, setShowMorePopupOpen] = useState(false);
     const [showMoreCustomActivty, setShowMoreCustomActivty] = useState(null);
+
+    const navigate = useNavigate();
 
     const CustomActivityPopup = () => {
         if (!showMoreCustomActivty) return null;
@@ -52,7 +59,7 @@ const Step1 = ({
                 <div
                     style={{
                         padding: "2em",
-                        width: "90%",
+                        width: "40vw",
                         maxHeight: "80vh",
                         overflowY: "auto",
                     }}
@@ -69,11 +76,49 @@ const Step1 = ({
         );
     };
 
+    const handleCreate = async (e) => {
+        e.preventDefault();
+
+        if (!name || !description || !formattedDate || !formattedTime || !price) {
+            console.log("popup does not work");
+            showPopupMessage("Please fill out all required details.", true);
+            return;
+        }
+
+        if (tags.length === 0) {
+            showPopupMessage("Please select at least one tag.", true);
+            return;
+        }
+
+        try {
+            await handleSubmit();
+
+            showPopupMessage(
+                `Activity ${isEdit ? "updated" : "created"} successfully!`,
+                false
+            );
+
+            setTimeout(() => navigate("/tourguide/assigned"), 1000);
+        } catch (error) {
+            console.error("Error creating activity:", error);
+            setIsProcessing(false);
+            showPopupMessage(
+                error.response?.data?.message ||
+                    "Error creating activity. Please try again.",
+                true
+            );
+        }
+    };
+
     return (
         <div
             style={{
                 width: "95%",
                 height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-between",
             }}
         >
             {showMorePopupOpen && <CustomActivityPopup />}
@@ -120,12 +165,13 @@ const Step1 = ({
                         setFormattedTime={(value) => {
                             setFormattedTime(value);
                         }}
+                        timelineActivities={timelineActivities}
                         showPopupMessage={showPopupMessage}
                         processing={processing}
                         isEdit={isEdit}
                     />
                 </div>
-                <div style={{ width: "30%" }}>
+                <div style={{ width: "35%" }}>
                     <Timeline
                         setStep={setStep}
                         timelineActivities={timelineActivities}
@@ -138,6 +184,30 @@ const Step1 = ({
                         showPopupMessage={showPopupMessage}
                     />
                 </div>
+            </div>
+            <div
+                style={{
+                    display: "flex",
+                    width: "60%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <Button
+                    stylingMode="dark-when-hovered"
+                    text="Cancel"
+                    handleClick={() => {
+                        navigate(-1);
+                    }}
+                    width="auto"
+                />
+                <Button
+                    stylingMode="always-dark"
+                    text={isEdit ? "Update Itinerary" : "Create Itinerary"}
+                    isLoading={processing}
+                    handleClick={handleCreate}
+                    width="auto"
+                />
             </div>
         </div>
     );

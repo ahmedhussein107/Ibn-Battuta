@@ -23,11 +23,12 @@ import AddIcon from "@mui/icons-material/Add";
 
 const TourguideProfilePage = () => {
     const [response, setResponse] = useState(null);
-    const [userType, setUserType] = useState("TourGuide");
+    const [userType, setUserType] = useState(Cookies.get("userType") || "Guest");
     const [isEditing, setIsEditing] = useState(false);
     const [isEditable, setIsEditable] = useState(false);
     const [isPrevEditing, setIsPrevEditing] = useState(false);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const defaultImage =
         "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg";
@@ -58,8 +59,19 @@ const TourguideProfilePage = () => {
     const { username } = useParams();
     console.log("in profile");
     useEffect(() => {
+        let credentials = false;
+        let path = "";
+        if (userType == "Guest") {
+            credentials = false;
+            path = `/tourguide/tourGuide/${username}`;
+        } else {
+            credentials = true;
+            path = `/tourguide/tourGuideLoggedIn/${username}`;
+        }
         axiosInstance
-            .get(`/tourguide/tourGuide/${username}`, { withCredentials: true })
+            .get(path, {
+                withCredentials: credentials,
+            })
             .then((response) => {
                 setIsEditable(response.data.isEditable);
                 setResponse(response.data);
@@ -213,7 +225,9 @@ const TourguideProfilePage = () => {
         const file = event.target.files[0];
         if (file) {
             const formData = new FormData();
+            setIsLoading(true);
             const image = await uploadFile(file, "tourguide-profile-pictures");
+            setIsLoading(false);
             formData.append("picture", image);
 
             axiosInstance
@@ -596,6 +610,7 @@ const TourguideProfilePage = () => {
                                             }
                                         }
                                         handleClick={handleSaveChanges}
+                                        isLoading={isLoading}
                                     />
                                 )}
                             </div>
@@ -667,6 +682,7 @@ const TourguideProfilePage = () => {
                                       marginBottom: "1vw",
                                       borderRadius: "8px",
                                       position: "relative", // For positioning the delete icon
+                                      //height: "33vh",
                                   }}
                               >
                                   <p>
@@ -763,7 +779,9 @@ const TourguideProfilePage = () => {
                                           >
                                               <TextField
                                                   id="outlined-basic"
-                                                  label="Years Of Experience"
+                                                  multiline
+                                                  //rows={2}
+                                                  label="Description"
                                                   value={work.description}
                                                   onChange={(e) =>
                                                       handlePreviousWorkChange(

@@ -6,10 +6,6 @@ import axiosInstance from "../../api/axiosInstance";
 import { uploadFiles } from "../../api/firebase";
 import CardActivity from "../CardActivity";
 import CardCustomActivity from "../CardCustomActivity";
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import SideBar from "../../components/SideBar/SideBar";
 import SearchField from "../../components/SearchField/SearchField";
 import Sorter from "../../components/Sorter";
@@ -21,8 +17,15 @@ import LocationAdder from "../LocationAdder";
 import MapPopUp from "../MapPopUp";
 import { TimeModalContent } from "../TimeModal";
 import { DateModalContent } from "../DateModal";
+import FilterButtons from "../FilterButtons";
 
-const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActivities }) => {
+const Step2 = ({
+    setStep,
+    convertedDate,
+    timelineActivities,
+    setTimelineActivities,
+    showPopupMessage,
+}) => {
     const [activeTab, setActiveTab] = useState("Activity");
     const [activities, setActivities] = useState([]);
     const [customActivities, setCustomActivities] = useState([]);
@@ -230,12 +233,22 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
 
         const handleSubmit = () => {
             if (!startDate || !endDate) {
-                alert("select the time interval!!!!!");
+                showPopupMessage("Please select start and end time", true);
+                return;
+            }
+
+            if (endDate < startDate) {
+                showPopupMessage("The end time must be after the start time", true);
+                return;
+            }
+
+            if (startDate < convertedDate) {
+                showPopupMessage("The start time must be after the pickup time", true);
                 return;
             }
 
             console.log({
-                activityType: activeTab,
+                activityType: activeTab.replace(/\s+/g, ""),
                 activity: selectedActivity,
                 startTime: startDate,
                 endTime: endDate,
@@ -246,20 +259,26 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                 const activityEndDate = new Date(selectedActivity.endDate);
 
                 if (startDate < activityStartDate || endDate > activityEndDate) {
-                    alert("the selected time interval is not valid for this activity!");
+                    showPopupMessage(
+                        "the selected time interval is not valid for this activity!",
+                        true
+                    );
                     setSelectTimeIntervalOpen(false);
                     return;
                 }
             }
             if (
                 !addActivityToTimeline({
-                    activityType: activeTab,
+                    activityType: activeTab.split(" ").join(""),
                     activity: selectedActivity,
                     startTime: startDate,
                     endTime: endDate,
                 })
             ) {
-                alert("the activity would intersect with another activity!");
+                showPopupMessage(
+                    "the selected time interval is not valid for this activity!",
+                    true
+                );
             }
             setSelectTimeIntervalOpen(false);
             setStep(1);
@@ -371,27 +390,44 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
     });
 
     const CreateCustomActivityPopup = ({ popUpOpen, setPopUpOpen }) => {
-        const [name, setName] = useState("");
-        const [description, setDescription] = useState("");
-        const [isLoading, setIsLoading] = useState(false);
+        const [customActivityName, setCustomActivityName] = useState(
+            localStorage.getItem("customActivityName") || ""
+        );
+        const [description, setDescription] = useState(
+            localStorage.getItem("description") || ""
+        );
+        const [isCreationProcessing, setIsCreationProcessing] = useState(false);
 
-        const [imagePreviews, setImagePreviews] = useState([]);
+        const [imagePreviews, setImagePreviews] = useState(
+            localStorage.getItem("imagePreviews")
+                ? JSON.stringify(localStorage.getItem("imagePreviews"))
+                : []
+        );
+        const handleSubmit = async (e) => {
+            e.preventDefault();
 
-        const handleSubmit = async () => {
             try {
+                if(name ===""){
+                    alert("Please enter activty name");
+                    return;
+                }
+                if(description ===""){
+                    alert("Please enter activty description");
+                    return;
+                }
                 const data = {
-                    name,
+                    name: customActivityName,
                     description,
                     Longitude: actLocation.longitude,
                     Latitude: actLocation.latitude,
                     location: actLocation.location,
                 };
 
-                setIsLoading(true);
+                setIsCreationProcessing(true);
 
                 const pictures = await uploadFiles(
                     imagePreviews.map((preview) => preview.file),
-                    `customActivities/${name}`
+                    `customActivities/${customActivityName}`
                 );
 
                 data.pictures = pictures;
@@ -425,15 +461,19 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
             } catch (err) {
                 console.log(err);
             } finally {
-                setIsLoading(false);
+                setIsCreationProcessing(false);
             }
         };
-        const handleImageAdd = (newImages) => {
-            setImagePreviews((prev) => [...prev, ...newImages]);
+        const handleImageAdd = (addedImages) => {
+            const newImages = [...imagePreviews, ...addedImages];
+            setImagePreviews(newImages);
+            localStorage.setItem("imagePreviews", JSON.stringify(newImages));
         };
 
         const handleImageRemove = (idToRemove) => {
-            setImagePreviews((prev) => prev.filter((image) => image.id !== idToRemove));
+            const newImages = imagePreviews.filter((image) => image.id !== idToRemove);
+            setImagePreviews(newImages);
+            localStorage.setItem("imagePreviews", JSON.stringify(newImages));
         };
 
         return (
@@ -497,8 +537,14 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                             </label>
                             <TextField
                                 type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                value={customActivityName}
+                                onChange={(e) => {
+                                    setCustomActivityName(e.target.value);
+                                    localStorage.setItem(
+                                        "customActivityName",
+                                        e.target.value
+                                    );
+                                }}
                                 placeholder="Insert title here..."
                                 style={{
                                     width: "100%",
@@ -517,7 +563,10 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                             </label>
                             <TextField
                                 value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                onChange={(e) => {
+                                    setDescription(e.target.value);
+                                    localStorage.setItem("description", e.target.value);
+                                }}
                                 placeholder="Insert description here..."
                                 style={{
                                     width: "100%",
@@ -537,9 +586,11 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                             <Button
                                 stylingMode="always-dark"
                                 text="Create Activity"
-                                isLoading={isLoading}
+                                isLoading={isCreationProcessing}
                                 customStyle={{ marginTop: "1vh" }}
-                                handleClick={handleSubmit}
+                                handleClick={(e) => {
+                                    handleSubmit(e);
+                                }}
                             />
                         </div>
                     </div>
@@ -655,6 +706,7 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                minHeight: "50vh",
                 gap: "2vh",
             }}
         >
@@ -691,26 +743,13 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                 </div>
                 <div className={classes.activitiesList}>
                     <div className={classes.tabsContainer}>
-                        <button
-                            className={`${classes.tab} ${
-                                activeTab === "Activity"
-                                    ? classes.activeTab
-                                    : classes.inactiveTab
-                            }`}
-                            onClick={() => setActiveTab("Activity")}
-                        >
-                            Activities
-                        </button>
-                        <button
-                            className={`${classes.tab} ${
-                                activeTab === "CustomActivity"
-                                    ? classes.activeTab
-                                    : classes.inactiveTab
-                            }`}
-                            onClick={() => setActiveTab("CustomActivity")}
-                        >
-                            Custom Activities
-                        </button>
+                        <FilterButtons
+                            buttons={["Activity", "Custom Activity"]}
+                            selected={activeTab}
+                            handleChooseType={setActiveTab}
+                            customStyle={{ gap: "1.3rem" }}
+                            fontSize="1.2rem"
+                        />
                     </div>
                     <div className={classes.cardsContainer}>
                         {activeTab === "Activity" &&
@@ -741,12 +780,13 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                                 />
                             ))}
 
-                        {activeTab === "CustomActivity" && (
+                        {activeTab === "Custom Activity" && (
                             <div
                                 style={{
                                     display: "flex",
                                     flexDirection: "column",
                                     alignItems: "center",
+                                    minHeight: "10vh",
                                     gap: "1vh",
                                 }}
                             >
@@ -777,7 +817,13 @@ const Step2 = ({ setStep, convertedDate, timelineActivities, setTimelineActiviti
                                         ]}
                                     />
                                 ))}
-                                <div style={{ display: "flex", gap: "1vw" }}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        gap: "1vw",
+                                        marginBottom: "2vh",
+                                    }}
+                                >
                                     Don't see what you want?{" "}
                                     <p
                                         style={{
@@ -917,7 +963,7 @@ const useStyles = createUseStyles({
         backgroundColor: "white",
         boxShadow: "2px 4px 4px 2px rgba(156, 79, 33, 0.2)",
         borderRadius: "10px",
-        padding: "2vh 1vw",
+        padding: "0vh 1vw",
         alignItems: "center",
         width: "60vw",
         maxHeight: "100vh",
@@ -926,9 +972,11 @@ const useStyles = createUseStyles({
         marginTop: "2%",
     },
     tabsContainer: {
+        width: "100%",
         display: "flex",
-        gap: "1vw",
-        marginBottom: "2vh",
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: "4%",
     },
     tab: {
         padding: "1vh 2vw",

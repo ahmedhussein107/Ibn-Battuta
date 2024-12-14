@@ -2,6 +2,7 @@ import React from "react";
 import "./HotelList.css";
 import HotelCard from "./HotelCard";
 import usePageHeader from "../Header/UseHeaderPage";
+import i1 from "../../assets/backgrounds/bookings_bg.png";
 import HotelsControls from "./HotelsControls";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";

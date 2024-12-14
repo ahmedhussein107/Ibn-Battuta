@@ -43,7 +43,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem", setError }) 
 
     console.log(booking);
     console.log(booking.typeId);
-    const Picture = booking.typeId?.picture || "";
+    const Picture = booking.typeId?.picture || booking.typeId?.pictures[0] || "";
     const profilePicture =
         booking.bookingType == "Itinerary"
             ? booking.typeId?.tourguideID.picture
@@ -221,7 +221,7 @@ const CardBooking = ({ booking, width, height, fontSize = "1.5rem", setError }) 
                 <FirstLine />
                 <SecondLine />
             </div>
-            <div style={{marginTop: "5%"}}>
+            <div style={{ marginTop: "2%" }}>
                 <ThirdLine />
             </div>
         </div>
