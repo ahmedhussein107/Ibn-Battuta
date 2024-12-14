@@ -293,7 +293,7 @@ const ShowOfferDetails = () => {
                         </div>
                     </div>
                     <div className="hotel-booking">
-                        <h4 style={{ color: "var(--accent-color)" }}>Show On Map</h4>
+                        <h4 style={{ color: "var(--accent-color)" }}>Location On Map</h4>
                         <MapWrapper>
                             <MapComponent
                                 markerPosition={{

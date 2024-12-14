@@ -460,7 +460,13 @@ const Shop = () => {
                                                 fontStyle: "italic",
                                             }}
                                         >
-                                            Seller: {product.ownerID?.name}
+                                            {product.ownerID?.name ? (
+                                                <p>
+                                                    {`Seller: ${product.ownerID?.name}`}{" "}
+                                                </p>
+                                            ) : (
+                                                "Fullfiled by admin"
+                                            )}
                                         </div>
                                     </>
                                 }

@@ -156,8 +156,7 @@ const MyItinenrary = () => {
                                 height: "4.8vh",
                                 marginLeft: "29.6vh",
                                 marginTop: "-4.82vh",
-                                bgcolor: orange[700],
-                                cursor: "pointer",
+                                bgcolor: "#9C4F21",
                             }}
                             onClick={() => {
                                 console.log("clicked");
