@@ -119,13 +119,14 @@ const ShowOfferDetails = () => {
                     backgroundRepeat: "no-repeat",
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "flex-end",
+                    justifyContent: "center",
+                    alignItems: "center",
                 }}
             >
-                <div style={{ marginLeft: "40%", marginBottom: "5%" }}>
+                <div style={{ marginTop: "8%" }}>
                     <h1
                         style={{
-                            fontSize: "6rem",
+                            fontSize: "5rem",
                             fontWeight: "bold",
                             marginBottom: "1rem",
                             textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
@@ -260,7 +261,15 @@ const ShowOfferDetails = () => {
                                 </div>
                             </div>
 
-                            <div className="details-grid">
+                            <div
+                                className="details-grid"
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                }}
+                            >
                                 <div className="check-dates">
                                     <p>
                                         <strong>Check-In:</strong> {offer.checkIn}
@@ -273,9 +282,6 @@ const ShowOfferDetails = () => {
                                     <p>
                                         <strong>Cancellation:</strong>{" "}
                                         {offer.cancellationPolicy}
-                                    </p>
-                                    <p>
-                                        <strong>Payment:</strong> {offer.paymentMethod}
                                     </p>
                                     <p>
                                         <strong>Total Price:</strong>{" "}

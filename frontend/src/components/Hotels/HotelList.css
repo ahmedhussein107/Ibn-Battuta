@@ -1,5 +1,6 @@
 .hotel-list-with-controls {
     width: 90%;
+    min-height: 50vh;
     margin-top: 3%;
     margin-left: 3.5%;
 }
