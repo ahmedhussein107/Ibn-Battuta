@@ -1,4 +1,3 @@
-
 ![WhatsApp Image 2024-12-08 at 5 59 48 PM](https://github.com/user-attachments/assets/88406ce0-0de2-4b43-9e92-a16eaba79f50)
 
 # Ibn-Battuta
