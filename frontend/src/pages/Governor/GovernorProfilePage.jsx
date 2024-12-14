@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import Footer from "../../components/Footer";

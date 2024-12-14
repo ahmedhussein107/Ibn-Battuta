@@ -31,9 +31,7 @@ const ItineraryTimeline = ({
         : activities.map((activityObj) => {
               const isCustom = activityObj.activityType !== "Activity";
               const type = "activity";
-              const title = isCustom
-                  ? activityObj.activityData.title
-                  : activityObj.activityData.name;
+              const title = activityObj.activityData.name;
               const details = `${activityObj.startTime} - ${activityObj.endTime} (Duration: ${activityObj.duration})`;
 
               return {

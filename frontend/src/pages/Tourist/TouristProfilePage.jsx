@@ -354,6 +354,7 @@ export default function TouristProfilePage() {
                     currency: response.data.currency || "",
                 });
                 setImage(response.data.picture || defaultImage);
+                Cookies.set("profileImage", response.data.picture);
             })
             .catch((error) => {
                 console.error("Error fetching tourist:", error);
