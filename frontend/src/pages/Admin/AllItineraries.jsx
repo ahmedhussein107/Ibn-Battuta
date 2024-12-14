@@ -17,47 +17,7 @@ import travellerBackground from "../../assets/backgrounds/travellerBackground.pn
 const AllItineraries = () => {
     const navigate = useNavigate();
 
-    const [itineraries, setitineraries] = useState([
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair", "Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair", "Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-        {
-            language: "Arabic",
-            location: "Cairo, Egypt",
-            accessibility: ["Wheelchair, Acc"],
-            name: "Tour in GUC",
-            price: 1000,
-            availableDatesAndTimes: ["2024-12-04T15:05:50.486+00:00"],
-            tags: ["shopping"],
-            description: "this is the description of the itinerary",
-            isActivated: true,
-            ratings: [],
-            picture: travellerBackground,
-        },
-    ]);
+    const [itineraries, setitineraries] = useState([]);
     const [searchedTerm, setSearchedTerm] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
 
