@@ -17,7 +17,7 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import axios from "axios";
 
 const AdminPromoCode = () => {
-    const [promoCode, setPromoCode] = useState(null);
+    const [promoCode, setPromoCode] = useState("");
     const [discount, setDiscount] = useState("");
     const [maxUsage, setMaxUsage] = useState("");
     const [isPromoCodeLoading, setIsPromoCodeLoading] = useState(false);
@@ -50,7 +50,7 @@ const AdminPromoCode = () => {
         if (!promoCode.trim() || !discount.trim() || !maxUsage.trim()) {
             setAlert({
                 open: true,
-                severity: "warning",
+                severity: "error",
                 message: "All fields are required",
             });
             return;
@@ -87,6 +87,13 @@ const AdminPromoCode = () => {
         }
     };
 
+    // const showAlert = (severity, message) => {
+    //     setAlert({ open: true, severity, message });
+    //     setTimeout(() => {
+    //         setAlert({ open: false, severity: "", message: "" }); // Close the alert after some time
+    //     }, 8000); // Alert will close after 5 seconds
+    // };
+
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ width: "100vw", position: "absolute", top: "0", left: "0" }}>
@@ -114,18 +121,40 @@ const AdminPromoCode = () => {
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    marginTop: "20vh",
+                    marginTop: "25vh",
+                    minHeight: "60vh",
                 }}
             >
-                <p style={{ color: "##9C5F11", fontWeight: "bold" }}>PromoCode</p>
+                <p
+                    style={{
+                        color: "#9C5F11",
+                        fontWeight: "bold",
+                        marginLeft: "-29vw",
+                        fontSize: "25px",
+                        marginBottom: "1vh",
+                    }}
+                >
+                    PromoCode
+                </p>
                 <TextField
                     name="promoCode"
                     label="Promo Code"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
                     variant="outlined"
-                    sx={{ width: "35vw", marginBottom: "3vh" }} // Use sx for styling
+                    sx={{ width: "35vw", marginBottom: "1vh" }} // Use sx for styling
                 />
+                <p
+                    style={{
+                        color: "#9C5F11",
+                        fontWeight: "bold",
+                        marginLeft: "-31vw",
+                        fontSize: "25px",
+                        marginBottom: "1vh",
+                    }}
+                >
+                    Discount
+                </p>
                 <TextField
                     name="discount"
                     label="Discount (%)"
@@ -133,11 +162,23 @@ const AdminPromoCode = () => {
                     onChange={(e) => setDiscount(e.target.value)}
                     variant="outlined"
                     size="medium"
-                    sx={{ width: "35vw", marginBottom: "3vh" }} // Use sx for styling
+                    sx={{ width: "35vw", marginBottom: "1vh" }} // Use sx for styling
                 />
+                <p
+                    style={{
+                        color: "#9C5F11",
+                        fontWeight: "bold",
+                        marginLeft: "-29vw",
+                        fontSize: "25px",
+                        marginBottom: "1vh",
+                    }}
+                >
+                    Max Usage
+                </p>
                 <TextField
                     name="maxUsage"
                     label="Max Usage"
+                    type="number"
                     value={maxUsage}
                     onChange={(e) => setMaxUsage(e.target.value)}
                     variant="outlined"
