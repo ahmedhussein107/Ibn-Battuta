@@ -2,6 +2,7 @@ import React from "react";
 import "./HotelList.css";
 import HotelCard from "./HotelCard";
 import usePageHeader from "../Header/UseHeaderPage";
+import i1 from "../../assets/backgrounds/bookings_bg.png";
 import HotelsControls from "./HotelsControls";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -30,7 +31,7 @@ const room = {
 };
 
 const HotelList = () => {
-    usePageHeader("/hotels.png", "Welcome to the Hotels Page");
+    usePageHeader(i1, "Hotels");
 
     const [rooms, setRooms] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();

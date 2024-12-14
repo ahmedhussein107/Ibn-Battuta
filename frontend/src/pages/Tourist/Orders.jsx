@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import PaginationComponent from "../../components/Pagination";
-import bookingsBackground from "../../assets/backgrounds/bookingsBackground.png";
+import bookingsBackground from "../../assets/backgrounds/bookings_bg.png";
 import Footer from "../../components/Footer";
 import CardOrder from "../../components/CardOrder";
 import FilterButtons from "../../components/FilterButtons";
@@ -77,7 +77,7 @@ const Orders = () => {
 const backgroundStyle = {
     width: "100vw",
     height: "30vh",
-    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bookingsBackground})`,
+    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${bookingsBackground})`,
     backgroundSize: "100% 100%",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",

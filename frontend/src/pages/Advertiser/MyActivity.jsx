@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import i1 from "../../assets/images/i1.png";
+import i1 from "../../assets/backgrounds/activities.png";
 import i2 from "../../assets/images/i2.png";
 import NavBar from "../../components/NavBar";
 import { Avatar } from "@mui/material";
@@ -96,7 +96,7 @@ const MyActivity = () => {
                             zIndex: -1,
                         }}
                     />
-                    <img
+                    {/* <img
                         src={i2}
                         style={{
                             position: "absolute",
@@ -107,7 +107,7 @@ const MyActivity = () => {
                             pointerEvents: "none",
                             zIndex: 0, // This will place the second image on top of the first
                         }}
-                    />
+                    /> */}
                 </div>
 
                 <div
@@ -157,7 +157,7 @@ const MyActivity = () => {
                                 height: "4.8vh",
                                 marginLeft: "17.7vw",
                                 marginTop: "-4.82vh",
-                                bgcolor: orange[700],
+                                bgcolor: "#9C4F21",
                             }}
                         >
                             <SearchIcon />

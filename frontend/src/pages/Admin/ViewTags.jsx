@@ -211,13 +211,12 @@ const ViewTags = () => {
                     width="10%"
                     customStyle={{
                         borderRadius: "60px",
-                        fontSize: "20px",
-                        width: "9vw",
+                        fontSize: "1rem",
                         textAlign: "center",
                         marginTop: "2vh",
-                        // padding: "8px 12px", // Adjust padding to control the button's height
+                        // padding: "4px 12px", // Adjust padding to control the button's height
                         lineHeight: "1", // Ensure text line-height doesn't increase height
-                        height: "40px", // Optional: explicitly set height
+                        height: "4vh", // Optional: explicitly set height
                     }}
                     icon={
                         <AddIcon sx={{ verticalAlign: "middle", marginRight: "5px" }} />
