@@ -96,7 +96,7 @@ const LandmarkTimes = ({ times, width = "100%", fontSize = "0.8rem" }) => {
                 </div>
                 <div
                     style={{
-                        padding: "0.5% 1%", // Use percentage for padding
+                        padding: "0.5% 1%",
                         backgroundColor: isOpenNow ? "#FFC107" : "#E0E0E0",
                         color: "#FFFFFF",
                         fontFamily: "Inika",
@@ -109,7 +109,7 @@ const LandmarkTimes = ({ times, width = "100%", fontSize = "0.8rem" }) => {
             <div
                 style={{
                     display: "flex",
-                    gap: "2.4%",
+                    gap: "1%",
                     flexWrap: "wrap",
                     alignItems: "center",
                     userSelect: "none",
