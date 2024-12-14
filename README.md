@@ -109,7 +109,8 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
 
     -Find activities and destinations tailored to your needs with accessibility filters and categorized tags.
 ## Code Examples 
-- Tourist Model
+<details>
+<summary>- Tourist Model</summary>
   
         import { mongoose } from "mongoose";
 
@@ -234,8 +235,9 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
 
         export default mongoose.model("Tourist", touristSchema);
 
-
--Tourist Controller :
+</details>
+<details>
+<summary>-Tourist Controller :</summary>
 
 
       import Tourist from "../models/tourist.model.js";
@@ -583,7 +585,7 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
       } catch (e) {
           res.status(400).json({ e: e.message });
       }
-  };
+      };
 
       export const changeTouristPassword = async (req, res) => {
           const touristId = req.user.userId; // Assuming userId is stored in the req.user object after authentication
@@ -622,7 +624,7 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
               .json("An error occurred while changing the password");
       }
     };
-
+</details>
 
 ## Installation
 
@@ -664,53 +666,7 @@ cd your-repository
 
 ## API Refrences 
 
-Below are some of the API endpoints used in the project. Each endpoint is organized by functionality and includes details about the request method, URL, parameters, and responses.
-
--  Category 
-
-    -Get All Category
-
-    -  Endpoint: GET /category/allCategories
-    -   Request Body
-          
-           {
-       
-        "_id": "food",
-       
-        "createdAt": "2024-10-06T20:38:57.308Z",
-       
-        "updatedAt": "2024-10-06T20:38:57.308Z",
-       
-        "__v": 0
-        
-        },
-
-        {
-       
-        "_id": "Beaches",
-       
-        "createdAt": "2024-10-10T03:56:44.980Z",
-       
-        "updatedAt": "2024-10-10T03:56:44.980Z",
-       
-        "__v": 0
-    
-        },
-
-- User Management
-    
-    -   User Login
-
-        -Endpoint: POST /user/login
-        -Request Body 
-            
-            {
-            
-            "email": "user@example.com",
-            
-            "password": "password123"
-            
-            }
+Below are some of the API endpoints used in the project. Each endpoint is organized by its related model, functionality and includes details about the request method and URL.
 
 <details>
   <summary>Activity routes</summary>
