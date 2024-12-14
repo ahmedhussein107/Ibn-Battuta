@@ -11,16 +11,16 @@ import ReviewsSection from "./ReviewsSection";
 import PopUp from "./PopUpsGeneric/PopUp.jsx";
 
 const CardProduct = ({
-                         product,
-                         width,
-                         height,
-                         firstLineButtons,
-                         controlButtons,
-                         lowerHeight = "68%",
-                         upperHeight = "30%",
-                         line2 = <></>,
-                         fontSize = "1.5rem",
-                     }) => {
+    product,
+    width,
+    height,
+    firstLineButtons,
+    controlButtons,
+    lowerHeight = "68%",
+    upperHeight = "30%",
+    line2 = <></>,
+    fontSize = "1.5rem",
+}) => {
     const [isRatingsPopupOpen, setIsRatingsPopupOpen] = useState(false);
 
     const image = product.pictures[0];
@@ -53,9 +53,9 @@ const CardProduct = ({
                 style={{
                     marginLeft: "5%",
                     marginTop: "0%",
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                    color: 'blue'
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "#9c4f21",
                 }}
                 onClick={() => {
                     setIsRatingsPopupOpen(true);
