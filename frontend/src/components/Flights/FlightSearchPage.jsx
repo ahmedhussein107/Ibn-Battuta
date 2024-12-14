@@ -27,7 +27,7 @@ const FlightSearchPage = ({
     handleView,
 }) => {
     return (
-        <div>
+        <div style={{ minHeight: "50vh" }}>
             <div style={{ width: "95%", margin: "2vh auto" }}>
                 <FlightControls
                     keyword={keyword}

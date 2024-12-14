@@ -124,7 +124,7 @@ const AllItineraries = () => {
                         // this is to prevent the text from being highlighted when clicked
                     }}
                 >
-                    All Itinenraries
+                    All Itineraries
                 </div>
 
                 <div
