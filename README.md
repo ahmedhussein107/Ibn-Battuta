@@ -30,8 +30,10 @@ Our codebase adheres to clean and consistent coding standards to ensure readabil
 ![Screenshot 2024-12-09 044414](https://github.com/user-attachments/assets/9a6799f1-1df0-48ff-bd05-8b12ccf663b2)
 ![Screenshot 2024-12-09 044358](https://github.com/user-attachments/assets/e4b426d1-ef40-4864-8187-7dafc39b51f3)
 ![Screenshot 2024-12-09 044347](https://github.com/user-attachments/assets/9ba45856-7a4b-46e7-88ac-e9ad378de6c6)
-![Screenshot 2024-12-09 044225](https://github.com/user-attachments/assets/3016a649-665a-4b18-8cd4-256f8495459a)
-![Screenshot 2024-12-09 044026](https://github.com/user-attachments/assets/c14fc4d2-e0b7-4d37-b3ab-9a09f4d7cf84)
+![Screenshot 2024-12-14 094214](https://github.com/user-attachments/assets/4e85064c-ad6e-4f5a-b9c4-ade845707b36)
+![Screenshot 2024-12-14 094433](https://github.com/user-attachments/assets/6aeba29b-03bb-453e-bb86-260ab85df3fc)
+![Screenshot 2024-12-14 094747](https://github.com/user-attachments/assets/c0866300-5b77-4cfe-a7c8-79cf0dcb41f2)
+
 
 
 ## Tech and Frameworks Used 🛠️
