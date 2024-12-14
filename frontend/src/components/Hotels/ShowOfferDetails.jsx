@@ -11,7 +11,6 @@ import Button from "../Button";
 import { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import Cookies from "js-cookie";
-import PopUp from "../PopUpsGeneric/PopUp";
 import { CircularProgress } from "@mui/material";
 import { useCurrencyConverter } from "../../hooks/currencyHooks";
 import { useFunctionContext } from "../../contexts/FunctionContext";
