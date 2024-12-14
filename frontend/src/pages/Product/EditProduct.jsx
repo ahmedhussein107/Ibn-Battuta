@@ -20,7 +20,7 @@ const EditProductPage = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [isErrorPopup, setIsErrorPopup] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedCurrency, setSelectedCurrency] = useState("");
+    const [selectedCurrency, setSelectedCurrency] = useState("EGP");
 
     useEffect(() => {
         const fetchProduct = async () => {
