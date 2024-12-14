@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Button from "../components/Button";
+import Background from "../assets/backgrounds/guide.jpg";
+import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 const steps = [
     {
@@ -50,34 +52,52 @@ const Demo = () => {
     };
 
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                textAlign: "center",
-                width: "50%",
-                height: "100%",
-                margin: "auto",
+        <div>
+            <div style={backgroundStyle}>
+                <div style={{ marginTop: "5vh" }}>
+                    <p
+                        style={{
+                            fontSize: "2.5rem",
+                            marginBottom: "1rem",
+                            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+                            color: "white",
+                            fontWeight: "bold",
+                            userSelect: "none",
+                        }}
+                    >
+                        Booking Guide
+                    </p>
+                </div>
+            </div>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    width: "50%",
+                    height: "100%",
+                    margin: "auto",
 
-                marginTop: "15vh",
-                marginBottom: "5vh",
+                    marginTop: "5vh",
+                    marginBottom: "5vh",
 
-                padding: "20px",
-                border: "1px solid #ccc",
-                borderRadius: "10px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            }}
-        >
-            <iframe
-                src="https://scribehow.com/embed/Booking_a_Sunrise_Adventure_Getaway_Online__1tFBATtTTNmVyXQ0Tv7-CA"
-                width="100%"
-                height="640"
-                allowfullscreen
-                frameborder="0"
-            ></iframe>
+                    padding: "20px",
+                    border: "1px solid #ccc",
+                    borderRadius: "10px",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                    minHeight: "60vh",
+                }}
+            >
+                <iframe
+                    src="https://scribehow.com/embed/Booking_a_Sunrise_Adventure_Getaway_Online__1tFBATtTTNmVyXQ0Tv7-CA"
+                    width="100%"
+                    height="640"
+                    allowfullscreen
+                    frameborder="0"
+                ></iframe>
 
-            {/* <h2 style={{ marginBottom: "20px" }}>{steps[currentStep].title}</h2>
+                {/* <h2 style={{ marginBottom: "20px" }}>{steps[currentStep].title}</h2>
             <img
                 src={steps[currentStep].image}
                 alt={`Step ${currentStep + 1}`}
@@ -129,8 +149,23 @@ const Demo = () => {
                     }
                 />
             </div> */}
+            </div>
+            <Footer />
         </div>
     );
 };
 
 export default Demo;
+
+const backgroundStyle = {
+    width: "100vw",
+    height: "30vh",
+    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${Background})`,
+    backgroundSize: "100% 100%",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    shadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+};
