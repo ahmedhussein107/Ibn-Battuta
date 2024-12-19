@@ -1969,29 +1969,27 @@ We welcome contributions to make this project even better! Whether you're fixing
 
 -   Docs
     
-    -Mongoose docs
+    - [Mongoose docs](https://mongoosejs.com/docs/)
     
-    -Express docs
+    - [ExpressJS docs](https://expressjs.com/en/guide/routing.html)
 
-    -ReactJs docs
+    - [ReactJS docs](https://react.dev/learn)
 
-    -NodeJs docs
-
-    -Prettier docs
+    - [NodeJS docs](https://nodejs.org/docs/latest/api/)
     
-    -MUI docs
+    - [MUI docs](https://mui.com/material-ui/getting-started/)
 
 -   YouTube Videos
 
-    -Mongoose Crash Course
+    - [MongoDB Crash Course](https://youtube.com/playlist?list=PL4cUxeGkcC9h77dJ-QJlwGlZlTd4ecZOA&si=Ig6ieW9te1vNuzgS)
 
-    -Express Crash Course
+    - [ReactJS Crash Course](https://www.youtube.com/playlist?list=PL4cUxeGkcC9gZD-Tvwfod2gaISzfRiP9d)
 
-    -ReactJs Crash Course
+    - [NodeJS Crash Course](https://www.youtube.com/playlist?list=PL4cUxeGkcC9jsz4LDYc6kv3ymONOKxwBU)
+ 
+    - [NodeJS, ExpressJS and MongoDB Crash Course](https://www.youtube.com/playlist?list=PL4cUxeGkcC9hAJ-ARcYq_z6lDZV7kT1xD)
 
-    -NodeJs Crash Course
-
-    -MERN stack Crash Course
+    - [MERN stack Crash Course](https://www.youtube.com/playlist?list=PL4cUxeGkcC9iJ_KkrkBZWZRHVwnzLIoUE)
 ## License 📝
 
 
