@@ -10,8 +10,8 @@
 4. [Screenshots](#screenshots-)
 5. [Tech and Frameworks](#tech-and-frameworks-%EF%B8%8F)
 6. [Features](#features-)
-7. [Code Examples](#code-examples)
-8. [Installation](#installation)
+7. [Code Examples](#code-examples-)
+8. [Installation](#installation-)
 9. [API References](#api-references)
 10. [Tests](#tests)
 11. [How To Use](#how-to-use-)
@@ -330,9 +330,56 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
 
     - Contact us any time for any inquiries or complaints.
     
-## Code Examples 
+## Code Examples 💻
+
 <details>
-<summary>- Tourist Model</summary>
+    <summary> Backend Routes</summary>
+
+```javascript
+      app.use("/api/payment", stripeRouter);
+      app.use("/api/tourist", touristRouter);
+      app.use("/api/username", usernameRouter);
+      app.use("/api/admin", adminRouter);
+      app.use("/api/activity", activityRouter);
+      app.use("/api/email", emailRouter);
+      app.use("/api/governor", governorRouter);
+      app.use("/api/complaint", complaintRouter);
+      app.use("/api/category", categoryRouter);
+      app.use("/api/booking", bookingRouter);
+      app.use("/api/product", productRouter);
+      app.use("/api/order", orderRouter);
+      app.use("/api/promocode", promoCodeRouter);
+      app.use("/api/notifications", notificationRouter);
+      app.use("/api/itinerary", itineraryRouter);
+      app.use("/api/advertiser", advertiserRouter);
+      app.use("/api/comment", commentRouter);
+      app.use("/api/tourguide", tourGuideRouter);
+      app.use("/api/seller", sellerRouter);
+      app.use("/api/tag", tagRouter);
+      app.use("/api/category", categoryRouter);
+      app.use("/api/rating", ratingRouter);
+      app.use("/api/landmark", landmarkRouter);
+      app.use("/api/customActivity", customActivityRouter);
+      app.use("/api/amadeus/hotels", amadeusHotelsRouter);
+      app.use("/api/amadeus/flights", amadeusFlightsRouter);
+      app.use("/api/bookmark", touristBookmarkRouter);
+      app.use("/api/general", generalRouter);
+      app.use("/api/cart", touristCartRouter);
+      app.use("/api/wishlist", touristWishlistRouter);
+      app.use("/api/analytics", analyticsRouter);
+      app.use("/api/landmarkTag", landmarkTagRouter);
+      app.use("/api/notification", notificationRouter);
+```
+    
+          
+</details>
+
+
+
+<details>
+<summary>Backend Tourist Model</summary>
+
+```javascript
   
         import { mongoose } from "mongoose";
 
@@ -456,12 +503,14 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
         });
 
         export default mongoose.model("Tourist", touristSchema);
-
+```
 </details>
+
+
 <details>
-<summary>-Tourist Controller :</summary>
+<summary>Backend Tourist Controller</summary>
 
-
+```javascript
       import Tourist from "../models/tourist.model.js";
       import Username from "../models/username.model.js";
       import Email from "../models/email.model.js";
@@ -846,25 +895,116 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
               .json("An error occurred while changing the password");
       }
     };
+```
 </details>
 
-## Installation
+<details> 
+    <summary> Frontend Admin Routes</summary>
 
--   Make sure you have Node and Git installed
 
--   Clone the Repository
+```javascript
+import AdminHome from "../pages/Admin/AdminHome";
+import UserManagement from "../pages/Admin/UserManagement";
+import ViewTags from "../pages/Admin/ViewTags";
+import AllActivities from "../pages/Admin/AllActivities";
+import ComplaintList from "../components/Complaint/ComplaintList";
+import ViewSingleComplaint from "../components/Complaint/ViewSingleComplaint";
+import Shop from "../pages/Product/Shop";
+import CreateProductPage from "../pages/Product/CreateProductPage";
+import AddNewUser from "../pages/Admin/AddNewUser";
+import ViewCategories from "../pages/Admin/ViewCategories";
+import AllItineraries from "../pages/Admin/AllItineraries";
+import UpdateProductPage from "../pages/Product/UpdateProductPage";
+import Inventory from "../pages/Seller/Inventory";
+import AdminProfilePage from "../pages/Admin/AdminProfilePage";
+import Analytics from "../pages/Analytics/Analytics";
+import EditProductPage from "../pages/Product/EditProduct";
+import AdminPromoCode from "../pages/Admin/AdminPromoCode";
+
+const adminRoutes = [
+    { path: "/admin", element: <Analytics /> },
+    {
+        path: "/admin/profile",
+        element: <AdminProfilePage />,
+    },
+    {
+        path: "/admin/promocode",
+        element: <AdminPromoCode />,
+    },
+    { path: "/admin/tags", element: <ViewTags /> },
+    { path: "/admin/categories", element: <ViewCategories /> },
+    { path: "/admin/itineraries", element: <AllItineraries /> },
+    { path: "/admin/activities", element: <AllActivities /> },
+    { path: "/admin/complaints", element: <ComplaintList /> },
+    {
+        path: "/admin/complaint/:complaintId",
+        element: <ViewSingleComplaint />,
+    },
+    { path: "/admin/inventory", element: <Inventory /> },
+    { path: "/admin/shop/update-product/:productId", element: <UpdateProductPage /> },
+    { path: "/admin/create-product", element: <CreateProductPage /> },
+    { path: "/admin/edit-product/:productId", element: <EditProductPage /> },
+    { path: "/admin/users", element: <UserManagement /> },
+
+    {
+        path: "admin/users/pending",
+        element: <UserManagement isAll={false} />,
+    },
+    { path: "/admin/users/new", element: <AddNewUser /> },
+];
+
+export default adminRoutes;
+
+```
+
+
+</details>
+
+<details>
+    <summary>Frontend Authorization Routes</summary>
+
+```javascript
+import Signin from "../pages/Signin/Signin";
+import SignUpPage from "../pages/Signup/SignUpPage";
+import SelectYourRole from "../pages/Signup/SelectYourRole";
+import ForgotYourPassword from "../pages/Signin/ForgotYourPassword.jsx";
+
+const authRoutes = [
+    { path: "/signin", element: <Signin /> },
+    { path: "/signup", element: <SignUpPage /> },
+    { path: "/select-your-role", element: <SelectYourRole /> },
+    { path: "/forgot-your-password", element: <ForgotYourPassword /> },
+];
+export default authRoutes;
+
+```
+
+  
+</details>
+
+## Installation 🪛
+
+-   Make sure you have [Node](https://nodejs.org/en/) and [Git](https://git-scm.com/) installed
+
+-   Navigate to the folder where you want the repo to be  
+
+-   Clone the repository
         
-        #git clone https://github.com/your-username/your-repository.git
-cd your-repository
+        git clone https://github.com/mabryuk/Ibn-Battuta.git
+        cd Ibn-Battuta
 
--   Install Dependencies
+-   Open two terminals, one for the backend, and one for the frontend 
+
+-   In one terminal, install backend dependencies
         
         # Install backend dependencies
             cd backend
             npm install
 
-        # Install frontend dependencies
-            cd ../frontend
+-   In the other terminal, install frontend dependencies
+  
+         # Install frontend dependencies
+            cd frontend
             npm install
 
 - Set Up Environment Variables 
@@ -872,19 +1012,40 @@ cd your-repository
     -Create a .env file in both the backend and frontend directories and configure the necessary environment variables.
 
         //Backend .env
+  
         PORT=5000
         MONGO_URI=your_mongodb_connection_string
-        JWT_SECRET=your_jwt_secret_key
-        MAP_API_KEY=your_google_maps_api_key
+        AMADEUS_API_KEY=your_amadeus_api_key
+        AMADEUS_API_SECRET=your_amadeus_api_secret
+        WEBSITE_EMAIL=your_website_email
+        WEBSITE_EMAIL_PASSWORD=your_website_email_password
+        STRIPE_SECRET_KEY=your_stripe_secret_key
+        STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+
 
         //Frontend .env
-        REACT_APP_API_URL=http://localhost:5000
-        REACT_APP_MAP_API_KEY=your_google_maps_api_key
+       
+        VITE_API_URI="http://localhost:5000/"
+        VITE_FIREBASE_API_KEY=your_firebase_api_key
+        VITE_FIREBASE_AUTH_DOMAIN=your_firebase_domain
+        VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
+        VITE_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+        VITE_FIREBASE_MESSAGING_SENDER_ID=your_firebase_sender_id
+        VITE_FIREBASE_APP_ID=your_firebase_app_id
+        VITE_FIREBASE_MEASUREMENT_ID=your_firebase_measurement_id
+        VITE_MAP_API_KEY=your_google_maps_api_key
+        VITE_CURRENCY_RATE_API_KEY=your_currency_rate_api_key
+        VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
 
--   Start the Application
+-   In the backend terminal, run the backend
         
         npm run dev
-    -Visit the application in your browser at http://localhost:5173.
+
+-   In the frontend terminal, run the frontend
+        
+        npm run dev
+
+-  Visit the application in your browser at the URL in your frontend terminal
 
 ## API References 
 
@@ -1394,6 +1555,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 ## Tests
 - We use Postman to manually test all our api references by making sure the response is as expected. We use it as some kind of sanity-check.
 - Here are some examples:
+  
 ![Screenshot 2024-12-09 051853](https://github.com/user-attachments/assets/aab58753-16e8-4763-a431-384c660205a7)
 ![Screenshot 2024-12-09 052018](https://github.com/user-attachments/assets/971e6bc1-3a52-4fe7-abb8-3b036c1a91e7)
 
