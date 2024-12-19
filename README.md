@@ -276,39 +276,60 @@ Our Virtual Trip Planner offers a comprehensive suite of features to make travel
 
 -   Personalized Travel Planning:
 
-    -Customize your trip based on preferences like historic landmarks, beaches, shopping, or budget-friendly options.
+    - Customize your trip based on preferences like historic landmarks, beaches, shopping, or budget-friendly options.
 
 -   Seamless Booking:
 
-    -Book flights, accommodations, and transportation directly within the app through trusted third-party services (Amadeus).
+    - Book flights, accommodations, and transportation directly within the app through trusted third-party services (Amadeus).
+
+-   Loyalty Points:
+  
+    - Receive points when completing a booking, which can then be redeemed and added to your balance to spend on our website.
 
 -   Discover Local Gems:
 
-    -Explore curated recommendations for local activities, museums, and historical landmarks with ticket prices and navigation options.
+    - Explore curated recommendations for local activities, itineraries, museums, and historical landmarks with ticket prices and navigation options.
 
 -   Real-Time Notifications:
 
-    -Stay updated with instant alerts for upcoming activities, bookings, or changes via app notifications and email.
+    - Stay updated with instant alerts for upcoming activities, bookings, or changes via app notifications and email.
 
 -   Tour Guide Integration:
 
-    -Access professional guided tours or create your own itinerary with customizable activity breakdowns.
+    - Access professional guided tours or create your own itinerary with customizable activity breakdowns.
 
 -   In-App Gift Shop:
 
-    -Browse a curated selection of souvenirs and unique local items to commemorate your journey.
+    - Browse a curated selection of souvenirs and unique local items to commemorate your journey.
 
 -   Comprehensive Itinerary Management:
 
-    -View, modify, and share your itinerary with an intuitive timeline display.
+    - View, modify, and share your itinerary with an intuitive timeline display.
 
 -   Location-Based Services:
 
-    -Use integrated maps for navigation and get detailed location data for activities and landmarks.
+    - Use integrated maps for navigation and get detailed location data for activities and landmarks.
 
 -   Accessibility and Tagging:
 
-    -Find activities and destinations tailored to your needs with accessibility filters and categorized tags.
+    - Find activities and destinations tailored to your needs with accessibility filters and categorized tags.
+
+-   Online Payment:
+  
+    - Pay for everything online easily through our Stripe integration.
+
+-   Frequent Promocodes and Discounts:
+ 
+    - Enjoy money-saving discounts on events, and save even further when applying a promocode during checkout.
+
+-   Full Refund after Cancellation:
+
+    - Cancel your booking at least 48 hours before an event and get your money back in full.
+
+-   Customer Service:
+
+    - Contact us any time for any inquiries or complaints.
+    
 ## Code Examples 
 <details>
 <summary>- Tourist Model</summary>
