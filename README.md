@@ -1994,4 +1994,7 @@ We welcome contributions to make this project even better! Whether you're fixing
     -MERN stack Crash Course
 ## License 📝
 
-The software is open source under the Apache 2.0 License.
+
+The software is open source under the `Apache 2.0 License`.
+
+[Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
