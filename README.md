@@ -1392,7 +1392,6 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
   <summary>Analytics Endpoints</summary>
   <br>
      
-      const analyticsRouter = express.Router();
 
     analyticsRouter.get("/getAnalytics", isAuthenticated, getAnalytics);
 </details>
@@ -1762,10 +1761,34 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 <details>
     <summary>Tourist Endpoints</summary>
     
-    const touristRouter = express.Router();
-    
-    touristRouter.get("/getTourists", getTourists);
-    
+  * `GET /tourist/getTourists` - Get all tourists
+	  - **Request Body**: N/A
+	  - **Response Body**
+	    ```
+	    {
+	        [
+			   	username: { type: String, ref: "Username"},
+			   	password: String,
+			   	name: String,
+				email: { type: String, ref: "Email" },
+				mobile: String,
+				nationality: String,
+				DOB: Date,
+				job: String,
+				picture: String,
+				wallet: Number,
+				points: Number,
+				loyalityPoints: Number,
+				notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notification" }],
+				hotelBookings: [Object],
+				flightBookings: [Object],
+				preferences: [{ type: String, ref: "Tag" }],
+				address: [{ name: String, Latitude: Number, Longitude: Number, address: String }],
+				currency: String,
+	    	]
+	    }
+	    ```
+      
     touristRouter.post("/createTourist", createTourist);
     
     touristRouter.get("/tourist", isAuthenticated, getTouristById);
