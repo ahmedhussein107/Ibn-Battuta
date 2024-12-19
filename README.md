@@ -2297,7 +2297,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
       	- Details include your best-selling product, how many tourist bought your products per month, and more.
 
 </details>
-  
+
 <details>
 
 <summary> For Tourism Governors </summary>
@@ -2308,10 +2308,67 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 
     	- Create a new account or log in using your existing credentials.
 
-      Plan Your Trip:
+    -  Manage Your Landmarks:
 
-    - Use the search bar to discover destinations, activities, and itineraries based on your preferences (e.g., historic landmarks, beaches, budget-friendly options).
+    	- Navigate to **My Landmarks** to view and edit your existing landmarks.
+ 
+     	- Using the **New Landmark** button, you can create a new landmark by entering its details.
+</details>
+
+<details>
+
+<summary> For Admins </summary>
+    
+    - Create an Account or Login:
+
+    	- Navigate to the app's login or registration page.
+
+    	- Create a new account or log in using your existing credentials.
+
+    -  Manage Existing Users:
+
+    	- Navigate to **Users List** to view all current users.
+
+     	- Through the user list, you can create delete any user who has violated the rules of the website.
+
+     	- Add a tourism governor by clicking on the **New Tourism Governor** button.
+
+      	- Add another admin by clicking on the **New Admin** button.
+
+     -  Accept and Reject Pending Users:
+
+    	- Navigate to Pending Users to view all pending users.
+
+     	- Through the pending user list, you can view their uploaded ID and documents.
+
+     	- Based on their documents, you can choose to accept or reject them.
+
+    -  Review Tourist Complaints:
+    
+    	- Navigate to Complaints to view all pending users.
+
+      	- Reply to tourist complaints, and mark them as resolved when the problem is solved.
+
+     - Create and Manage Your Products:
+
+    	- Navigate to **Invetory** to view and edit your existing products.
+ 
+     	- Using the **New Product** button, you can create a new product by entering its details.
+
+     - Create Tags and Categories:
+     
+     	- Navigate to Categorization to edit tags and categories.
+
+      	- Add new tags and categories, or delete unused ones.
+
+      - Create Promocodes:
+     
+     	- Navigate to Promocodes.
+
+      	- Create a promocode by entering the code, its discount percentage, and its max usage.
+
 	
+
 </details>
 
 
