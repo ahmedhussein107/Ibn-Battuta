@@ -29,22 +29,97 @@ Welcome to Ibn Battuta, a team inspired by the legendary explorer who traversed 
 * More comprehensive automated tests should be added to ensure better coverage and reliability in future iterations.
 
 * More documentation should be added to provide clear guidance for contributors and users.
+  
 ## Code Style 🖋️
 
 Our codebase adheres to clean and consistent coding standards to ensure readability, maintainability, and collaboration across the team. Below are the key practices we follow:
 
 - General Conventions: - Use camelCase, PascalCase as well as writing self-documenting code.
 - Linting and Formatting: Format code with [Prettier](https://prettier.io/) to enforce consistent style (e.g., single quotes, semicolon usage, indentations).
+  
 ## Screenshots 📸
 
+<details>
+    <summary> Home</summary>
 
-![Screenshot 2024-12-09 044514](https://github.com/user-attachments/assets/bf2daf68-6f97-478e-b482-5705cff1adb2)
-![Screenshot 2024-12-09 044414](https://github.com/user-attachments/assets/9a6799f1-1df0-48ff-bd05-8b12ccf663b2)
-![Screenshot 2024-12-09 044358](https://github.com/user-attachments/assets/e4b426d1-ef40-4864-8187-7dafc39b51f3)
-![Screenshot 2024-12-09 044347](https://github.com/user-attachments/assets/9ba45856-7a4b-46e7-88ac-e9ad378de6c6)
-![Screenshot 2024-12-14 094214](https://github.com/user-attachments/assets/4e85064c-ad6e-4f5a-b9c4-ade845707b36)
-![Screenshot 2024-12-14 094433](https://github.com/user-attachments/assets/6aeba29b-03bb-453e-bb86-260ab85df3fc)
-![Screenshot 2024-12-14 094747](https://github.com/user-attachments/assets/c0866300-5b77-4cfe-a7c8-79cf0dcb41f2)
+
+![Home Page](https://github.com/user-attachments/assets/bf2daf68-6f97-478e-b482-5705cff1adb2)
+
+
+</details>
+
+<details>
+    <summary> Sign Up</summary>
+
+
+![Choose Your Role](https://github.com/user-attachments/assets/e4b426d1-ef40-4864-8187-7dafc39b51f3)
+![Sign Up](https://github.com/user-attachments/assets/9ba45856-7a4b-46e7-88ac-e9ad378de6c6)
+
+
+</details>
+
+<details>
+    <summary> Sign In</summary>
+
+
+![Sign In](https://github.com/user-attachments/assets/9a6799f1-1df0-48ff-bd05-8b12ccf663b2)
+
+
+</details>
+
+<details>
+    <summary> Itineraries</summary>
+
+
+![Itineraries](https://github.com/user-attachments/assets/6aeba29b-03bb-453e-bb86-260ab85df3fc)
+
+![Itinerary Details](https://github.com/user-attachments/assets/2ad012bf-6946-47e7-be89-a0704eacbd54)
+
+
+</details>
+
+<details>
+    <summary> Shop</summary>
+
+
+![Shop](https://github.com/user-attachments/assets/32784244-95cc-4432-8b1d-9124c1caeae2)
+
+![Cart](https://github.com/user-attachments/assets/c0866300-5b77-4cfe-a7c8-79cf0dcb41f2)
+
+![Checkout](https://github.com/user-attachments/assets/0d00fd70-ebca-4334-ad98-6fc4bbb6c89c)
+
+
+</details>
+
+<details>
+    <summary> Flights</summary>
+
+![Flights](https://github.com/user-attachments/assets/5a017d85-9792-4094-bcd5-6436dadac124)
+
+![Flight Details](https://github.com/user-attachments/assets/8ff2153b-3d40-4a6e-806f-0b39aa781f20)
+
+
+</details>
+
+<details>
+    <summary> Hotels</summary>
+
+
+![Hotel Offers](https://github.com/user-attachments/assets/209bbdce-96cf-4d07-9288-a71f4cadd19b)
+
+![Hotel Offer Details](https://github.com/user-attachments/assets/83e3c633-18d5-454d-baa5-8aa1dfddc37c)
+
+
+</details>
+
+<details>
+    <summary> Analytics</summary>
+
+
+![Analytics](https://github.com/user-attachments/assets/4e85064c-ad6e-4f5a-b9c4-ade845707b36)
+
+
+</details>
 
 
 
