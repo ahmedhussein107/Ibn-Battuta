@@ -1,28 +1,41 @@
-![WhatsApp Image 2024-12-08 at 5 59 48 PM](https://github.com/user-attachments/assets/88406ce0-0de2-4b43-9e92-a16eaba79f50)
+![Ibn Battuta Logo](https://github.com/user-attachments/assets/88406ce0-0de2-4b43-9e92-a16eaba79f50)
 
 # Ibn-Battuta
 
+## Table of Contents
+
+1. [Motivation](#motivation-)
+2. [Build Status](#build-status-)
+3. [Code Style](#code-style-%EF%B8%8F)
+4. [Screenshots](#screenshots-)
+5. [Tech and Frameworks](#tech-and-frameworks-%EF%B8%8F)
+6. [Features](#features-)
+7. [Code Examples](#code-examples)
+8. [Installation](#installation)
+9. [API References](#api-references)
+10. [Tests](#tests)
+11. [How To Use](#how-to-use-)
+12. [Contribute](#contribute-)
+13. [Credits](#credits-)
+14. [License](#license-)
 
 ## Motivation 🚀 
-
 
 Welcome to Ibn Battuta, a team inspired by the legendary explorer who traversed continents, connecting people and cultures through his unparalleled journeys. Just as Ibn Battuta ventured boldly into the unknown, our team embraces the challenge of creating the ultimate Virtual Trip Planner. With a shared vision of innovation and exploration, we are committed to delivering a platform that redefines how people discover, plan, and experience travelling. Guided by curiosity, collaboration, and a passion for excellence, we take each sprint as a new step in our journey toward crafting seamless, personalized, and unforgettable travel experiences. Together, we aim to leave a lasting mark on the world of travel technology, one milestone at a time.
 ## Build Status 🚧
 
--Under Development: This project is currently under active development and is not ready for production use.
+* This project is currently under active development and is not ready for production use.
 
--Issue Tracking: Check the Issues section for a complete list of reported bugs, feature requests, and tasks.
+* More comprehensive automated tests should be added to ensure better coverage and reliability in future iterations.
 
--Automated Testing: While the initial set of tests has been implemented, more comprehensive automated tests will be added to ensure better coverage and reliability in future iterations.
-
--Documentation: We aim to expand and refine the documentation to provide clear guidance for contributors and users. Stay tuned for updates!
+* More documentation should be added to provide clear guidance for contributors and users.
 ## Code Style 🖋️
 
 Our codebase adheres to clean and consistent coding standards to ensure readability, maintainability, and collaboration across the team. Below are the key practices we follow:
 
 - General Conventions: - Use camelCase, PascalCase as well as writing self-documenting code.
-- Linting and Formatting: Format code with Prettier to enforce consistent style (e.g., single quotes, semicolon usage).
-## Screenshots
+- Linting and Formatting: Format code with [Prettier](https://prettier.io/) to enforce consistent style (e.g., single quotes, semicolon usage, indentations).
+## Screenshots 📸
 
 
 ![Screenshot 2024-12-09 044514](https://github.com/user-attachments/assets/bf2daf68-6f97-478e-b482-5705cff1adb2)
@@ -35,7 +48,7 @@ Our codebase adheres to clean and consistent coding standards to ensure readabil
 
 
 
-## Tech and Frameworks Used 🛠️
+## Tech and Frameworks 🛠️
 
 Our project leverages modern technologies and tools to deliver a robust, scalable, and user-friendly platform. Below is a list of the main tech stack and frameworks used:
 
@@ -665,7 +678,7 @@ cd your-repository
         npm run dev
     -Visit the application in your browser at http://localhost:5173.
 
-## API Refrences 
+## API References 
 
 Below are some of the API endpoints used in the project. Each endpoint is organized by its related model, functionality and includes details about the request method and URL.
 
@@ -1169,6 +1182,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 
     usernameRouter.delete("/deleteUsername", deleteUsername);
 </details>
+
 ## Tests
 - We use Postman to manually test all our api references by making sure the response is as expected. We use it as some kind of sanity-check.
 - Here are some examples:
