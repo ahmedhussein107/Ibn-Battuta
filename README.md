@@ -39,87 +39,187 @@ Our codebase adheres to clean and consistent coding standards to ensure readabil
   
 ## Screenshots 📸
 
-<details>
-    <summary> Home</summary>
+* Guest
+
+    <details>
+        <summary> Home</summary>
+    
+    
+    ![Home Page](https://github.com/user-attachments/assets/bf2daf68-6f97-478e-b482-5705cff1adb2)
+    
+    
+    </details>
+    
+    <details>
+        <summary> Sign Up</summary>
+    
+    
+    ![Choose Your Role](https://github.com/user-attachments/assets/e4b426d1-ef40-4864-8187-7dafc39b51f3)
+    ![Sign Up](https://github.com/user-attachments/assets/9ba45856-7a4b-46e7-88ac-e9ad378de6c6)
+    
+    
+    </details>
+    
+    <details>
+        <summary> Sign In</summary>
+    
+    
+    ![Sign In](https://github.com/user-attachments/assets/9a6799f1-1df0-48ff-bd05-8b12ccf663b2)
+    
+    
+    </details>
+
+- Tourist
+
+    <details>
+        <summary> Itineraries</summary>
+    
+    
+    ![Itineraries](https://github.com/user-attachments/assets/6aeba29b-03bb-453e-bb86-260ab85df3fc)
+    
+    ![Itinerary Details](https://github.com/user-attachments/assets/2ad012bf-6946-47e7-be89-a0704eacbd54)
+    
+    
+    </details>
+    
+    <details>
+        <summary> Shop</summary>
+    
+    
+    ![Shop](https://github.com/user-attachments/assets/32784244-95cc-4432-8b1d-9124c1caeae2)
+    
+    ![Cart](https://github.com/user-attachments/assets/c0866300-5b77-4cfe-a7c8-79cf0dcb41f2)
+    
+    ![Checkout](https://github.com/user-attachments/assets/0d00fd70-ebca-4334-ad98-6fc4bbb6c89c)
+    
+    
+    </details>
+    
+    <details>
+        <summary> Flights</summary>
+    
+    ![Flights](https://github.com/user-attachments/assets/5a017d85-9792-4094-bcd5-6436dadac124)
+    
+    ![Flight Details](https://github.com/user-attachments/assets/8ff2153b-3d40-4a6e-806f-0b39aa781f20)
+    
+    
+    </details>
+    
+    <details>
+        <summary> Hotels</summary>
+    
+    
+    ![Hotel Offers](https://github.com/user-attachments/assets/209bbdce-96cf-4d07-9288-a71f4cadd19b)
+    
+    ![Hotel Offer Details](https://github.com/user-attachments/assets/83e3c633-18d5-454d-baa5-8aa1dfddc37c)
+    
+    
+    </details>
+
+- Admin
+
+    <details>
+        <summary> Dashboard</summary>
+    
+    
+    ![Analytics](https://github.com/user-attachments/assets/4e85064c-ad6e-4f5a-b9c4-ade845707b36)
+    
+    ![Analytics Part 2](https://github.com/user-attachments/assets/20d4f515-9ae2-418a-a0d9-4d7dc1c39d5d)
+    
+    
+    </details>
+    
+    <details>
+        <summary> User Management</summary>
+    
+    
+    ![Existing Users](https://github.com/user-attachments/assets/28eb94b3-f755-4b5a-af65-0a16a843134d)
+    
+    ![Pending Users](https://github.com/user-attachments/assets/cb732d96-5860-4b2e-b03a-4aa835e43c6d)
+    
+    
+    </details>
+    
+    <details>
+        <summary> Complaints</summary>
+    
+    
+    ![Complaints](https://github.com/user-attachments/assets/be3415e0-6a0e-4567-8ab3-30d897872973)
+    
+    
+    </details>
+    
+    <details>
+        <summary> Categorization</summary>
+    
+    
+    ![Tags](https://github.com/user-attachments/assets/9f63054f-a5de-4359-88fe-b5ae4009b767)
+    
+    ![Categories](https://github.com/user-attachments/assets/bb4195c1-5fa1-4398-8f91-cb45868aefa7)
+    
+    
+    </details>
+    
+    <details>
+        <summary> Promocodes</summary>
+    
+    
+    ![Promocodes](https://github.com/user-attachments/assets/f1214d4b-18f8-4cda-a235-cebc3edbb04e)
+    
+    
+    </details>
+
+- Seller
+
+    <details>
+        <summary> Inventory</summary>
+    
+    
+    ![Inventory](https://github.com/user-attachments/assets/cb3081e7-e8fb-4abf-9fd1-ca3c4cc22e0f)
+    
+    ![Create Product](https://github.com/user-attachments/assets/128d2cd4-ec96-4f26-ad1a-dab5fdfc6d58)
+    
+    
+    </details>
+
+- Advertiser
+
+    <details>
+        <summary> My Activites</summary>
+    
+    
+    ![My Activities](https://github.com/user-attachments/assets/10a1b170-36fe-4416-90c9-fc4811449da5)
+    
+    ![Create Activity](https://github.com/user-attachments/assets/75454485-0282-4797-a6f4-256a3c5aec32)
+    
+    
+    </details>
+
+- Tour Guide
+  
+    <details>
+        <summary> My Tours</summary>
+    
+    
+    ![My Tours](https://github.com/user-attachments/assets/b615a552-46cf-4339-bffe-f3149907c848)
+    
+    ![Create Itinerary](https://github.com/user-attachments/assets/65238e22-cd3c-4911-bd3d-e7c398ee8d01)
+    
+    </details>
 
 
-![Home Page](https://github.com/user-attachments/assets/bf2daf68-6f97-478e-b482-5705cff1adb2)
-
-
-</details>
-
-<details>
-    <summary> Sign Up</summary>
-
-
-![Choose Your Role](https://github.com/user-attachments/assets/e4b426d1-ef40-4864-8187-7dafc39b51f3)
-![Sign Up](https://github.com/user-attachments/assets/9ba45856-7a4b-46e7-88ac-e9ad378de6c6)
-
-
-</details>
-
-<details>
-    <summary> Sign In</summary>
-
-
-![Sign In](https://github.com/user-attachments/assets/9a6799f1-1df0-48ff-bd05-8b12ccf663b2)
-
-
-</details>
-
-<details>
-    <summary> Itineraries</summary>
-
-
-![Itineraries](https://github.com/user-attachments/assets/6aeba29b-03bb-453e-bb86-260ab85df3fc)
-
-![Itinerary Details](https://github.com/user-attachments/assets/2ad012bf-6946-47e7-be89-a0704eacbd54)
-
-
-</details>
-
-<details>
-    <summary> Shop</summary>
-
-
-![Shop](https://github.com/user-attachments/assets/32784244-95cc-4432-8b1d-9124c1caeae2)
-
-![Cart](https://github.com/user-attachments/assets/c0866300-5b77-4cfe-a7c8-79cf0dcb41f2)
-
-![Checkout](https://github.com/user-attachments/assets/0d00fd70-ebca-4334-ad98-6fc4bbb6c89c)
-
-
-</details>
-
-<details>
-    <summary> Flights</summary>
-
-![Flights](https://github.com/user-attachments/assets/5a017d85-9792-4094-bcd5-6436dadac124)
-
-![Flight Details](https://github.com/user-attachments/assets/8ff2153b-3d40-4a6e-806f-0b39aa781f20)
-
-
-</details>
-
-<details>
-    <summary> Hotels</summary>
-
-
-![Hotel Offers](https://github.com/user-attachments/assets/209bbdce-96cf-4d07-9288-a71f4cadd19b)
-
-![Hotel Offer Details](https://github.com/user-attachments/assets/83e3c633-18d5-454d-baa5-8aa1dfddc37c)
-
-
-</details>
-
-<details>
-    <summary> Analytics</summary>
-
-
-![Analytics](https://github.com/user-attachments/assets/4e85064c-ad6e-4f5a-b9c4-ade845707b36)
-
-
-</details>
+- Tourism Governor
+  
+    <details>
+      <summary> My Landmarks</summary>
+    
+    
+    ![My Landmarks](https://github.com/user-attachments/assets/83901aea-00e9-49e8-8dd0-2700672b870e)
+    
+    ![Create Landmark](https://github.com/user-attachments/assets/10c32138-eaea-4711-b057-6f64771ea756)
+    
+    
+    </details>
 
 
 
@@ -127,24 +227,26 @@ Our codebase adheres to clean and consistent coding standards to ensure readabil
 
 Our project leverages modern technologies and tools to deliver a robust, scalable, and user-friendly platform. Below is a list of the main tech stack and frameworks used:
 
-- Frontend:
+* Frontend:
     
     -React.js: For building dynamic, responsive, and reusable UI components.
 
     -Material-UI: For creating a consistent, visually appealing, and responsive design.
     
     -Axios: For making HTTP requests to the backend API.
-- Backend:
+  
+* Backend:
     
     -Node.js: For building the server-side logic and handling RESTful API endpoints.
     
     -Express.js: As the web application framework for routing and middleware.
--   Database:
+  
+* Database:
     
     -MongoDB: For storing and managing application data in a NoSQL format.
 
     -Mongoose: For schema modeling and interacting with the MongoDB database.
--   DevOps and Tools:
+      DevOps and Tools:
     
     -Git: For version control and collaboration.
     
@@ -153,11 +255,13 @@ Our project leverages modern technologies and tools to deliver a robust, scalabl
     -Prettier: For maintaining code quality and consistency.
     
     -Postman: For API testing and debugging.
--   Other Libraries and Utilities:
+  
+* Other Libraries and Utilities:
     
     -dotenv: For managing environment variables securely.
     
     -Google Maps API: For location-based services like reverse geocoding and displaying maps.
+  
 ## Features ✨
  
 Our Virtual Trip Planner offers a comprehensive suite of features to make travel planning effortless and enjoyable. Key highlights include:
