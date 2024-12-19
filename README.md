@@ -2023,54 +2023,53 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 		currency: String,
 	  }
 	 ```
-* `DELETE/tourist/deleteTourist` -Delete tourist from the system
-   - **Request Body**: N/A
-   - **Response Body**:
-        ```
-	{ message: "Tourist deleted successfully"}
-        ```
-* `POST/tourist/redeemPoints` - Redeem Tourist Points
-   - **Request Body**: 
- 	 ```
-	  {points:Number}
-  	 ```
+* `DELETE/tourist/deleteTourist` - Delete tourist from the system
+    - **Request Body**: N/A
     - **Response Body**:
-        ```
-  	 { message: "Points redeemed successfully",(points / 10000) * 100}
-        ```  
-* `PUT/tourist/addPrefrence` - Add tourist prefrence tag
-    - **Request Body**: 
- 	 ```
-  	 {
-   		preference:String
-   	 }
-  	 ```
-     - **Response Body**:
+      ```
+      { message: "Tourist deleted successfully" }
+      ```
+
+* `POST/tourist/redeemPoints` - Redeem Tourist Points
+    - **Request Body**:
+      ```
+      { points: Number }
+      ```
+    - **Response Body**:
+      ```
+      { message: "Points redeemed successfully", (points / 10000) * 100 }
+      ```
+
+* `PUT/tourist/addPrefrence` - Add tourist preference tag
+    - **Request Body**:
+      ```
+      { preference: String }
+      ```
+    - **Response Body**:
       ```
       { message: "Preference added successfully" }
       ```
- * `DELETE/tourist/removePrefrence` - Remove tourist prefrence
-      - **Request Body**: 
- 	 ```
-  	 {preference:String}
-   ```
-      - **Response Body**:
-         ```
-          { message: "Preference deleted successfully" }
-          ```
 
-    * `PATCH/tourist/changeTouristPassword` -Change tourist password
-       - **Request Body**: 
-       ```
-       {oldPassword:String,
-        newPassword:String
-       }
-       ```
-       - **Response Body**:
-        ```
-	     { message: "Password changed successfully!" }
-        ```
-    
+* `DELETE/tourist/removePrefrence` - Remove tourist preference
+    - **Request Body**:
+      ```
+      { preference: String }
+      ```
+    - **Response Body**:
+      ```
+      { message: "Preference deleted successfully" }
+      ```
+
+* `PATCH/tourist/changeTouristPassword` - Change tourist password
+    - **Request Body**:
+      ```
+      { oldPassword: String, newPassword: String }
+      ```
+    - **Response Body**:
+      ```
+      { message: "Password changed successfully!" }
+      ```
+
 </details>
       
    
