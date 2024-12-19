@@ -1373,20 +1373,135 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
      
       const adminRouter = express.Router();
 
-    adminRouter.post("/createAdmin", createAdmin);
+* `POST /admin/createAdmin` - Create a new admin
+  - **Request Body**
+    ```
+    {
+        username: {
+            type: String,
+            ref: "Username",
+            required: true,
+            unique: true,
+        },
+        password: { type: String, required: true },
+        name: { type: String },
+        email: { type: String, ref: "Email" },
+        picture: String,
+        notifications: [{ type: Schema.ObjectId, ref: "Notification" }],
+    
+    }
+    ```
+  - **Response Body**:
+    ```
+    {
+     message: "Admin created successfully" };
+    }
+    ```
 
-    adminRouter.get("/getAdmins", getAdmins);
+* `GET /admin/getAdmins` - Get all admins in the system
+  - **Request Body**: N/A
+  
+  - **Response Body**:
+    ```
+    {[
+        username: {
+            type: String,
+            ref: "Username",
+            required: true,
+            unique: true,
+        },
+        password: { type: String, required: true },
+        name: { type: String },
+        email: { type: String, ref: "Email" },
+        picture: String,
+        notifications: [{ type: Schema.ObjectId, ref: "Notification" }],
+    ]}
+    ```
+* `GET /admin/getUsers` - Get all users in the system
+   - **Request Body**: N/A
+   - **Response Body**:
+    ```
+    {[
+         username: {
+            type: String,
+            ref: "Username",
+            required: true,
+            unique: true, // auto-created index
+        },
+        name: { type: String, required: true },
+        email: {
+            type: String,
+            ref: "Email",
+            required: true,
+            unique: true,
+    ]}
+    ```
+* `PUT/admin/updateAdmin` - Update admin data
+   - **Request Body**:
+     ```
+         {
+        username: {
+            type: String,
+            ref: "Username",
+            required: true,
+            unique: true,
+        },
+        password: { type: String, required: true },
+        name: { type: String },
+        email: { type: String, ref: "Email" },
+        picture: String,
+        notifications: [{ type: Schema.ObjectId, ref: "Notification" }],
+ 		}
+     ```
+   
+   - **Response Body**:
+    ```
+       {
+        username: {
+            type: String,
+            ref: "Username",
+            required: true,
+            unique: true,
+        },
+        password: { type: String, required: true },
+        name: { type: String },
+        email: { type: String, ref: "Email" },
+        picture: String,
+        notifications: [{ type: Schema.ObjectId, ref: "Notification" }],
+   	 }
+    ```
+    * `GET /admin/getAdminById` - Get a specific admin by id 
+       - **Request Body**: N/A
+       - **Response Body**:
+        ```
+	    {[
+		username: {
+		    type: String,
+		    ref: "Username",
+		    required: true,
+		    unique: true,
+		},
+		password: { type: String, required: true },
+		name: { type: String },
+		email: { type: String, ref: "Email" },
+		picture: String,
+		notifications: [{ type: Schema.ObjectId, ref: "Notification" }],
+	    ]}
+        ```
 
-    adminRouter.get("/getUsers", getUsers);
-
-    adminRouter.delete("/deleteAdmin", isAuthenticated, deleteAdmin);
-
-    adminRouter.put("/updateAdmin", isAuthenticated, updateAdmin);
-
-    adminRouter.get("/getAdminById", isAuthenticated, getAdminById);
-
-    adminRouter.put("/changeAdminPassword", isAuthenticated, changeAdminPassword);
+     * `PUT/admin/changeAdminPassword` -Change admin password
+       - **Request Body**: 
+       ```
+       {oldPassword:String,
+        newPassword:String
+       }
+       ```
+       - **Response Body**:
+        ```
+	     { message: "Password changed successfully!" }
+        ```
 </details>
+
 
  <details>
   <summary>Analytics Endpoints</summary>
@@ -1789,22 +1904,176 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 	    }
 	    ```
       
-    touristRouter.post("/createTourist", createTourist);
+  * `POST/tourist/createTourist` - Create a new tourist
+	  - **Request Body**: 
+ 	 ```
+	    {
+	      username: { type: String, ref: "Username"},
+	      password: String,
+	      name: String,
+	      email: { type: String, ref: "Email" },
+	      mobile: String,
+	      nationality: String,
+	      DOB: Date,
+	      job: String,
+	      picture: String,
+	      wallet: Number,
+	      points: Number,
+	      loyalityPoints: Number,
+	      notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notification" }],
+	      hotelBookings: [Object],
+	      flightBookings: [Object],
+	      preferences: [{ type: String, ref: "Tag" }],
+	      address: [{ name: String, Latitude: Number, Longitude: Number, address: String }],
+	      currency: String,
+			    }
+	 ```
+	  - **Response Body**
+	 ```
+	    {
+	      message: "Sign up successful",
+	      user: {username: { type: String, ref: "Username"},
+		     password: String,
+		     name: String,
+		     email: { type: String, ref: "Email" },
+		     mobile: String,
+		     nationality: String,
+		     DOB: Date,
+		     job: String,
+		     picture: String,
+		     wallet: Number,
+		     points: Number,
+		     loyalityPoints: Number,
+		     notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notification" }],
+		     hotelBookings: [Object],
+		     flightBookings: [Object],
+		     preferences: [{ type: String, ref: "Tag" }],
+		     address: [{ name: String, Latitude: Number, Longitude: Number, address: String }],
+		     currency: String,}
+	    			}
+	 ```
+  * `GET/tourist/getTouristById` - Create a specific user by id
+       - **Request Body**:N/A
+       - **Response Body**
+      ```
+      {      username: { type: String, ref: "Username"},
+	     password: String,
+	     name: String,
+	     email: { type: String, ref: "Email" },
+	     mobile: String,
+	     nationality: String,
+	     DOB: Date,
+	     job: String,
+	     picture: String,
+	     wallet: Number,
+	     points: Number,
+	     loyalityPoints: Number,
+	     notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notification" }],
+	     hotelBookings: [Object],
+	     flightBookings: [Object],
+	     preferences: [{ type: String, ref: "Tag" }],
+	     address: [{ name: String, Latitude: Number, Longitude: Number, address: String }],
+	     currency: String,
+      }
+     ```
+ * `PUT/tourist/updateTourist` - Update tourist data
+	  - **Request Body**: 
+ 	 ```
+    {
+		username: { type: String, ref: "Username"},
+		password: String,
+		name: String,
+		email: { type: String, ref: "Email" },
+		mobile: String,
+		nationality: String,
+		DOB: Date,
+		job: String,
+		picture: String,
+		wallet: Number,
+		points: Number,
+		loyalityPoints: Number,
+		notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notification" }],
+		hotelBookings: [Object],
+		flightBookings: [Object],
+		preferences: [{ type: String, ref: "Tag" }],
+		address: [{ name: String, Latitude: Number, Longitude: Number, address: String }],
+		currency: String,
+	   }
+	 ```
+ 	 - **Response Body**: 
+ 	 ```
+          {
+		username: { type: String, ref: "Username"},
+		password: String,
+		name: String,
+		email: { type: String, ref: "Email" },
+		mobile: String,
+		nationality: String,
+		DOB: Date,
+		job: String,
+		picture: String,
+		wallet: Number,
+		points: Number,
+		loyalityPoints: Number,
+		notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notification" }],
+		hotelBookings: [Object],
+		flightBookings: [Object],
+		preferences: [{ type: String, ref: "Tag" }],
+		address: [{ name: String, Latitude: Number, Longitude: Number, address: String }],
+		currency: String,
+	  }
+	 ```
+* `DELETE/tourist/deleteTourist` -Delete tourist from the system
+   - **Request Body**: N/A
+   - **Response Body**:
+        ```
+	{ message: "Tourist deleted successfully"}
+        ```
+* `POST/tourist/redeemPoints` - Redeem Tourist Points
+   - **Request Body**: 
+ 	 ```
+	  {points:Number}
+  	 ```
+    - **Response Body**:
+        ```
+  	 { message: "Points redeemed successfully",(points / 10000) * 100}
+        ```  
+* `PUT/tourist/addPrefrence` - Add tourist prefrence tag
+    - **Request Body**: 
+ 	 ```
+  	 {
+   		preference:String
+   	 }
+  	 ```
+     - **Response Body**:
+      ```
+      { message: "Preference added successfully" }
+      ```
+ * `DELETE/tourist/removePrefrence` - Remove tourist prefrence
+      - **Request Body**: 
+ 	 ```
+  	 {preference:String}
+   ```
+      - **Response Body**:
+         ```
+          { message: "Preference deleted successfully" }
+          ```
+
+    * `PATCH/tourist/changeTouristPassword` -Change tourist password
+       - **Request Body**: 
+       ```
+       {oldPassword:String,
+        newPassword:String
+       }
+       ```
+       - **Response Body**:
+        ```
+	     { message: "Password changed successfully!" }
+        ```
     
-    touristRouter.get("/tourist", isAuthenticated, getTouristById);
-    
-    touristRouter.put("/updateTourist", isAuthenticated, updateTourist);
-    
-    touristRouter.delete("/deleteTourist", isAuthenticated, deleteTourist);
-    
-    touristRouter.post("/redeemPoints", isAuthenticated, redeemPoints);
-    
-    touristRouter.post("/addPreference", isAuthenticated, addPreference);
-    
-    touristRouter.delete("/removePreference", isAuthenticated, removePreference);
-    
-    touristRouter.patch("/updatePassword", isAuthenticated, changeTouristPassword);
 </details>
+      
+   
 <details>
     <summary>Tourist Bookmark Endpoints</summary>
     
