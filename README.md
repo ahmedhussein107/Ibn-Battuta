@@ -2171,13 +2171,15 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 
     - Plan Your Trip:
 
-    	- Use the navigation bar to discover meseums, activities, and itineraries based on your preferences (e.g., historic landmarks, beaches, budget-friendly options).
+    	- Use the navigation bar to discover museums, activities, and itineraries based on your preferences (e.g., historic landmarks, beaches, budget-friendly options).
 
     	- Browse personalized trip suggestions tailored to your interests, and filter based on rating, location, budget, etc.
       
     	- Choose an activity or itinerary, and view its details.
  
-    	- Book tickets easily, and pay online with card.
+    	- Book tickets easily, and pay online with card and/or wallet.
+
+	- Bookmark an activity or itinerary, in order to get notified when they start accepting bookings, view them in **My Bookmarks**.
       
     - Book Flights and Hotels:
 
@@ -2202,6 +2204,18 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
     	- Choose to pay with card, wallet, or cash on delivery.
  
     	- View your order details and status in **My Orders**
+
+     - Complaints for user involvement:
+
+    	- File a complaints to the admin, who reviews them and takes appropriate actions.
+ 
+    	- View your complaints details and status in **My Complaints**
+     
+     - Step-by-Step Guide:
+
+    	- Use the navbar to view a step-by-step guide explaining the process of booking an itinerary.
+
+ 
 
 </details>
 
