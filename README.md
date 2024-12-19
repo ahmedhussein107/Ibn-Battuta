@@ -1470,9 +1470,9 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
         notifications: [{ type: Schema.ObjectId, ref: "Notification" }],
    	 }
     ```
-    * `GET /admin/getAdminById` - Get a specific admin by id 
-       - **Request Body**: N/A
-       - **Response Body**:
+* `GET /admin/getAdminById` - Get a specific admin by id 
+   - **Request Body**: N/A
+   - **Response Body**:
         ```
 	    {[
 		username: {
@@ -1489,14 +1489,14 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 	    ]}
         ```
 
-     * `PUT/admin/changeAdminPassword` -Change admin password
-       - **Request Body**: 
+* `PUT/admin/changeAdminPassword` -Change admin password
+   - **Request Body**: 
        ```
        {oldPassword:String,
         newPassword:String
        }
        ```
-       - **Response Body**:
+    - **Response Body**:
         ```
 	     { message: "Password changed successfully!" }
         ```
