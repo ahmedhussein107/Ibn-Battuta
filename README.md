@@ -1891,40 +1891,148 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 
 ## How to Use 🚀
 
--   For End Users (Travel Planning)
+<details>
+<summary> For Tourists </summary>
     
-    -Create an Account or Login:
+    - Create an Account or Login:
 
-    -   Navigate to the app's login or registration page.
+    	- Navigate to the app's login or registration page.
 
-    -   Create a new account or log in using your existing credentials.
+    	- Create a new account or log in using your existing credentials.
 
-    -Plan Your Trip:
+    - Plan Your Trip:
+
+    	- Use the navigation bar to discover meseums, activities, and itineraries based on your preferences (e.g., historic landmarks, beaches, budget-friendly options).
+
+    	- Browse personalized trip suggestions tailored to your interests, and filter based on rating, location, budget, etc.
+      
+    	- Choose an activity or itinerary, and view its details.
+ 
+    	- Book tickets easily, and pay online with card.
+      
+    - Book Flights and Hotels:
+
+    	- Once you’ve planned your itinerary, book flights, hotels, and transportation directly within the app.
+      
+    	- The app will show you available options with prices and descriptions.
+      
+    - View Your Booking:
+
+    	- View your itinerary, activity, flight and hotel booking details in **My Bookings**.
+      
+    	- Stay updated with notifications about your upcoming trips.
+ 
+    	- In case of any change in plans, you can can cancel your activity/itinerary bookings 48 hours before the start date.
+      
+    - Shop for Souvenirs:
+
+    	- Browse the in-app gift shop for souvenirs, unique items, and local goods to remember your trip by.
+
+    	- Add products to your cart, and checkout your order.
+
+    	- Choose to pay with card, wallet, or cash on delivery.
+ 
+    	- View your order details and status in **My Orders**
+
+</details>
+
+<details>
+<summary> For Tour Guides</summary>
+    
+    - Create an Account or Login:
+
+    	- Navigate to the app's login or registration page.
+
+    	- Create a new account or log in using your existing credentials.
+
+    - Create and Manage Your Itineraries:
+
+    	- Navigate to **My Tours** to view and edit your existing itineraries.
+ 
+     	- Using the **New Itinerary** button, you can create a new itinerary by entering its details, and choosing which activities will be including in it.
+     
+    - Browse Other Itineraries:
+      
+      	- Navigate to **Browse** to view itineraries created by other tour guides to scope out the competition.
+
+    - View Your Analytics:
+      
+      	- Navigate to **Analytics** to view detailed report about your itineraries.
+     
+      	- Details include your best-selling itinerary, how many tourist booked your itineraries per month, and more.
+</details>
+
+<details>
+<summary> For Advertisers</summary>
+    
+    - Create an Account or Login:
+
+    	- Navigate to the app's login or registration page.
+
+    	- Create a new account or log in using your existing credentials.
+
+    - Create and Manage Your Activities:
+
+    	- Navigate to **My Activities** to view and edit your existing activities.
+ 
+     	- Using the **New Activity** button, you can create a new activity by entering its details.
+     
+    - Browse Other Activities:
+      
+      	- Navigate to **Browse** to view activities created by other advertisers to scope out the competition.
+
+    - View Your Analytics:
+      
+      	- Navigate to **Analytics** to view detailed report about your activities.
+     
+      	- Details include your best-selling activity, how many tourist booked your activities per month, and more.
+
+</details>
+
+<details>
+<summary> For Sellers </summary> 
+    
+    - Create an Account or Login:
+
+    	- Navigate to the app's login or registration page.
+
+    	- Create a new account or log in using your existing credentials.
+
+    - Create and Manage Your Products:
+
+    	- Navigate to **Invetory** to view and edit your existing products.
+ 
+     	- Using the **New Product** button, you can create a new product by entering its details.
+     
+    - Browse Other Products:
+      
+      	- Navigate to **Shop** to view products sold by other sellers to scope out the competition.
+
+    - View Your Analytics:
+      
+      	- Navigate to **Analytics** to view detailed report about your products.
+     
+      	- Details include your best-selling product, how many tourist bought your products per month, and more.
+
+</details>
+  
+<details>
+
+<summary> For Tourism Governors </summary>
+    
+    - Create an Account or Login:
+
+    	- Navigate to the app's login or registration page.
+
+    	- Create a new account or log in using your existing credentials.
+
+      Plan Your Trip:
 
     - Use the search bar to discover destinations, activities, and itineraries based on your preferences (e.g., historic landmarks, beaches, budget-friendly options).
-
-    - Browse personalized trip suggestions tailored to your interests.
-    -Book Flights and Hotels:
-
-    -   Once you’ve planned your itinerary, book flights, hotels, and transportation directly within the app.
-    -   The app will show you available options with prices and descriptions.
-    -Join Guided Tours:
-
-    -   Get a detailed breakdown of activities, timings, and costs.
-
-    -View Your Itinerary:
-
-    -   View and your itinerary in real-time, including activities, locations, and accommodation details.
-    -   Stay updated with notifications about your upcoming trips.
-    -Shop for Souvenirs:
-
-    -   Browse the in-app gift shop for souvenirs, unique items, and local goods to remember your trip by.
+	
+</details>
 
 
-
--   For Developers (Setting Up Locally)
-    
-    -follow the Installation steps 
 ## Contribute 🤝
 
 We welcome contributions to make this project even better! Whether you're fixing bugs, adding new features, or improving documentation, we appreciate your involvement. Here's how you can contribute:
