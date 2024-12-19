@@ -1051,31 +1051,324 @@ export default authRoutes;
 
 Below are some of the API endpoints used in the project. Each endpoint is organized by its related model, functionality and includes details about the request method and URL.
 
+**Note**: > - All endpoints are prefixed by `/api/<The URI>`
+
+
 <details>
-  <summary>Activity routes</summary>
+  <summary>Activity Endpoints</summary>
   <br>
-  
-     const activityRouter = express.Router();
 
-    activityRouter.post("/createActivity", isAuthenticated, createActivity);
+* `POST /activity/createActivity` - Create a new activity by the logged in advertiser
+  - **Request Body**
+    ```
+    {
+        name: { type: String, required: true },
+        description: { type: String, required: true },
+        pictures: [String],
+        location: { type: String },
+        Latitude: { type: Number },
+        Longitude: { type: Number },
+        startDate: { type: Date, required: true },
+        endDate: { type: Date, required: true },
+        price: Number,
+        category: { type: String, ref: "Category" },
+        tags: [{ type: String, ref: "Tag" }],
+        isOpenForBooking: { type: Boolean, default: true },
+        initialFreeSpots: { type: Number, default: 0, required: true },
+        freeSpots: { type: Number, required: true },
+        specialDiscount: { type: Number, default: 0 },
+    }
+    ```
+  - **Response Body**:
+    ```
+    {
+        advertiserID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Advertiser",
+        },
+        name: String,
+        description: String,
+        pictures: [String],
+        location: String,
+        Latitude: Number,
+        Longitude: Number,
+        startDate: Date,
+        endDate: Date,
+        price: Number,
+        category: { type: String, ref: "Category" },
+        tags: [{ type: String, ref: "Tag" }],
+        ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+        isOpenForBooking: Boolean,
+        isFlagged: Boolean,
+        sumOfRatings: Number,
+        initialFreeSpots: Number,
+        freeSpots: Number,
+        specialDiscount: Number,
+    }
+    ```
 
-    activityRouter.get("/getActivity/:id", getActivityById);
 
-    activityRouter.get("/getAllActivities", getAllActivities);
 
-    activityRouter.patch("/updateActivity/:id", updateActivity);
+* `GET /activity/getActivity/:id` - Get an activity by ID
+  - **Request Body**: N/A
 
-    activityRouter.get("/getAdvertiserActivities/", isAuthenticated, getAdvertiserActivities);
+  - **Response Body**
+     ```
+        {
+        advertiserID: {
+            username: {type: String, ref: "Username"},
+            password: String,
+            email: { type: String, ref: "Email"},
+            name: String,
+            isAccepted: Boolean,
+            documents: [String],
+            website:  String,
+            hotline: String,
+            companyProfile: String,
+            picture: String,
+            notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notification" }],
+        },
+        name: String,
+        description: String,
+        pictures: [String],
+        location: String,
+        Latitude: Number,
+        Longitude: Number,
+        startDate: Date,
+        endDate: Date,
+        price: Number,
+        category: { type: String, ref: "Category" },
+        tags: [{ type: String, ref: "Tag" }],
+        ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+        isOpenForBooking: Boolean,
+        isFlagged: Boolean,
+        sumOfRatings: Number,
+        initialFreeSpots: Number,
+        freeSpots: Number,
+        specialDiscount: Number,
+    }
+    ```
 
-    activityRouter.delete("/deleteActivity/:id", deleteActivity);
 
-    activityRouter.get("/getUpcomingActivities", getUpcomingActivities);
 
-    activityRouter.patch("/toggleFlag/:id", toggleFlaggedActivities);
+* `GET /activity/getAllActivities` - Get all activities matching the request query filters
+  - **Request Body**: N/A
+
+  - **Response Body**
+     ```
+        [{
+        advertiserID: {
+            username: {type: String, ref: "Username"},
+            password: String,
+            email: { type: String, ref: "Email"},
+            name: String,
+            isAccepted: Boolean,
+            documents: [String],
+            website:  String,
+            hotline: String,
+            companyProfile: String,
+            picture: String,
+            notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notification" }],
+        },
+        name: String,
+        description: String,
+        pictures: [String],
+        location: String,
+        Latitude: Number,
+        Longitude: Number,
+        startDate: Date,
+        endDate: Date,
+        price: Number,
+        category: { type: String, ref: "Category" },
+        tags: [{ type: String, ref: "Tag" }],
+        ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+        isOpenForBooking: Boolean,
+        isFlagged: Boolean,
+        sumOfRatings: Number,
+        initialFreeSpots: Number,
+        freeSpots: Number,
+        specialDiscount: Number]
+    }
+    ```
+
+
+
+* `GET /activity/getUpcomingActivities` - Get all upcoming, unflagged activities matching the request query filters
+  - **Request Body**: N/A
+
+  - **Response Body**
+     ```
+        [{
+        advertiserID: {
+            username: {type: String, ref: "Username"},
+            password: String,
+            email: { type: String, ref: "Email"},
+            name: String,
+            isAccepted: Boolean,
+            documents: [String],
+            website:  String,
+            hotline: String,
+            companyProfile: String,
+            picture: String,
+            notifications: [{ type: mongoose.Schema.ObjectId, ref: "Notification" }],
+        },
+        name: String,
+        description: String,
+        pictures: [String],
+        location: String,
+        Latitude: Number,
+        Longitude: Number,
+        startDate: Date,
+        endDate: Date,
+        price: Number,
+        category: { type: String, ref: "Category" },
+        tags: [{ type: String, ref: "Tag" }],
+        ratings: [{
+            touristID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Tourist",
+            },
+            rating: Number,
+            comment: String
+            }
+        ],
+        isOpenForBooking: Boolean,
+        isFlagged: Boolean,
+        sumOfRatings: Number,
+        initialFreeSpots: Number,
+        freeSpots: Number,
+        specialDiscount: Number]
+    }
+    ```
+
+
+* `GET /activity/getAdvertiserActivities` - Get all activities of the logged in advertiser
+  - **Request Body**: N/A
+
+  - **Response Body**
+     ```
+        [{
+        advertiserID: { type: Schema.Types.ObjectId, ref: "Advertiser" }
+        name: String,
+        description: String,
+        pictures: [String],
+        location: String,
+        Latitude: Number,
+        Longitude: Number,
+        startDate: Date,
+        endDate: Date,
+        price: Number,
+        category: { type: String, ref: "Category" },
+        tags: [{ type: String, ref: "Tag" }],
+        ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+        isOpenForBooking: Boolean,
+        isFlagged: Boolean,
+        sumOfRatings: Number,
+        initialFreeSpots: Number,
+        freeSpots: Number,
+        specialDiscount: Number]
+    }
+    ```
+
+
+* `PATCH /activity/updateActivity/:id` - Update the activity with the specified ID
+  - **Request Body**
+    ```
+    {
+        name: String,
+        description: String,
+        pictures: [String],
+        location: String,
+        Latitude: Number,
+        Longitude: Number,
+        startDate: Date,
+        endDate: Date,
+        price: Number,
+        category: { type: String, ref: "Category" },
+        tags: [{ type: String, ref: "Tag" }],
+        isOpenForBooking: Boolean,
+        initialFreeSpots: Number,
+        freeSpots: Number,
+        specialDiscount: Number,
+    }
+    ```
+  - **Response Body**
+    ```
+    {
+        advertiserID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Advertiser",
+        },
+        name: String,
+        description: String,
+        pictures: [String],
+        location: String,
+        Latitude: Number,
+        Longitude: Number,
+        startDate: Date,
+        endDate: Date,
+        price: Number,
+        category: { type: String, ref: "Category" },
+        tags: [{ type: String, ref: "Tag" }],
+        ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+        isOpenForBooking: Boolean,
+        isFlagged: Boolean,
+        sumOfRatings: Number,
+        initialFreeSpots: Number,
+        freeSpots: Number,
+        specialDiscount: Number,
+    }
+    ```
+
+
+
+* `DELETE /activity/deleteActivity/:id` - Delete the activity with the specified ID
+  - **Request Body**: N/A
+  - **Response Body**
+    ```
+    {
+        message: "Activity Deleted"
+    }
+    ```
+ 
+* `PATCH /activity/toggleFlag/:id` - Toggles the isFlagged property of the activity with the specified ID 
+  - **Request Body**: N/A
+  - **Response Body**
+    ```
+    {
+        message: "Activity flagged status changed successfully",
+			  activity: {
+            advertiserID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Advertiser",
+            },
+            name: String,
+            description: String,
+            pictures: [String],
+            location: String,
+            Latitude: Number,
+            Longitude: Number,
+            startDate: Date,
+            endDate: Date,
+            price: Number,
+            category: { type: String, ref: "Category" },
+            tags: [{ type: String, ref: "Tag" }],
+            ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+            isOpenForBooking: Boolean,
+            isFlagged: Boolean,
+            sumOfRatings: Number,
+            initialFreeSpots: Number,
+            freeSpots: Number,
+            specialDiscount: Number,
+        }
+    }
+    ```
+
+
 </details>
      
  <details>
-  <summary>Admin routes</summary>
+  <summary>Admin Endpoints</summary>
   <br>
      
       const adminRouter = express.Router();
@@ -1096,7 +1389,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
  <details>
-  <summary>Analytics routes</summary>
+  <summary>Analytics Endpoints</summary>
   <br>
      
       const analyticsRouter = express.Router();
@@ -1105,7 +1398,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
  <details>
-  <summary>Booking routes</summary>
+  <summary>Booking Endpoints</summary>
   <br>
   
      bookingRouter.get("/getBookings", getBookings);
@@ -1146,7 +1439,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
  <details>
-  <summary>Categoey routes</summary>
+  <summary>Categoey Endpoints</summary>
   <br>
      
       const categoryRouter = express.Router();
@@ -1160,7 +1453,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 
 </details>
  <details>
-  <summary>Comment routes</summary>
+  <summary>Comment Endpoints</summary>
   <br>
      
       const commentRouter = express.Router();
@@ -1184,7 +1477,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
  <details>
-      <summary>Complaint routes</summary>
+      <summary>Complaint Endpoints</summary>
   <br>
     
      const complaintRouter = express.Router();
@@ -1207,22 +1500,22 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 
 </details>
 <details>
-    <summary>Custom Activity routes</summary>
+    <summary>Custom Activity Endpoints</summary>
    <br>
   
       const customActivityRouter = express.Router();
 
     customActivityRouter.post("/createCustomActivity", isAuthenticated, createCustomActivity);
 
-   customActivityRouter.get("/getAllCustomActivities", getCustomActivities);
+     customActivityRouter.get("/getAllCustomActivities", getCustomActivities);
 
-   customActivityRouter.get("/getCustomActivity/:id", getCustomActivityById);
+     customActivityRouter.get("/getCustomActivity/:id", getCustomActivityById);
 
      customActivityRouter.patch("/updateCustomActivity/:id", updateCustomActivity);
 
-  customActivityRouter.delete("/deleteCustomActivity/:id", deleteCustomActivity);
+    customActivityRouter.delete("/deleteCustomActivity/:id", deleteCustomActivity);
 
-  customActivityRouter.get(
+    customActivityRouter.get(
         "/getCustomActivityByTourGuideId",
         isAuthenticated,
         getCustomActivityByTourGuideId
@@ -1230,7 +1523,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
 <details>
-          <summary>General routes</summary>
+          <summary>General Endpoints</summary>
           <br>
           
           generalRouter.put("/changePassword", changePassword);
@@ -1241,7 +1534,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
   
  <details>
-      <summary>Governor routes</summary>
+      <summary>Governor Endpoints</summary>
       <br>
       
      const governorRouter = express.Router();
@@ -1261,7 +1554,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 
 
   <details>
-        <summary>Itinerary routes</summary>
+        <summary>Itinerary Endpoints</summary>
         <br>
           
       const itineraryRouter = express.Router();
@@ -1293,7 +1586,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
   </details>
   
   <details>
-          <summary>Landmark routes</summary>
+          <summary>Landmark Endpoints</summary>
           <br>
           const landmarkRouter = express.Router();
 
@@ -1313,7 +1606,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
 <details>
-      <summary>Tag routes</summary>
+      <summary>Tag Endpoints</summary>
       <br>
      
     const landmarkTagRouter = express.Router();
@@ -1332,7 +1625,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
     
 <details>
-      <summary>Order routes</summary>
+      <summary>Order Endpoints</summary>
       <br>
       
     const orderRouter = express.Router();
@@ -1356,7 +1649,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
 <details>
-      <summary>Product routes</summary>
+      <summary>Product Endpoints</summary>
       <br>
           
         const productRouter = express.Router();
@@ -1383,7 +1676,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
 <details>
-    <summary>Promo code routes</summary>
+    <summary>Promocode Endpoints</summary>
     <br>
     
         promoCodeRouter.post("/validatePromoCode", isAuthenticated, validatePromoCode);
@@ -1391,7 +1684,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
         promoCodeRouter.post("/createPromoCode", createGeneralPromoCode);
 </details>
 <details>
-    <summary>Rating routes</summary>
+    <summary>Rating Endpoints</summary>
     <br>
     
         const ratingRouter = express.Router();
@@ -1407,7 +1700,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
 <details>
-      <summary>Seller routes</summary>
+      <summary>Seller Endpoints</summary>
       <br>
       
     const sellerRouter = express.Router();
@@ -1428,7 +1721,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
 <details>
-      <summary>Preference  Tag routes</summary>
+      <summary>Preference Tag Endpoints</summary>
       <br>
     
     const tagRouter = express.Router();
@@ -1446,7 +1739,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
     tagRouter.get("/searchTags", searchTags);
 </details>
 <details>
-    <summary>Tourguide routes</summary>
+    <summary>Tourguide Endpoints</summary>
     
     const tourGuideRouter = express.Router();
     
@@ -1467,7 +1760,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
     tourGuideRouter.get("/tourGuide/:id", getTourGuide);
 </details>
 <details>
-    <summary>Tourist routes</summary>
+    <summary>Tourist Endpoints</summary>
     
     const touristRouter = express.Router();
     
@@ -1490,7 +1783,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
     touristRouter.patch("/updatePassword", isAuthenticated, changeTouristPassword);
 </details>
 <details>
-    <summary>Tourist Bookmark routes</summary>
+    <summary>Tourist Bookmark Endpoints</summary>
     
     const touristBookmarkRouter = express.Router();
     
@@ -1509,7 +1802,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
 <details>
-<summary>Tourist Cart routes</summary>
+<summary>Tourist Cart Endpoints</summary>
 
     const touristCartRouter = express.Router();
     
@@ -1527,7 +1820,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
 <details>
-    <summary>Tourist Wishlist routes</summary>
+    <summary>Tourist Wishlist Endpoints</summary>
     
     const touristWishlistRouter = express.Router();
     
@@ -1539,7 +1832,7 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
 </details>
 
 <details>
-    <summary>Username routes</summary>
+    <summary> Username Endpoints</summary>
     
     const usernameRouter = express.Router();
 
@@ -1552,13 +1845,26 @@ Below are some of the API endpoints used in the project. Each endpoint is organi
     usernameRouter.delete("/deleteUsername", deleteUsername);
 </details>
 
+
 ## Tests
-- We use Postman to manually test all our api references by making sure the response is as expected. We use it as some kind of sanity-check.
+- We use [Postman](https://www.postman.com/) to manually test all our API references by making sure the response is as expected.
 - Here are some examples:
   
-![Screenshot 2024-12-09 051853](https://github.com/user-attachments/assets/aab58753-16e8-4763-a431-384c660205a7)
-![Screenshot 2024-12-09 052018](https://github.com/user-attachments/assets/971e6bc1-3a52-4fe7-abb8-3b036c1a91e7)
-
+    * [Tourist Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-ff91fd2c-3fb6-4567-9c57-93264c09fc71?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Username Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-872db6df-5b42-42fc-ad09-a551d63df0f8?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Email Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-6c68a556-c215-454a-b0fb-3e12a879af6a?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Activity Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-cbcb4f1b-2b55-4454-86d6-e6d0832c83df?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Advertiser Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-6b9a2551-36be-419f-8826-fae0f3e62f53?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Rating Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-7764dd6d-96ee-4a4c-9e69-6f6e21d0bb2d?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Itinerary Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-993debac-e3ed-40da-bf80-dea0d0568355?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Tour Guide Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-d1632a1d-0a00-43dd-98dd-7f23062a092b?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Landmark Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-45539069-03df-4c74-a1b4-9df1ee004a9a?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Admin Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-0b5d3940-d73d-4e78-abbc-9aba7601955c?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Complaint Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-24c2ae69-7c28-42f4-9e3f-5b99110a6240?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Seller Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-feb8f065-677e-458a-971f-596b5e23695a?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Product Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-689f3e80-8b90-4edf-8026-690dd898e804?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [Hotel Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-8856ecc5-8f89-4443-a2c9-f58b762dc40d?action=share&source=copy-link&creator=40554084&ctx=documentation)
+    * [OTP Tests](https://ibn-battuta-1248.postman.co/workspace/3d11366f-74ca-4b83-8721-8cb3204556b7/folder/38606166-d155d337-fcd0-4229-8f15-6f4da428b9d1?action=share&source=copy-link&creator=40554084&ctx=documentation)
 
 ## How to Use 🚀
 
