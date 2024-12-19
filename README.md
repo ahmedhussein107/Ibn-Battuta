@@ -229,38 +229,46 @@ Our project leverages modern technologies and tools to deliver a robust, scalabl
 
 * Frontend:
     
-    -React.js: For building dynamic, responsive, and reusable UI components.
+    - [React.js](https://reactjs.org/): For building dynamic, responsive, and reusable UI components.
 
-    -Material-UI: For creating a consistent, visually appealing, and responsive design.
+    - [Material-UI](https://mui.com/): For creating a consistent, visually appealing, and responsive design.
     
-    -Axios: For making HTTP requests to the backend API.
+    - [Axios](https://axios-http.com/): For making HTTP requests to the backend API.
   
 * Backend:
     
-    -Node.js: For building the server-side logic and handling RESTful API endpoints.
+    - [Node.js](https://nodejs.org/en/): For building the server-side logic and handling RESTful API endpoints.
     
-    -Express.js: As the web application framework for routing and middleware.
+    - [Express.js](https://expressjs.com/): As the web application framework for routing and middleware.
   
 * Database:
     
-    -MongoDB: For storing and managing application data in a NoSQL format.
+    - [MongoDB](https://www.mongodb.com/): For storing and managing application data in a NoSQL format.
 
-    -Mongoose: For schema modeling and interacting with the MongoDB database.
+    - [Mongoose](https://mongoosejs.com/): For schema modeling and interacting with the MongoDB database.
       DevOps and Tools:
-    
-    -Git: For version control and collaboration.
-    
-    -GitHub: For repository hosting and issue tracking.
-    
-    -Prettier: For maintaining code quality and consistency.
-    
-    -Postman: For API testing and debugging.
   
 * Other Libraries and Utilities:
+
+    - [Git](https://git-scm.com/): For version control and collaboration.
     
-    -dotenv: For managing environment variables securely.
+    - [GitHub](https://github.com/): For repository hosting and issue tracking.
     
-    -Google Maps API: For location-based services like reverse geocoding and displaying maps.
+    - [Prettier](https://prettier.io/): For maintaining code quality and consistency.
+    
+    - [Postman](https://www.postman.com/): For API testing and debugging.
+    
+    - [dotenv](https://www.npmjs.com/package/dotenv): For managing environment variables securely.
+    
+    - [Google Maps API](https://developers.google.com/maps): For location-based services like reverse geocoding and displaying maps.
+      
+    - [Bcrypt](https://www.npmjs.com/package/bcrypt): For encrypting and safely storing user data.
+ 
+    - [JSON Web Token](https://jwt.io/): For managing user sessions through cookies.
+ 
+    - [Nodemailer](https://nodemailer.com/about/): For sending personalized emails to users.
+ 
+    - [Firebase](https://firebase.google.com/docs/storage): For storing images and files uploaded by users.
   
 ## Features ✨
  
