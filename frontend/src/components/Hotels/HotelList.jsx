@@ -41,7 +41,19 @@ const HotelList = () => {
     const [start, setStart] = useState(searchParams.get("start") || "");
     const [end, setEnd] = useState(searchParams.get("end") || "");
     const [isLoading, setIsLoading] = useState(false);
+    const daysBetweenInclusive = (startStr, endStr) => {
+        const start = new Date(startStr);
+        const end = new Date(endStr);
 
+        // Ensure time components don't affect the result
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
+
+        const diffMs = end - start; // difference in milliseconds
+        const diffDays = diffMs / (1000 * 60 * 60 * 24); // convert to days
+
+        return diffDays + 1; // inclusive
+    };
     // Parse guest count with a fallback
     const getGuestCount = () => {
         const guestCount = Number(searchParams.get("guests"));
@@ -69,7 +81,8 @@ const HotelList = () => {
                 response.data.hotels.map((hotel) => {
                     return {
                         ...hotel,
-                        totalPrice: hotel.totalPrice / 100,
+                        totalPrice:
+                            (hotel.totalPrice / 100) * daysBetweenInclusive(start, end),
                     };
                 }) || []
             );
