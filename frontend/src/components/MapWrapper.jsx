@@ -1,7 +1,7 @@
 import React from "react";
 import { useLoadScript } from "@react-google-maps/api";
 export const MapWrapper = ({ children }) => {
-    const rr = "AIzaSyC_zN08IM5_NV1yi_gVMJfmLigewujCn8w";
+    const rr = import.meta.env.VITE_MAP_API_KEY;
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: rr,
     });
